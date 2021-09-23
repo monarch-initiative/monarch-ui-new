@@ -9,7 +9,7 @@ Clone the repo and run `yarn install` to install dependencies.
 
 ### Commands
 
-- `yarn serve` - Start development server with auto-open, auto-refresh, and hot-reloading
+- `yarn serve` - Start development server with auto-refresh and hot-reloading
 - `yarn build` - Build a production version of the app
 - `yarn test:unit` - Run unit and accessibility tests
 - `yarn test:e2e` - Run end-to-end tests

@@ -3,7 +3,9 @@
     <!-- temporary test items -->
     <markdownify :source="testMarkdown"></markdownify>
     <ul>
-      <li v-for="(item, index) of testYaml" :key="index">{{ item }}</li>
+      <li v-for="(item, index) of testYaml" :key="index">
+        {{ item }}
+      </li>
     </ul>
     <fa icon="dna" />
   </main>

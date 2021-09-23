@@ -19,7 +19,9 @@ jobs:
         run: yarn build
       - name: Run lint/formatting tests
         run: yarn lint
-      - name: Run unit and accessibility tests
+      - name: Run unit tests
         run: yarn test:unit
       - name: Run e2e/integration tests
         run: yarn test:e2e
+      - name: Run accessibility tests
+        run: yarn test:accessibility

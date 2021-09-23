@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
+    "test:unit": "vue-cli-service test:unit unit",
+    "test:accessibility": "vue-cli-service test:unit accessibility",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "fresh": "yarn cache clean && rm -rf node_modules && yarn install"
@@ -45,6 +46,8 @@
     "eslint-plugin-vue": "^7.0.0",
     "eslint-plugin-vuejs-accessibility": "^0.7.1",
     "jest-axe": "^5.0.1",
+    "jest-raw-loader": "^1.0.1",
+    "jest-yaml-transform": "^0.2.0",
     "prettier": "^2.2.1",
     "raw-loader": "^4.0.2",
     "sass": "^1.26.5",
