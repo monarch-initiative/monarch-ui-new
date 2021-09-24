@@ -4,7 +4,8 @@ name: Test
 on: pull_request
 
 jobs:
-  test:
+  # only install yarn packages once for rest of jobs
+  install-cache:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -13,15 +14,88 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "14"
-      - name: Install packages
+          cache: yarn
+      - name: Run cache
+        id: run-cache
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Install packages if cache invalid
+        if: steps.run-cache.outputs.cache-hit != 'true'
         run: yarn install
-      - name: Test that app can build without issues
+
+  # test that app can build without issues
+  test-build:
+    runs-on: ubuntu-latest
+    needs: install-cache
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Restore yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Run test
         run: yarn build
-      - name: Run lint/formatting tests
+
+  # test that app is properly formatted and linted
+  test-lint:
+    runs-on: ubuntu-latest
+    needs: install-cache
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Restore yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Run test
         run: yarn lint
-      - name: Run unit tests
+
+  # run unit tests
+  test-unit:
+    runs-on: ubuntu-latest
+    needs: install-cache
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Restore yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Run test
         run: yarn test:unit
-      - name: Run e2e/integration tests
+
+  # run end to end integration tests
+  test-e2e:
+    runs-on: ubuntu-latest
+    needs: install-cache
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Restore yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Run test
         run: yarn test:e2e
-      - name: Run accessibility tests
+
+    # run accessibility tests
+  test-accessibility:
+    runs-on: ubuntu-latest
+    needs: install-cache
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Restore yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Run test
         run: yarn test:accessibility
