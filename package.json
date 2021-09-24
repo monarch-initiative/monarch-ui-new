@@ -8,6 +8,7 @@
     "test:unit": "vue-cli-service test:unit unit",
     "test:accessibility": "vue-cli-service test:unit accessibility",
     "test:e2e": "vue-cli-service test:e2e --headless",
+    "test:e2e-gui": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "fresh": "yarn cache clean && rm -rf node_modules && yarn install"
   },

@@ -15,15 +15,13 @@ jobs:
         with:
           node-version: "14"
           cache: yarn
-      - name: Run cache
-        id: run-cache
+      - name: Install packages
+        run: yarn install
+      - name: Store cache
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - name: Install packages if cache invalid
-        if: steps.run-cache.outputs.cache-hit != 'true'
-        run: yarn install
+          key: ${{ GITHUB_RUN_NUMBER }}
 
   # test that app can build without issues
   test-build:
@@ -32,11 +30,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Restore yarn dependencies
+      - name: Restore cache
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn build
 
@@ -47,11 +45,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Restore yarn dependencies
+      - name: Restore cache
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn lint
 
@@ -62,11 +60,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Restore yarn dependencies
+      - name: Restore cache
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn test:unit
 
@@ -74,14 +72,15 @@ jobs:
   test-e2e:
     runs-on: ubuntu-latest
     needs: install-cache
+    timeout-minutes: 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Restore yarn dependencies
+      - name: Restore cache
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn test:e2e
 
@@ -92,10 +91,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Restore yarn dependencies
+      - name: Restore cache
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn test:accessibility
