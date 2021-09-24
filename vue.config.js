@@ -33,8 +33,8 @@ module.exports = {
   // configure dev options
   devServer: {
     // disable hot (state-preserving) reload on windows environments due to vue cli bugginess
-    hot: process.platform !== "win32",
+    hot: process.env.mode === "development" && process.platform !== "win32",
     // keep page auto-refresh when files change, because that's still nice
-    liveReload: true,
+    liveReload: process.env.mode === "development",
   },
 };
