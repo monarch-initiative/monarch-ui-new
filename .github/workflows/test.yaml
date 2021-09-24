@@ -17,6 +17,8 @@ jobs:
           cache: yarn
       - name: Install packages
         run: yarn install
+      - name: Debug
+        run: echo "$GITHUB_RUN_NUMBER"
       - name: Store cache
         uses: actions/cache@v2
         with:
