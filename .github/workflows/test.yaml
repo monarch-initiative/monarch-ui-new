@@ -3,12 +3,10 @@ name: Test
 
 on: pull_request
 
-# set env vars for repeated values
 env:
   CACHE_PATH: |
     ~/.cache/Cypress
     node_modules
-  CACHE_KEY: "${{ env.GITHUB_RUN_NUMBER }}"
 
 jobs:
   # only install yarn packages once for rest of jobs
@@ -28,7 +26,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ CACHE_PATH }}
-          key: ${{ CACHE_KEY }}
+          key: ${{ env.GITHUB_RUN_NUMBER }}
 
   # test that app can build without issues
   test-build:
@@ -41,7 +39,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ CACHE_PATH }}
-          key: ${{ CACHE_KEY }}
+          key: ${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn build
 
@@ -56,7 +54,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ CACHE_PATH }}
-          key: ${{ CACHE_KEY }}
+          key: ${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn lint
 
@@ -71,7 +69,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ CACHE_PATH }}
-          key: ${{ CACHE_KEY }}
+          key: ${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn test:unit
 
@@ -87,7 +85,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ CACHE_PATH }}
-          key: ${{ CACHE_KEY }}
+          key: ${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn test:e2e
 
@@ -102,6 +100,6 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ CACHE_PATH }}
-          key: ${{ CACHE_KEY }}
+          key: ${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn test:accessibility
