@@ -3,6 +3,13 @@ name: Test
 
 on: pull_request
 
+# set env vars for repeated values
+env:
+  CACHE_PATH: |
+    ~/.cache/Cypress
+    node_modules
+  CACHE_KEY: ${{ runner.os }}-${{ env.GITHUB_RUN_NUMBER }}
+
 jobs:
   # only install yarn packages once for rest of jobs
   install-cache:
@@ -20,8 +27,8 @@ jobs:
       - name: Store cache
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ env.GITHUB_RUN_NUMBER }}
+          path: ${{ CACHE_PATH }}
+          key: ${{ CACHE_KEY }}
 
   # test that app can build without issues
   test-build:
@@ -33,8 +40,8 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ env.GITHUB_RUN_NUMBER }}
+          path: ${{ CACHE_PATH }}
+          key: ${{ CACHE_KEY }}
       - name: Run test
         run: yarn build
 
@@ -48,8 +55,8 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ env.GITHUB_RUN_NUMBER }}
+          path: ${{ CACHE_PATH }}
+          key: ${{ CACHE_KEY }}
       - name: Run test
         run: yarn lint
 
@@ -63,8 +70,8 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ env.GITHUB_RUN_NUMBER }}
+          path: ${{ CACHE_PATH }}
+          key: ${{ CACHE_KEY }}
       - name: Run test
         run: yarn test:unit
 
@@ -79,8 +86,8 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ env.GITHUB_RUN_NUMBER }}
+          path: ${{ CACHE_PATH }}
+          key: ${{ CACHE_KEY }}
       - name: Run test
         run: yarn test:e2e
 
@@ -94,7 +101,7 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ env.GITHUB_RUN_NUMBER }}
+          path: ${{ CACHE_PATH }}
+          key: ${{ CACHE_KEY }}
       - name: Run test
         run: yarn test:accessibility
