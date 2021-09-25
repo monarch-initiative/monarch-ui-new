@@ -25,7 +25,7 @@ jobs:
       - name: Store cache
         uses: actions/cache@v2
         with:
-          path: ${{ CACHE_PATH }}
+          path: ${{ env.CACHE_PATH }}
           key: ${{ env.GITHUB_RUN_NUMBER }}
 
   # test that app can build without issues
@@ -38,7 +38,7 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v2
         with:
-          path: ${{ CACHE_PATH }}
+          path: ${{ env.CACHE_PATH }}
           key: ${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn build
@@ -53,7 +53,7 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v2
         with:
-          path: ${{ CACHE_PATH }}
+          path: ${{ env.CACHE_PATH }}
           key: ${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn lint
@@ -68,7 +68,7 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v2
         with:
-          path: ${{ CACHE_PATH }}
+          path: ${{ env.CACHE_PATH }}
           key: ${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn test:unit
@@ -84,7 +84,7 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v2
         with:
-          path: ${{ CACHE_PATH }}
+          path: ${{ env.CACHE_PATH }}
           key: ${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn test:e2e
@@ -99,7 +99,7 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v2
         with:
-          path: ${{ CACHE_PATH }}
+          path: ${{ env.CACHE_PATH }}
           key: ${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn test:accessibility
