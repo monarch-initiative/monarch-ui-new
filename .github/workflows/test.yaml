@@ -26,7 +26,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_PATH }}
-          key: ${{ env.GITHUB_RUN_NUMBER }}
+          key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
 
   # test that app can build without issues
   test-build:
@@ -39,7 +39,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_PATH }}
-          key: ${{ env.GITHUB_RUN_NUMBER }}
+          key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn build
 
@@ -54,7 +54,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_PATH }}
-          key: ${{ env.GITHUB_RUN_NUMBER }}
+          key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn lint
 
@@ -69,7 +69,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_PATH }}
-          key: ${{ env.GITHUB_RUN_NUMBER }}
+          key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn test:unit
 
@@ -85,7 +85,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_PATH }}
-          key: ${{ env.GITHUB_RUN_NUMBER }}
+          key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn test:e2e
 
@@ -100,6 +100,6 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_PATH }}
-          key: ${{ env.GITHUB_RUN_NUMBER }}
+          key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
         run: yarn test:accessibility
