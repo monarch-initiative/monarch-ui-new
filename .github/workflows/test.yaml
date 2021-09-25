@@ -8,7 +8,7 @@ env:
   CACHE_PATH: |
     ~/.cache/Cypress
     node_modules
-  CACHE_KEY: ${{ runner.os }}-${{ env.GITHUB_RUN_NUMBER }}
+  CACHE_KEY: "${{ env.GITHUB_RUN_NUMBER }}"
 
 jobs:
   # only install yarn packages once for rest of jobs
