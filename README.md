@@ -4,7 +4,7 @@
 
 ### Setup
 
-Install [Node](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) if you haven't already.
+Install [Node](https://nodejs.org/) (> 14) and [Yarn](https://yarnpkg.com/) if you haven't already.
 Clone the repo and run `yarn install` to install dependencies.
 
 ### Commands
