@@ -2,6 +2,10 @@
 
 ## Development
 
+### Figma sketch
+
+https://www.figma.com/file/VxRrD9Tfjpg0CWMVS5qLKr/Monarch-UI-redesign?node-id=9%3A6
+
 ### Setup
 
 Install [Node](https://nodejs.org/) (> 14) and [Yarn](https://yarnpkg.com/) if you haven't already.
