@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import { axe, toHaveNoViolations } from "jest-axe";
 import Home from "@/views/Home.vue";
-import { globalComponents } from "@/main";
+import globalComponents from "@/global/components";
 
 expect.extend(toHaveNoViolations);
 

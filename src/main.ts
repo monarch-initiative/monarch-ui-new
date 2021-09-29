@@ -1,16 +1,11 @@
-import { createApp, Component } from "vue";
+import { createApp } from "vue";
 import App from "@/App.vue";
 import router from "@/router";
 import store from "@/store";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import "@/icons";
-import Markdownify from "@/components/Markdownify.vue";
-
-// list of components we want to be available anywhere without importing them
-export const globalComponents: Record<string, Component> = {
-  fa: FontAwesomeIcon,
-  markdownify: Markdownify,
-};
+import "normalize.css";
+import "@/global/icons";
+import globalComponents from "@/global/components";
+import "@/global/styles.scss";
 
 // create main app object
 let app = createApp(App);

@@ -21,3 +21,12 @@ Clone the repo and run `yarn install` to install dependencies.
 - `yarn lint` - Lint and fix files
 - `yarn fresh` - Clear cache and `node_modules` and reinstall dependencies
 - `yarn test:e2e-gui` - Run end-to-end tests in visible browser to watch them run
+
+### CSS
+
+See `variables.scss` for a palette of acceptable colors/fonts/etc to use.
+
+### Notes
+
+To simplify app/router/etc configuration, the app only works when served from root.
+Hosting on e.g. GitHub Pages like monarch-initiative.github.io/monarch-ui is not possible without changes.
