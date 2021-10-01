@@ -1,6 +1,6 @@
 <template>
   <Section>
-    <h1 v-heading>Home</h1>
+    <h1>Home</h1>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua. Augue lacus viverra
