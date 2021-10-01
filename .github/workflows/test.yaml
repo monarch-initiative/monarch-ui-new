@@ -102,4 +102,4 @@ jobs:
           path: ${{ env.CACHE_PATH }}
           key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
-        run: yarn test:accessibility
+        run: yarn test:axe
