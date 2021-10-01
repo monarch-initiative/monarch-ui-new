@@ -2,18 +2,15 @@ import { createApp } from "vue";
 import App from "@/App.vue";
 import router from "@/router";
 import store from "@/store";
-import "normalize.css";
-import "@/global/icons";
-import tooltip from "@/directives/tooltip";
-import heading from "@/directives/heading";
 import globalComponents from "@/global/components";
-import "@/global/styles.scss";
+import directives from "@/global/directives";
 
 // create main app object
 let app = createApp(App);
 
-// add custom directives
-app = app.directive("tooltip", tooltip).directive("heading", heading);
+// register directives
+for (const [name, directive] of Object.entries(directives))
+  app = app.directive(name, directive);
 
 // add middleware
 app = app.use(store).use(router);

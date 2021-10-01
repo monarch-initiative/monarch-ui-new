@@ -1,7 +1,7 @@
-// import { shallowMount } from "@vue/test-utils";
+// import { mount } from "@vue/test-utils";
 
 it("Renders passed props", () => {
   // const text = "new message";
-  // const wrapper = shallowMount(Button, { props: { text } });
+  // const wrapper = mount(Button, { props: { text } });
   // expect(wrapper.text()).toMatch(text);
 });
