@@ -1,5 +1,7 @@
 // normalize.css also installed
 
+// document
+
 * {
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
@@ -17,4 +19,66 @@ html {
 
 main {
   flex-grow: 1;
+}
+
+// headings
+
+h1 {
+  margin: 40px 0 20px 0;
+  @include trim-v-margins;
+  padding: 10px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 1px;
+  // text-transform: uppercase;
+}
+
+h2 {
+  margin: 40px 0 20px 0;
+  @include trim-v-margins;
+  padding: 10px 0;
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+h3 {
+  margin: 40px 0 20px 0;
+  @include trim-v-margins;
+  padding: 10px 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+// elements
+
+p {
+  text-align: justify;
+  line-height: $spacing + 0.3;
+}
+
+// anchors
+
+.anchor {
+  display: inline-block;
+  width: 0;
+  padding: 10px;
+  opacity: 0;
+  text-decoration: none;
+  font-size: 0.8em;
+  transition: opacity $fast;
+}
+
+.anchor:focus {
+  opacity: 1;
+}
+
+h1,
+h2,
+h3 {
+  &:hover .anchor {
+    opacity: 1;
+  }
 }

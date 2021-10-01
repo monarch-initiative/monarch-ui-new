@@ -1,6 +1,4 @@
-describe("App renders", () => {
-  it("Visits the app root url", () => {
-    cy.visit("/");
-    cy.get("#app").should("not.be.empty");
-  });
+it("App renders", () => {
+  cy.visit("/");
+  cy.get("#app").should("not.be.empty");
 });
