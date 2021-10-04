@@ -1,19 +1,16 @@
-import { createApp, Component } from "vue";
+import { createApp } from "vue";
 import App from "@/App.vue";
 import router from "@/router";
 import store from "@/store";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import "@/icons";
-import Markdownify from "@/components/Markdownify.vue";
-
-// list of components we want to be available anywhere without importing them
-export const globalComponents: Record<string, Component> = {
-  fa: FontAwesomeIcon,
-  markdownify: Markdownify,
-};
+import globalComponents from "@/global/components";
+import directives from "@/global/directives";
 
 // create main app object
 let app = createApp(App);
+
+// register directives
+for (const [name, directive] of Object.entries(directives))
+  app = app.directive(name, directive);
 
 // add middleware
 app = app.use(store).use(router);

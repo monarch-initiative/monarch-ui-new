@@ -5,11 +5,13 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "test": "yarn test:lint && yarn test:unit && yarn test:e2e && yarn test:axe",
     "test:unit": "vue-cli-service test:unit unit",
-    "test:accessibility": "vue-cli-service test:unit accessibility",
     "test:e2e": "vue-cli-service test:e2e --headless",
-    "test:e2e-gui": "vue-cli-service test:e2e",
+    "test:axe": "vue-cli-service test:unit accessibility",
+    "test:lint": "vue-cli-service lint --no-fix",
     "lint": "vue-cli-service lint",
+    "test:gui": "vue-cli-service test:e2e",
     "fresh": "yarn cache clean && rm -rf node_modules && yarn install"
   },
   "dependencies": {
@@ -19,7 +21,10 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/vue-fontawesome": "^3.0.0-4",
     "core-js": "^3.6.5",
+    "lodash": "^4.17.21",
     "micromark": "^3.0.5",
+    "normalize.css": "^8.0.1",
+    "tippy.js": "^6.3.2",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
@@ -27,6 +32,7 @@
   "devDependencies": {
     "@types/jest": "^24.0.19",
     "@types/jest-axe": "^3.5.3",
+    "@types/lodash": "^4.14.175",
     "@types/markdown-it": "^12.2.1",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",

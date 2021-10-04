@@ -56,7 +56,7 @@ jobs:
           path: ${{ env.CACHE_PATH }}
           key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
-        run: yarn lint
+        run: yarn test:lint
 
   # run unit tests
   test-unit:
@@ -102,4 +102,4 @@ jobs:
           path: ${{ env.CACHE_PATH }}
           key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
       - name: Run test
-        run: yarn test:accessibility
+        run: yarn test:axe
