@@ -3,28 +3,34 @@
     <!-- title bar -->
     <div class="title">
       <!-- logo image and text -->
-      <router-link to="/" class="logo" :data-big="big">
+      <AppLink to="/" class="logo" :data-big="big" v-tooltip="'Homepage'">
         <Logo class="image" />
         <div class="text">Monarch<br />Intiative</div>
-      </router-link>
+      </AppLink>
 
       <!-- nav toggle button -->
-      <Button
+      <button
         class="button"
-        :icon="expanded ? 'times' : 'bars'"
         @click="expanded = !expanded"
         :aria-label="
           expanded ? 'Collapse navigation menu' : 'Expand navigation menu'
         "
-      />
+      >
+        <AppIcon :icon="expanded ? 'times' : 'bars'" />
+      </button>
     </div>
 
     <!-- navigation bar -->
     <nav :data-big="big" :data-expanded="expanded">
-      <router-link class="link" to="/explore">Explore</router-link>
-      <router-link class="link" to="/tools">Tools</router-link>
-      <router-link class="link" to="/about">About</router-link>
-      <router-link class="link" to="/help">Help</router-link>
+      <AppLink
+        v-for="(item, index) in nav"
+        :key="index"
+        :to="item.to"
+        v-tooltip="item.tooltip"
+        class="link"
+      >
+        {{ item.text }}
+      </AppLink>
     </nav>
   </header>
 </template>
@@ -32,6 +38,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import Logo from "@/assets/Logo.vue";
+import nav from "@/global/nav.yaml";
 
 export default defineComponent({
   components: {
@@ -41,6 +48,8 @@ export default defineComponent({
     return {
       // is nav menu expanded
       expanded: false,
+      // nav menu data
+      nav,
     };
   },
   computed: {
@@ -94,17 +103,15 @@ header[data-big="true"] {
   justify-content: space-between;
 }
 
-.button {
-  display: none;
+@media (min-width: $wrap) {
+  .button {
+    display: none;
+  }
 }
 
 @media (max-width: $wrap) {
   .title {
     width: 100%;
-  }
-
-  .button {
-    display: unset;
   }
 }
 
@@ -155,7 +162,7 @@ header[data-big="true"] {
 
 nav {
   display: flex;
-  padding: 20px;
+  margin: 20px;
 }
 
 .link {
@@ -179,7 +186,7 @@ nav:hover .link:hover {
   nav {
     flex-direction: column;
     position: unset;
-    padding: 10px;
+    margin: 10px;
     width: 100%;
   }
 

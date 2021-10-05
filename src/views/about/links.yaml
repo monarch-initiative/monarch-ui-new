@@ -1,0 +1,26 @@
+# big tile links on about landing page
+
+- to: "/cite"
+  icon: feather-alt
+  title: Cite
+  subtitle: How to cite and attribute Monarch
+
+- to: "/team"
+  icon: users
+  title: Team
+  subtitle: The groups and people behind Monarch
+
+- to: "/publications"
+  icon: newspaper
+  title: Publications
+  subtitle: Monarch-related published works
+
+- to: "/sources"
+  icon: database
+  title: Sources
+  subtitle: Datasets, ontologies, and downloads
+
+- to: "/terms"
+  icon: signature
+  title: Terms of Use
+  subtitle: Disclaimers and agreements

@@ -24,7 +24,7 @@ main {
 // headings
 
 h1 {
-  margin: 40px 0 20px 0;
+  margin: 40px 0;
   @include trim-v-margins;
   padding: 10px 0;
   font-size: 1.5rem;
@@ -35,7 +35,7 @@ h1 {
 }
 
 h2 {
-  margin: 40px 0 20px 0;
+  margin: 40px 0;
   @include trim-v-margins;
   padding: 10px 0;
   font-size: 1.3rem;
@@ -44,7 +44,7 @@ h2 {
 }
 
 h3 {
-  margin: 40px 0 20px 0;
+  margin: 40px 0;
   @include trim-v-margins;
   padding: 10px 0;
   font-size: 1.2rem;
@@ -57,6 +57,28 @@ h3 {
 p {
   text-align: justify;
   line-height: $spacing + 0.3;
+  margin: 20px 0;
+  @include trim-v-margins;
+}
+
+button {
+  color: currentColor;
+  background: none;
+  border: none;
+  padding: 20px;
+  cursor: pointer;
+}
+
+ul,
+ol {
+  text-align: left;
+  margin: 20px 0;
+  @include trim-v-margins;
+  padding: 0;
+}
+
+li {
+  padding: 5px 0 5px 20px;
 }
 
 // anchors
@@ -81,4 +103,17 @@ h3 {
   &:hover .anchor {
     opacity: 1;
   }
+}
+
+// tooltips
+
+.tippy-box {
+  padding: 10px;
+  font-size: 1rem;
+}
+
+// util
+
+.center {
+  text-align: center;
 }

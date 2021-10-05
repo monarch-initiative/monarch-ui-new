@@ -1,0 +1,13 @@
+# list of nav links (shown in header)
+
+- to: /explore
+  text: Explore
+  tooltip: Dive right in and use Monarch
+
+- to: /about
+  text: About
+  tooltip: Info, citing, licensing, sources, social media, and more
+
+- to: /help
+  text: Help
+  tooltip: Feedback, docs, guides, contact, and more

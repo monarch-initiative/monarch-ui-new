@@ -1,23 +1,15 @@
 <template>
   <footer>
     <div class="social">
-      <a
-        href=""
-        v-tooltip="
-          'Subscribe to our newsletter for occassional detailed updates'
-        "
+      <AppLink
+        v-for="(item, index) in social"
+        :key="index"
+        :to="item.to"
+        :subtitle="item.subtitle"
+        v-tooltip="item.subtitle"
       >
-        <FontAwesomeIcon icon="envelope-open-text" />
-      </a>
-      <a href="" v-tooltip="'Star and follow us on GitHub for new releases'">
-        <FontAwesomeIcon :icon="['fab', 'github']" />
-      </a>
-      <a href="" v-tooltip="'Read our blog on Medium'">
-        <FontAwesomeIcon icon="blog" />
-      </a>
-      <a href="" v-tooltip="'Follow us on Twitter for updates and musings'">
-        <FontAwesomeIcon :icon="['fab', 'twitter']" />
-      </a>
+        <AppIcon :icon="item.icon" />
+      </AppLink>
     </div>
     <div class="license">
       <span>Monarch Intiative {{ new Date().getFullYear() }}</span>
@@ -26,6 +18,20 @@
     </div>
   </footer>
 </template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import social from "@/global/social.yaml";
+
+export default defineComponent({
+  data() {
+    return {
+      // social icons data
+      social,
+    };
+  },
+});
+</script>
 
 <style lang="scss" scoped>
 $wrap: 500px;

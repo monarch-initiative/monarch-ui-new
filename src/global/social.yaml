@@ -1,0 +1,21 @@
+# list of social media links (shown in footer and on about page)
+
+- to: https://substack.com/
+  icon: envelope-open-text
+  title: Newsletter
+  subtitle: Occasional, detailed updates
+
+- to: https://github.com/monarch-initiative
+  icon: fab github
+  title: GitHub
+  subtitle: Star and follow for new releases
+
+- to: https://twitter.com/MonarchInit
+  icon: fab twitter
+  title: Twitter
+  subtitle: Quick updates and musings
+
+- to: https://medium.com/@MonarchInit
+  icon: blog
+  title: Blog
+  subtitle: Our posts on Medium

@@ -5,6 +5,14 @@ import {
   faBalanceScale,
   faEnvelopeOpenText,
   faBlog,
+  faArrowRight,
+  faFeatherAlt,
+  faUsers,
+  faNewspaper,
+  faDatabase,
+  faSignature,
+  faComment,
+  faHandsHelping,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 
@@ -14,6 +22,14 @@ import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 library.add(faBars);
 library.add(faTimes);
 library.add(faBalanceScale);
+library.add(faArrowRight);
+library.add(faFeatherAlt);
+library.add(faUsers);
+library.add(faNewspaper);
+library.add(faDatabase);
+library.add(faSignature);
+library.add(faComment);
+library.add(faHandsHelping);
 
 // social
 library.add(faEnvelopeOpenText);
