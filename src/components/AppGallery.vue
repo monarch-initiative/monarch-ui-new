@@ -13,6 +13,7 @@ $phone: 400px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 40px;
+  margin: 40px 0;
 
   @media (max-width: $tablet) {
     grid-template-columns: 1fr 1fr;

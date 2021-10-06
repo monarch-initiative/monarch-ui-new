@@ -1,5 +1,11 @@
 <template>
-  <component class="button" :is="component" :data-design="design">
+  <component
+    class="button"
+    :is="component"
+    :to="to"
+    @click="click"
+    :data-design="design"
+  >
     <span v-if="text">{{ text }}</span>
     <AppIcon :icon="icon" v-if="icon" />
     <slot />
@@ -27,7 +33,7 @@ export default defineComponent({
   },
   computed: {
     component() {
-      if (this.to) return "router-link";
+      if (this.to) return "AppLink";
       else return "button";
     },
   },
@@ -40,13 +46,16 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   gap: 10px;
+  min-width: 200px;
   min-height: 40px;
   margin: 20px;
   padding: 0 20px;
-  font-size: 1rem;
   background: $theme-light;
   color: $off-black;
   border-radius: 3px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
   cursor: pointer;
   transition: background $fast;
 

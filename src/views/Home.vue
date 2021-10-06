@@ -6,7 +6,7 @@
   <AppSection>
     <h2 v-heading>What is Monarch?</h2>
     <AppPlaceholder />
-    <AppButton text="Learn more" icon="arrow-right" />
+    <AppButton to="/about" text="Learn more" icon="arrow-right" />
   </AppSection>
   <AppSection>
     <h2 v-heading>How to use Monarch</h2>

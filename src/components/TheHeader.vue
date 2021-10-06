@@ -23,13 +23,32 @@
     <!-- navigation bar -->
     <nav :data-big="big" :data-expanded="expanded">
       <AppLink
-        v-for="(item, index) in nav"
-        :key="index"
-        :to="item.to"
-        v-tooltip="item.tooltip"
         class="link"
+        to="/explore"
+        v-tooltip="'Dive right in and use Monarch'"
       >
-        {{ item.text }}
+        Explore
+      </AppLink>
+      <AppLink
+        class="link"
+        to="/tools"
+        v-tooltip="'Monarch\'s ecosystem of tools'"
+      >
+        Tools
+      </AppLink>
+      <AppLink
+        class="link"
+        to="/about"
+        v-tooltip="'Citing, licensing, sources, and other info'"
+      >
+        About
+      </AppLink>
+      <AppLink
+        class="link"
+        to="/help"
+        v-tooltip="'Feedback, docs, guides, contact, and more'"
+      >
+        Help
       </AppLink>
     </nav>
   </header>
@@ -38,7 +57,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import Logo from "@/assets/Logo.vue";
-import nav from "@/global/nav.yaml";
 
 export default defineComponent({
   components: {
@@ -48,8 +66,6 @@ export default defineComponent({
     return {
       // is nav menu expanded
       expanded: false,
-      // nav menu data
-      nav,
     };
   },
   computed: {

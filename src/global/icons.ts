@@ -13,6 +13,10 @@ import {
   faSignature,
   faComment,
   faHandsHelping,
+  faTools,
+  faCheckCircle,
+  faTimesCircle,
+  faCircleNotch,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 
@@ -30,6 +34,10 @@ library.add(faDatabase);
 library.add(faSignature);
 library.add(faComment);
 library.add(faHandsHelping);
+library.add(faTools);
+library.add(faCheckCircle);
+library.add(faTimesCircle);
+library.add(faCircleNotch);
 
 // social
 library.add(faEnvelopeOpenText);

@@ -6,6 +6,7 @@ import {
 } from "vue-router";
 import Home from "@/views/Home.vue";
 import Explore from "@/views/explore/Explore.vue";
+import Tools from "@/views/tools/Tools.vue";
 import About from "@/views/about/About.vue";
 import Help from "@/views/help/Help.vue";
 
@@ -20,6 +21,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/explore",
     name: "explore",
     component: Explore,
+  },
+  {
+    path: "/tools",
+    name: "tools",
+    component: Tools,
   },
   {
     path: "/about",

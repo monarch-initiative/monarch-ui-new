@@ -1,14 +1,17 @@
 <template>
   <footer>
     <div class="social">
-      <AppLink
-        v-for="(item, index) in social"
-        :key="index"
-        :to="item.to"
-        :subtitle="item.subtitle"
-        v-tooltip="item.subtitle"
-      >
-        <AppIcon :icon="item.icon" />
+      <AppLink to="https://substack.com/" v-tooltip="'Newsletter'">
+        <AppIcon icon="envelope-open-text" />
+      </AppLink>
+      <AppLink to="https://github.com/monarch-initiative" v-tooltip="'GitHub'">
+        <AppIcon icon="fab github" />
+      </AppLink>
+      <AppLink to="https://twitter.com/MonarchInit" v-tooltip="'Twitter'">
+        <AppIcon icon="fab twitter" />
+      </AppLink>
+      <AppLink to="https://medium.com/@MonarchInit" v-tooltip="'Blog'">
+        <AppIcon icon="blog" />
       </AppLink>
     </div>
     <div class="license">
@@ -18,20 +21,6 @@
     </div>
   </footer>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-import social from "@/global/social.yaml";
-
-export default defineComponent({
-  data() {
-    return {
-      // social icons data
-      social,
-    };
-  },
-});
-</script>
 
 <style lang="scss" scoped>
 $wrap: 500px;

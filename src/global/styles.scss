@@ -54,6 +54,15 @@ h3 {
 
 // elements
 
+a {
+  color: $theme;
+  transition: color $fast;
+
+  &:hover {
+    color: $black;
+  }
+}
+
 p {
   text-align: justify;
   line-height: $spacing + 0.3;
