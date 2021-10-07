@@ -17,6 +17,7 @@ import {
   faCheckCircle,
   faTimesCircle,
   faCircleNotch,
+  faHistory,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 
@@ -38,6 +39,7 @@ library.add(faTools);
 library.add(faCheckCircle);
 library.add(faTimesCircle);
 library.add(faCircleNotch);
+library.add(faHistory);
 
 // social
 library.add(faEnvelopeOpenText);

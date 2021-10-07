@@ -1,5 +1,5 @@
 <template>
-  <a v-if="isExternal" :href="to || ''">
+  <a v-if="isExternal" :href="to || ''" target="_blank">
     <slot />
   </a>
   <router-link v-else :to="to || ''">

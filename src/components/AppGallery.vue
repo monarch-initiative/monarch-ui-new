@@ -1,30 +1,48 @@
 <template>
   <!-- puts arbitrary content into a responsive grid gallery -->
-  <div class="gallery">
+  <div class="gallery" :data-size="size">
     <slot />
   </div>
 </template>
 
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  props: {
+    // size of items in gallery
+    // default: medium
+    // "small": smaller items and spacing
+    size: String,
+  },
+});
+</script>
+
 <style lang="scss" scoped>
-$tablet: 800px;
-$phone: 400px;
+$two: 900px;
+$one: 600px;
 
 .gallery {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 40px;
-  margin: 40px 0;
+  max-width: 1000px;
+  margin: 40px auto;
 
-  @media (max-width: $tablet) {
+  &[data-size="small"] {
+    gap: 10px;
+  }
+
+  @media (max-width: $two) {
     grid-template-columns: 1fr 1fr;
   }
 
-  @media (max-width: $phone) {
+  @media (max-width: $one) {
     grid-template-columns: 1fr;
   }
 }
 
-.gallery ::v-deep * {
+.gallery :deep(*) {
   margin: 0;
 }
 </style>

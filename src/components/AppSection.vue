@@ -1,5 +1,5 @@
 <template>
-  <section :data-full="full || false" :data-design="design">
+  <section :data-width="width || 'medium'" :data-design="design">
     <slot />
   </section>
 </template>
@@ -10,8 +10,11 @@ import { defineComponent } from "vue";
 // section that spans width of page
 export default defineComponent({
   props: {
-    // whether content spans full page width or limited to page sass var
-    full: Boolean,
+    // width of section
+    // default: medium width
+    // "big": bigger than medium width
+    // "full": full width of screen
+    width: String,
     // visual design
     // default: white/offwhite
     // "fill": darker bg
@@ -22,10 +25,14 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 section {
-  padding: 50px 40px; // fallback
+  padding: 50px 40px; // full width
 
-  &[data-full="false"] {
-    padding: 50px max(40px, calc((100% - $page) / 2));
+  &[data-width="medium"] {
+    padding: 50px max(40px, calc((100% - $section) / 2));
+  }
+
+  &[data-width="big"] {
+    padding: 50px max(40px, calc((100% - $section-big) / 2));
   }
 
   text-align: center;
