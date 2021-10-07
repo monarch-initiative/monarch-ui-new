@@ -1,5 +1,5 @@
 <template>
-  <div class="status">
+  <div class="status" :aria-label="status">
     <AppIcon class="icon" :icon="icon" :data-status="status" />
     <div>{{ text }}</div>
   </div>

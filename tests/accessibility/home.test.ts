@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import { axe, toHaveNoViolations } from "jest-axe";
 import App from "@/App.vue";
-import { mountOptions } from "../";
+import { mountOptions } from ".";
 
 expect.extend(toHaveNoViolations);
 

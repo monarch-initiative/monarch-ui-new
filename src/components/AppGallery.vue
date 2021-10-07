@@ -23,4 +23,8 @@ $phone: 400px;
     grid-template-columns: 1fr;
   }
 }
+
+.gallery ::v-deep * {
+  margin: 0;
+}
 </style>
