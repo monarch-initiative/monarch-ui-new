@@ -8,6 +8,7 @@ import Home from "@/views/Home.vue";
 import Explore from "@/views/explore/Explore.vue";
 import Tools from "@/views/tools/Tools.vue";
 import About from "@/views/about/About.vue";
+import Cite from "@/views/about/Cite.vue";
 import Help from "@/views/help/Help.vue";
 
 // list of routes and corresponding components
@@ -31,6 +32,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/about",
     name: "about",
     component: About,
+  },
+  {
+    path: "/cite",
+    name: "cite",
+    component: Cite,
   },
   {
     path: "/help",

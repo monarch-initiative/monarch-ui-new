@@ -4,7 +4,7 @@
 
 * {
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+  font-family: $sans;
 }
 
 html {
@@ -54,6 +54,17 @@ h3 {
 
 // elements
 
+p,
+blockquote,
+ul,
+ol {
+  text-align: justify;
+  line-height: $spacing + 0.3;
+  margin: 20px 0;
+  @include trim-v-margins;
+  padding: 0;
+}
+
 a {
   color: $theme;
   transition: color $fast;
@@ -61,13 +72,6 @@ a {
   &:hover {
     color: $black;
   }
-}
-
-p {
-  text-align: justify;
-  line-height: $spacing + 0.3;
-  margin: 20px 0;
-  @include trim-v-margins;
 }
 
 button {
@@ -78,16 +82,22 @@ button {
   cursor: pointer;
 }
 
-ul,
-ol {
-  text-align: left;
-  margin: 20px 0;
-  @include trim-v-margins;
+li {
   padding: 0;
+  padding-left: 20px;
 }
 
-li {
-  padding: 5px 0 5px 20px;
+blockquote {
+  padding: 20px;
+  background: $theme-light;
+  text-align: left;
+}
+
+code {
+  padding: 3px 5px;
+  background: $off-black;
+  color: $white;
+  font-family: $mono;
 }
 
 // anchors
@@ -95,7 +105,7 @@ li {
 .anchor {
   display: inline-block;
   width: 0;
-  padding: 10px;
+  margin-left: 10px;
   opacity: 0;
   text-decoration: none;
   font-size: 0.8em;

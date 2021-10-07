@@ -22,10 +22,10 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 section {
-  padding: 60px 40px; // fallback
+  padding: 50px 40px; // fallback
 
   &[data-full="false"] {
-    padding: 60px max(40px, calc((100% - $page) / 2));
+    padding: 50px max(40px, calc((100% - $page) / 2));
   }
 
   text-align: center;
