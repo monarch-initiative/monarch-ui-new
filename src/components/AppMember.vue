@@ -5,13 +5,13 @@
     </div>
     <div class="text">
       <div class="name">
-        {{ name }}
-        <AppIcon
-          class="icon"
-          icon="history"
-          v-if="alumni"
-          v-tooltip="'Alumni team member'"
-        />
+        {{ name
+        }}<span class="icon"
+          ><AppIcon
+            icon="history"
+            v-if="alumni"
+            v-tooltip="'Alumni team member'"
+        /></span>
       </div>
       <div class="role">{{ role }}</div>
     </div>
@@ -92,6 +92,11 @@ export default defineComponent({
 }
 
 .icon {
-  margin-left: 5px;
+  display: inline-block;
+  width: 0;
+
+  svg {
+    margin-left: 10px;
+  }
 }
 </style>
