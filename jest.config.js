@@ -16,4 +16,7 @@ module.exports = {
   // https://github.com/facebook/jest/issues/9292
   // https://www.npmjs.com/package/@vue/cli-plugin-unit-jest#transform-dependencies-from-node_modules
   transformIgnorePatterns: [],
+
+  // setup
+  setupFilesAfterEnv: ["mock-local-storage"],
 };

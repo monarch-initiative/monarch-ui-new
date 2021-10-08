@@ -15,13 +15,15 @@ import Help from "@/views/help/Help.vue";
 
 // handle redirect from 404
 const redirect404 = (to: RouteLocationNormalized) => {
-  const redirect = sessionStorage.redirect;
-  if (redirect) {
+  // get place to redirect to from session storage (saved from 404 page)
+  const redirect = window.sessionStorage.redirect;
+  if (redirect && redirect !== to.path) {
     console.info({ redirect });
-    delete sessionStorage.redirect;
+    delete window.sessionStorage.redirect;
     return redirect;
   } else {
-    return to;
+    // cancel redirect
+    return null;
   }
 };
 
@@ -31,7 +33,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "home",
     component: Home,
-    redirect: redirect404,
+    beforeEnter: redirect404,
   },
   {
     path: "/explore",
