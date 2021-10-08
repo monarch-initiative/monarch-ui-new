@@ -56,7 +56,6 @@
     "jest-axe": "^5.0.1",
     "jest-raw-loader": "^1.0.1",
     "jest-yaml-transform": "^0.2.0",
-    "mock-local-storage": "^1.1.17",
     "prettier": "^2.2.1",
     "raw-loader": "^4.0.2",
     "sass": "^1.26.5",
