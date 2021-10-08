@@ -1,9 +1,9 @@
 <template>
-  <Header />
+  <TheHeader />
   <main>
     <router-view />
   </main>
-  <Footer />
+  <TheFooter />
 </template>
 
 <script lang="ts">
@@ -11,16 +11,16 @@ import { defineComponent } from "vue";
 import "@/global/icons";
 import "normalize.css";
 import "@/global/styles.scss";
-import Header from "@/components/Header.vue";
-import Footer from "@/components/Footer.vue";
+import TheHeader from "@/components/TheHeader.vue";
+import TheFooter from "@/components/TheFooter.vue";
 
 export default defineComponent({
   props: {
     large: Boolean,
   },
   components: {
-    Header,
-    Footer,
+    TheHeader,
+    TheFooter,
   },
 });
 </script>

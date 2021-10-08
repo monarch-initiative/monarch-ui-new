@@ -1,23 +1,18 @@
 <template>
   <footer>
     <div class="social">
-      <a
-        href=""
-        v-tooltip="
-          'Subscribe to our newsletter for occassional detailed updates'
-        "
-      >
-        <FontAwesomeIcon icon="envelope-open-text" />
-      </a>
-      <a href="" v-tooltip="'Star and follow us on GitHub for new releases'">
-        <FontAwesomeIcon :icon="['fab', 'github']" />
-      </a>
-      <a href="" v-tooltip="'Read our blog on Medium'">
-        <FontAwesomeIcon icon="blog" />
-      </a>
-      <a href="" v-tooltip="'Follow us on Twitter for updates and musings'">
-        <FontAwesomeIcon :icon="['fab', 'twitter']" />
-      </a>
+      <AppLink to="https://substack.com/" v-tooltip="'Newsletter'">
+        <AppIcon icon="envelope-open-text" />
+      </AppLink>
+      <AppLink to="https://github.com/monarch-initiative" v-tooltip="'GitHub'">
+        <AppIcon icon="fab github" />
+      </AppLink>
+      <AppLink to="https://twitter.com/MonarchInit" v-tooltip="'Twitter'">
+        <AppIcon icon="fab twitter" />
+      </AppLink>
+      <AppLink to="https://medium.com/@MonarchInit" v-tooltip="'Blog'">
+        <AppIcon icon="blog" />
+      </AppLink>
     </div>
     <div class="license">
       <span>Monarch Intiative {{ new Date().getFullYear() }}</span>

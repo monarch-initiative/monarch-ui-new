@@ -7,7 +7,7 @@ import { kebabCase } from "lodash";
 // when element created
 const mounted = (element: HTMLElement): void => {
   // make id for heading based on contents
-  const id = kebabCase(element.getAttribute("id") || element.innerHTML);
+  const id = kebabCase(element.getAttribute("id") || element.innerText);
   element.setAttribute("id", id);
 
   // make anchor link

@@ -1,0 +1,196 @@
+# list of groups and people on the team
+
+- name: University of Colorado Center for Health AI
+  image: health-ai.png
+  link: https://medschool.cuanschutz.edu/ai
+  members:
+    - name: Melissa Haendel
+      image: melissa-haendel.jpg
+      role: Monarch PI
+      link: https://tislab.org/members/melissa-haendel.html
+    - name: Julie McMurry
+      image: julie-mcmurry.jpg
+      role: Associate Director
+      link: https://tislab.org/members/julie-mcmurry.html
+    - name: Moni Munoz-Torres
+      image: monica-munoz-torres.jpg
+      role: Program Manager
+      link: https://tislab.org/members/monica-munoz-torres.html
+    - name: Tim Putman
+      image: tim-putman.jpg
+      role: Technical Director
+      link: https://tislab.org/members/tim-putman.html
+    - name: Kent Shefchek
+      image: kent-shefchek.jpg
+      role: Bioinformatics Software Engineer
+      link: https://tislab.org/members/kent-shefchek.html
+    - name: Vincent Rubinetti
+      image: vincent-rubinetti.jpg
+      role: Frontend and UI/UX Dev
+      link: https://greenelab.com/members/vincent-rubinetti.html
+    - name: Faisal Alquaddoomi
+      image: faisal-alquaddoomi.jpg
+      role: Full Stack Dev and Dev Ops
+      link: https://github.com/falquaddoomi
+    - name: Anne Thessen
+      image: anne-thessen.jpg
+      role: Biodiversity Informaticist
+      link: https://tislab.org/members/anne-thessen.html
+    - name: Sabrina Toro
+      image: sabrina-toro.jpg
+      role: Biocurator
+      link: https://tislab.org/members/sabrina-toro.html
+    - name: Nicole Vasilevsky
+      image: nicole-vasilevsky.jpg
+      role: Lead Biocurator
+      link: https://tislab.org/members/nicole-vasilevsky.html
+    - name: Victoria Alexandra Soesanto
+      image: victoria-soesanto.jpg
+      role: Scientific Software Engineer
+      link: https://tislab.org/members/victoria-soesanto.html
+    - name: Matthew Brush
+      image: matthew-brush.jpg
+      role: Ontologist
+      link: https://tislab.org/members/matthew-brush.html
+    - name: Shahim Essaid
+      image: shahim-essaid.jpg
+      role: Ontologist
+      link: https://tislab.org/members/shahim-essaid.html
+
+- name: The Jackson Laboratory
+  image: jackson.png
+  link: https://www.jax.org/
+  members:
+    - name: Peter Robinson
+      role: Monarch PI
+    - name: Hannah Blau
+      role: Research Software Engineer
+    - name: Leigh Carmody
+      role: Scientific Curator
+    - name: Michael Gargano
+      role: Software Engineer
+    - name: Vida Ravanmehr
+      role: Postdoctoral Associate
+
+- name: Lawrence Berkeley National Laboratory
+  image: berkeley.png
+  link: http://lbl.gov/
+  members:
+    - name: Chris Mungall
+      role: Monarch PI
+    - name: Seth Carbon
+      role: Software engineer
+    - name: Nomi Harris
+      role: Program Manager
+    - name: Sierra Moxon
+      role: Software developer
+    - name: Justin Reese
+      role: Software developer
+    - name: Deepak Unni
+      role: Bioinformatics Software Developer
+      alumni: true
+    - name: Eric Douglass
+      role: Software developer
+      alumni: true
+    - name: Sarah Kim
+      role: Web Developer/Designer
+      alumni: true
+    - name: Suzanna Lewis
+      role: Genomics
+      alumni: true
+    - name: Jeremy Nguyen Xuan
+      role: Software Engineer
+      alumni: true
+    - name: Nicole Washington
+      role: Lead Bioinformatician
+      alumni: true
+    - name: J. Hary Caufield
+      role: Data Scientist
+
+- name: Oregon State University
+  image: oregon-state.png
+  link: https://oregonstate.edu/
+  alumni: true
+  members:
+    - name: Tom Conlin
+      role: Bioinformaticist
+    - name: Jen Martin
+      role: Scientific Software Engineer
+    - name: Dan Keith
+      role: Bioinformatics Semantic Engineer
+
+- name: Oregon Health & Science University
+  image: ohsu.png
+  link: https://www.ohsu.edu/
+  alumni: true
+  members:
+    - name: Bryan Laraway
+      role: Data Wrangler
+    - name: Lilly Winfree
+      role: Science and Data Analyst
+
+- name: Charité - Universitätsmedizin Berlin
+  image: charite.png
+  link: http://compbio.charite.de/
+  members:
+    - name: Sebastian Köhler
+      role: Bioinformatician & Developer
+
+- name: Queen Mary University of London
+  image: queen-mary.png
+  link: http://www.qmul.ac.uk/
+  members:
+    - name: Damian Smedley
+      role: Senior Scientific Manager
+    - name: Jules Jacobsen
+      role: Bioinformatician
+    - name: Tomasz Konopka
+      role: Bioinformatician
+      alumni: true
+    - name: Pilar Cacheiro
+      role: Computational Biologist
+      alumni: true
+
+- name: Renaissance Computing Institute, University of North Carolina at Chapel Hill
+  image: renci.png
+  link: http://renci.org/
+  members:
+    - name: Jim Balhoff
+      role: Senior Research Scientist
+
+- name: European Bioinformatics Institute
+  image: ebi.png
+  link: https://www.ebi.ac.uk/
+  members:
+    - name: David Osumi-Sutherland
+      role: Monarch PI
+    - name: Nicolas Matentzoglu
+      role: Semantic Web Developer
+
+- name: Garvan Institute
+  image: garvan.png
+  link: http://garvan.org.au/
+  alumni: true
+  members:
+    - name: Tudor Groza
+      role: Phenomics Team Leader
+    - name: Craig McNamara
+      role: Developer
+    - name: Edwin Zhang
+      role: Developer
+
+- name: University of Pittsburgh
+  image: pittsburgh.png
+  link: http://pitt.edu/
+  alumni: true
+  members:
+    - name: Harry Hochheiser
+      role: Monarch PI
+    - name: Michael Davis
+      role: Software Developer
+    - name: Zhou Yuan
+      role: Web Application Developer
+    - name: Chuck Borromeo
+      role: Interface Architect
+    - name: Jeremy Espino
+      role: Senior Research Scientist

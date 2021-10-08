@@ -5,6 +5,19 @@ import {
   faBalanceScale,
   faEnvelopeOpenText,
   faBlog,
+  faArrowRight,
+  faFeatherAlt,
+  faUsers,
+  faNewspaper,
+  faDatabase,
+  faSignature,
+  faComment,
+  faHandsHelping,
+  faTools,
+  faCheckCircle,
+  faTimesCircle,
+  faCircleNotch,
+  faHistory,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 
@@ -14,6 +27,19 @@ import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 library.add(faBars);
 library.add(faTimes);
 library.add(faBalanceScale);
+library.add(faArrowRight);
+library.add(faFeatherAlt);
+library.add(faUsers);
+library.add(faNewspaper);
+library.add(faDatabase);
+library.add(faSignature);
+library.add(faComment);
+library.add(faHandsHelping);
+library.add(faTools);
+library.add(faCheckCircle);
+library.add(faTimesCircle);
+library.add(faCircleNotch);
+library.add(faHistory);
 
 // social
 library.add(faEnvelopeOpenText);

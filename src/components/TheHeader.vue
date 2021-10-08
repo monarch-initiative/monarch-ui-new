@@ -3,28 +3,53 @@
     <!-- title bar -->
     <div class="title">
       <!-- logo image and text -->
-      <router-link to="/" class="logo" :data-big="big">
+      <AppLink to="/" class="logo" :data-big="big" v-tooltip="'Homepage'">
         <Logo class="image" />
         <div class="text">Monarch<br />Intiative</div>
-      </router-link>
+      </AppLink>
 
       <!-- nav toggle button -->
-      <Button
+      <button
         class="button"
-        :icon="expanded ? 'times' : 'bars'"
         @click="expanded = !expanded"
         :aria-label="
           expanded ? 'Collapse navigation menu' : 'Expand navigation menu'
         "
-      />
+      >
+        <AppIcon :icon="expanded ? 'times' : 'bars'" />
+      </button>
     </div>
 
     <!-- navigation bar -->
     <nav :data-big="big" :data-expanded="expanded">
-      <router-link class="link" to="/explore">Explore</router-link>
-      <router-link class="link" to="/tools">Tools</router-link>
-      <router-link class="link" to="/about">About</router-link>
-      <router-link class="link" to="/help">Help</router-link>
+      <AppLink
+        class="link"
+        to="/explore"
+        v-tooltip="'Dive right in and use Monarch'"
+      >
+        Explore
+      </AppLink>
+      <AppLink
+        class="link"
+        to="/tools"
+        v-tooltip="'Monarch\'s ecosystem of tools'"
+      >
+        Tools
+      </AppLink>
+      <AppLink
+        class="link"
+        to="/about"
+        v-tooltip="'Citing, licensing, sources, and other info'"
+      >
+        About
+      </AppLink>
+      <AppLink
+        class="link"
+        to="/help"
+        v-tooltip="'Feedback, docs, guides, contact, and more'"
+      >
+        Help
+      </AppLink>
     </nav>
   </header>
 </template>
@@ -94,17 +119,15 @@ header[data-big="true"] {
   justify-content: space-between;
 }
 
-.button {
-  display: none;
+@media (min-width: $wrap) {
+  .button {
+    display: none;
+  }
 }
 
 @media (max-width: $wrap) {
   .title {
     width: 100%;
-  }
-
-  .button {
-    display: unset;
   }
 }
 
@@ -155,7 +178,7 @@ header[data-big="true"] {
 
 nav {
   display: flex;
-  padding: 20px;
+  margin: 20px;
 }
 
 .link {
@@ -179,7 +202,7 @@ nav:hover .link:hover {
   nav {
     flex-direction: column;
     position: unset;
-    padding: 10px;
+    margin: 10px;
     width: 100%;
   }
 

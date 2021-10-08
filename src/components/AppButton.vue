@@ -1,0 +1,71 @@
+<template>
+  <component
+    class="button"
+    :is="component"
+    :to="to"
+    @click="click"
+    :data-design="design"
+  >
+    <span v-if="text">{{ text }}</span>
+    <AppIcon :icon="icon" v-if="icon" />
+    <slot />
+  </component>
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+
+// component that looks like a button that either does something or goes somewhere
+export default defineComponent({
+  props: {
+    // text to show
+    text: String,
+    // icon to show
+    icon: String,
+    // visual design
+    // default: filled
+    // "plain": no fill
+    design: String,
+    // location to link to
+    to: String,
+    // on click action
+    click: Function,
+  },
+  computed: {
+    component() {
+      if (this.to) return "AppLink";
+      else return "button";
+    },
+  },
+});
+</script>
+
+<style lang="scss" scoped>
+.button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  min-width: 200px;
+  min-height: 40px;
+  margin: 20px;
+  padding: 0 20px;
+  background: $theme-light;
+  color: $off-black;
+  border-radius: 3px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background $fast;
+
+  &:hover {
+    background: $light-gray;
+  }
+
+  &[data-design="plain"] {
+    background: none;
+    color: currentColor;
+  }
+}
+</style>
