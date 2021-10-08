@@ -71,7 +71,7 @@ export default defineComponent({
   computed: {
     // is big version (home page)
     big() {
-      return this.$route.name === "home";
+      return String(this.$route.name).toLowerCase() === "home";
     },
   },
 });
