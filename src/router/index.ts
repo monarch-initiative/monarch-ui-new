@@ -1,3 +1,4 @@
+import { nextTick } from "vue";
 import {
   createRouter,
   createWebHistory,
@@ -31,38 +32,42 @@ const redirect404 = (to: RouteLocationNormalized) => {
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "home",
+    name: "Home",
     component: Home,
     beforeEnter: redirect404,
   },
   {
+    path: "/home",
+    redirect: "/",
+  },
+  {
     path: "/explore",
-    name: "explore",
+    name: "Explore",
     component: Explore,
   },
   {
     path: "/tools",
-    name: "tools",
+    name: "Tools",
     component: Tools,
   },
   {
     path: "/about",
-    name: "about",
+    name: "About",
     component: About,
   },
   {
     path: "/cite",
-    name: "cite",
+    name: "Cite",
     component: Cite,
   },
   {
     path: "/team",
-    name: "team",
+    name: "Team",
     component: Team,
   },
   {
     path: "/help",
-    name: "help",
+    name: "Help",
     component: Help,
   },
 ];
@@ -99,6 +104,15 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
   scrollBehavior,
+});
+
+// set document title after route
+router.afterEach((to) => {
+  // https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
+  nextTick(() => {
+    const page = typeof to.name === "string" ? to.name : "";
+    document.title = process.env.VUE_APP_TITLE_SHORT + " - " + page;
+  });
 });
 
 export default router;

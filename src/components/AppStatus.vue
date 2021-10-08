@@ -39,7 +39,6 @@ export default defineComponent({
       if (!response.ok) throw new Error(`${this.url} Response not OK`);
       this.status = "success";
     } catch (error) {
-      console.log(error);
       this.status = "error";
       this.$emit("error");
     }
