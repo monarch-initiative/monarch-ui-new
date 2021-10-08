@@ -2,7 +2,6 @@ import { nextTick } from "vue";
 import {
   createRouter,
   createWebHistory,
-  RouteLocationNormalized,
   RouteRecordRaw,
   RouterScrollBehavior,
 } from "vue-router";
@@ -15,16 +14,13 @@ import Team from "@/views/about/Team.vue";
 import Help from "@/views/help/Help.vue";
 
 // handle redirect from 404
-const redirect404 = (to: RouteLocationNormalized) => {
-  // get place to redirect to from session storage (saved from 404 page)
+const redirect404 = () => {
+  // look for redirect in session storage (saved from 404 page)
   const redirect = window.sessionStorage.redirect;
-  if (redirect && redirect !== to.path) {
+  if (redirect) {
     console.info({ redirect });
     delete window.sessionStorage.redirect;
     return redirect;
-  } else {
-    // cancel redirect
-    return null;
   }
 };
 
