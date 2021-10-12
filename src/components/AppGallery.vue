@@ -13,6 +13,7 @@ export default defineComponent({
     // size of items in gallery
     // default: medium
     // "small": smaller items and spacing
+    // "big": larger and fewer items
     size: String,
   },
 });
@@ -21,24 +22,32 @@ export default defineComponent({
 <style lang="scss" scoped>
 $two: 900px;
 $one: 600px;
+$cell: minmax(100px, 1fr);
 
 .gallery {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: $cell $cell $cell;
   gap: 40px;
-  max-width: 1000px;
   margin: 40px auto;
 
   &[data-size="small"] {
     gap: 10px;
   }
 
+  &[data-size="big"] {
+    grid-template-columns: $cell $cell;
+
+    @media (max-width: $one) {
+      grid-template-columns: $cell;
+    }
+  }
+
   @media (max-width: $two) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: $cell $cell;
   }
 
   @media (max-width: $one) {
-    grid-template-columns: 1fr;
+    grid-template-columns: $cell;
   }
 }
 

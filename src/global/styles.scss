@@ -89,7 +89,7 @@ li {
 
 blockquote {
   padding: 20px;
-  background: $theme-light;
+  background: $light-gray;
   text-align: left;
 }
 
@@ -135,4 +135,19 @@ h3 {
 
 .center {
   text-align: center;
+}
+
+.truncate:not(:focus) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: help;
+}
+
+.truncate-2:not(:focus) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  cursor: help;
 }

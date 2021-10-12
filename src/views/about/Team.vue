@@ -7,9 +7,8 @@
       biologists, scientists, and programmers from various schools and
       institutes.
     </p>
-    <p>
-      <strong>Jump to:</strong>&nbsp;
-      <template class="link" v-for="(group, index) in team" :key="index">
+    <p class="center">
+      <template v-for="(group, index) in team" :key="index">
         <a :href="'#' + toKebabCase(group.name)">{{ group.name }}</a>
         <span v-if="index !== team.length - 1"> · </span>
       </template>
@@ -102,10 +101,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.link {
-  margin: 0 5px;
-}
-
 .image {
   display: block;
   max-width: 100%;
