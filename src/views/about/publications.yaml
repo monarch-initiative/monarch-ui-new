@@ -371,12 +371,6 @@
       issue: "10(12):2004-15"
       link: "[pubmed](http://www.ncbi.nlm.nih.gov/pubmed/26562621)"
 
-    - title: "Computational evaluation of exome sequence data using human and model organism phenotypes improves diagnostic efficiency"
-      authors: "Bone WP, Washington NL, Buske OJ, Adams DR, Davis J, Draper D, Flynn ED, Girdea M, Godfrey R, Golas G, Groden C, Jacobsen J, Köhler S, Lee EM, Links AE, Markello TC, Mungall CJ, Nehrebecky M, Robinson PN, Sincan M, Soldatos AG, Tifft CJ, Toro C, Trang H, Valkanas E, Vasilevsky N, Wahl C, Wolfe LA, Boerkoel CF, Brudno M, Haendel MA, Gahl WA, Smedley D"
-      journal: "Genet Med"
-      issue: "18(6):608-17"
-      link: "[pubmed](http://www.ncbi.nlm.nih.gov/pubmed/26562225)"
-
 - year: 2015
   list:
     - title: "Human genotype-phenotype databases: aims, challenges and opportunities"
