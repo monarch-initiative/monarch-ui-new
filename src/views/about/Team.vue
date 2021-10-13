@@ -23,7 +23,7 @@
         class="icon"
         icon="history"
         v-if="group.alumni"
-        v-tooltip="'Previous group'"
+        v-tooltip="'Alumni group'"
       />
     </h2>
     <AppLink :to="group.link">
@@ -51,23 +51,39 @@
   <!-- funding sources -->
   <AppSection>
     <h2 v-heading>Funding</h2>
-    <AppGallery>
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-    </AppGallery>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-      cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-      est laborum.
-    </p>
+    <p>The Monarch Initiative is funded by:</p>
+    <ul>
+      <li>
+        OFFICE OF THE DIRECTOR, NATIONAL INSTITUTES OF HEALTH
+        <br />
+        <AppLink to="https://reporter.nih.gov/project-details/10173498">
+          The Monarch Initiative: Linking diseases to model organism
+          resources</AppLink
+        >
+        <br />
+        2R24OD011883-10A1
+      </li>
+      <li>
+        NATIONAL HUMAN GENOME RESEARCH INSTITUTE, Center of Excellence in Genome
+        Sciences
+        <br />
+        <AppLink to="https://reporter.nih.gov/project-details/10448140">
+          A phenomics-first resource for interpretation of variants
+        </AppLink>
+        <br />
+        7RM1HG010860-02
+      </li>
+      <li>
+        NATIONAL HUMAN GENOME RESEARCH INSTITUTE
+        <br />
+        <AppLink to="https://reporter.nih.gov/project-details/10269338">
+          The Human Phenotype Ontology: Accelerating Computational Integration
+          of Clinical Data for Genomics</AppLink
+        >
+        <br />
+        1U24HG011449-01A1
+      </li>
+    </ul>
   </AppSection>
 </template>
 

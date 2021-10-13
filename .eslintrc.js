@@ -25,7 +25,6 @@ module.exports = {
     "vuejs-accessibility/anchor-has-content": [
       "error",
       {
-        components: ["Anchor"],
         accessibleDirectives: ["tooltip"],
       },
     ],

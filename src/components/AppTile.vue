@@ -1,6 +1,6 @@
 <template>
   <div class="tile" :data-design="design">
-    <AppLink :to="to || ''" class="button">
+    <AppLink :to="to || ''" class="button" :aria-label="title">
       <AppIcon :icon="icon" />
     </AppLink>
     <div class="title">{{ title }}</div>

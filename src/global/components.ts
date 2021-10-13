@@ -7,10 +7,12 @@ import AppInput from "@/components/AppInput.vue";
 import AppPlaceholder from "@/components/AppPlaceholder.vue";
 import AppGallery from "@/components/AppGallery.vue";
 import AppTile from "@/components/AppTile.vue";
-import AppMarkdownify from "@/components/AppMarkdownify.vue";
+import AppMarkdown from "@/components/AppMarkdown.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import AppCitation from "@/components/AppCitation.vue";
 import AppMember from "@/components/AppMember.vue";
+import AppAccordion from "@/components/AppAccordion.vue";
+import AppDetail from "@/components/AppDetail.vue";
 
 // list of components we want to be available in any vue file without importing them
 const globalComponents: Record<string, Component> = {
@@ -22,10 +24,12 @@ const globalComponents: Record<string, Component> = {
   AppPlaceholder,
   AppGallery,
   AppTile,
-  AppMarkdownify,
+  AppMarkdown,
   AppStatus,
   AppCitation,
   AppMember,
+  AppAccordion,
+  AppDetail,
 };
 
 export default globalComponents;

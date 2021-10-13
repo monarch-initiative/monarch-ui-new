@@ -19,7 +19,11 @@ export default defineComponent({
   computed: {
     isExternal() {
       const url = (this.to || "") as string;
-      return url.startsWith("http") || url.startsWith("mailto:");
+      return (
+        url.startsWith("http") ||
+        url.startsWith("ftp") ||
+        url.startsWith("mailto:")
+      );
     },
   },
 });

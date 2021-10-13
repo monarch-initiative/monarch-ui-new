@@ -2,17 +2,16 @@
   <blockquote class="citation">
     <div v-if="title" class="truncate-2" tabindex="0">{{ title }}</div>
     <div v-if="authors" class="truncate-2" tabindex="0">{{ authors }}</div>
-    <div
+    <AppMarkdown
       v-if="_details"
       class="truncate-2"
       tabindex="0"
-      v-html="_details"
-    ></div>
+      :source="_details"
+    />
   </blockquote>
 </template>
 
 <script lang="ts">
-import { micromark } from "micromark";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -26,11 +25,7 @@ export default defineComponent({
   },
   computed: {
     _details() {
-      return micromark(
-        (this.details || []).filter((e) => e).join("&nbsp; · &nbsp;")
-      )
-        .replaceAll("<p>", "")
-        .replaceAll("</p>", "");
+      return (this.details || []).filter((e) => e).join("&nbsp; · &nbsp;");
     },
   },
 });
