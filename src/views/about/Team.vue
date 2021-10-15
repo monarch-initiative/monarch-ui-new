@@ -26,7 +26,7 @@
         v-tooltip="'Alumni group'"
       />
     </h2>
-    <AppLink :to="group.link">
+    <AppLink v-if="group.link" :to="group.link" :aria-label="group.name">
       <img
         v-if="getSrc(group.image)"
         class="image"

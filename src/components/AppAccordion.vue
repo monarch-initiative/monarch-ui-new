@@ -2,7 +2,7 @@
   <button
     class="title"
     @click="expanded = !expanded"
-    v-tooltip="expanded ? 'Collapse section' : 'Expand section'"
+    v-tooltip="expanded ? 'Collapse' : 'Expand for more info'"
   >
     <span class="text">
       <slot name="title" />

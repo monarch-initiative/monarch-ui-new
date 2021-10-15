@@ -18,7 +18,7 @@ export default defineComponent({
   },
   computed: {
     isExternal() {
-      const url = (this.to || "") as string;
+      const url = String(this.to || "");
       return (
         url.startsWith("http") ||
         url.startsWith("ftp") ||

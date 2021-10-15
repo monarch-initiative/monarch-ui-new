@@ -36,7 +36,7 @@ export default defineComponent({
   computed: {
     // debounced version of on scroll listener for performance
     debounced(): DebouncedFunc<() => void> {
-      return debounce(this.onScroll, 100);
+      return debounce(this.onScroll, 100, { leading: true, maxWait: 100 });
     },
   },
   mounted() {

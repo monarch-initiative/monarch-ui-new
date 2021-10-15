@@ -17,7 +17,7 @@ import Terms from "@/views/about/Terms.vue";
 import Help from "@/views/help/Help.vue";
 
 // handle redirect from 404
-const redirect404 = () => {
+const redirect404 = (): string | void => {
   // look for redirect in session storage (saved from 404 page)
   const redirect = window.sessionStorage.redirect;
   if (redirect) {
@@ -27,7 +27,7 @@ const redirect404 = () => {
 };
 
 // list of routes and corresponding components
-const routes: Array<RouteRecordRaw> = [
+export const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Home",

@@ -7,7 +7,7 @@ module.exports = {
   // jest needs its own loaders analogous to webpack loaders
   transform: {
     "\\.vue$": "vue-jest",
-    "\\.yaml$": "jest-yaml-transform",
+    "\\.yaml$": "yaml-jest",
     "\\.md$": "jest-raw-loader",
     "\\.txt$": "jest-raw-loader",
   },

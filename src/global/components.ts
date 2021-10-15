@@ -13,6 +13,7 @@ import AppCitation from "@/components/AppCitation.vue";
 import AppMember from "@/components/AppMember.vue";
 import AppAccordion from "@/components/AppAccordion.vue";
 import AppDetail from "@/components/AppDetail.vue";
+import AppCheckbox from "@/components/AppCheckbox.vue";
 
 // list of components we want to be available in any vue file without importing them
 const globalComponents: Record<string, Component> = {
@@ -30,6 +31,7 @@ const globalComponents: Record<string, Component> = {
   AppMember,
   AppAccordion,
   AppDetail,
+  AppCheckbox,
 };
 
 export default globalComponents;

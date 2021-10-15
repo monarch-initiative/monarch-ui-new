@@ -2,22 +2,25 @@
   <AppSection>
     <h1>Sources</h1>
 
-    <AppButton
-      icon="download"
-      text="All Downloads"
-      to="https://archive.monarchinitiative.org/latest/"
-    />
+    <!-- filters -->
+    <p class="center">
+      <AppCheckbox v-model="showDatasets" icon="database">
+        Datasets
+      </AppCheckbox>
+      <AppCheckbox v-model="showOntologies" icon="puzzle-piece">
+        Ontologies
+      </AppCheckbox>
+    </p>
 
     <!-- list of all sources -->
-    <AppAccordion v-for="(source, index) in sources" :key="index">
+    <AppAccordion v-for="(source, index) in filteredSources" :key="index">
       <!-- title of accordion button -->
       <template #title>
-        {{ source.name || "" }}
+        {{ source.name || source.id || "" }}
         <AppIcon
           v-if="source.type"
           class="icon"
           :icon="source.type === 'dataset' ? 'database' : 'puzzle-piece'"
-          v-tooltip="toStartCase(source.type)"
         />
       </template>
 
@@ -61,10 +64,8 @@
           :src="getSrc(source.image)"
           :alt="source.name"
         />
-        <p v-if="source.description">
-          {{ source.description }}
-        </p>
-        <AppMarkdown v-if="source.use" :source="source.use" component="p" />
+        <p v-if="source.description" v-html="source.description" />
+        <AppMarkdown v-if="source.usage" :source="source.usage" component="p" />
 
         <!-- row of file download links -->
         <p v-if="source.files?.length">
@@ -83,76 +84,105 @@
       </template>
     </AppAccordion>
   </AppSection>
+
+  <!-- all downloads -->
+  <AppSection>
+    <p class="center">
+      A listing of all data that Monarch archives for use in its knowledge graph
+      and tools:
+    </p>
+    <AppButton
+      icon="download"
+      text="All Downloads"
+      to="https://archive.monarchinitiative.org/latest/"
+    />
+  </AppSection>
+
+  <!-- notes -->
+  <AppSection>
+    <h2 v-heading>Note about licensing</h2>
+    <p>
+      Each of these sources has its own license. We have described this
+      licensing challenge extensively on
+      <AppLink to="https://reusabledata.org/">reusabledata.org</AppLink> and our
+      <AppLink to="https://doi.org/10.1371/journal.pone.0213090"
+        >2018 PlosOne publication</AppLink
+      >. Many of the specific data resources we use in Monarch have been
+      evaluated according to our reusabledata.org rubric; see the
+      <AppLink to="https://reusabledata.org/#our-sources-data"
+        >corpus of evaluations here</AppLink
+      >.
+    </p>
+  </AppSection>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { startCase } from "lodash";
 import sources from "./sources.yaml";
-
-// expected shape of source
-interface Source {
-  // static (manually written out in sources.yaml)
-  name?: string;
-  type?: string;
-  link?: string;
-  license?: string;
-  image?: string;
-  description?: string;
-  usage?: string;
-  vocabulary?: string;
-  iri?: string;
-  reusable?: string;
-
-  // dynamic (retrieved from biolink api)
-  date: string;
-  rdf: string;
-  files: Array<string>;
-}
+import { getDatasets } from "@/api/datasets";
+import { getOntologies } from "@/api/ontologies";
+import { Source } from "./sources.types";
 
 // sources page
 export default defineComponent({
   data() {
     return {
       // sources data
-      sources,
+      sources: sources as Array<Source>,
+      // whether to show dataset sources
+      showDatasets: true,
+      // whether to show ontology sources
+      showOntologies: true,
     };
   },
   methods: {
-    // get source img src with fallback if not found
-    getSrc(image: string) {
+    // get source img src
+    getSrc(image = "") {
       try {
-        return require(`@/assets/sources/${image}`);
+        if (image.startsWith("http")) return image;
+        else return require(`@/assets/sources/${image}`);
       } catch (error) {
         return false;
       }
     },
     // get filename from full path
-    getFilename(path: string) {
+    getFilename(path = "") {
       return path.split("/").pop();
     },
-    // expose toStartCase
-    toStartCase(string: string) {
-      return startCase(string);
+  },
+  computed: {
+    filteredSources(): Array<Source> {
+      return this.sources.filter(
+        (source: Source) =>
+          (source.type === "dataset" && this.showDatasets) ||
+          (source.type === "ontology" && this.showOntologies)
+      );
     },
   },
-  mounted() {
-    this.sources = this.sources
-      // merge dynamic source info into static source info
-      .map(
-        (source: Source): Source => ({
-          ...source,
-          // temporary dummy dynamic info
-          date: "2021-10-13",
-          rdf: "https://monarchinitiative.org/",
-          files: Array(10).fill("https://monarchinitiative.org/test-file.txt"),
-        })
+  async mounted() {
+    // get dynamic source info
+    const datasets = await getDatasets();
+    const ontologies = await getOntologies();
+    const dynamic = [...datasets, ...ontologies];
+
+    // merge dynamic source info into static source info
+    for (const source of this.sources) {
+      // find match between static and dynamic by id
+      const match = dynamic.find((d: Source) => source.id === d.id);
+
+      // merge props
+      if (match) Object.assign(source, match);
+    }
+
+    // sort sources alphabetically by name or id
+    this.sources.sort((a: Source, b: Source) => {
+      if (
+        (a?.name || a?.id || "").toLowerCase() <
+        (b?.name || b?.id || "").toLowerCase()
       )
-      // sort alphabetically by name
-      .sort((a: Source, b: Source) => {
-        if ((a?.name || "") < (b?.name || "")) return -1;
-        else return 1;
-      });
+        return -1;
+      else return 1;
+    });
   },
 });
 </script>
@@ -166,7 +196,7 @@ export default defineComponent({
 }
 
 .icon {
-  margin-left: 10px;
+  margin-left: 5px;
   color: $gray;
 }
 
