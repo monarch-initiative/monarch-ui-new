@@ -40,7 +40,6 @@
         v-for="(member, memberIndex) in group.members"
         :key="memberIndex"
         :name="member.name"
-        :image="member.image"
         :role="member.role"
         :link="member.link"
         :alumni="group.alumni || member.alumni"
@@ -51,7 +50,6 @@
   <!-- funding sources -->
   <AppSection>
     <h2 v-heading>Funding</h2>
-    <p>The Monarch Initiative is funded by:</p>
     <ul>
       <li>
         OFFICE OF THE DIRECTOR, NATIONAL INSTITUTES OF HEALTH

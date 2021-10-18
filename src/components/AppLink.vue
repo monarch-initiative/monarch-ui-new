@@ -1,8 +1,11 @@
 <template>
-  <a v-if="isExternal" :href="to || ''" target="_blank">
+  <span v-if="!to">
+    <slot />
+  </span>
+  <a v-else-if="isExternal" :href="to" target="_blank">
     <slot />
   </a>
-  <router-link v-else :to="to || ''">
+  <router-link v-else :to="to">
     <slot />
   </router-link>
 </template>
