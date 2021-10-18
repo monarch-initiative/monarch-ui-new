@@ -292,7 +292,7 @@
       issue: "79:9-14"
       link: "[pubmed](http://www.ncbi.nlm.nih.gov/pubmed/28532962)"
 
-    - title: "\"Opposite-of\"-Information Improves Similarity Calculations in Phenotype Ontologies"
+    - title: '"Opposite-of"-Information Improves Similarity Calculations in Phenotype Ontologies'
       authors: "Koehler S, Robinson PN, Mungall CJ"
       journal: "bioRxiv"
       issue: "doi:10.1101/108977"
