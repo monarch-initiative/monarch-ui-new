@@ -268,7 +268,7 @@
       issue: "49(8):1231-1238"
       link: "[pubmed](http://www.ncbi.nlm.nih.gov/pubmed/28650483)"
 
-    - title: "Once Doesn’t Count: Phenotype-Driven Gene Hunting in Cohorts"
+    - title: "Once Doesn't Count: Phenotype-Driven Gene Hunting in Cohorts"
       authors: "Robinson PN"
       journal: "Human Mutat"
       issue: "38(5):469"
@@ -292,9 +292,10 @@
       issue: "79:9-14"
       link: "[pubmed](http://www.ncbi.nlm.nih.gov/pubmed/28532962)"
 
-    - title: "Opposite-of’-Information Improves Similarity Calculations in Phenotype Ontologies"
+    - title: "\"Opposite-of\"-Information Improves Similarity Calculations in Phenotype Ontologies"
       authors: "Koehler S, Robinson PN, Mungall CJ"
-      journal: "Koehler S, Robinson PN, Mungall CJ (2017)  Opposite-of’-Information Improves Similarity Calculations in Phenotype Ontologies"
+      journal: "bioRxiv"
+      issue: "doi:10.1101/108977"
       link: "[bioRxiv](https://www.biorxiv.org/content/10.1101/108977v1)"
 
     - title: "Ontobee: A linked ontology data server to support ontology term dereferencing, linkage, query and integration"
@@ -377,13 +378,13 @@
       authors: "Brookes AJ, Robinson PN"
       journal: "Nature Rev Genet"
       issue: "16(12):702-15"
-      link: "[pubmed](http://www.ncbi.nlm.nih.gov/pubmed/%20%20%20%2026553330)"
+      link: "[pubmed](http://www.ncbi.nlm.nih.gov/pubmed/26553330)"
 
     - title: "The digital revolution in phenotyping"
       authors: "Oellrich A, Collier N, Groza T, Rebholz-Schuhmann D, Shah N, Bodenreider O, Boland MR, Georgiev I, Liu H, Livingston K, Luna A, Mallon AM, Manda P, Robinson PN, Rustici G, Simon M, Wang L, Winnenburg R, Dumontier M"
       journal: "Brief Bioinform"
       issue: "17(5):819-30"
-      link: "[abstract](http://bib.oxfordjournals.org/cgi/pmidlookup?view=long&pmid=26420780)"
+      link: "[pubmed](https://pubmed.ncbi.nlm.nih.gov/26420780/)"
 
     - title: "Phenotype-driven strategies for exome prioritization of human Mendelian disease genes"
       authors: "Smedley D, Robinson PN"

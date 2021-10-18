@@ -41,7 +41,6 @@ export default defineComponent({
       try {
         return require(`@/assets/team/members/${image}.jpg`);
       } catch (error) {
-        console.log(image);
         return require(`@/assets/team/_member.jpg`);
       }
     },
