@@ -1,11 +1,21 @@
 <template>
-  <header :data-big="big">
+  <header :data-home="home">
     <!-- title bar -->
     <div class="title">
       <!-- logo image and text -->
-      <AppLink to="/" class="logo" :data-big="big" v-tooltip="'Homepage'">
+      <AppLink
+        :to="home ? '' : '/'"
+        class="logo"
+        :data-home="home"
+        v-tooltip="home ? '' : 'Homepage'"
+      >
         <Logo class="image" />
-        <div class="text">Monarch<br />Intiative</div>
+        <!-- make logo text the h1 on homepage -->
+        <component :is="home ? 'h1' : 'div'" class="text">
+          Monarch
+          <br />
+          Intiative
+        </component>
       </AppLink>
 
       <!-- nav toggle button -->
@@ -21,7 +31,7 @@
     </div>
 
     <!-- navigation bar -->
-    <nav :data-big="big" :data-expanded="expanded">
+    <nav :data-home="home" :data-expanded="expanded">
       <AppLink
         class="link"
         to="/explore"
@@ -69,8 +79,8 @@ export default defineComponent({
     };
   },
   computed: {
-    // is big version (home page)
-    big() {
+    // is home page (big) version
+    home() {
       return String(this.$route.name).toLowerCase() === "home";
     },
   },
@@ -98,7 +108,7 @@ header {
   }
 }
 
-header[data-big="true"] {
+header[data-home="true"] {
   justify-content: center;
   min-height: 300px;
 
@@ -147,8 +157,10 @@ header[data-big="true"] {
 }
 
 .text {
+  margin: 0;
   padding: 5px;
   font-size: 1rem;
+  font-weight: 400;
   text-align: center;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -161,15 +173,15 @@ header[data-big="true"] {
 }
 
 @media (min-width: $wrap) {
-  .logo[data-big="true"] {
+  .logo[data-home="true"] {
     flex-direction: column;
   }
 
-  .logo[data-big="true"] .image {
+  .logo[data-home="true"] .image {
     height: 70px;
   }
 
-  .logo[data-big="true"] .text {
+  .logo[data-home="true"] .text {
     font-size: 1.1rem;
   }
 }
@@ -212,7 +224,7 @@ nav:hover .link:hover {
 }
 
 @media (min-width: $wrap) {
-  nav[data-big="true"] {
+  nav[data-home="true"] {
     position: absolute;
     top: 0;
     right: 0;
