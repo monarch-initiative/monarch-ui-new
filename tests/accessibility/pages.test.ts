@@ -1,17 +1,19 @@
+import { mount } from "@vue/test-utils";
 import router, { routes } from "@/router";
 import { axe, toHaveNoViolations } from "jest-axe";
+import { mountOptions } from "../setup";
 import App from "@/App.vue";
-import { mountComponent } from "..";
 
 expect.extend(toHaveNoViolations);
 
 // get list of page paths to check
 const pages = routes.map((route) => route.path);
+// const pages = ["/sources"];
 
 test(
   "Page accessibility checks",
   async () => {
-    const wrapper = await mountComponent(App);
+    const wrapper = await mount(App, mountOptions);
     for (const page of pages) {
       router.push(page);
       await router.isReady();
@@ -20,6 +22,6 @@ test(
       expect(results).toHaveNoViolations();
     }
   },
-  // allow multiple seconds per page
+  // allow plenty of seconds per page
   pages.length * 10 * 1000
 );

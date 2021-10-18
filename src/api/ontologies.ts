@@ -1,3 +1,4 @@
+import axios from "axios";
 import yaml from "js-yaml";
 import { Source } from "@/views/about/sources.types";
 
@@ -20,9 +21,8 @@ interface Ontology {
 
 // get metadata of all ontologies listed on obo
 export const getOntologies = async (): Promise<Array<Source>> => {
-  const response = await fetch(obo);
-  const text = await response.text();
-  const json = (await yaml.load(text)) as Response;
+  const { data } = await axios.get(obo, { responseType: "text" });
+  const json = (await yaml.load(data as string)) as Response;
   const { ontologies = [] } = json;
 
   // convert results to desired format
