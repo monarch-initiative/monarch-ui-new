@@ -13,7 +13,7 @@ const pages = routes.map((route) => route.path);
 test(
   "Page accessibility checks",
   async () => {
-    const wrapper = await mount(App, mountOptions);
+    const wrapper = mount(App, mountOptions);
     for (const page of pages) {
       router.push(page);
       await router.isReady();

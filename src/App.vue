@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import "normalize.css"; // keep this before global styles
+import "normalize.css"; // keep this before global styles so they take priority
 import "@/global/icons";
 import "@/global/styles.scss";
 import TheHeader from "@/components/TheHeader.vue";
