@@ -23,15 +23,15 @@ jobs:
       - name: Install packages
         run: yarn install
       - name: Define cache key
-        id: define-key
+        id: define
         run: echo "::set-output name=key::tests-cache-key-${{ date "+%s" }}"
       - name: Store cache
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_PATH }}
-          key: ${{ steps.define-key.outputs.key }}
+          key: ${{ steps.define.outputs.key }}
     - outputs:
-        cache-key: ${{ steps.define-key.outputs.key }}
+        cache-key: ${{ steps.define.outputs.key }}
 
   # test that app can build without issues
   test-build:
