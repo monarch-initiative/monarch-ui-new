@@ -43,6 +43,9 @@
     - name: Shahim Essaid
       role: Ontologist
       link: https://tislab.org/members/shahim-essaid.html
+    - name: Bryan Laraway
+      role: Data Wrangler
+      link: https://www.linkedin.com/in/bryanlaraway/
 
 - name: The Jackson Laboratory
   image: jackson.png
@@ -131,9 +134,6 @@
   link: https://www.ohsu.edu/
   alumni: true
   members:
-    - name: Bryan Laraway
-      role: Data Wrangler
-      link: https://www.linkedin.com/in/bryanlaraway/
     - name: Lilly Winfree
       role: Science and Data Analyst
       link: https://www.linkedin.com/in/lilly-winfree-phd/
