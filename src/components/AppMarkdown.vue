@@ -1,5 +1,5 @@
 <template>
-  <span v-html="html"></span>
+  <component :is="component || 'div'" v-html="html" />
 </template>
 
 <script lang="ts">
@@ -10,11 +10,16 @@ import { micromark } from "micromark";
 // only use on a per paragraph basis. do not use with headings.
 export default defineComponent({
   props: {
+    // markdown input source
     source: String,
+    // what component to wrap source in (defaults to div)
+    component: String,
   },
   computed: {
     html() {
-      return micromark(this.source || "");
+      return micromark(this.source || "")
+        .replaceAll("<p>", "")
+        .replaceAll("</p>", "");
     },
   },
 });

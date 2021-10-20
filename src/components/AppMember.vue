@@ -20,6 +20,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { kebabCase, deburr } from "lodash";
 
 // team member profile/portrait
 export default defineComponent({
@@ -28,8 +29,6 @@ export default defineComponent({
     name: String,
     // their role
     role: String,
-    // their image filename
-    image: String,
     // link to bio
     link: String,
     // whether or not member is a past contributor
@@ -38,9 +37,9 @@ export default defineComponent({
   computed: {
     // get member img src with fallback if not found
     src() {
+      const image = kebabCase(deburr((this.name || "").toLowerCase()));
       try {
-        if (!this.image) throw new Error();
-        return require(`@/assets/team/members/${this.image}`);
+        return require(`@/assets/team/members/${image}.jpg`);
       } catch (error) {
         return require(`@/assets/team/_member.jpg`);
       }
@@ -57,15 +56,15 @@ export default defineComponent({
   max-width: 100%;
   color: $black;
   text-decoration: none;
+}
 
-  &:hover {
-    color: $theme;
-  }
+a.member:hover {
+  color: $theme;
 }
 
 .image {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   flex-shrink: 0;
   border-radius: 999px;
   overflow: hidden;

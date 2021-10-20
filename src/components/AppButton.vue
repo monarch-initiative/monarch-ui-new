@@ -4,7 +4,8 @@
     :is="component"
     :to="to"
     @click="click"
-    :data-design="design"
+    :data-icon="icon ? true : false"
+    :data-text="text ? true : false"
   >
     <span v-if="text">{{ text }}</span>
     <AppIcon :icon="icon" v-if="icon" />
@@ -22,10 +23,6 @@ export default defineComponent({
     text: String,
     // icon to show
     icon: String,
-    // visual design
-    // default: filled
-    // "plain": no fill
-    design: String,
     // location to link to
     to: String,
     // on click action
@@ -63,9 +60,11 @@ export default defineComponent({
     background: $light-gray;
   }
 
-  &[data-design="plain"] {
-    background: none;
-    color: currentColor;
+  &[data-icon="true"][data-text="false"] {
+    min-width: unset;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
   }
 }
 </style>

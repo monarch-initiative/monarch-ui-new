@@ -7,7 +7,7 @@ module.exports = {
   // jest needs its own loaders analogous to webpack loaders
   transform: {
     "\\.vue$": "vue-jest",
-    "\\.yaml$": "jest-yaml-transform",
+    "\\.yaml$": "yaml-jest",
     "\\.md$": "jest-raw-loader",
     "\\.txt$": "jest-raw-loader",
   },
@@ -16,4 +16,7 @@ module.exports = {
   // https://github.com/facebook/jest/issues/9292
   // https://www.npmjs.com/package/@vue/cli-plugin-unit-jest#transform-dependencies-from-node_modules
   transformIgnorePatterns: [],
+
+  // setup to run before each test (but after jest env and globals installed)
+  setupFilesAfterEnv: ["./tests/setup.ts"],
 };

@@ -11,8 +11,10 @@ const mounted = (
   element: ReferenceElement,
   { value }: DirectiveBinding
 ): void => {
-  tippy(element, { content: value });
-  element.setAttribute("aria-label", value);
+  if (value) {
+    tippy(element, { content: value });
+    element.setAttribute("aria-label", value);
+  }
 };
 
 // when element updated
@@ -20,13 +22,17 @@ const updated = (
   element: ReferenceElement,
   { value }: DirectiveBinding
 ): void => {
-  (element._tippy as Instance).setContent(value);
-  element.setAttribute("aria-label", value);
+  if (value) {
+    (element._tippy as Instance)?.setContent(value);
+    element.setAttribute("aria-label", value);
+  } else {
+    (element._tippy as Instance)?.destroy();
+  }
 };
 
 // when element destroyed
 const beforeUnmount = (element: ReferenceElement): void => {
-  (element._tippy as Instance).destroy();
+  (element._tippy as Instance)?.destroy();
 };
 
 // create directive

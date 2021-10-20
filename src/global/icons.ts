@@ -18,6 +18,12 @@ import {
   faTimesCircle,
   faCircleNotch,
   faHistory,
+  faAngleUp,
+  faAngleDown,
+  faPuzzlePiece,
+  faHome,
+  faDownload,
+  faCalendarAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 
@@ -40,6 +46,12 @@ library.add(faCheckCircle);
 library.add(faTimesCircle);
 library.add(faCircleNotch);
 library.add(faHistory);
+library.add(faAngleUp);
+library.add(faAngleDown);
+library.add(faPuzzlePiece);
+library.add(faHome);
+library.add(faDownload);
+library.add(faCalendarAlt);
 
 // social
 library.add(faEnvelopeOpenText);

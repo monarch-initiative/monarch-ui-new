@@ -20,13 +20,23 @@ module.exports = {
     ecmaVersion: 2020,
   },
 
-  // rules overrides (KEEP THIS AS MINIMAL AS POSSIBLE)
+  // rule overrides (KEEP THIS AS MINIMAL AS POSSIBLE)
   rules: {
+    // count v-tooltip (which adds an accessible aria-label attribute) as accessible
     "vuejs-accessibility/anchor-has-content": [
       "error",
       {
-        components: ["Anchor"],
         accessibleDirectives: ["tooltip"],
+      },
+    ],
+    // allow nesting a control in a label without a for attribute (perfectly fine practice)
+    "vuejs-accessibility/label-has-for": [
+      "error",
+      {
+        required: {
+          some: ["nesting", "id"],
+        },
+        allowChildren: true,
       },
     ],
   },

@@ -29,16 +29,20 @@
     <AppCitation
       title="Navigating the Phenotype Frontier: The Monarch Initiative"
       authors="McMurry et al."
-      journal="GENETICS"
-      issue="August 1, 2016 vol. 203 no. 4 1491-1495"
-      doi="10.1534/genetics.116.188870"
+      :details="[
+        'GENETICS',
+        'August 1, 2016 vol. 203 no. 4 1491-1495',
+        '10.1534/genetics.116.188870',
+      ]"
     />
     <AppCitation
       title="The Monarch Initiative in 2019: an integrative data and analytic platform connecting phenotypes to genotypes across species"
       authors="Shefchek et al."
-      journal="Nucleic Acids Res."
-      issue="2020 Jan 8; 48 (Database issue): D704–D715. Published online 2019 Nov 08."
-      doi="10.1093/nar/gkz997"
+      :details="[
+        'Nucleic Acids Res.',
+        '2020 Jan 8; 48 (Database issue): D704–D715. Published online 2019 Nov 08.',
+        '10.1093/nar/gkz997',
+      ]"
     />
   </AppSection>
 

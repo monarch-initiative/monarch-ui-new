@@ -11,21 +11,23 @@ import Tools from "@/views/tools/Tools.vue";
 import About from "@/views/about/About.vue";
 import Cite from "@/views/about/Cite.vue";
 import Team from "@/views/about/Team.vue";
+import Publications from "@/views/about/Publications.vue";
+import Sources from "@/views/about/Sources.vue";
+import Terms from "@/views/about/Terms.vue";
 import Help from "@/views/help/Help.vue";
 
 // handle redirect from 404
-const redirect404 = () => {
+const redirect404 = (): string | void => {
   // look for redirect in session storage (saved from 404 page)
   const redirect = window.sessionStorage.redirect;
   if (redirect) {
-    console.info({ redirect });
     delete window.sessionStorage.redirect;
     return redirect;
   }
 };
 
 // list of routes and corresponding components
-const routes: Array<RouteRecordRaw> = [
+export const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Home",
@@ -62,6 +64,21 @@ const routes: Array<RouteRecordRaw> = [
     component: Team,
   },
   {
+    path: "/publications",
+    name: "Publications",
+    component: Publications,
+  },
+  {
+    path: "/sources",
+    name: "Sources",
+    component: Sources,
+  },
+  {
+    path: "/terms",
+    name: "Terms",
+    component: Terms,
+  },
+  {
     path: "/help",
     name: "Help",
     component: Help,
@@ -77,7 +94,7 @@ const scrollBehavior: RouterScrollBehavior = (to, from, savedPosition) => {
 
   if (to.hash) {
     // get target element of hash
-    let target = document.querySelector(to.hash);
+    let target = document.getElementById(to.hash.slice(1));
 
     if (target) {
       // move target to parent section element if first child

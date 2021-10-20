@@ -1,15 +1,15 @@
 import { mount } from "@vue/test-utils";
 import AppLink from "@/components/AppLink.vue";
-import { mountOptions } from ".";
+import { mountOptions } from "../setup";
 
-it("Renders as link", () => {
+test("Renders as link", async () => {
   const props = { to: "https://google.com/" };
-  const wrapper = mount(AppLink, { ...mountOptions, props });
+  const wrapper = await mount(AppLink, { ...mountOptions, props });
   expect(wrapper.find("a").exists()).toBeTruthy();
 });
 
-it("Renders as router-link", () => {
+test("Renders as router-link", async () => {
   const props = { to: "/about" };
-  const wrapper = mount(AppLink, { ...mountOptions, props });
+  const wrapper = await mount(AppLink, { ...mountOptions, props });
   expect(wrapper.findComponent({ name: "router-link" }).exists()).toBeTruthy();
 });

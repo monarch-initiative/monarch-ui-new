@@ -1,8 +1,11 @@
 <template>
-  <a v-if="isExternal" :href="to || ''" target="_blank">
+  <span v-if="!to">
+    <slot />
+  </span>
+  <a v-else-if="isExternal" :href="to" target="_blank">
     <slot />
   </a>
-  <router-link v-else :to="to || ''">
+  <router-link v-else :to="to">
     <slot />
   </router-link>
 </template>
@@ -18,8 +21,12 @@ export default defineComponent({
   },
   computed: {
     isExternal() {
-      const url = (this.to || "") as string;
-      return url.startsWith("http") || url.startsWith("mailto:");
+      const url = String(this.to || "");
+      return (
+        url.startsWith("http") ||
+        url.startsWith("ftp") ||
+        url.startsWith("mailto:")
+      );
     },
   },
 });

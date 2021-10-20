@@ -22,11 +22,16 @@ jobs:
           cache: yarn
       - name: Install packages
         run: yarn install
+      - name: Define cache key
+        id: define-key
+        run: echo "::set-output name=key::tests-cache-key-$(date '+%s')"
       - name: Store cache
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_PATH }}
-          key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
+          key: ${{ steps.define-key.outputs.key }}
+    outputs:
+      cache-key: ${{ steps.define-key.outputs.key }}
 
   # test that app can build without issues
   test-build:
@@ -39,7 +44,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_PATH }}
-          key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
+          key: ${{ needs.install-cache.outputs.cache-key }}
       - name: Run test
         run: yarn build
 
@@ -54,7 +59,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_PATH }}
-          key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
+          key: ${{ needs.install-cache.outputs.cache-key }}
       - name: Run test
         run: yarn test:lint
 
@@ -69,7 +74,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_PATH }}
-          key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
+          key: ${{ needs.install-cache.outputs.cache-key }}
       - name: Run test
         run: yarn test:unit
 
@@ -85,7 +90,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_PATH }}
-          key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
+          key: ${{ needs.install-cache.outputs.cache-key }}
       - name: Run test
         run: yarn test:e2e
 
@@ -100,6 +105,6 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_PATH }}
-          key: test-cache-${{ env.GITHUB_RUN_NUMBER }}
+          key: ${{ needs.install-cache.outputs.cache-key }}
       - name: Run test
         run: yarn test:axe
