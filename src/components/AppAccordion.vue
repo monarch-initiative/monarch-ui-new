@@ -1,9 +1,5 @@
 <template>
-  <button
-    class="title"
-    @click="expanded = !expanded"
-    v-tooltip="expanded ? 'Collapse' : 'Expand for more info'"
-  >
+  <button class="title" @click="expanded = !expanded" :aria-expanded="expanded">
     <span class="text">
       <slot name="title" />
     </span>
