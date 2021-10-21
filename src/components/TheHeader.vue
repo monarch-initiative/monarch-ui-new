@@ -22,9 +22,7 @@
       <button
         class="button"
         @click="expanded = !expanded"
-        :aria-label="
-          expanded ? 'Collapse navigation menu' : 'Expand navigation menu'
-        "
+        :aria-expanded="expanded"
       >
         <AppIcon :icon="expanded ? 'times' : 'bars'" />
       </button>
@@ -127,6 +125,7 @@ header[data-home="true"] {
 .title {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 @media (min-width: $wrap) {

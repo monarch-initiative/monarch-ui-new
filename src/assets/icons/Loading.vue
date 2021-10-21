@@ -1,0 +1,26 @@
+<template>
+  <svg viewBox="-50 -50 100 100">
+    <path
+      fill="none"
+      stroke="currentColor"
+      stroke-width="10"
+      d="M 0 40 A 40 40 0 1 1 40 0"
+    />
+  </svg>
+</template>
+
+<style lang="scss" scoped>
+svg {
+  height: 1em;
+  animation: spin 2s linear infinite forwards;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

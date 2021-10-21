@@ -121,7 +121,7 @@ import { defineComponent } from "vue";
 import sources from "./sources.yaml";
 import { getDatasets } from "@/api/datasets";
 import { getOntologies } from "@/api/ontologies";
-import { Source } from "./sources.types";
+import { Source } from "@/types/sources";
 
 // sources page
 export default defineComponent({
