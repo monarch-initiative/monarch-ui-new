@@ -1,8 +1,8 @@
 <html>
   <body>
     <script type="text/javascript">
-      const { origin, pathname, search } = location;
-      window.sessionStorage.redirect = pathname + search;
+      const { origin, pathname, search, hash } = location;
+      window.sessionStorage.redirect = pathname + search + hash;
       location.replace("/");
     </script>
   </body>
