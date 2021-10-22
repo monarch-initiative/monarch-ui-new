@@ -1,5 +1,10 @@
 <template>
-  <button class="title" @click="expanded = !expanded" :aria-expanded="expanded">
+  <button
+    class="title"
+    @click="expanded = !expanded"
+    :aria-expanded="expanded"
+    :aria-label="expanded ? 'Collapse section' : 'Expand section'"
+  >
     <span class="text">
       <slot name="title" />
     </span>

@@ -20,6 +20,7 @@ const icons: Record<string, string> = {
   loading: "loading",
   paused: "pause-circle",
   success: "check-circle",
+  warning: "exclamation-circle",
   error: "times-circle",
   unknown: "question-circle",
 };
@@ -38,7 +39,6 @@ export default defineComponent({
     // "big": vertical layout with bigger icon and text
     design: String,
   },
-
   computed: {
     icon() {
       return icons[this.code || "unknown"];
@@ -68,12 +68,16 @@ export default defineComponent({
     color: $success;
   }
 
+  &[data-code="warning"] {
+    color: $warning;
+  }
+
   &[data-code="error"] {
     color: $error;
   }
 
   &[data-code="unknown"] {
-    color: $warning;
+    color: $gray;
   }
 
   &[data-design="big"] {

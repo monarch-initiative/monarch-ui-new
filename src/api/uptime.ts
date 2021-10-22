@@ -1,3 +1,4 @@
+import { handleError } from "./index";
 import axios from "axios";
 import { Status } from "@/types/status";
 
@@ -26,31 +27,39 @@ enum Code {
   down = 9,
 }
 
+// get list of uptimerobot monitors and their statuses, names, and other info
 export const getStatuses = async (): Promise<Array<Status>> => {
-  // get data from endpoint
-  const params = { api_key: key };
-  const { data } = await axios.post(api, null, { params });
-  const { monitors = [] } = data as Response;
+  try {
+    // get data from endpoint
+    const params = { api_key: key };
+    const { data } = await axios.post(api, null, { params });
+    const { monitors = [] } = data as Response;
 
-  // map uptimerobot status codes to our simplified status codes in status component
-  const codeMap = {
-    [Code.paused]: "paused",
-    [Code.unchecked]: "unknown",
-    [Code.up]: "success",
-    [Code.seems_down]: "error",
-    [Code.down]: "error",
-  };
+    // map uptimerobot status codes to our simplified status codes in status component
+    const codeMap = {
+      [Code.paused]: "paused",
+      [Code.unchecked]: "unknown",
+      [Code.up]: "success",
+      [Code.seems_down]: "error",
+      [Code.down]: "error",
+    };
 
-  // convert results to desired format
-  const results = monitors.map(
-    (monitor: Monitor): Status => ({
-      code: (typeof monitor.status !== "undefined"
-        ? codeMap[monitor.status]
-        : "unknown") as Status["code"],
-      text: monitor.friendly_name,
-      link: page + "/" + (monitor.id || ""),
-    })
-  );
+    // convert results to desired format
+    const results = monitors.map(
+      (monitor: Monitor): Status => ({
+        code: (typeof monitor.status !== "undefined"
+          ? codeMap[monitor.status]
+          : "unknown") as Status["code"],
+        text: monitor.friendly_name,
+        link: page + "/" + (monitor.id || ""),
+      })
+    );
 
-  return results;
+    return results;
+  } catch (error) {
+    handleError(error);
+  }
+
+  // default return
+  return [];
 };

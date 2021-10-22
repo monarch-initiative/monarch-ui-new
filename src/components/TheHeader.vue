@@ -23,6 +23,9 @@
         class="button"
         @click="expanded = !expanded"
         :aria-expanded="expanded"
+        :aria-label="
+          expanded ? 'Close navigation menu' : 'Expand navigation menu'
+        "
       >
         <AppIcon :icon="expanded ? 'times' : 'bars'" />
       </button>

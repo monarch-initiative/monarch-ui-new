@@ -16,6 +16,7 @@ import {
   faTools,
   faPauseCircle,
   faCheckCircle,
+  faExclamationCircle,
   faTimesCircle,
   faQuestionCircle,
   faHistory,
@@ -46,6 +47,7 @@ library.add(faHandsHelping);
 library.add(faTools);
 library.add(faPauseCircle);
 library.add(faCheckCircle);
+library.add(faExclamationCircle);
 library.add(faTimesCircle);
 library.add(faQuestionCircle);
 library.add(faHistory);

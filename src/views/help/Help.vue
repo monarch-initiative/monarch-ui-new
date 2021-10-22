@@ -22,29 +22,14 @@
     </p>
   </AppSection>
 
-  <!-- docs -->
-  <AppSection>
-    <h2 v-heading>How to use Monarch</h2>
-    <AppGallery>
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-    </AppGallery>
-    <AppButton to="/tools" text="API and Tools" icon="tools" />
-    <AppButton to="/sources" text="Ontologies and Datasets" icon="database" />
-  </AppSection>
-
   <!-- api and service statuses -->
   <AppSection>
-    <h2 v-heading>Monarch Services</h2>
+    <h2 v-heading>Statuses</h2>
     <p v-if="loading" class="center">
       <AppStatus code="loading" text="Loading service statuses" />
     </p>
     <p v-else-if="error" class="center">
-      <AppStatus code="error" text="Error getting statuses from Uptime Robot" />
+      <AppStatus code="warning" :text="error" />
     </p>
     <div v-else class="statuses">
       <AppStatus
@@ -61,6 +46,21 @@
       text="More Details"
       icon="arrow-right"
     />
+  </AppSection>
+
+  <!-- docs -->
+  <AppSection>
+    <h2 v-heading>How to use Monarch</h2>
+    <AppGallery>
+      <AppPlaceholder />
+      <AppPlaceholder />
+      <AppPlaceholder />
+      <AppPlaceholder />
+      <AppPlaceholder />
+      <AppPlaceholder />
+    </AppGallery>
+    <AppButton to="/tools" text="API and Tools" icon="tools" />
+    <AppButton to="/sources" text="Ontologies and Datasets" icon="database" />
   </AppSection>
 
   <!-- last resort contact methods -->
@@ -86,16 +86,15 @@ export default defineComponent({
       // whether we're still loading statuses
       loading: true,
       // whether an error has occurred trying to query uptimerobot
-      error: false,
+      error: "",
     };
   },
   async mounted() {
     // get statuses from uptimerobot api
     try {
-      await new Promise((resolve) => window.setTimeout(resolve, 1000));
       this.statuses = await getStatuses();
     } catch (error) {
-      this.error = true;
+      this.error = (error as Error).message;
     }
     this.loading = false;
   },

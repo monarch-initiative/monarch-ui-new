@@ -2,6 +2,7 @@
 export const Codes = [
   "loading",
   "success",
+  "warning",
   "error",
   "paused",
   "unknown",
