@@ -1,3 +1,4 @@
+import { sleep } from './../util/debug';
 import { nextTick } from "vue";
 import {
   createRouter,
@@ -85,7 +86,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
 ];
 
-const scrollBehavior: RouterScrollBehavior = (to, from, savedPosition) => {
+const scrollBehavior: RouterScrollBehavior = async (to, from, savedPosition) => {
   // scroll to previous position if exists
   if (savedPosition) return savedPosition;
 
@@ -108,6 +109,9 @@ const scrollBehavior: RouterScrollBehavior = (to, from, savedPosition) => {
       result = { el: target, top: offset };
     }
   }
+
+  // https://github.com/vuejs/vue-router-next/issues/1147
+  await sleep(1);
 
   return result;
 };
