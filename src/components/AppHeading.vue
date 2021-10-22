@@ -21,24 +21,29 @@ import { kebabCase } from "lodash";
 
 // set heading level and tag, i.e. h1, h2, h3, etc
 function setTag(this: Heading) {
+  // level to set
   let level;
-  // if level manually specified, use that
+
+  // if level manually specified, just use that
   if (this.level) {
     level = this.level;
   }
-  // otherwise, determine level of heading based on its position in document
+
+  // otherwise, determine automatically based on heading's position in document
   else {
     // heading element
     const element = this?.$refs?.heading as HTMLElement;
     // parent section element
     const section = element.closest("section") as HTMLElement;
+    // is there an existing h1 (besides self)
+    let h1 = document.querySelector("h1");
+    if (h1 === element) h1 = null;
 
     // if heading is first element in section
     if (element.matches(":first-child")) {
-      // if section is first section in <main> and if no h1s already
+      // if section is first section in <main> and if no other h1s already
       // (only one h1 per page for accessibility)
-      if (section.matches(":first-child") && !document.querySelector("h1"))
-        level = 1;
+      if (section.matches(":first-child") && !h1) level = 1;
       // if section is latter
       else level = 2;
     }
@@ -48,7 +53,7 @@ function setTag(this: Heading) {
     }
   }
 
-  // set actual tag/component
+  // set tag/component
   this.tag = "h" + level;
 }
 
@@ -74,7 +79,7 @@ const heading = defineComponent({
   },
   data() {
     return {
-      // tag of heading
+      // tag of heading (default to blank to avoid conflict with automatic level)
       tag: "",
       // hash link of heading
       link: "",
@@ -85,8 +90,8 @@ const heading = defineComponent({
     setLink.call(this);
   },
   updated() {
-    // setTag.call(this);
-    // setLink.call(this);
+    setTag.call(this);
+    setLink.call(this);
   },
 });
 
