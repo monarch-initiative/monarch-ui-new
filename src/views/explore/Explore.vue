@@ -1,5 +1,5 @@
 <template>
   <AppSection>
-    <h1>Explore</h1>
+    <AppHeading>Explore</AppHeading>
   </AppSection>
 </template>

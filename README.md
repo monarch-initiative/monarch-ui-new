@@ -34,3 +34,5 @@ See `variables.scss` for a palette of acceptable colors/fonts/etc to use.
 
 To simplify app/router/etc configuration, the app only works when served from root.
 Hosting on e.g. GitHub Pages like monarch-initiative.github.io/monarch-ui is not possible without changes.
+
+Whenever possible, use custom components like `AppHeading` and `AppLink` instead of native elements like `h1` and `a`.

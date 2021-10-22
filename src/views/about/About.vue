@@ -1,7 +1,7 @@
 <template>
   <!-- brief overview -->
   <AppSection>
-    <h1>About</h1>
+    <AppHeading>About</AppHeading>
     <p>
       The Monarch Initiative is an extensive, comprehensive knowledge graph and
       ecosystem of tools made for the benefit of clinicians, researchers, and
@@ -48,7 +48,7 @@
 
   <!-- social media -->
   <AppSection>
-    <h2 v-heading>Stay up to date</h2>
+    <AppHeading>Stay up to date</AppHeading>
     <p class="center">
       Be the first to know when we have important updates or other fun news.
     </p>
@@ -84,7 +84,7 @@
 
   <!-- mission statement -->
   <AppSection>
-    <h2 v-heading>Our Vision</h2>
+    <AppHeading>Our Vision</AppHeading>
     <ol>
       <li>
         Connect cross-species gene, genotype, variant, disease, and phenotype

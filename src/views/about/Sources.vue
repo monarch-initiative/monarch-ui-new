@@ -1,6 +1,6 @@
 <template>
   <AppSection>
-    <h1>Sources</h1>
+    <AppHeading>Sources</AppHeading>
 
     <!-- filters -->
     <p class="center">
@@ -100,7 +100,7 @@
 
   <!-- notes -->
   <AppSection>
-    <h2 v-heading>Note about licensing</h2>
+    <AppHeading>Note about licensing</AppHeading>
     <p>
       Each of these sources has its own license. We have described this
       licensing challenge extensively on

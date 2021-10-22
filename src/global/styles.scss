@@ -106,30 +106,6 @@ strong {
   font-weight: 600;
 }
 
-// anchors
-
-.anchor {
-  display: inline-block;
-  width: 0;
-  margin-left: 10px;
-  opacity: 0;
-  text-decoration: none;
-  font-size: 0.8em;
-  transition: opacity $fast;
-}
-
-.anchor:focus {
-  opacity: 1;
-}
-
-h1,
-h2,
-h3 {
-  &:hover .anchor {
-    opacity: 1;
-  }
-}
-
 // tooltips
 
 .tippy-box {

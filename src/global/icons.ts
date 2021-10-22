@@ -1,5 +1,6 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
+  faLink,
   faBars,
   faTimes,
   faBalanceScale,
@@ -33,6 +34,7 @@ import Loading from "@/assets/icons/Loading.vue";
 // create collection/"palette" of useable icons
 
 // general
+library.add(faLink);
 library.add(faBars);
 library.add(faTimes);
 library.add(faBalanceScale);

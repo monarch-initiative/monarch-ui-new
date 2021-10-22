@@ -1,7 +1,7 @@
 <template>
   <!-- main links -->
   <AppSection>
-    <h1>Help</h1>
+    <AppHeading>Help</AppHeading>
     <AppTile
       icon="comment"
       title="Feedback Form"
@@ -24,7 +24,7 @@
 
   <!-- api and service statuses -->
   <AppSection>
-    <h2 v-heading>Statuses</h2>
+    <AppHeading>Statuses</AppHeading>
     <p v-if="loading" class="center">
       <AppStatus code="loading" text="Loading service statuses" />
     </p>
@@ -50,7 +50,7 @@
 
   <!-- docs -->
   <AppSection>
-    <h2 v-heading>How to use Monarch</h2>
+    <AppHeading>How to use Monarch</AppHeading>
     <AppGallery>
       <AppPlaceholder />
       <AppPlaceholder />

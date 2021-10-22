@@ -1,10 +1,10 @@
 <template>
   <AppSection>
-    <h1>Terms of Use</h1>
+    <AppHeading>Terms of Use</AppHeading>
   </AppSection>
 
   <AppSection>
-    <h2 v-heading>License</h2>
+    <AppHeading>License</AppHeading>
     <p>
       This web application and its source code are licensed under the
       <AppLink to="https://opensource.org/licenses/BSD-3-Clause"
@@ -15,7 +15,7 @@
       tools, APIs, algorithms, and workflows can be found on the
       <AppLink to="/tools">tools page</AppLink>.
     </p>
-    <h2 v-heading>Tracking</h2>
+    <AppHeading>Tracking</AppHeading>
     <p>
       This web application tracks user behavior such as navigation and clicks
       through the use of HotJar and Google Analytics. These background
@@ -37,7 +37,7 @@
   </AppSection>
 
   <AppSection>
-    <h2 v-heading>Definitions</h2>
+    <AppHeading>Definitions</AppHeading>
     <p>
       The first-party software and resources used and referenced on this website
       &mdash; including but not limited to the Monarch Website (this website
@@ -47,13 +47,13 @@
       that develop and maintain the Monarch Tools are hereby collectively
       refered to as the "Monarch Initiative".
     </p>
-    <h2 v-heading>Intended use</h2>
+    <AppHeading>Intended use</AppHeading>
     <p>
       Monarch Tools should not be used for direct diagnostic use or medical
       decision-making. If you have any health questions about the information
       contained on this website, please contact a medical professional.
     </p>
-    <h2 v-heading>Disclaimer</h2>
+    <AppHeading>Disclaimer</AppHeading>
     <p>
       YOU ACKNOWLEDGE THAT THE MONARCH TOOLS, INCLUDING WITHOUT LIMITATION, THE
       DATABASE OF INFORMATION CONTAINED THEREIN, IS EXPERIMENTAL AND ACADEMIC IN
@@ -75,7 +75,7 @@
       OR WITH ANY OF THESE TERMS, YOUR SOLE AND EXCLUSIVE REMEDY IS TO
       DISCONTINUE USING THE MONARCH TOOLS.
     </p>
-    <h2 v-heading>Limitation of liability</h2>
+    <AppHeading>Limitation of liability</AppHeading>
     <p>
       IN NO EVENT SHALL THE MONARCH INITIATIVE, OR THEIR RESPECTIVE DIRECTORS,
       OFFICERS, EMPLOYEES, AGENTS, LICENSEES, LICENSORS, CONTRIBUTORS, FOUNDERS
@@ -99,7 +99,7 @@
   </AppSection>
 
   <AppSection>
-    <h2 v-heading>Variant interpretation</h2>
+    <AppHeading>Variant interpretation</AppHeading>
     <p>
       The Monarch Initiative sources variant interpretations as provided by the
       original source, with no consolidation of results, and always has a link

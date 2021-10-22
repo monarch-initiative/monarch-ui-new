@@ -1,7 +1,7 @@
 <template>
   <!-- brief intro -->
   <AppSection>
-    <h1>Team</h1>
+    <AppHeading>Team</AppHeading>
     <p>
       Monarch is made possible thanks to a diverse and dedicated team of
       biologists, scientists, and programmers from various schools and
@@ -17,7 +17,7 @@
 
   <!-- list each group -->
   <AppSection v-for="(group, groupIndex) in team" :key="groupIndex" width="big">
-    <h2 v-heading>
+    <AppHeading>
       {{ group.name }}
       <AppIcon
         class="icon"
@@ -25,7 +25,7 @@
         v-if="group.alumni"
         v-tooltip="'Alumni group'"
       />
-    </h2>
+    </AppHeading>
     <AppLink v-if="group.link" :to="group.link" :aria-label="group.name">
       <img
         v-if="getSrc(group.image)"
@@ -49,7 +49,7 @@
 
   <!-- funding sources -->
   <AppSection>
-    <h2 v-heading>Funding</h2>
+    <AppHeading>Funding</AppHeading>
     <ul>
       <li>
         OFFICE OF THE DIRECTOR, NATIONAL INSTITUTES OF HEALTH
