@@ -107,7 +107,7 @@ const scrollBehavior: RouterScrollBehavior = async (
     if (target) {
       // move target to parent section element if first child
       const parent = target.parentElement;
-      if (parent?.tagName === "section" && target.matches(":first-child"))
+      if (parent?.tagName === "SECTION" && target.matches(":first-child"))
         target = parent;
 
       // get offset to account for header
