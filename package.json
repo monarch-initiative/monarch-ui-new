@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test": "yarn test:lint && yarn test:unit && yarn test:e2e && yarn test:axe",
-    "test:unit": "vue-cli-service test:unit /AppHeading.test",
+    "test:unit": "vue-cli-service test:unit /unit",
     "test:e2e": "vue-cli-service test:e2e --headless",
     "test:axe": "vue-cli-service test:unit /axe",
     "test:lint": "vue-cli-service lint --no-fix",
