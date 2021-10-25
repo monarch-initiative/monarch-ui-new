@@ -15,7 +15,7 @@
 import { defineComponent, PropType } from "vue";
 import { Status } from "@/types/status";
 
-// font awesome icons for status codes
+// icons for status codes
 const icons: Record<string, string> = {
   loading: "loading",
   paused: "pause-circle",
@@ -56,48 +56,51 @@ export default defineComponent({
   margin: 20px;
   text-decoration: none;
 
-  &[data-code="loading"] {
-    color: $gray;
-  }
-
-  &[data-code="paused"] {
-    color: $gray;
-  }
-
-  &[data-code="success"] {
-    color: $success;
-  }
-
-  &[data-code="warning"] {
-    color: $warning;
-  }
-
-  &[data-code="error"] {
-    color: $error;
-  }
-
-  &[data-code="unknown"] {
-    color: $gray;
-  }
-
   &[data-design="big"] {
     flex-direction: column;
     margin: 0;
   }
 }
 
+// icon
+
 .icon {
   font-size: 1.5rem;
-  color: currentColor;
 }
+.status[data-design="big"] .icon {
+  font-size: 2rem;
+}
+
+.status[data-code="loading"] .icon {
+  color: $gray;
+}
+
+.status[data-code="paused"] .icon {
+  color: $gray;
+}
+
+.status[data-code="success"] .icon {
+  color: $success;
+}
+
+.status[data-code="warning"] .icon {
+  color: $warning;
+}
+
+.status[data-code="error"] .icon {
+  color: $error;
+}
+
+.status[data-code="unknown"] .icon {
+  color: $gray;
+}
+
+// text
 
 .text {
   font-size: 1.1rem;
   text-align: left;
-}
-
-.status[data-design="big"] .icon {
-  font-size: 2rem;
+  color: $dark-gray;
 }
 
 .status[data-design="big"] .text {

@@ -7,6 +7,7 @@ export const Codes = [
   "paused",
   "unknown",
 ] as const;
+
 export interface Status {
   code?: typeof Codes[number];
   text?: string;
