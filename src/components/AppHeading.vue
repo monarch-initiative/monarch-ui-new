@@ -30,7 +30,7 @@ function setTag(this: Heading) {
   }
 
   // otherwise, determine automatically based on heading's position in document
-  // https://dequeuniversity.com/rules/axe/4.1/page-has-heading-one?application=RuleDescription
+  // https://dequeuniversity.com/rules/axe/4.1/page-has-heading-one
   else {
     // heading element
     const element = this?.$refs?.heading as HTMLElement;
