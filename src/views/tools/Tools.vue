@@ -1,6 +1,6 @@
 <template>
   <AppSection>
-    <h1>Tools</h1>
+    <AppHeading>Tools</AppHeading>
     <p class="center">
       The architecture of the Monarch ecosystem. Click on an item to see it's
       documentation and licensing info.

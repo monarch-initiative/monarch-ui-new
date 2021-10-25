@@ -1,5 +1,5 @@
 <template>
-  <span v-if="!to">
+  <span v-if="!to" role="link">
     <slot />
   </span>
   <a v-else-if="isExternal" :href="to" target="_blank">

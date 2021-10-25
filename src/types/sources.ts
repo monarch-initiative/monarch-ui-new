@@ -1,5 +1,4 @@
-// possible properties of a source
-// chosen/constructed for convenience of display on sources page
+// possible properties of a source on the sources page
 export interface Source {
   name?: string;
   id?: string;

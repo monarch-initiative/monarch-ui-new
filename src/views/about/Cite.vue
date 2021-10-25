@@ -1,11 +1,11 @@
 <template>
   <AppSection>
-    <h1>Cite</h1>
+    <AppHeading>Cite</AppHeading>
   </AppSection>
 
   <!-- general acknowledgement -->
   <AppSection>
-    <h2 v-heading>Acknowledgement</h2>
+    <AppHeading>Acknowledgement</AppHeading>
     <p class="center">
       If you use Monarch, please acknolwedge us with a paragraph like the
       following:
@@ -21,7 +21,7 @@
 
   <!-- typical citing -->
   <AppSection>
-    <h2 v-heading>In Publications</h2>
+    <AppHeading>In Publications</AppHeading>
     <p class="center">
       To cite the use of Monarch in publications, please use these two
       references:
@@ -48,7 +48,7 @@
 
   <!-- citing data -->
   <AppSection>
-    <h2 v-heading>Data or Result</h2>
+    <AppHeading>Data or Result</AppHeading>
     <p>
       Because most of the association content in Monarch comes from external
       sources, please cite the original database records (e.g.
@@ -71,7 +71,7 @@
 
   <!-- citing pages -->
   <AppSection>
-    <h2 v-heading>Page or Algorithmic Results</h2>
+    <AppHeading>Page or Algorithmic Results</AppHeading>
     <p>
       To link to a specific page or to algorithmic results presented on this
       website, please use the URL in your browser's address bar or from the

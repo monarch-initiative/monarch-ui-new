@@ -1,47 +1,48 @@
 <template>
-  <div class="status" :aria-label="status">
-    <AppIcon class="icon" :icon="icon" :data-status="status" />
-    <div>{{ text }}</div>
-  </div>
+  <component
+    :is="link ? 'AppLink' : 'div'"
+    :to="link"
+    class="status"
+    :data-code="code"
+    :data-design="design"
+  >
+    <AppIcon class="icon" :icon="icon" :aria-label="code" />
+    <span class="text">{{ text }}</span>
+  </component>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
+import { Status } from "@/types/status";
 
-// font awesome icons for statuses
+// icons for status codes
 const icons: Record<string, string> = {
-  loading: "circle-notch",
+  loading: "loading",
+  paused: "pause-circle",
   success: "check-circle",
+  warning: "exclamation-circle",
   error: "times-circle",
+  unknown: "question-circle",
 };
 
+// an icon, text, and link showing the status of something
 export default defineComponent({
   props: {
-    // url to query and check status of
-    url: String,
+    // status code
+    code: String as PropType<Status["code"]>,
     // text to show under status icon
     text: String,
-  },
-  emits: ["error"],
-  data() {
-    return {
-      status: "loading",
-    };
+    // where to link to for more details about status
+    link: String,
+    // visual design
+    // default: horizontal layout
+    // "big": vertical layout with bigger icon and text
+    design: String,
   },
   computed: {
     icon() {
-      return icons[this.status || "loading"];
+      return icons[this.code || "unknown"];
     },
-  },
-  async mounted() {
-    try {
-      const response = await fetch(this.url || "");
-      if (!response.ok) throw new Error(`${this.url} Response not OK`);
-      this.status = "success";
-    } catch (error) {
-      this.status = "error";
-      this.$emit("error");
-    }
   },
 });
 </script>
@@ -51,34 +52,59 @@ export default defineComponent({
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   margin: 20px;
+  text-decoration: none;
+
+  &[data-design="big"] {
+    flex-direction: column;
+    margin: 0;
+  }
 }
+
+// icon
 
 .icon {
   font-size: 1.5rem;
-
-  &[data-status="loading"] {
-    color: $gray;
-    animation: spin 1s linear forwards infinite;
-  }
-
-  &[data-status="success"] {
-    color: $success;
-  }
-
-  &[data-status="error"] {
-    color: $error;
-  }
+}
+.status[data-design="big"] .icon {
+  font-size: 2rem;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.status[data-code="loading"] .icon {
+  color: $gray;
+}
+
+.status[data-code="paused"] .icon {
+  color: $gray;
+}
+
+.status[data-code="success"] .icon {
+  color: $success;
+}
+
+.status[data-code="warning"] .icon {
+  color: $warning;
+}
+
+.status[data-code="error"] .icon {
+  color: $error;
+}
+
+.status[data-code="unknown"] .icon {
+  color: $gray;
+}
+
+// text
+
+.text {
+  font-size: 1.1rem;
+  text-align: left;
+  color: $dark-gray;
+}
+
+.status[data-design="big"] .text {
+  color: $black;
+  text-align: center;
 }
 </style>

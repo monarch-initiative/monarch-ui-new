@@ -42,6 +42,7 @@ a {
 
 .social {
   display: flex;
+  font-size: 1.1rem;
 }
 
 .social a {

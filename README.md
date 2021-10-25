@@ -1,5 +1,7 @@
 <p align="center"><img src="https://user-images.githubusercontent.com/8326331/133301616-504b30a2-a015-4de8-b611-60539f133cfc.png" height="200px" /></p>
 
+![Uptime Robot status](https://img.shields.io/uptimerobot/status/m789510441-3925163e68cf6a3e0c57dc6c?label=website%20status) ![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m789510441-3925163e68cf6a3e0c57dc6c?label=website%20uptime%20ratio) ![Uptime Robot status](https://img.shields.io/uptimerobot/status/m789510547-1aca51572498527e9d4b9966?label=API%20status) ![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m789510547-1aca51572498527e9d4b9966?label=API%20uptime%20ratio)
+
 ## Development
 
 ### Figma sketch
@@ -32,3 +34,5 @@ See `variables.scss` for a palette of acceptable colors/fonts/etc to use.
 
 To simplify app/router/etc configuration, the app only works when served from root.
 Hosting on e.g. GitHub Pages like monarch-initiative.github.io/monarch-ui is not possible without changes.
+
+Whenever possible, use custom components like `AppHeading` and `AppLink` instead of native elements like `h1` and `a`.

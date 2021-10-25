@@ -1,5 +1,6 @@
 import { Component } from "vue";
 import AppSection from "@/components/AppSection.vue";
+import AppHeading from "@/components/AppHeading.vue";
 import AppLink from "@/components/AppLink.vue";
 import AppIcon from "@/components/AppIcon.vue";
 import AppButton from "@/components/AppButton.vue";
@@ -18,6 +19,7 @@ import AppCheckbox from "@/components/AppCheckbox.vue";
 // list of components we want to be available in any vue file without importing them
 const globalComponents: Record<string, Component> = {
   AppSection,
+  AppHeading,
   AppLink,
   AppIcon,
   AppButton,

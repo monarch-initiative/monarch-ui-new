@@ -1,7 +1,7 @@
 <template>
   <!-- main links -->
   <AppSection>
-    <h1>Help</h1>
+    <AppHeading>Help</AppHeading>
     <AppTile
       icon="comment"
       title="Feedback Form"
@@ -22,9 +22,35 @@
     </p>
   </AppSection>
 
+  <!-- api and service statuses -->
+  <AppSection>
+    <AppHeading>Statuses</AppHeading>
+    <p v-if="loading" class="center">
+      <AppStatus code="loading" text="Loading service statuses" />
+    </p>
+    <p v-else-if="error" class="center">
+      <AppStatus code="warning" :text="error" />
+    </p>
+    <div v-else class="statuses">
+      <AppStatus
+        v-for="(status, index) in statuses"
+        :key="index"
+        :code="status.code"
+        :text="status.text"
+        :link="status.link"
+        design="big"
+      />
+    </div>
+    <AppButton
+      to="https://stats.uptimerobot.com/XPRo9s4BJ5"
+      text="More Details"
+      icon="arrow-right"
+    />
+  </AppSection>
+
   <!-- docs -->
   <AppSection>
-    <h2 v-heading>How to use Monarch</h2>
+    <AppHeading>How to use Monarch</AppHeading>
     <AppGallery>
       <AppPlaceholder />
       <AppPlaceholder />
@@ -35,26 +61,6 @@
     </AppGallery>
     <AppButton to="/tools" text="API and Tools" icon="tools" />
     <AppButton to="/sources" text="Ontologies and Datasets" icon="database" />
-  </AppSection>
-
-  <!-- api statuses -->
-  <AppSection>
-    <AppStatus
-      v-for="(check, index) in checks"
-      :key="index"
-      :url="check.url"
-      :text="check.text"
-      @error="this.error = true"
-    />
-    <p class="center" v-if="error">
-      We’re aware of a problem and working to resolve the issue as fast as we
-      can
-    </p>
-    <AppButton
-      to="https://status.monarchinitiative.org/"
-      text="More Details"
-      icon="arrow-right"
-    />
   </AppSection>
 
   <!-- last resort contact methods -->
@@ -69,23 +75,41 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
-// dummy status checks. include one failure.
-const checks = [
-  { url: "https://monarchinitiative.org/", text: "BioLink API" },
-  { url: "https://monarchinitiative.org/", text: "BioLink API" },
-  { url: "https://monarchinitiative.org/", text: "BioLink API" },
-  { url: "https://google.org/", text: "BioLink API" },
-];
+import { getStatuses } from "@/api/uptime";
+import { Status } from "@/types/status";
 
 export default defineComponent({
   data() {
     return {
-      // list of status checks to perform
-      checks,
-      // whether an error has occurred in one of the checks
-      error: false,
+      // list of status checks to display
+      statuses: [] as Array<Status>,
+      // whether we're still loading statuses
+      loading: true,
+      // whether an error has occurred trying to query uptimerobot
+      error: "",
     };
+  },
+  async mounted() {
+    // get statuses from uptimerobot api
+    try {
+      this.statuses = await getStatuses();
+    } catch (error) {
+      this.error = (error as Error).message;
+    }
+    this.loading = false;
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.statuses {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 100px);
+  grid-template-rows: repeat(auto-fit, 80px);
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
+  justify-items: center;
+  margin: 40px 0;
+}
+</style>

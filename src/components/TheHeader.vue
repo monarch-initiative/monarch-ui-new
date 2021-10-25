@@ -22,8 +22,9 @@
       <button
         class="button"
         @click="expanded = !expanded"
+        :aria-expanded="expanded"
         :aria-label="
-          expanded ? 'Collapse navigation menu' : 'Expand navigation menu'
+          expanded ? 'Close navigation menu' : 'Expand navigation menu'
         "
       >
         <AppIcon :icon="expanded ? 'times' : 'bars'" />
@@ -80,8 +81,13 @@ export default defineComponent({
   },
   computed: {
     // is home page (big) version
-    home() {
+    home(): boolean {
       return String(this.$route.name).toLowerCase() === "home";
+    },
+  },
+  watch: {
+    $route() {
+      this.expanded = false;
     },
   },
 });
@@ -127,6 +133,7 @@ header[data-home="true"] {
 .title {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 @media (min-width: $wrap) {

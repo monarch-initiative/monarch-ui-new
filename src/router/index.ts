@@ -15,6 +15,7 @@ import Publications from "@/views/about/Publications.vue";
 import Sources from "@/views/about/Sources.vue";
 import Terms from "@/views/about/Terms.vue";
 import Help from "@/views/help/Help.vue";
+import { sleep } from "@/util/debug";
 
 // handle redirect from 404
 const redirect404 = (): string | void => {
@@ -85,7 +86,14 @@ export const routes: Array<RouteRecordRaw> = [
   },
 ];
 
-const scrollBehavior: RouterScrollBehavior = (to, from, savedPosition) => {
+const scrollBehavior: RouterScrollBehavior = async (
+  to,
+  from,
+  savedPosition
+) => {
+  // https://github.com/vuejs/vue-router-next/issues/1147
+  await sleep(0);
+
   // scroll to previous position if exists
   if (savedPosition) return savedPosition;
 
@@ -99,7 +107,7 @@ const scrollBehavior: RouterScrollBehavior = (to, from, savedPosition) => {
     if (target) {
       // move target to parent section element if first child
       const parent = target.parentElement;
-      if (parent?.tagName === "section" && target.matches(":first-child"))
+      if (parent?.tagName === "SECTION" && target.matches(":first-child"))
         target = parent;
 
       // get offset to account for header

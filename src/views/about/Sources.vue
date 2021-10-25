@@ -1,6 +1,6 @@
 <template>
   <AppSection>
-    <h1>Sources</h1>
+    <AppHeading>Sources</AppHeading>
 
     <!-- filters -->
     <p class="center">
@@ -100,7 +100,7 @@
 
   <!-- notes -->
   <AppSection>
-    <h2 v-heading>Note about licensing</h2>
+    <AppHeading>Note about licensing</AppHeading>
     <p>
       Each of these sources has its own license. We have described this
       licensing challenge extensively on
@@ -121,7 +121,7 @@ import { defineComponent } from "vue";
 import sources from "./sources.yaml";
 import { getDatasets } from "@/api/datasets";
 import { getOntologies } from "@/api/ontologies";
-import { Source } from "./sources.types";
+import { Source } from "@/types/sources";
 
 // sources page
 export default defineComponent({

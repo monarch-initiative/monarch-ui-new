@@ -1,15 +1,15 @@
 <template>
   <AppSection design="fill">
-    <h2>Explore</h2>
+    <AppHeading>Explore</AppHeading>
     <AppInput placeholder="Search for something" />
   </AppSection>
   <AppSection>
-    <h2 v-heading>What is Monarch?</h2>
+    <AppHeading>What is Monarch?</AppHeading>
     <AppPlaceholder />
     <AppButton to="/about" text="Learn more" icon="arrow-right" />
   </AppSection>
   <AppSection>
-    <h2 v-heading>How to use Monarch</h2>
+    <AppHeading>How to use Monarch</AppHeading>
     <AppGallery>
       <AppPlaceholder />
       <AppPlaceholder />
@@ -20,7 +20,7 @@
     </AppGallery>
   </AppSection>
   <AppSection>
-    <h2 v-heading>Who's using Monarch</h2>
+    <AppHeading>Who's using Monarch</AppHeading>
     <AppGallery>
       <AppPlaceholder />
       <AppPlaceholder />

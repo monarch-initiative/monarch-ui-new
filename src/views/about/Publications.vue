@@ -1,6 +1,6 @@
 <template>
   <AppSection>
-    <h1>Publications</h1>
+    <AppHeading>Publications</AppHeading>
     <p class="center">
       <template
         class="link"
@@ -15,7 +15,7 @@
 
   <!-- by year -->
   <AppSection v-for="(group, index) in publications" :key="index" width="big">
-    <h2 v-heading>{{ group.year }}</h2>
+    <AppHeading>{{ group.year }}</AppHeading>
     <AppGallery size="big">
       <AppCitation
         v-for="(publication, item) in group.list"
