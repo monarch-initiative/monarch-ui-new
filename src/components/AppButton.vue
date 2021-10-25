@@ -43,10 +43,11 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   gap: 10px;
-  min-width: 200px;
+  min-width: 200px; // fallback
+  min-width: min(200px, calc(100% - 40px));
   min-height: 40px;
   margin: 20px;
-  padding: 0 20px;
+  padding: 5px 20px;
   background: $theme-light;
   color: $off-black;
   border-radius: 3px;
