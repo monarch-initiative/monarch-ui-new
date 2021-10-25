@@ -1,5 +1,5 @@
 <template>
-  <component :is="tag || 'div'" ref="heading">
+  <component :is="tag || 'div'" ref="heading" :id="link">
     <!-- heading content -->
     <slot />
 
@@ -61,14 +61,9 @@ function setTag(this: Heading) {
 function setLink(this: Heading) {
   // heading element
   const element = this?.$refs?.heading as HTMLElement;
-  // parent section element
-  const section = element.closest("section") as HTMLElement;
 
-  // if heading right at top of page, don't have link because no point
-  if (element.matches(":first-child") && section.matches(":first-child"))
-    this.link = "";
-  // otherwise, determine link from text content of heading
-  else this.link = kebabCase(element.innerText);
+  // determine link from text content of heading
+  this.link = kebabCase(element.textContent || "");
 }
 
 // heading component with anchor link and (optionally) automatic level
