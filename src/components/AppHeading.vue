@@ -1,5 +1,5 @@
 <template>
-  <component :is="tag || 'div'" ref="heading">
+  <component :is="tag || 'div'" ref="heading" :id="link">
     <!-- heading content -->
     <slot />
 
@@ -30,27 +30,22 @@ function setTag(this: Heading) {
   }
 
   // otherwise, determine automatically based on heading's position in document
+  // https://dequeuniversity.com/rules/axe/4.1/page-has-heading-one
   else {
     // heading element
     const element = this?.$refs?.heading as HTMLElement;
-    // parent section element
-    const section = element.closest("section") as HTMLElement;
-    // is there an existing h1 (besides self)
-    let h1 = document.querySelector("h1");
-    if (h1 === element) h1 = null;
 
-    // if heading is first element in section
-    if (element.matches(":first-child")) {
-      // if section is first section in <main> and if no other h1s already
-      // (only one h1 per page for accessibility)
-      if (section.matches(":first-child") && !h1) level = 1;
-      // if section is latter
-      else level = 2;
-    }
-    // if heading is latter
-    else {
-      level = 3;
-    }
+    // if heading is first in parent
+    const firstInParent = element.matches("*:first-child");
+    // if heading is first in document
+    const firstInDoc = element.matches(
+      "main > section:first-child > *:first-child, main > *:first-child"
+    );
+
+    // determine level
+    if (firstInDoc) level = 1;
+    else if (firstInParent) level = 2;
+    else level = 3;
   }
 
   // set tag/component
@@ -61,14 +56,9 @@ function setTag(this: Heading) {
 function setLink(this: Heading) {
   // heading element
   const element = this?.$refs?.heading as HTMLElement;
-  // parent section element
-  const section = element.closest("section") as HTMLElement;
 
-  // if heading right at top of page, don't have link because no point
-  if (element.matches(":first-child") && section.matches(":first-child"))
-    this.link = "";
-  // otherwise, determine link from text content of heading
-  else this.link = kebabCase(element.innerText);
+  // determine link from text content of heading
+  this.link = kebabCase(element.textContent || "");
 }
 
 // heading component with anchor link and (optionally) automatic level

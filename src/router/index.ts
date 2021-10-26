@@ -15,6 +15,7 @@ import Publications from "@/views/about/Publications.vue";
 import Sources from "@/views/about/Sources.vue";
 import Terms from "@/views/about/Terms.vue";
 import Help from "@/views/help/Help.vue";
+import Testbed from "@/views/Testbed.vue";
 import { sleep } from "@/util/debug";
 
 // handle redirect from 404
@@ -84,6 +85,17 @@ export const routes: Array<RouteRecordRaw> = [
     name: "Help",
     component: Help,
   },
+
+  // test routes (pages to only include during development)
+  ...(process.env.NODE_ENV === "development"
+    ? [
+        {
+          path: "/testbed",
+          name: "Testbed",
+          component: Testbed,
+        },
+      ]
+    : []),
 ];
 
 const scrollBehavior: RouterScrollBehavior = async (
