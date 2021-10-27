@@ -40,7 +40,6 @@ export default defineComponent({
 
   &:hover {
     background: $light-gray;
-    // background: $theme-light;
   }
 }
 
