@@ -33,6 +33,7 @@ footer {
   background: $theme-dark;
   color: $white;
   font-size: 0.9rem;
+  z-index: 1;
 }
 
 a {

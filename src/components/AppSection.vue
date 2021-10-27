@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 
 // section that spans width of page
 export default defineComponent({
@@ -14,11 +14,11 @@ export default defineComponent({
     // default: medium width
     // "big": bigger than medium width
     // "full": full width of screen
-    width: String,
+    width: String as PropType<"big" | "full" | undefined>,
     // visual design
     // default: white/offwhite
     // "fill": darker bg
-    design: String,
+    design: String as PropType<"fill" | undefined>,
   },
 });
 </script>

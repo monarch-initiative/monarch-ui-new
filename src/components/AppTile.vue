@@ -4,27 +4,27 @@
       <AppIcon :icon="icon" />
     </AppLink>
     <div class="title">{{ title }}</div>
-    <div class="subtitle">{{ subtitle }}</div>
+    <div v-if="subtitle" class="subtitle">{{ subtitle }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 
 export default defineComponent({
   props: {
     // where to link to
     to: String,
     // icon to show in button
-    icon: String,
+    icon: { type: String, required: true },
     // main text
-    title: String,
+    title: { type: String, required: true },
     // secondary text
     subtitle: String,
     // visual design
     // default: big
     // "small": smaller button
-    design: String,
+    design: String as PropType<"small" | undefined>,
   },
 });
 </script>

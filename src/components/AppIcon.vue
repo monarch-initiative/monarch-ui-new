@@ -15,7 +15,7 @@ const prefixes = ["fas", "far", "fab"];
 export default defineComponent({
   props: {
     // icon to show in button
-    icon: String,
+    icon: { type: String, required: true },
   },
   components: {
     FontAwesomeIcon,
