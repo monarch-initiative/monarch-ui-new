@@ -8,7 +8,7 @@
     <span class="text">
       <slot name="title" />
     </span>
-    <AppIcon :icon="expanded ? 'angle-up' : 'angle-down'" />
+    <AppIcon class="icon" icon="angle-down" :data-expanded="expanded" />
   </button>
   <div v-if="expanded" class="content">
     <slot name="content" />
@@ -32,14 +32,14 @@ export default defineComponent({
 .title {
   width: 100%;
   margin: 10px 0;
-  padding: 10px;
   @include trim-v-margins;
-  background: $light-gray;
+  padding: 10px;
+  border-bottom: solid 2px $light-gray;
   font-size: 1.1rem;
   transition: background $fast;
 
   &:hover {
-    background: $theme-light;
+    background: $light-gray;
   }
 }
 
@@ -50,5 +50,15 @@ export default defineComponent({
 
 .content {
   padding: 20px;
+}
+
+.icon {
+  position: relative;
+  top: 2px;
+  transition: transform $fast;
+
+  &[data-expanded="true"] {
+    transform: rotate(-180deg);
+  }
 }
 </style>

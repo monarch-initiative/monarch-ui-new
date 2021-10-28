@@ -106,6 +106,7 @@ header {
   top: 0;
   background: $theme-dark;
   color: $white;
+  z-index: 1;
 }
 
 @media (max-width: $wrap) {

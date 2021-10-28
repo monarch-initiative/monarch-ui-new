@@ -4,6 +4,24 @@
 
 ## Development
 
+### Overview
+
+This is a Vue project that has been initialized with [`vue-cli`](https://cli.vuejs.org/) with the following options:
+
+- Yarn
+- Vue 3
+- TypeScript
+- Eslint and Prettier
+- Vuex (for global state management)
+- Vue router
+- Jest (unit testing, via [`vue-test-utils`](https://next.vue-test-utils.vuejs.org/guide/))
+- Cypress (e2e testing, via [`vue-test-utils`](https://next.vue-test-utils.vuejs.org/guide/))
+- Sass (with dart-sass)
+
+Additional notable features:
+
+- [Axe](https://www.deque.com/axe/) (via [`jest-axe`](https://github.com/nickcolley/jest-axe)) for accessibility testing
+
 ### Figma sketch
 
 https://www.figma.com/file/VxRrD9Tfjpg0CWMVS5qLKr/Monarch-UI-redesign?node-id=9%3A6
@@ -26,13 +44,51 @@ Clone the repo and run `yarn install` to install dependencies.
 - `yarn test:gui` - Run end-to-end tests in visible browser to watch them run
 - `yarn fresh` - Clear cache and `node_modules` and reinstall dependencies
 
-### CSS
+### Continuous Integration
+
+On pull requests, the app is automatically tested and will not allow merging without all tests passing and at least one peer review.
+Netlify is used to build and host live deploy previews of the changes in a PR for convenient in-situ testing.
+
+When merging into main, the app is automatically built and deployed to GitHub Pages at a custom top-level-domain url.
+Note: To simplify app/router/etc configuration, the app only works when served from root.
+Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-ui is not possible without changes.
+
+### Directory structure
+
+- `/.github` - GitHub Actions continuous integration workflows for testing and deploying the app.
+- `/dist` - Where the built app is outputted to after running `yarn build`.
+- `/figma` - Backup/local copy of Figma sketch for app.
+- `/public` - Folder whose contents gets copied over verbatim to build folder.
+  Use as little as possible; prefer `/assets`.
+- `/src` - Main source code that gets compiled, along with installed packages in `/node_modules`, into the final product.
+  - `/api` - Code that interfaces directly with any external services or data sources.
+    As much as possible, data transformation should take place here, putting it into the desired format, leaving `.vue` files as mostly presentational (and some local UI state).
+    Data transformation should take place here as much as possible, keeping `.vue` files mostly presentational and with minimal logic.
+  - `/assets` - Static resources like images.
+  - `/components` - Reusable building blocks of UI.
+  - `/directives` - See [Vue directives](https://v3.vuejs.org/guide/custom-directive.html#custom-directives).
+  - `/global` - Components, directives, styles, and other "global" resources that always -- whether running the app normally or setting up and mounting a test -- need to be included in the Vue application instance.
+  - `/router` - See [Vue router](https://router.vuejs.org/).
+  - `/store` - See [Vuex](https://vuex.vuejs.org/) (similar to Redux).
+    Most useful for managing global and complex state.
+  - `/types` - Folder for any TypeScript types that need to be shared across files.
+    Any types needed only in a single file should just go in that file.
+  - `/util` - Miscellaneous utility functions to do generic tasks.
+  - `/views` - Organizes the site into pages.
+    Directory structure and file names should correlate to urls.
+- `/tests` - Suite of tests to verify functionality and ensure quality.
+- `package.json` - What third party packages are necessary for this app to run, and which versions.
+  Also where the `yarn ___` shorthand commands are defined.
+  `yarn.lock` - Detailed list of all dependencies and sub-dependencies, and their versions, providing a last known good configuration.
+- `.eslintrs.js`, `babel.config.js`, etc. - Separate configuration files for the various tools involved in the development pipeline.
+- `.env` - Environment variable file.
+  A convenient place to set static string values that need to be repeated throughout the app.
+
+### Guidelines
+
+Where possible and appropriate, use custom components like `AppHeading` and `AppLink` instead of native elements like `h1` and `a`.
 
 See `variables.scss` for a palette of acceptable colors/fonts/etc to use.
 
-### Notes
-
-To simplify app/router/etc configuration, the app only works when served from root.
-Hosting on e.g. GitHub Pages like monarch-initiative.github.io/monarch-ui is not possible without changes.
-
-Whenever possible, use custom components like `AppHeading` and `AppLink` instead of native elements like `h1` and `a`.
+Keep configuration files as minimal as possible and conform to third-party-maintained presets.
+For example, avoid overriding default eslint rules as much as possible.

@@ -3,7 +3,7 @@
     <div class="image">
       <img :src="src" :alt="name" loading="lazy" />
     </div>
-    <div class="text">
+    <div v-if="role" class="text">
       <div class="name">
         {{ name
         }}<span class="icon"
@@ -13,7 +13,7 @@
             v-tooltip="'Alumni team member'"
         /></span>
       </div>
-      <div class="role">{{ role }}</div>
+      <div v-if="role" class="role">{{ role }}</div>
     </div>
   </AppLink>
 </template>

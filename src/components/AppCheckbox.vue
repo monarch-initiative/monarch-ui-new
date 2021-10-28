@@ -3,7 +3,7 @@
     <input type="checkbox" :checked="modelValue" @change="onChange" />
     <span>
       <slot />
-      <AppIcon class="icon" :icon="icon" />
+      <AppIcon v-if="icon" class="icon" :icon="icon" />
     </span>
   </label>
 </template>
@@ -36,12 +36,18 @@ export default defineComponent({
   display: inline-flex;
   align-items: center;
   margin: 10px;
-  padding: 10px;
+  padding: 5px 10px;
   cursor: pointer;
+  transition: background $fast;
+
+  &:hover {
+    background: $light-gray;
+  }
 
   input {
     width: 20px;
     height: 20px;
+    flex-shrink: 0;
     margin-right: 10px;
     appearance: none;
     background: none;

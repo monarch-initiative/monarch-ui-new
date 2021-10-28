@@ -1,14 +1,14 @@
 <template>
-  <component
-    :is="link ? 'AppLink' : 'div'"
+  <AppLink
     :to="link"
     class="status"
     :data-code="code"
     :data-design="design"
+    :aria-label="code"
   >
-    <AppIcon class="icon" :icon="icon" :aria-label="code" />
-    <span class="text">{{ text }}</span>
-  </component>
+    <AppIcon class="icon" :icon="icon" />
+    <span v-if="text" class="text">{{ text }}</span>
+  </AppLink>
 </template>
 
 <script lang="ts">
@@ -37,7 +37,7 @@ export default defineComponent({
     // visual design
     // default: horizontal layout
     // "big": vertical layout with bigger icon and text
-    design: String,
+    design: String as PropType<"big" | undefined>,
   },
   computed: {
     icon() {

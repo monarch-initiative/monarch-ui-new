@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 
 export default defineComponent({
   props: {
@@ -14,7 +14,7 @@ export default defineComponent({
     // default: medium
     // "small": smaller items and spacing
     // "big": larger and fewer items
-    size: String,
+    size: String as PropType<"small" | "big" | undefined>,
   },
 });
 </script>

@@ -1,8 +1,8 @@
 <template>
-  <component :is="to ? 'AppLink' : 'span'" class="detail" :to="to">
+  <AppLink class="detail" :to="to">
     <AppIcon :icon="icon" />
     <span>{{ text }}</span>
-  </component>
+  </AppLink>
 </template>
 
 <script lang="ts">
@@ -14,9 +14,9 @@ export default defineComponent({
     // optional location to link to
     to: String,
     // icon to show
-    icon: String,
+    icon: { type: String, required: true },
     // text to show
-    text: String,
+    text: { type: String, required: true },
   },
 });
 </script>
@@ -31,9 +31,9 @@ export default defineComponent({
     margin-left: 10px;
     font-weight: 500;
   }
-}
 
-span.detail {
-  color: $gray;
+  &:not(a) {
+    color: $gray;
+  }
 }
 </style>
