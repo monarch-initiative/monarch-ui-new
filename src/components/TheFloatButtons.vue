@@ -51,11 +51,12 @@ export default defineComponent({
       // if page is long and user has scrolled far down enough
       const downEnough = window.scrollY > window.innerHeight * 0.25;
 
-      // if user has scrolled to bottom of page
+      // if user has scrolled to bottom of page (and not at top)
       const atBottom =
+        window.scrollY > 0 &&
         window.scrollY + window.innerHeight >=
-        document.body.clientHeight -
-          (document.querySelector("footer")?.clientHeight || 0);
+          document.body.clientHeight -
+            (document.querySelector("footer")?.clientHeight || 0);
 
       // show/hide buttons based on scroll
       this.showJump = downEnough && !atBottom;
@@ -74,6 +75,7 @@ export default defineComponent({
     },
   },
   mounted() {
+    this.onScroll();
     window.addEventListener("scroll", this.debounced);
   },
   beforeUnmount() {

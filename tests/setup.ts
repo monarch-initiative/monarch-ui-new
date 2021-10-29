@@ -2,6 +2,7 @@ import { MountingOptions } from "@vue/test-utils";
 import { ComponentCustomProps } from "vue";
 import router from "@/router";
 import components from "@/global/components";
+import plugins from "@/global/plugins";
 import directives from "@/global/directives";
 import "@/global/icons";
 
@@ -20,6 +21,6 @@ export const mountOptions: MountingOptions<ComponentCustomProps> = {
   global: {
     components,
     directives,
-    plugins: [router],
+    plugins,
   },
 };

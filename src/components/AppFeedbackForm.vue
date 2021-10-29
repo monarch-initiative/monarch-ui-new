@@ -1,6 +1,6 @@
 <template>
   <!-- overview -->
-  <AppHeading>Feedback Form</AppHeading>
+  <div v-if="modal" class="heading">Feedback Form</div>
   <p class="center">
     Request a feature, report a bug, or chat with us about anything
     Monarch-related.
@@ -155,7 +155,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.title {
+.heading {
+  margin-bottom: 30px;
   font-size: 1.3rem;
   text-align: center;
   font-weight: 600;

@@ -2,9 +2,9 @@
   <TheHeader />
   <main>
     <router-view />
+    <TheFloatButtons />
   </main>
   <TheFooter />
-  <TheFloatButtons />
 </template>
 
 <script lang="ts">
