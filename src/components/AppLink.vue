@@ -2,15 +2,10 @@
   <span v-if="!to" role="link">
     <slot />
   </span>
-  <a
-    v-else-if="isExternal"
-    :href="to"
-    target="_blank"
-    @click="($event.target as HTMLElement).blur()"
-  >
+  <a v-else-if="isExternal" :href="to" target="_blank">
     <slot />
   </a>
-  <router-link v-else :to="to" @click="$event.target.blur()">
+  <router-link v-else :to="to">
     <slot />
   </router-link>
 </template>
