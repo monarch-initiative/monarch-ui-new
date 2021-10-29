@@ -5,6 +5,7 @@ import {
   RouteRecordRaw,
   RouterScrollBehavior,
 } from "vue-router";
+import { hideAll } from "tippy.js";
 import Home from "@/views/Home.vue";
 import Explore from "@/views/explore/Explore.vue";
 import Tools from "@/views/tools/Tools.vue";
@@ -152,6 +153,11 @@ router.afterEach((to) => {
     const page = typeof to.name === "string" ? to.name : "";
     document.title = process.env.VUE_APP_TITLE_SHORT + " - " + page;
   });
+});
+
+// close any open tooltips on route change
+router.beforeEach(() => {
+  hideAll();
 });
 
 export default router;
