@@ -1,10 +1,28 @@
 <template>
   <label class="input">
     <div v-if="title" class="title">
-      {{ title }}<AppIcon v-if="required" icon="asterisk" class="asterisk" />
+      {{ title }}
+      <AppIcon
+        v-if="required"
+        icon="asterisk"
+        class="asterisk"
+        v-tooltip="'Required field'"
+      />
     </div>
-    <textarea v-if="multi"></textarea>
-    <input v-else />
+    <textarea
+      v-if="multi"
+      :value="modelValue"
+      @change="onChange"
+      :placeholder="placeholder"
+    >
+    </textarea>
+    <input
+      v-else
+      :value="modelValue"
+      @change="onChange"
+      :placeholder="placeholder"
+      :type="type"
+    />
     <div v-if="description" class="description">{{ description }}</div>
   </label>
 </template>
@@ -13,7 +31,14 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
+  emits: ["update:modelValue"],
   props: {
+    //  state
+    modelValue: String,
+    // placeholder string when nothing typed in
+    placeholder: String,
+    // type of text box
+    type: String,
     // name of field, shown above box
     title: String,
     // description of field, shown below box
@@ -22,6 +47,14 @@ export default defineComponent({
     required: Boolean,
     // whether field is multi-line
     multi: Boolean,
+  },
+  methods: {
+    onChange(event: Event) {
+      this.$emit(
+        "update:modelValue",
+        (event?.target as HTMLInputElement).value
+      );
+    },
   },
 });
 </script>

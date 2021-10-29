@@ -3,7 +3,8 @@
   <AppSection>
     <AppHeading>Help</AppHeading>
     <p class="center">
-      Request a feature, report a bug, or chat with us about Monarch.
+      Request a feature, report a bug, or chat with us about anything
+      Monarch-related.
     </p>
     <AppTile
       icon="comment"
@@ -17,6 +18,21 @@
       subtitle="If you have a GitHub account"
       to="https://github.com/monarch-initiative/helpdesk"
     />
+  </AppSection>
+
+  <!-- docs -->
+  <AppSection>
+    <AppHeading>How to use Monarch</AppHeading>
+    <AppGallery>
+      <AppPlaceholder />
+      <AppPlaceholder />
+      <AppPlaceholder />
+      <AppPlaceholder />
+      <AppPlaceholder />
+      <AppPlaceholder />
+    </AppGallery>
+    <AppButton to="/tools" text="API and Tools" icon="tools" />
+    <AppButton to="/sources" text="Ontologies and Datasets" icon="database" />
   </AppSection>
 
   <!-- api and service statuses -->
@@ -42,21 +58,6 @@
       text="More Details"
       icon="arrow-right"
     />
-  </AppSection>
-
-  <!-- docs -->
-  <AppSection>
-    <AppHeading>How to use Monarch</AppHeading>
-    <AppGallery>
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-    </AppGallery>
-    <AppButton to="/tools" text="API and Tools" icon="tools" />
-    <AppButton to="/sources" text="Ontologies and Datasets" icon="database" />
   </AppSection>
 
   <!-- last resort contact methods -->
