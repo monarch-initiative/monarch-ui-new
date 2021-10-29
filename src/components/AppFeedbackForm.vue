@@ -1,5 +1,6 @@
 <template>
   <!-- overview -->
+  <AppHeading>Feedback Form</AppHeading>
   <p class="center">
     Request a feature, report a bug, or chat with us about anything
     Monarch-related.
@@ -31,7 +32,7 @@
       <AppInput
         class="feedback"
         title="Feedback"
-        description="Give as many details as possible"
+        description="Please give us as many details as possible!"
         placeholder=""
         :required="true"
         :multi="true"
@@ -56,7 +57,9 @@
       on GitHub with <em>all of the information above</em>. You'll get a link to
       the discussion once it's created.
     </p>
-    <AppButton text="Submit" icon="paper-plane" type="submit" />
+    <p class="center">
+      <AppButton text="Submit" icon="paper-plane" type="submit" />
+    </p>
   </form>
 </template>
 
@@ -70,6 +73,10 @@ export default defineComponent({
   components: {
     AppInput,
   },
+  props: {
+    // whether form is in a modal
+    modal: Boolean,
+  },
   data() {
     return {
       // user's name
@@ -80,26 +87,27 @@ export default defineComponent({
       github: "",
       // user's freeform feedback
       feedback: "",
-      // list of automatic details to record
-      details: {},
     };
   },
-  mounted() {
-    // get browser/device/os/etc details from ua parser  library
-    const { browser, device, os, engine, cpu } = parser();
+  computed: {
+    // list of automatic details to record
+    details() {
+      // get browser/device/os/etc details from ua parser  library
+      const { browser, device, os, engine, cpu } = parser();
 
-    // filter and join strings together
-    const concat = (...array: Array<string | undefined>) =>
-      array.filter((e) => e && e !== "()").join(" ");
+      // filter and join strings together
+      const concat = (...array: Array<string | undefined>) =>
+        array.filter((e) => e && e !== "()").join(" ");
 
-    // make map of desired properties in desired stringified format
-    this.details = {
-      Page: this.$route.fullPath,
-      Browser: concat(browser.name, browser.version),
-      Device: concat(device.vendor, device.model, device.type),
-      OS: concat(os.name, os.version, cpu.architecture),
-      Engine: concat(engine.name, engine.version),
-    };
+      // make map of desired properties in desired stringified format
+      return {
+        Page: this.$route.fullPath,
+        Browser: concat(browser.name, browser.version),
+        Device: concat(device.vendor, device.model, device.type),
+        OS: concat(os.name, os.version, cpu.architecture),
+        Engine: concat(engine.name, engine.version),
+      };
+    },
   },
   methods: {
     onSubmit(event: Event) {
@@ -109,9 +117,6 @@ export default defineComponent({
       // only proceed if submitted through button, not "implicitly" (enter press)
       const active = document.activeElement;
       if (active && active.getAttribute("type") !== "submit") return;
-
-      // (lightly) sanitize inputs
-      this.github = "@" + this.github.replaceAll("@", "");
 
       // make issue title (unclear what char limit is?)
       const title = [
@@ -130,11 +135,18 @@ export default defineComponent({
         "",
         "**GitHub Username**",
         this.github,
+
+        "",
+        "**Details**",
+        ...Object.entries(this.details).map(
+          ([key, value]) => `${key}: ${value}`
+        ),
         "",
         "",
         this.feedback,
       ].join("\n");
 
+      // create issue
       console.log(title);
       console.log(body);
     },
@@ -143,6 +155,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.title {
+  font-size: 1.3rem;
+  text-align: center;
+  font-weight: 600;
+}
+
 form {
   margin-top: 40px;
 }
@@ -157,7 +175,7 @@ form {
   grid-column: 1 / span 3;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .fields {
     grid-template-columns: 1fr;
   }
@@ -169,7 +187,7 @@ form {
 
 .details {
   display: grid;
-  grid-template-columns: 0.5fr 1fr 0.5fr 1fr;
+  grid-template-columns: 100px 1fr 100px 1fr;
   gap: 10px;
   justify-items: flex-start;
   margin: 50px 0;
@@ -178,6 +196,14 @@ form {
 
   & > *:nth-child(odd) {
     font-weight: 600;
+  }
+
+  @media (max-width: 800px) {
+    grid-template-columns: 100px 1fr;
+  }
+
+  @media (max-width: 400px) {
+    grid-template-columns: 1fr;
   }
 }
 </style>

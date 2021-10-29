@@ -98,6 +98,7 @@ textarea {
 }
 
 textarea {
+  min-width: 100%;
   min-height: 160px;
 }
 

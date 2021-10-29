@@ -4,6 +4,7 @@ import router from "@/router";
 import store from "@/store";
 import globalComponents from "@/global/components";
 import directives from "@/global/directives";
+import VueFinalModal from "vue-final-modal";
 
 // create main app object
 let app = createApp(App);
@@ -13,7 +14,7 @@ for (const [name, directive] of Object.entries(directives))
   app = app.directive(name, directive);
 
 // add middleware
-app = app.use(store).use(router);
+app = app.use(store).use(router).use(VueFinalModal);
 
 // register global components
 for (const [name, Component] of Object.entries(globalComponents))

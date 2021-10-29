@@ -1,6 +1,5 @@
 <template>
   <AppSection>
-    <AppHeading>Feedback Form</AppHeading>
     <AppFeedbackForm />
   </AppSection>
 </template>

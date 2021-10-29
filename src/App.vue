@@ -4,7 +4,7 @@
     <router-view />
   </main>
   <TheFooter />
-  <TheJumpButton />
+  <TheFloatButtons />
 </template>
 
 <script lang="ts">
@@ -14,7 +14,7 @@ import "@/global/icons";
 import "@/global/styles.scss";
 import TheHeader from "@/components/TheHeader.vue";
 import TheFooter from "@/components/TheFooter.vue";
-import TheJumpButton from "@/components/TheJumpButton.vue";
+import TheFloatButtons from "@/components/TheFloatButtons.vue";
 
 export default defineComponent({
   props: {
@@ -23,7 +23,7 @@ export default defineComponent({
   components: {
     TheHeader,
     TheFooter,
-    TheJumpButton,
+    TheFloatButtons,
   },
 });
 </script>

@@ -56,7 +56,7 @@ export default defineComponent({
   text-decoration: none;
   outline: none;
   cursor: pointer;
-  transition: box-shadow $fast;
+  transition: box-shadow $fast, opacity $fast;
 
   &:focus,
   &:hover {
