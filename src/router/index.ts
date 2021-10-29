@@ -15,6 +15,7 @@ import Publications from "@/views/about/Publications.vue";
 import Sources from "@/views/about/Sources.vue";
 import Terms from "@/views/about/Terms.vue";
 import Help from "@/views/help/Help.vue";
+import Feedback from "@/views/help/Feedback.vue";
 import Testbed from "@/views/Testbed.vue";
 import { sleep } from "@/util/debug";
 
@@ -84,6 +85,11 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/help",
     name: "Help",
     component: Help,
+  },
+  {
+    path: "/feedback",
+    name: "Feedback",
+    component: Feedback,
   },
 
   // test routes (pages to only include during development)

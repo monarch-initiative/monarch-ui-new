@@ -11,7 +11,7 @@
       following:
     </p>
     <blockquote>
-      <code>[your work]</code> uses and displays data and algorithms from the
+      <code>YOUR WORK</code> uses and displays data and algorithms from the
       Monarch Initiative. The Monarch Initiative (https://monarchinitiative.org)
       makes biomedical knowledge exploration more efficient and effective by
       providing tools for genotype-phenotype analysis, genomic diagnostics, and
@@ -86,3 +86,14 @@
     </blockquote>
   </AppSection>
 </template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import AppCitation from "@/components/AppCitation.vue";
+
+export default defineComponent({
+  components: {
+    AppCitation,
+  },
+});
+</script>

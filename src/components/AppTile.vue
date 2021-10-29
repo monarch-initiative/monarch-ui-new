@@ -1,8 +1,6 @@
 <template>
   <div class="tile" :data-design="design">
-    <AppLink :to="to || ''" class="button" :aria-label="title">
-      <AppIcon :icon="icon" />
-    </AppLink>
+    <AppButton :to="to || ''" class="button" :icon="icon" :aria-label="title" />
     <div class="title">{{ title }}</div>
     <div v-if="subtitle" class="subtitle">{{ subtitle }}</div>
   </div>
@@ -40,20 +38,7 @@ export default defineComponent({
 }
 
 .button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 80px;
-  height: 80px;
-  border-radius: 999px;
-  background: $theme-light;
-  color: $off-black;
-  transition: background $fast;
   font-size: 2rem;
-
-  &:hover {
-    background: $light-gray;
-  }
 }
 
 .tile[data-design="small"] {
@@ -61,8 +46,6 @@ export default defineComponent({
   margin: 10px;
 
   .button {
-    width: 60px;
-    height: 60px;
     font-size: 1.4rem;
   }
 }
@@ -72,6 +55,7 @@ export default defineComponent({
 }
 
 .subtitle {
+  color: $off-black;
   line-height: $spacing;
 }
 </style>

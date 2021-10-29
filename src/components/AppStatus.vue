@@ -1,11 +1,5 @@
 <template>
-  <AppLink
-    :to="link"
-    class="status"
-    :data-code="code"
-    :data-design="design"
-    :aria-label="code"
-  >
+  <AppLink :to="link" class="status" :data-code="code" :aria-label="code">
     <AppIcon class="icon" :icon="icon" />
     <span v-if="text" class="text">{{ text }}</span>
   </AppLink>
@@ -34,10 +28,6 @@ export default defineComponent({
     text: String,
     // where to link to for more details about status
     link: String,
-    // visual design
-    // default: horizontal layout
-    // "big": vertical layout with bigger icon and text
-    design: String as PropType<"big" | undefined>,
   },
   computed: {
     icon() {
@@ -55,20 +45,12 @@ export default defineComponent({
   gap: 15px;
   margin: 20px;
   text-decoration: none;
-
-  &[data-design="big"] {
-    flex-direction: column;
-    margin: 0;
-  }
 }
 
 // icon
 
 .icon {
   font-size: 1.5rem;
-}
-.status[data-design="big"] .icon {
-  font-size: 2rem;
 }
 
 .status[data-code="loading"] .icon {
@@ -98,13 +80,7 @@ export default defineComponent({
 // text
 
 .text {
-  font-size: 1.1rem;
   text-align: left;
   color: $dark-gray;
-}
-
-.status[data-design="big"] .text {
-  color: $black;
-  text-align: center;
 }
 </style>

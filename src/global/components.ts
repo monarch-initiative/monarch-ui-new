@@ -1,39 +1,40 @@
 import { Component } from "vue";
-import AppSection from "@/components/AppSection.vue";
-import AppHeading from "@/components/AppHeading.vue";
-import AppLink from "@/components/AppLink.vue";
-import AppIcon from "@/components/AppIcon.vue";
 import AppButton from "@/components/AppButton.vue";
-import AppInput from "@/components/AppInput.vue";
-import AppPlaceholder from "@/components/AppPlaceholder.vue";
 import AppGallery from "@/components/AppGallery.vue";
-import AppTile from "@/components/AppTile.vue";
+import AppHeading from "@/components/AppHeading.vue";
+import AppIcon from "@/components/AppIcon.vue";
+import AppLink from "@/components/AppLink.vue";
 import AppMarkdown from "@/components/AppMarkdown.vue";
-import AppStatus from "@/components/AppStatus.vue";
-import AppCitation from "@/components/AppCitation.vue";
-import AppMember from "@/components/AppMember.vue";
-import AppAccordion from "@/components/AppAccordion.vue";
-import AppDetail from "@/components/AppDetail.vue";
-import AppCheckbox from "@/components/AppCheckbox.vue";
+import AppPlaceholder from "@/components/AppPlaceholder.vue";
+import AppSection from "@/components/AppSection.vue";
+import AppTile from "@/components/AppTile.vue";
 
-// list of components we want to be available in any vue file without importing them
+// list of components we want to be available in any vue file without importing
+// only list components used very repetitively
 const globalComponents: Record<string, Component> = {
-  AppSection,
-  AppHeading,
-  AppLink,
-  AppIcon,
   AppButton,
-  AppInput,
-  AppPlaceholder,
   AppGallery,
-  AppTile,
+  AppHeading,
+  AppIcon,
+  AppLink,
   AppMarkdown,
-  AppStatus,
-  AppCitation,
-  AppMember,
-  AppAccordion,
-  AppDetail,
-  AppCheckbox,
+  AppPlaceholder,
+  AppSection,
+  AppTile,
 };
 
 export default globalComponents;
+
+declare module "@vue/runtime-core" {
+  export interface GlobalComponents {
+    AppButton: typeof AppButton;
+    AppGallery: typeof AppGallery;
+    AppHeading: typeof AppHeading;
+    AppIcon: typeof AppIcon;
+    AppLink: typeof AppLink;
+    AppMarkdown: typeof AppMarkdown;
+    AppPlaceholder: typeof AppPlaceholder;
+    AppSection: typeof AppSection;
+    AppTile: typeof AppTile;
+  }
+}
