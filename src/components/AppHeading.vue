@@ -109,7 +109,8 @@ export default heading;
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
   &:hover .anchor {
     opacity: 1;
   }

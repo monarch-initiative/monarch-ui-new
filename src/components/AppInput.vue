@@ -1,20 +1,77 @@
 <template>
-  <input />
+  <label class="input">
+    <div v-if="title" class="title">
+      {{ title }}<AppIcon v-if="required" icon="asterisk" class="asterisk" />
+    </div>
+    <textarea v-if="multi"></textarea>
+    <input v-else />
+    <div v-if="description" class="description">{{ description }}</div>
+  </label>
 </template>
 
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  props: {
+    // name of field, shown above box
+    title: String,
+    // description of field, shown below box
+    description: String,
+    // whether field is required
+    required: Boolean,
+    // whether field is multi-line
+    multi: Boolean,
+  },
+});
+</script>
+
 <style lang="scss" scoped>
-input {
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.title {
+  text-align: left;
+  font-weight: 500;
+}
+
+.asterisk {
+  position: relative;
+  top: -5px;
+  left: 5px;
+  color: $error;
+  font-size: 0.7rem;
+}
+
+.description {
+  color: $dark-gray;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+input,
+textarea {
   width: 100%;
+  max-width: 100%;
   min-height: 40px;
-  padding: 0 10px;
+  padding: 10px;
   border: solid 2px $off-black;
   border-radius: 3px;
   outline: none;
   transition: box-shadow $fast;
 }
 
+textarea {
+  min-height: 160px;
+}
+
 input:hover,
-input:focus {
-  box-shadow: 0 0 0 3px $theme;
+input:focus,
+textarea:hover,
+textarea:focus {
+  box-shadow: 0 0 0 2px $theme;
 }
 </style>
