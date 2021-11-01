@@ -55,7 +55,7 @@ const write = (key = "", value: unknown) => {
   try {
     storage.setItem(key, string);
   } catch (error) {
-    console.log(`Error setting key "${key}" to storage`);
+    console.error(`Error setting key "${key}" to storage`);
     return;
   }
 };
