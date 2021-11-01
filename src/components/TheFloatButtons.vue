@@ -70,16 +70,16 @@ export default defineComponent({
   },
   computed: {
     // debounced version of on scroll listener for performance
-    debounced(): DebouncedFunc<() => void> {
+    debouncedOnScroll(): DebouncedFunc<() => void> {
       return debounce(this.onScroll, 100, { leading: true, maxWait: 100 });
     },
   },
   mounted() {
     this.onScroll();
-    window.addEventListener("scroll", this.debounced);
+    window.addEventListener("scroll", this.debouncedOnScroll);
   },
   beforeUnmount() {
-    window.removeEventListener("scroll", this.debounced);
+    window.removeEventListener("scroll", this.debouncedOnScroll);
   },
 });
 </script>

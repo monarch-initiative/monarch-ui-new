@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import App from "@/App.vue";
 import components from "@/global/components";
+import mixins from "@/global/mixins";
 import plugins from "@/global/plugins";
 import directives from "@/global/directives";
 
@@ -10,6 +11,9 @@ let app = createApp(App);
 // register directives
 for (const [name, directive] of Object.entries(directives))
   app = app.directive(name, directive);
+
+// register mixins
+for (const mixin of mixins) app = app.mixin(mixin);
 
 // register plugins/middleware
 for (const plugin of plugins) app = app.use(plugin);

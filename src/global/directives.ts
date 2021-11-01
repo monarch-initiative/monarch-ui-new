@@ -1,8 +1,7 @@
-import { Directive } from "vue";
-import tooltip from "@/directives/tooltip";
+import tooltip from "./tooltip";
 
 // list of global directives
-const directives: Record<string, Directive> = {
+const directives = {
   tooltip,
 };
 

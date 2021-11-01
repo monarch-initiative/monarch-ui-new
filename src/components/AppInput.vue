@@ -12,14 +12,14 @@
     <textarea
       v-if="multi"
       :value="modelValue"
-      @change="onChange"
+      @input="onInput"
       :placeholder="placeholder"
     >
     </textarea>
     <input
       v-else
       :value="modelValue"
-      @change="onChange"
+      @input="onInput"
       :placeholder="placeholder"
       :type="type"
     />
@@ -49,7 +49,7 @@ export default defineComponent({
     multi: Boolean,
   },
   methods: {
-    onChange(event: Event) {
+    onInput(event: Event) {
       this.$emit(
         "update:modelValue",
         (event?.target as HTMLInputElement).value

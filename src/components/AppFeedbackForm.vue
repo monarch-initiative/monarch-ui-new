@@ -14,20 +14,20 @@
         title="Name"
         description="So we can address you"
         placeholder="Jane Smith"
-        v-model="name"
+        v-model.trim="name"
       />
       <AppInput
         title="Email"
         description="So we can follow up with you"
         placeholder="jane.smith@gmail.com"
         type="email"
-        v-model="email"
+        v-model.trim="email"
       />
       <AppInput
         title="GitHub username"
         description="So we can tag you"
         placeholder="@janesmith"
-        v-model="github"
+        v-model.trim="github"
       />
       <AppInput
         class="feedback"
@@ -109,6 +109,7 @@ export default defineComponent({
       };
     },
   },
+  persist: ["name", "email", "github", "feedback"],
   methods: {
     onSubmit(event: Event) {
       // prevent default post and navigation from form submission
