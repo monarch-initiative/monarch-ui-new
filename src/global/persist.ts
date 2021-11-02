@@ -1,4 +1,4 @@
-import { ComponentOptions } from "@vue/runtime-core";
+import { ComponentOptions, defineComponent } from "vue";
 import { debounce } from "lodash";
 
 // persist mixin
@@ -7,14 +7,14 @@ import { debounce } from "lodash";
 
 const storage = window.localStorage;
 
-export interface Options {
+interface Options {
   keys: Array<string>;
   namespace: string;
 }
 
-const persist: ComponentOptions = {
+export default defineComponent({
   // before component instance is created
-  created(): void {
+  created(this: ComponentOptions): void {
     // if no persist property specified, do nothing
     if (!this.$options.persist) return;
 
@@ -33,12 +33,24 @@ const persist: ComponentOptions = {
         debouncedWrite(`${namespace}-${key}`, value)
       );
   },
-};
 
-export default persist;
+  // clear keys on command
+  methods: {
+    clearPersist(): void {
+      // if no persist property specified, do nothing
+      if (!this.$options.persist) return;
+
+      // get what data keys to persist from $persist option attached to component
+      const { keys, namespace } = this.$options.persist as Options;
+
+      // clear keys
+      for (const key of keys) clear(`${namespace}-${key}`);
+    },
+  },
+});
 
 // read value from storage
-const read = (key = "") => {
+const read = (key: string) => {
   const string = storage.getItem(key) || "";
   if (!string) return null;
   try {
@@ -50,7 +62,7 @@ const read = (key = "") => {
 };
 
 // write value to storage
-const write = (key = "", value: unknown) => {
+const write = (key: string, value: unknown) => {
   if (!key) return;
   let string: string;
   try {
@@ -66,5 +78,7 @@ const write = (key = "", value: unknown) => {
     return;
   }
 };
+
+const clear = (key: string) => storage.removeItem(key);
 
 const debouncedWrite = debounce(write, 1000);

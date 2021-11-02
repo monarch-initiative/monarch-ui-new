@@ -164,18 +164,26 @@ export default defineComponent({
         this.feedback,
       ].join("\n");
 
-      // create issue
+      // loading...
       this.status = {
         code: "loading",
         text: "Submitting feedback",
       };
+
       try {
+        // post feedback and get link of created issue
         this.link = await postFeedback(title, body);
+
+        // success...
         this.status = {
           code: "success",
           text: "Feedback submitted successfully!",
         };
+
+        // clear form data from storage
+        (this as unknown as { clearPersist: () => void })?.clearPersist();
       } catch (error) {
+        // error...
         this.status = { code: "error", text: (error as Error).message };
       }
     },
