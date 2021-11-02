@@ -43,11 +43,12 @@
       <AppStatus :status="status" />
     </p>
     <!-- indiviual statuses -->
-    <AppGallery v-else class="status">
+    <AppGallery v-else size="small">
       <AppStatus
         v-for="(status, index) in statuses"
         :key="index"
         :status="status"
+        design="plain"
       />
     </AppGallery>
     <!-- link to uptime bot site for full details -->
@@ -102,10 +103,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.status {
-  justify-items: flex-start;
-  gap: 20px !important;
-}
-</style>

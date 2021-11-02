@@ -14,6 +14,7 @@
       :value="modelValue"
       @input="onInput"
       :placeholder="placeholder"
+      :required="required"
     >
     </textarea>
     <input
@@ -22,6 +23,7 @@
       @input="onInput"
       :placeholder="placeholder"
       :type="type"
+      :required="required"
     />
     <div v-if="description" class="description">{{ description }}</div>
   </label>

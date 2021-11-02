@@ -2,77 +2,74 @@
   <!-- heading -->
   <div v-if="modal" class="heading">Feedback Form</div>
 
-  <!-- result status -->
-  <template v-if="status">
-    <AppStatus :status="status">
-      <AppLink v-if="link" :to="link"
-        >View your submitted feedback here.</AppLink
-      >
-    </AppStatus>
-  </template>
+  <!-- overview info -->
+  <p v-if="!status" class="center">
+    Request a feature, report a bug, or chat with us about anything
+    Monarch-related.
+  </p>
 
   <!-- form -->
-  <template v-else>
-    <!-- overview info -->
-    <p v-if="!status" class="center">
-      Request a feature, report a bug, or chat with us about anything
-      Monarch-related.
+  <form @submit.prevent="onSubmit">
+    <!-- fields for user to fill out -->
+    <div class="fields">
+      <AppInput
+        title="Name"
+        description="So we can address you"
+        placeholder="Jane Smith"
+        v-model.trim="name"
+      />
+      <AppInput
+        title="Email"
+        description="So we can follow up with you"
+        placeholder="jane.smith@gmail.com"
+        type="email"
+        v-model.trim="email"
+      />
+      <AppInput
+        title="GitHub username"
+        description="So we can tag you"
+        placeholder="@janesmith"
+        v-model.trim="github"
+      />
+      <AppInput
+        class="feedback"
+        title="Feedback"
+        description="Please give us as many details as possible!"
+        placeholder=""
+        :required="true"
+        :multi="true"
+        v-model="feedback"
+      />
+    </div>
+
+    <!-- auto-submitted details -->
+    <div class="details">
+      <template v-for="(value, key) in details" :key="key">
+        <span>{{ key }}</span>
+        <span>{{ value }}</span>
+      </template>
+    </div>
+
+    <!-- finish up -->
+    <p>
+      Submitting this form starts a <strong>public</strong> discussion on our
+      <AppLink to="https://github.com/monarch-initiative/helpdesk"
+        >help desk</AppLink
+      >
+      on GitHub with <em>all of the information above</em>. You'll get a link to
+      the discussion once it's created.
     </p>
-
-    <form @submit="onSubmit">
-      <!-- fields for user to fill out -->
-      <div class="fields">
-        <AppInput
-          title="Name"
-          description="So we can address you"
-          placeholder="Jane Smith"
-          v-model.trim="name"
-        />
-        <AppInput
-          title="Email"
-          description="So we can follow up with you"
-          placeholder="jane.smith@gmail.com"
-          type="email"
-          v-model.trim="email"
-        />
-        <AppInput
-          title="GitHub username"
-          description="So we can tag you"
-          placeholder="@janesmith"
-          v-model.trim="github"
-        />
-        <AppInput
-          class="feedback"
-          title="Feedback"
-          description="Please give us as many details as possible!"
-          placeholder=""
-          :required="true"
-          :multi="true"
-          v-model="feedback"
-        />
-      </div>
-
-      <!-- auto-submitted details -->
-      <div class="details">
-        <template v-for="(value, key) in details" :key="key">
-          <span>{{ key }}</span>
-          <span>{{ value }}</span>
-        </template>
-      </div>
-
-      <!-- finish up -->
-      <p>
-        Submitting this form starts a <strong>public</strong> discussion on our
-        <AppLink to="https://github.com/monarch-initiative/helpdesk"
-          >help desk</AppLink
+    <p class="center">
+      <!-- result status -->
+      <AppStatus v-if="status" :status="status">
+        <AppLink v-if="link" :to="link"
+          >View your submitted feedback here.</AppLink
         >
-        on GitHub with <em>all of the information above</em>. You'll get a link
-        to the discussion once it's created.
-      </p>
-      <p class="center">
-        <AppButton text="Submit" icon="paper-plane" type="submit" />
-      </p></form
-  ></template>
+      </AppStatus>
+      <!-- submit button -->
+      <AppButton text="Submit" icon="paper-plane" type="submit" />
+    </p>
+  </form>
 </template>
 
 <script lang="ts">
@@ -129,12 +126,12 @@ export default defineComponent({
       };
     },
   },
-  persist: ["name", "email", "github", "feedback"],
+  persist: {
+    keys: ["name", "email", "github", "feedback"],
+    namespace: "feedback-form",
+  },
   methods: {
-    async onSubmit(event: Event) {
-      // prevent default post and navigation from form submission
-      event.preventDefault();
-
+    async onSubmit() {
       // only proceed if submitted through button, not "implicitly" (enter press)
       const active = document.activeElement;
       if (active && active.getAttribute("type") !== "submit") return;
@@ -173,16 +170,19 @@ export default defineComponent({
         text: "Submitting feedback",
       };
       try {
-        const response = await postFeedback(title, body);
+        this.link = await postFeedback(title, body);
         this.status = {
           code: "success",
           text: "Feedback submitted successfully!",
         };
-        this.link = response;
       } catch (error) {
         this.status = { code: "error", text: (error as Error).message };
       }
     },
+  },
+  mounted() {
+    // reset status when reloading form
+    this.status = null;
   },
 });
 </script>

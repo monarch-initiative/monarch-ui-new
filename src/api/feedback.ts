@@ -18,6 +18,7 @@ interface ErrorResponse {
 // create issue on helpdesk on submit of feedback form
 export const postFeedback = async (title = "", body = ""): Promise<string> => {
   try {
+    // check params
     if (!title || !body) throw new Error("Title or body not specified");
 
     // post to api endpoint which posts new github issue

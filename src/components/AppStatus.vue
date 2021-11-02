@@ -2,6 +2,7 @@
   <AppLink
     :to="status?.link || ''"
     class="status"
+    :data-design="design"
     :data-code="status?.code || ''"
     :aria-label="status?.code || ''"
   >
@@ -29,6 +30,10 @@ export default defineComponent({
   props: {
     // status object
     status: Object as PropType<Status>,
+    // visual design
+    // default: background and centered
+    // "plain": no bg, padding, align, etc
+    design: String as PropType<"plain" | undefined>,
   },
   computed: {
     icon() {
@@ -40,12 +45,19 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .status {
-  display: inline-flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   gap: 15px;
-  margin: 20px;
+  padding: 20px;
+  background: $light-gray;
   text-decoration: none;
+
+  &[data-design="plain"] {
+    padding: unset;
+    background: unset;
+    justify-content: unset;
+  }
 }
 
 // icon
@@ -82,6 +94,6 @@ export default defineComponent({
 
 .text {
   text-align: left;
-  color: $dark-gray;
+  color: $off-black;
 }
 </style>

@@ -7,24 +7,31 @@ import { debounce } from "lodash";
 
 const storage = window.localStorage;
 
+export interface Options {
+  keys: Array<string>;
+  namespace: string;
+}
+
 const persist: ComponentOptions = {
   // before component instance is created
   created(): void {
-    // get what data keys to persist from $persist option attached to component
-    const keys: Array<string> = this.$options.persist || [];
+    // if no persist property specified, do nothing
+    if (!this.$options.persist) return;
 
-    // if no keys specified, do nothing
-    if (!keys.length) return;
+    // get what data keys to persist from $persist option attached to component
+    const { keys, namespace } = this.$options.persist as Options;
 
     // read initial values from storage
     for (const key of keys) {
-      const value = read(key);
+      const value = read(`${namespace}-${key}`);
       if (value !== null) this[key] = value;
     }
 
     // setup listeners for writing values to storage on change
     for (const key of keys)
-      this.$watch(key, (value: unknown) => debouncedWrite(key, value));
+      this.$watch(key, (value: unknown) =>
+        debouncedWrite(`${namespace}-${key}`, value)
+      );
   },
 };
 

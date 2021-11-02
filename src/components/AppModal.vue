@@ -8,7 +8,8 @@
     :esc-to-close="true"
     v-slot="{ close }"
   >
-    <slot />
+    <!-- only render slot if modal visible to force remount on open -->
+    <slot v-if="modelValue" />
     <AppButton
       class="close"
       icon="times"
