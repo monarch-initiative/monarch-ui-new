@@ -4,17 +4,16 @@ import axios from "axios";
 export const handleError = (error: unknown): unknown => {
   // if axios error, make message more useful
   if (axios.isAxiosError(error)) {
+    // log details
+    console.error(error.toJSON());
+
     // description of error
     const data = error?.response?.data as string;
     // generic message and status code
     const message = error?.message;
 
-    // log details
-    console.error(message);
-    console.error(data);
-
     // kick back error
-    throw new Error(data);
+    throw new Error(data || message);
   } else {
     // log details and throw error like normal
     console.error(error);

@@ -20,7 +20,7 @@
     />
   </AppSection>
 
-  <!-- docs -->
+  <!-- tutorials/faqs/etc -->
   <AppSection>
     <AppHeading>How to use Monarch</AppHeading>
     <AppGallery>
@@ -38,21 +38,19 @@
   <!-- api and service statuses -->
   <AppSection>
     <AppHeading>Status</AppHeading>
-    <p v-if="loading" class="center">
-      <AppStatus code="loading" text="Loading service statuses" />
+    <!-- main status of all checks -->
+    <p v-if="status" class="center">
+      <AppStatus :status="status" />
     </p>
-    <p v-else-if="error" class="center">
-      <AppStatus code="warning" :text="error" />
-    </p>
+    <!-- indiviual statuses -->
     <AppGallery v-else class="status">
       <AppStatus
         v-for="(status, index) in statuses"
         :key="index"
-        :code="status.code"
-        :text="status.text"
-        :link="status.link"
+        :status="status"
       />
     </AppGallery>
+    <!-- link to uptime bot site for full details -->
     <AppButton
       to="https://stats.uptimerobot.com/XPRo9s4BJ5"
       text="More Details"
@@ -76,6 +74,7 @@ import { getStatuses } from "@/api/uptime";
 import { Status } from "@/types/status";
 import AppStatus from "@/components/AppStatus.vue";
 
+// help landing page
 export default defineComponent({
   components: {
     AppStatus,
@@ -84,20 +83,22 @@ export default defineComponent({
     return {
       // list of status checks to display
       statuses: [] as Array<Status>,
-      // whether we're still loading statuses
-      loading: true,
-      // whether an error has occurred trying to query uptimerobot
-      error: "",
+      // overall status of query
+      status: null as Status | null,
     };
   },
   async mounted() {
     // get statuses from uptimerobot api
+    this.status = {
+      code: "loading",
+      text: "Loading service statuses",
+    };
     try {
       this.statuses = await getStatuses();
+      this.status = null;
     } catch (error) {
-      this.error = (error as Error).message;
+      this.status = { code: "error", text: (error as Error).message };
     }
-    this.loading = false;
   },
 });
 </script>

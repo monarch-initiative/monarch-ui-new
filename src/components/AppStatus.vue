@@ -1,7 +1,12 @@
 <template>
-  <AppLink :to="link" class="status" :data-code="code" :aria-label="code">
+  <AppLink
+    :to="status?.link || ''"
+    class="status"
+    :data-code="status?.code || ''"
+    :aria-label="status?.code || ''"
+  >
     <AppIcon class="icon" :icon="icon" />
-    <span v-if="text" class="text">{{ text }}</span>
+    <span class="text">{{ status?.text || "" }} <slot /></span>
   </AppLink>
 </template>
 
@@ -22,16 +27,12 @@ const icons: Record<string, string> = {
 // an icon, text, and link showing the status of something
 export default defineComponent({
   props: {
-    // status code
-    code: String as PropType<Status["code"]>,
-    // text to show under status icon
-    text: String,
-    // where to link to for more details about status
-    link: String,
+    // status object
+    status: Object as PropType<Status>,
   },
   computed: {
     icon() {
-      return icons[this.code || "unknown"];
+      return icons[this.status?.code || "unknown"];
     },
   },
 });

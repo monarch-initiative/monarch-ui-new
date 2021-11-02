@@ -26,7 +26,6 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { debounce, DebouncedFunc } from "lodash";
 import AppModal from "@/components/AppModal.vue";
 import AppFeedbackForm from "@/components/AppFeedbackForm.vue";
 
@@ -41,52 +40,36 @@ export default defineComponent({
       // whether to show jump button
       showJump: false,
       // whether to show feedback button
-      showFeedback: false,
+      showFeedback: true,
       // whether to show feedback modal
       showModal: false,
     };
   },
   methods: {
-    onScroll() {
-      // if page is long and user has scrolled far down enough
-      const downEnough = window.scrollY > window.innerHeight * 0.25;
-
-      // if user has scrolled to bottom of page (and not at top)
-      const atBottom =
-        window.scrollY > 0 &&
-        window.scrollY + window.innerHeight >=
-          document.body.clientHeight -
-            (document.querySelector("footer")?.clientHeight || 0);
-
+    showOrHide() {
       // show/hide buttons based on scroll
-      this.showJump = downEnough && !atBottom;
-      this.showFeedback =
-        !atBottom && String(this.$route.name).toLowerCase() !== "feedback";
+      this.showJump = window.scrollY > window.innerHeight * 0.25;
     },
     jump() {
       // jump to top of page
       window.scrollTo(0, 0);
     },
   },
-  computed: {
-    // debounced version of on scroll listener for performance
-    debouncedOnScroll(): DebouncedFunc<() => void> {
-      return debounce(this.onScroll, 100, { leading: true, maxWait: 100 });
-    },
-  },
   mounted() {
-    this.onScroll();
-    window.addEventListener("scroll", this.debouncedOnScroll);
+    this.showOrHide();
+    window.addEventListener("scroll", this.showOrHide);
+    window.addEventListener("resize", this.showOrHide);
   },
   beforeUnmount() {
-    window.removeEventListener("scroll", this.debouncedOnScroll);
+    window.removeEventListener("scroll", this.showOrHide);
+    window.removeEventListener("resize", this.showOrHide);
   },
 });
 </script>
 
 <style lang="scss" scoped>
 .float {
-  --spacing: 20px;
+  --spacing: 10px;
   display: flex;
   flex-direction: column;
   gap: var(--spacing);
@@ -94,10 +77,6 @@ export default defineComponent({
   right: var(--spacing);
   bottom: var(--spacing);
   z-index: 2;
-
-  @media (max-width: 600px) {
-    --spacing: 10px;
-  }
 }
 
 .button {
