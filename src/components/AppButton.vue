@@ -48,6 +48,7 @@ export default defineComponent({
   min-height: 40px;
   margin: 20px;
   padding: 5px 20px;
+  flex-shrink: 0;
   background: $theme-light;
   color: $off-black;
   border-radius: 3px;

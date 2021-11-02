@@ -35,9 +35,15 @@ export default defineComponent({
 // close button
 .close {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 20px;
+  right: 20px;
+  margin: 0 !important;
   font-size: 0.8rem !important;
+
+  @media (max-width: 400px) {
+    top: 10px;
+    right: 10px;
+  }
 }
 </style>
 
@@ -57,8 +63,8 @@ export default defineComponent({
 // style modal itself
 .modal-content {
   position: relative;
-  max-width: min(800px, calc(95vw - 50px));
-  max-height: calc(100vh - 50px);
+  max-width: min(800px, calc(100vw - 80px));
+  max-height: calc(100vh - 80px);
   padding: 40px;
   background: $white;
   overflow-y: auto;
