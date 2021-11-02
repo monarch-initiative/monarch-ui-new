@@ -24,6 +24,7 @@ const globalComponents = {
 
 export default globalComponents;
 
+// typescript hints so editors can warn when you haven't supplied props properly
 declare module "@vue/runtime-core" {
   export interface GlobalComponents {
     AppButton: typeof AppButton;
