@@ -2,53 +2,25 @@
   <!-- main links -->
   <AppSection>
     <AppHeading>Help</AppHeading>
+    <p class="center">
+      Request a feature, report a bug, or chat with us about anything
+      Monarch-related.
+    </p>
     <AppTile
       icon="comment"
       title="Feedback Form"
-      subtitle="Request a feature, report a bug, etc."
+      subtitle="Right here, no account required"
+      to="/feedback"
     />
     <AppTile
-      icon="hands-helping"
+      icon="comments"
       title="Help Desk"
-      subtitle="A central place for users to talk with us"
-    />
-    <p>
-      If you have a GitHub account, know the relevant respository, and have a
-      specific feature request or bug report, you can also directly
-      <AppLink to="https://github.com/monarch-initiative"
-        >create an issue on GitHub</AppLink
-      >. If you’re not sure, please use the methods above; we’ll funnel your
-      request to the appropriate place from there.
-    </p>
-  </AppSection>
-
-  <!-- api and service statuses -->
-  <AppSection>
-    <AppHeading>Statuses</AppHeading>
-    <p v-if="loading" class="center">
-      <AppStatus code="loading" text="Loading service statuses" />
-    </p>
-    <p v-else-if="error" class="center">
-      <AppStatus code="warning" :text="error" />
-    </p>
-    <div v-else class="statuses">
-      <AppStatus
-        v-for="(status, index) in statuses"
-        :key="index"
-        :code="status.code"
-        :text="status.text"
-        :link="status.link"
-        design="big"
-      />
-    </div>
-    <AppButton
-      to="https://stats.uptimerobot.com/XPRo9s4BJ5"
-      text="More Details"
-      icon="arrow-right"
+      subtitle="If you have a GitHub account"
+      to="https://github.com/monarch-initiative/helpdesk"
     />
   </AppSection>
 
-  <!-- docs -->
+  <!-- tutorials/faqs/etc -->
   <AppSection>
     <AppHeading>How to use Monarch</AppHeading>
     <AppGallery>
@@ -63,12 +35,36 @@
     <AppButton to="/sources" text="Ontologies and Datasets" icon="database" />
   </AppSection>
 
+  <!-- api and service statuses -->
+  <AppSection>
+    <AppHeading>Status</AppHeading>
+    <!-- main status of all checks -->
+    <p v-if="status" class="center">
+      <AppStatus :status="status" />
+    </p>
+    <!-- indiviual statuses -->
+    <AppGallery v-else size="small">
+      <AppStatus
+        v-for="(status, index) in statuses"
+        :key="index"
+        :status="status"
+        design="plain"
+      />
+    </AppGallery>
+    <!-- link to uptime bot site for full details -->
+    <AppButton
+      to="https://stats.uptimerobot.com/XPRo9s4BJ5"
+      text="More Details"
+      icon="arrow-right"
+    />
+  </AppSection>
+
   <!-- last resort contact methods -->
   <AppSection>
     <p class="center">
       If you still need help, or for general inquires, you can
       <AppLink to="mailto:info@monarchinitiative.org">email us</AppLink> or
-      <AppLink to="https://twitter.com/MonarchInit">tweet us</AppLink>
+      <AppLink to="https://twitter.com/MonarchInit">tweet us</AppLink>.
     </p>
   </AppSection>
 </template>
@@ -77,39 +73,33 @@
 import { defineComponent } from "vue";
 import { getStatuses } from "@/api/uptime";
 import { Status } from "@/types/status";
+import AppStatus from "@/components/AppStatus.vue";
 
+// help landing page
 export default defineComponent({
+  components: {
+    AppStatus,
+  },
   data() {
     return {
       // list of status checks to display
       statuses: [] as Array<Status>,
-      // whether we're still loading statuses
-      loading: true,
-      // whether an error has occurred trying to query uptimerobot
-      error: "",
+      // overall status of query
+      status: null as Status | null,
     };
   },
   async mounted() {
     // get statuses from uptimerobot api
+    this.status = {
+      code: "loading",
+      text: "Loading service statuses",
+    };
     try {
       this.statuses = await getStatuses();
+      this.status = null;
     } catch (error) {
-      this.error = (error as Error).message;
+      this.status = { code: "error", text: (error as Error).message };
     }
-    this.loading = false;
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.statuses {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 100px);
-  grid-template-rows: repeat(auto-fit, 80px);
-  gap: 30px;
-  justify-content: center;
-  align-items: flex-start;
-  justify-items: center;
-  margin: 40px 0;
-}
-</style>

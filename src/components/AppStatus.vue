@@ -1,13 +1,13 @@
 <template>
   <AppLink
-    :to="link"
+    :to="status?.link || ''"
     class="status"
-    :data-code="code"
     :data-design="design"
-    :aria-label="code"
+    :data-code="status?.code || ''"
+    :aria-label="status?.code || ''"
   >
     <AppIcon class="icon" :icon="icon" />
-    <span v-if="text" class="text">{{ text }}</span>
+    <span class="text">{{ status?.text || "" }} <slot /></span>
   </AppLink>
 </template>
 
@@ -28,20 +28,16 @@ const icons: Record<string, string> = {
 // an icon, text, and link showing the status of something
 export default defineComponent({
   props: {
-    // status code
-    code: String as PropType<Status["code"]>,
-    // text to show under status icon
-    text: String,
-    // where to link to for more details about status
-    link: String,
+    // status object
+    status: Object as PropType<Status>,
     // visual design
-    // default: horizontal layout
-    // "big": vertical layout with bigger icon and text
-    design: String as PropType<"big" | undefined>,
+    // default: background and centered
+    // "plain": no bg, padding, align, etc
+    design: String as PropType<"plain" | undefined>,
   },
   computed: {
     icon() {
-      return icons[this.code || "unknown"];
+      return icons[this.status?.code || "unknown"];
     },
   },
 });
@@ -49,16 +45,18 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .status {
-  display: inline-flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   gap: 15px;
-  margin: 20px;
+  padding: 20px;
+  background: $light-gray;
   text-decoration: none;
 
-  &[data-design="big"] {
-    flex-direction: column;
-    margin: 0;
+  &[data-design="plain"] {
+    padding: unset;
+    background: unset;
+    justify-content: unset;
   }
 }
 
@@ -66,9 +64,6 @@ export default defineComponent({
 
 .icon {
   font-size: 1.5rem;
-}
-.status[data-design="big"] .icon {
-  font-size: 2rem;
 }
 
 .status[data-code="loading"] .icon {
@@ -98,13 +93,7 @@ export default defineComponent({
 // text
 
 .text {
-  font-size: 1.1rem;
   text-align: left;
-  color: $dark-gray;
-}
-
-.status[data-design="big"] .text {
-  color: $black;
-  text-align: center;
+  color: $off-black;
 }
 </style>

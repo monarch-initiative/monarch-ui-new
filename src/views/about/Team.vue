@@ -88,9 +88,13 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { kebabCase } from "lodash";
+import AppMember from "@/components/AppMember.vue";
 import team from "./team.yaml";
 
 export default defineComponent({
+  components: {
+    AppMember,
+  },
   data() {
     return {
       // list of team data

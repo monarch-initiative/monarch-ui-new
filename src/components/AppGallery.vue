@@ -12,7 +12,7 @@ export default defineComponent({
   props: {
     // size of items in gallery
     // default: medium
-    // "small": smaller items and spacing
+    // "small": smaller spacing
     // "big": larger and fewer items
     size: String as PropType<"small" | "big" | undefined>,
   },
@@ -27,11 +27,12 @@ $cell: minmax(100px, 1fr);
 .gallery {
   display: grid;
   grid-template-columns: $cell $cell $cell;
+  justify-items: stretch;
   gap: 40px;
   margin: 40px auto;
 
   &[data-size="small"] {
-    gap: 10px;
+    gap: 20px;
   }
 
   &[data-size="big"] {

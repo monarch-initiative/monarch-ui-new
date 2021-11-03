@@ -61,6 +61,7 @@ Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-
 - `/public` - Folder whose contents gets copied over verbatim to build folder.
   Use as little as possible; prefer `/assets`.
 - `/src` - Main source code that gets compiled, along with installed packages in `/node_modules`, into the final product.
+
   - `/api` - Code that interfaces directly with any external services or data sources.
     As much as possible, data transformation should take place here, putting it into the desired format, leaving `.vue` files as mostly presentational (and some local UI state).
     Data transformation should take place here as much as possible, keeping `.vue` files mostly presentational and with minimal logic.
@@ -76,6 +77,7 @@ Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-
   - `/util` - Miscellaneous utility functions to do generic tasks.
   - `/views` - Organizes the site into pages.
     Directory structure and file names should correlate to urls.
+
 - `/tests` - Suite of tests to verify functionality and ensure quality.
 - `package.json` - What third party packages are necessary for this app to run, and which versions.
   Also where the `yarn ___` shorthand commands are defined.
@@ -92,3 +94,6 @@ See `variables.scss` for a palette of acceptable colors/fonts/etc to use.
 
 Keep configuration files as minimal as possible and conform to third-party-maintained presets.
 For example, avoid overriding default eslint rules as much as possible.
+
+Keep long lists, such as those in `/global`, sorted alphabetically for consistency and ease of lookup and comparison.
+Tip: use VS Code extension "Sort Lines".

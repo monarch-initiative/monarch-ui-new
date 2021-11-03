@@ -7,22 +7,26 @@
   <!-- status component -->
   <AppSection>
     <AppGallery>
-      <AppStatus code="loading" text="Loading some results" />
-      <AppStatus code="success" text="Action was a success" />
-      <AppStatus code="warning" text="Be careful" />
-      <AppStatus code="error" text="There was an error" />
-      <AppStatus code="paused" text="Action is paused" />
-      <AppStatus code="unknown" text="Unexpected result" />
-    </AppGallery>
-  </AppSection>
-  <AppSection>
-    <AppGallery>
-      <AppStatus code="loading" design="big" text="Loading some results" />
-      <AppStatus code="success" design="big" text="Action was a success" />
-      <AppStatus code="warning" design="big" text="Be careful" />
-      <AppStatus code="error" design="big" text="There was an error" />
-      <AppStatus code="paused" design="big" text="Action is paused" />
-      <AppStatus code="unknown" design="big" text="Unexpected result" />
+      <AppStatus :status="{ code: 'loading', text: 'Loading some results' }" />
+      <AppStatus :status="{ code: 'success', text: 'Action was a success' }" />
+      <AppStatus :status="{ code: 'warning', text: 'Be careful' }" />
+      <AppStatus :status="{ code: 'error', text: 'There was an error' }" />
+      <AppStatus :status="{ code: 'paused', text: 'Action is paused' }" />
+      <AppStatus :status="{ code: 'unknown', text: 'Unexpected result' }" />
+      <AppStatus :status="{ code: 'success' }">
+        <strong>Atribtrary content using slot</strong>
+      </AppStatus>
     </AppGallery>
   </AppSection>
 </template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import AppStatus from "@/components/AppStatus.vue";
+
+export default defineComponent({
+  components: {
+    AppStatus,
+  },
+});
+</script>

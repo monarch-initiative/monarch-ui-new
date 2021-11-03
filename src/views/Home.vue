@@ -31,3 +31,14 @@
     </AppGallery>
   </AppSection>
 </template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import AppInput from "@/components/AppInput.vue";
+
+export default defineComponent({
+  components: {
+    AppInput,
+  },
+});
+</script>

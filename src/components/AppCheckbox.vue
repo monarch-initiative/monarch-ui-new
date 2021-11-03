@@ -40,6 +40,7 @@ export default defineComponent({
   cursor: pointer;
   transition: background $fast;
 
+  &:focus-within,
   &:hover {
     background: $light-gray;
   }
@@ -53,6 +54,7 @@ export default defineComponent({
     background: none;
     border-radius: 3px;
     border: solid 2px $theme;
+    outline: none;
     cursor: pointer;
   }
 

@@ -9,7 +9,7 @@ test("Chooses heading levels correctly", async () => {
   // mount hoc
   const wrapper = mount(AppHeadings, mountOptions);
 
-  // wait for everything to render
+  // wait for async rendering to finish
   await flushPromises();
 
   // find all heading components
@@ -28,9 +28,8 @@ test("Creates heading links correctly", async () => {
   // mount hoc
   const wrapper = mount(AppHeadings, mountOptions);
 
-  // wait for everything to render
+  // wait for async rendering to finish
   await flushPromises();
-  await sleep();
 
   // find all heading components
   const headings = wrapper.findAll(tags);

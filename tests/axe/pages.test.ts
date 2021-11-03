@@ -9,7 +9,7 @@ expect.extend(toHaveNoViolations);
 
 // get list of page paths to check
 const pages = routes.map((route) => route.path);
-// const pages = ["/help"];
+// const pages = ["/feedback"];
 
 test(
   "Page accessibility checks",

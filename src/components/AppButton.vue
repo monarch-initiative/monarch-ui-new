@@ -48,23 +48,28 @@ export default defineComponent({
   min-height: 40px;
   margin: 20px;
   padding: 5px 20px;
+  flex-shrink: 0;
   background: $theme-light;
   color: $off-black;
   border-radius: 3px;
   font-size: 1rem;
   font-weight: 500;
   text-decoration: none;
+  outline: none;
   cursor: pointer;
-  transition: background $fast;
+  transition: box-shadow $fast, opacity $fast;
 
+  &:focus,
   &:hover {
-    background: $light-gray;
+    box-shadow: 0 0 0 2px $theme;
   }
 
   &[data-icon="true"][data-text="false"] {
     min-width: unset;
-    width: 40px;
-    height: 40px;
+    min-height: unset;
+    width: 2.5em;
+    height: 2.5em;
+    padding: unset;
     border-radius: 999px;
   }
 }

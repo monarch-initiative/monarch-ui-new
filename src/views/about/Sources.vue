@@ -119,12 +119,20 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import sources from "./sources.yaml";
+import AppCheckbox from "@/components/AppCheckbox.vue";
+import AppAccordion from "@/components/AppAccordion.vue";
+import AppDetail from "@/components/AppDetail.vue";
 import { getDatasets } from "@/api/datasets";
 import { getOntologies } from "@/api/ontologies";
 import { Source } from "@/types/sources";
 
 // sources page
 export default defineComponent({
+  components: {
+    AppCheckbox,
+    AppAccordion,
+    AppDetail,
+  },
   data() {
     return {
       // sources data

@@ -14,6 +14,7 @@
 }
 
 main {
+  position: relative;
   flex-grow: 1;
 }
 
@@ -48,6 +49,15 @@ h3 {
   text-align: left;
 }
 
+h4 {
+  margin: 20px 0;
+  @include trim-v-margins;
+  padding: 10px 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: left;
+}
+
 // elements
 
 p,
@@ -72,10 +82,12 @@ a {
 
 button {
   display: inline-flex;
+  justify-content: center;
+  align-items: center;
   color: currentColor;
   background: none;
   border: none;
-  padding: 20px;
+  padding: 0;
   cursor: pointer;
 }
 
@@ -126,4 +138,21 @@ strong {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+}
+
+// transitions
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }

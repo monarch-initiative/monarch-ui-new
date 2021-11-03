@@ -5,6 +5,7 @@ import {
   RouteRecordRaw,
   RouterScrollBehavior,
 } from "vue-router";
+import { hideAll } from "tippy.js";
 import Home from "@/views/Home.vue";
 import Explore from "@/views/explore/Explore.vue";
 import Tools from "@/views/tools/Tools.vue";
@@ -15,6 +16,7 @@ import Publications from "@/views/about/Publications.vue";
 import Sources from "@/views/about/Sources.vue";
 import Terms from "@/views/about/Terms.vue";
 import Help from "@/views/help/Help.vue";
+import Feedback from "@/views/help/Feedback.vue";
 import Testbed from "@/views/Testbed.vue";
 import { sleep } from "@/util/debug";
 
@@ -85,6 +87,11 @@ export const routes: Array<RouteRecordRaw> = [
     name: "Help",
     component: Help,
   },
+  {
+    path: "/feedback",
+    name: "Feedback",
+    component: Feedback,
+  },
 
   // test routes (pages to only include during development)
   ...(process.env.NODE_ENV === "development"
@@ -146,6 +153,11 @@ router.afterEach((to) => {
     const page = typeof to.name === "string" ? to.name : "";
     document.title = process.env.VUE_APP_TITLE_SHORT + " - " + page;
   });
+});
+
+// close any open tooltips on route change
+router.beforeEach(() => {
+  hideAll();
 });
 
 export default router;
