@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, nextTick } from "vue";
 import AppModal from "@/components/AppModal.vue";
 import AppFeedbackForm from "@/components/AppFeedbackForm.vue";
 
@@ -48,6 +48,7 @@ export default defineComponent({
     };
   },
   methods: {
+    // update data state
     update() {
       // get dimensions of footer
       const footerEl = document.querySelector("footer");
@@ -55,7 +56,7 @@ export default defineComponent({
       const footer = footerEl.getBoundingClientRect();
 
       // if user has scrolled far down enough
-      const downEnough = window.scrollY > window.innerHeight * 0.25;
+      const downEnough = window.scrollY > window.innerHeight * 0.1;
 
       // if user has scrolled to bottom of page (and not at top)
       const atBottom =
@@ -81,14 +82,25 @@ export default defineComponent({
       window.scrollTo(0, 0);
     },
   },
+  watch: {
+    // run update when route changes (after page finished rendering)
+    $route: {
+      handler: function () {
+        nextTick(this.update);
+      },
+      deep: true,
+    },
+  },
   mounted() {
+    // run initial update (after page finished rendering)
+    nextTick(this.update);
+
+    // listen for events that would affect calcs in update and run update
     window.addEventListener("scroll", this.update);
     window.addEventListener("resize", this.update);
   },
-  updated() {
-    this.update();
-  },
   beforeUnmount() {
+    // detach/cleanup event listeners
     window.removeEventListener("scroll", this.update);
     window.removeEventListener("resize", this.update);
   },

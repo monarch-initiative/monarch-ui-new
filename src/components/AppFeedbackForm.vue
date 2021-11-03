@@ -180,7 +180,7 @@ export default defineComponent({
           text: "Feedback submitted successfully!",
         };
 
-        // clear form data from storage
+        // clear form data from storage after successful submit
         (this as unknown as { clearPersist: () => void })?.clearPersist();
       } catch (error) {
         // error...

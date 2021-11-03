@@ -17,7 +17,7 @@
     <div class="license">
       <span>Monarch Intiative {{ new Date().getFullYear() }}</span>
       <span>&nbsp; · &nbsp;</span>
-      <a href="" class="license">BSD-3 License</a>
+      <AppLink to="/terms" class="license">BSD-3</AppLink>
     </div>
   </footer>
 </template>
