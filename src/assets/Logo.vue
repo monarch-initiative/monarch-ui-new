@@ -61,7 +61,7 @@ export default defineComponent({
     // restart css animations
     replay() {
       // https://stackoverflow.com/questions/6268508/restart-animation-in-css3-any-better-way-than-removing-the-element/67183414#67183414
-      (this.$refs.svg as HTMLElement)
+      (this.$refs.svg as SVGElement)
         .getAnimations({ subtree: true })
         .forEach((animation: Animation) => {
           animation.cancel();
