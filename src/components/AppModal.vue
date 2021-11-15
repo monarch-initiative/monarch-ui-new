@@ -28,7 +28,7 @@
 import { defineComponent, nextTick } from "vue";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 
-// modal component with arbitrary content
+// basic modal component with arbitrary content
 export default defineComponent({
   props: {
     // open state
