@@ -2,12 +2,7 @@
   <label class="input">
     <div v-if="title" class="title">
       {{ title }}
-      <AppIcon
-        v-if="required"
-        icon="asterisk"
-        class="asterisk"
-        v-tooltip="'Required field'"
-      />
+      <AppIcon v-if="required" icon="asterisk" class="asterisk" />
     </div>
     <textarea
       v-if="multi"

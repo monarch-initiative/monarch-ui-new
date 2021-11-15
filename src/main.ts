@@ -4,6 +4,7 @@ import components from "@/global/components";
 import mixins from "@/global/mixins";
 import plugins from "@/global/plugins";
 import directives from "@/global/directives";
+import "wicg-inert";
 
 // create main app object
 let app = createApp(App);
