@@ -18,7 +18,7 @@
         v-tooltip="'Give us feedback on this page!'"
       />
     </transition>
-    <AppModal v-model="showModal">
+    <AppModal v-model="showModal" label="Feedback form">
       <AppFeedbackForm :modal="true" />
     </AppModal>
   </div>

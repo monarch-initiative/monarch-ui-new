@@ -1,4 +1,3 @@
-import { sleep } from "./../../src/util/debug";
 import { flushPromises, mount } from "@vue/test-utils";
 import AppHeadings from "./AppHeadings.vue";
 import { mountOptions } from "../setup";

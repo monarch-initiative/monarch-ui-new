@@ -21,6 +21,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/vue-fontawesome": "^3.0.0-4",
     "axios": "^0.23.0",
+    "body-scroll-lock": "^4.0.0-beta.0",
     "core-js": "^3.6.5",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
@@ -29,11 +30,12 @@
     "tippy.js": "^6.3.2",
     "ua-parser-js": "^1.0.2",
     "vue": "^3.0.0",
-    "vue-final-modal": "^3.4.3",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "wicg-inert": "^3.1.1"
   },
   "devDependencies": {
+    "@types/body-scroll-lock": "^3.1.0",
     "@types/jest": "^24.0.19",
     "@types/jest-axe": "^3.5.3",
     "@types/js-yaml": "^4.0.3",
