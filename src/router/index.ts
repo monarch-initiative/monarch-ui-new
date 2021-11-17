@@ -111,7 +111,7 @@ const scrollBehavior: RouterScrollBehavior = async (
   savedPosition
 ) => {
   // https://github.com/vuejs/vue-router-next/issues/1147
-  await sleep(0);
+  await sleep();
 
   // scroll to previous position if exists
   if (savedPosition) return savedPosition;

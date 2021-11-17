@@ -1,5 +1,5 @@
-import { flushPromises, mount } from "@vue/test-utils";
-import { mountOptions, axiosMock } from "../setup";
+import { mount } from "@vue/test-utils";
+import { mountOptions, flush } from "../setup";
 import Help from "@/views/help/Help.vue";
 
 test("Help page renders uptimerobot statuses", async () => {
@@ -7,10 +7,7 @@ test("Help page renders uptimerobot statuses", async () => {
   const wrapper = mount(Help, mountOptions);
 
   // wait for async rendering to finish
-  await flushPromises();
-
-  // check that api was mocked correctly
-  expect(axiosMock.history.post.length).toBe(1);
+  await flush();
 
   // check that various statuses exist. fixture data contains all possible
   // status types from uptimerobot. check that all of them get converted to and

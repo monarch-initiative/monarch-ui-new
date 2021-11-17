@@ -1,2 +1,2 @@
-export const sleep = async (ms = 1000): Promise<void> =>
+export const sleep = async (ms = 0): Promise<void> =>
   new Promise((resolve) => window.setTimeout(resolve, ms));

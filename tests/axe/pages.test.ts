@@ -1,7 +1,7 @@
-import { flushPromises, mount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import router, { routes } from "@/router";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { mountOptions } from "../setup";
+import { mountOptions, flush } from "../setup";
 import App from "@/App.vue";
 
 // add axe to jest
@@ -27,7 +27,7 @@ test(
       await router.isReady();
 
       // wait until async rendering is done
-      await flushPromises();
+      await flush();
 
       // analyze rendered html with axe
       const results = await axe(wrapper.element);

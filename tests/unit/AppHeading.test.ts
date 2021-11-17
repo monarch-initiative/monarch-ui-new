@@ -1,6 +1,6 @@
-import { flushPromises, mount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import AppHeadings from "./AppHeadings.vue";
-import { mountOptions } from "../setup";
+import { mountOptions, flush } from "../setup";
 
 const tags = "h1, h2, h3, h4";
 
@@ -9,7 +9,7 @@ test("Chooses heading levels correctly", async () => {
   const wrapper = mount(AppHeadings, mountOptions);
 
   // wait for async rendering to finish
-  await flushPromises();
+  await flush();
 
   // find all heading components
   const headings = wrapper.findAll(tags);
@@ -28,7 +28,7 @@ test("Creates heading links correctly", async () => {
   const wrapper = mount(AppHeadings, mountOptions);
 
   // wait for async rendering to finish
-  await flushPromises();
+  await flush();
 
   // find all heading components
   const headings = wrapper.findAll(tags);
