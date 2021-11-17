@@ -17,16 +17,16 @@ it("Feedback form can open and close", () => {
 
   // click in overlay in corner, which should close modal
   cy.get(".overlay").first().click(10, 10);
-  cy.get(".modal").should("not.be.visible");
+  cy.get(".modal").should("not.exist");
 
   // reopen and make sure pressing esc closes
   cy.get("@open").click();
   cy.window().trigger("keydown", { key: "Escape" });
   cy.window().trigger("keypress", { key: "Escape" });
-  cy.get(".modal").should("not.be.visible");
+  cy.get(".modal").should("not.exist");
 
   // reopen and make sure x button closes
   cy.get("@open").click();
   cy.get(".modal button").first().click(); // close button should always be first button in dom order
-  cy.get(".modal").should("not.be.visible");
+  cy.get(".modal").should("not.exist");
 });
