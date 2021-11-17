@@ -1,11 +1,13 @@
 import { MountingOptions } from "@vue/test-utils";
 import { ComponentCustomProps } from "vue";
+import axios from "axios";
+import MockAdapter from "axios-mock-adapter";
 import router from "@/router";
 import components from "@/global/components";
 import mixins from "@/global/mixins";
 import plugins from "@/global/plugins";
 import directives from "@/global/directives";
-import { axiosMock } from "./fixtures/api-mocks";
+import { fixtures } from "./fixtures";
 import "@/global/icons";
 
 // mock window functions
@@ -30,3 +32,10 @@ export const mountOptions: MountingOptions<ComponentCustomProps> = {
     plugins,
   },
 };
+
+// api call mocks
+export const axiosMock = new MockAdapter(axios);
+for (const [method, url, , response] of fixtures) {
+  if (method === "POST") axiosMock.onPost(url).reply(200, response);
+  else axiosMock.onGet(url).reply(200, response);
+}

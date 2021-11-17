@@ -1,7 +1,6 @@
 import { flushPromises, mount } from "@vue/test-utils";
 import AppFeedbackForm from "@/components/AppFeedbackForm.vue";
-import { mountOptions } from "../setup";
-import { axiosMock } from "../fixtures/api-mocks";
+import { mountOptions, axiosMock } from "../setup";
 
 test("Submits correctly when filled out", async () => {
   // mount

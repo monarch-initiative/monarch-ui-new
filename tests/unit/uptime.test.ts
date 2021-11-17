@@ -1,6 +1,5 @@
-import { axiosMock } from "./../fixtures/api-mocks";
 import { flushPromises, mount } from "@vue/test-utils";
-import { mountOptions } from "../setup";
+import { mountOptions, axiosMock } from "../setup";
 import Help from "@/views/help/Help.vue";
 
 test("Help page renders uptimerobot statuses", async () => {

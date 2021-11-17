@@ -19,4 +19,9 @@ module.exports = {
 
   // setup to run before each test (but after jest env and globals installed)
   setupFilesAfterEnv: ["./tests/setup.ts"],
+
+  // ignore inline webpack loaders
+  moduleNameMapper: {
+    ".*!(.*)": "$1",
+  },
 };
