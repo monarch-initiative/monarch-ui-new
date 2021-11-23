@@ -1,5 +1,8 @@
 <template>
   <header :data-home="home">
+    <!-- header background visualization -->
+    <TheViz v-if="home" />
+
     <!-- title bar -->
     <div class="title">
       <!-- logo image and text -->
@@ -67,10 +70,12 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import TheViz from "./TheViz.vue";
 import Logo from "@/assets/Logo.vue";
 
 export default defineComponent({
   components: {
+    TheViz,
     Logo,
   },
   data() {
