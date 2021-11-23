@@ -5,13 +5,15 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { debounce } from "lodash";
+import { mix } from "tinycolor2";
 import { sin, cos, dist } from "@/util/math";
 
-const color = "#ffffff"; // color of dots and links
+// settings shared across functions
 const size = 4; // size of dots and links
 const gap = 50; // distance between dots
-const limit = 100; // max number of dots
-const fps = 30; // steps of physics and draw to do per second
+const baseColor = "#" + mix("#ffffff", "#00838f", 92).toHex(); // color of elements at rest
+const pulseColor = "#" + mix("#ffffff", "#00838f", 50).toHex(); // color of element when pulsing
+// (other one-off settings in place below)
 
 interface Dot {
   // rendered position
@@ -21,13 +23,20 @@ interface Dot {
   cx: number;
   cy: number;
   // angle and spin
-  a: number;
-  da: number;
+  angle: number;
+  spin: number;
+  // target and actual color
+  color: string;
+  colorTarget: string;
 }
 
 interface Link {
+  // dots to link together
   a: Dot;
   b: Dot;
+  // target and actual color
+  color: string;
+  colorTarget: string;
 }
 
 // globals
@@ -45,6 +54,22 @@ const step = () => {
   draw();
 };
 
+// pulse color of field of dots and links from inward to outward
+const pulse = () => {
+  for (const entity of [...dots, ...links]) {
+    // get center position of entity
+    const x = "x" in entity ? entity.x : (entity.a.x + entity.b.x) / 2;
+    const y = "y" in entity ? entity.y : (entity.a.y + entity.b.y) / 2;
+    // time delays
+    const speed = 2 / 10; // how fast pulse propagates outward
+    const start = dist(x - width / 2, y - height / 2) / speed;
+    const reset = start + 100 / speed;
+    // set timers
+    window.setTimeout(() => (entity.colorTarget = pulseColor), start);
+    window.setTimeout(() => (entity.colorTarget = baseColor), reset);
+  }
+};
+
 // resize canvas
 const resize = () => {
   if (!canvas || !ctx) return;
@@ -59,7 +84,7 @@ const resize = () => {
 // clear canvas
 const clear = () => {
   if (!canvas || !ctx) return;
-  ctx.clearRect(0, 0, canvas.width || 0, canvas.height || 0);
+  ctx.clearRect(0, 0, width || 0, height || 0);
 };
 
 // draw dots and links to canvas
@@ -67,9 +92,7 @@ const draw = () => {
   if (!ctx) return;
 
   // draw links
-  for (const { a, b } of links) {
-    // closer the dots, the stronger the link
-    ctx.globalAlpha = Math.pow(1.01, -dist(a.x, a.y, b.x, b.y));
+  for (const { a, b, color } of links) {
     ctx.strokeStyle = color;
     ctx.lineWidth = size / 3;
     ctx.beginPath();
@@ -79,8 +102,7 @@ const draw = () => {
   }
 
   // draw dots
-  for (const { x, y } of dots) {
-    ctx.globalAlpha = 1;
+  for (const { x, y, color } of dots) {
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(x, y, size, 0, 2 * Math.PI);
@@ -91,34 +113,45 @@ const draw = () => {
 // move physics simulation one step
 const move = () => {
   for (const dot of dots) {
-    dot.a += dot.da;
-    dot.x = dot.cx + (sin(dot.a) * gap) / 4;
-    dot.y = dot.cy + (cos(dot.a) * gap) / 4;
+    // giving dots actual velocity makes them wander off and become less uniformly distributed
+    // instead, move in circles around center point to give illusion of random movement
+    dot.angle += dot.spin;
+    dot.x = dot.cx + (sin(dot.angle) * gap) / 4;
+    dot.y = dot.cy + (cos(dot.angle) * gap) / 4;
   }
+
+  // move color toward target color smoothly
+  const speed = 10;
+  for (const entity of [...dots, ...links])
+    entity.color = "#" + mix(entity.color, entity.colorTarget, speed).toHex();
 };
 
 // generate field of dots and links
 const generate = debounce(() => {
   // generate field of dots
   dots = [];
-  for (let x = 0; x <= width; x += gap) {
-    for (let y = 0; y <= height; y += gap) {
+  for (let x = -gap; x <= width + gap; x += gap) {
+    for (let y = -gap; y <= height + gap; y += gap) {
       // eliminate some to make more "organic" and less "grid"
       if (Math.random() > 0.5)
         dots.push({
+          // set positions
           x,
           y,
           cx: x,
           cy: y,
           // set random starting angle and spin
-          a: Math.random() * 360,
-          da: -1 + Math.random() * 2,
+          angle: Math.random() * 360,
+          spin: -1 + Math.random() * 2,
+          // set colors
+          color: baseColor,
+          colorTarget: baseColor,
         });
     }
   }
 
   // hard limit dots for performance
-  while (dots.length > limit)
+  while (dots.length > 200)
     dots.splice(Math.floor(dots.length * Math.random()), 1);
 
   // go through each pair of dots
@@ -131,7 +164,14 @@ const generate = debounce(() => {
         const { cx: x2, cy: y2 } = dots[b];
         // only link if within a certain distance
         if (dist(x1, y1, x2, y2) < gap * 2)
-          links.push({ a: dots[a], b: dots[b] });
+          links.push({
+            // set linked dots
+            a: dots[a],
+            b: dots[b],
+            // set colors
+            color: baseColor,
+            colorTarget: baseColor,
+          });
       }
     }
   }
@@ -140,8 +180,10 @@ const generate = debounce(() => {
   dots = dots.filter((dot) => links.find(({ a, b }) => dot === a || dot === b));
 }, 50);
 
-// step physics simulation
-window.setInterval(step, 1000 / fps);
+// fps
+window.setInterval(step, 1000 / 30);
+// how frequently field pulses
+window.setInterval(pulse, 5000);
 
 // fun background visualization element behind header
 export default defineComponent({
@@ -168,7 +210,6 @@ canvas {
   top: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.25;
   overflow: hidden;
   z-index: -1;
 }
