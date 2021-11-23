@@ -27,6 +27,8 @@ const pulseColor = "#" + mix("#ffffff", "#00838f", 50).toHex(); // color of elem
 // 3d axis rotations
 let rx = 0;
 let ry = 0;
+let rxTarget = 0;
+let ryTarget = 0;
 
 interface Dot {
   // position in 3d space
@@ -58,32 +60,6 @@ let height = 0;
 let dots: Array<Dot> = [];
 let links: Array<Link> = [];
 
-// one step/tick/frame
-const step = () => {
-  move();
-  clear();
-  draw();
-};
-
-// pulse color of field of dots and links from inward to outward
-const pulse = () => {
-  for (const entity of [...dots, ...links]) {
-    // get center position of entity
-    const center =
-      "point" in entity
-        ? entity.point
-        : getMidpoint(entity.from.point, entity.to.point);
-
-    // time delays
-    const speed = 2 / 10; // how fast pulse propagates outward
-    const start = dist(center.x - width / 2, center.y - height / 2) / speed;
-    const reset = start + 100 / speed;
-    // set timers
-    window.setTimeout(() => (entity.colorTarget = pulseColor), start);
-    window.setTimeout(() => (entity.colorTarget = baseColor), reset);
-  }
-};
-
 // resize canvas
 const resize = () => {
   if (!canvas || !ctx) return;
@@ -95,7 +71,100 @@ const resize = () => {
   ctx.scale(scale, scale);
 };
 
-// clear canvas
+// generate field of dots and links
+const generate = debounce(() => {
+  // generate field of dots
+  dots = [];
+  for (let x = -gap; x <= width + gap; x += gap) {
+    for (let y = -gap; y <= height + gap; y += gap) {
+      // eliminate some to make more "organic" and less "grid"
+      if (Math.random() > 0.5)
+        dots.push({
+          // set positions (x and y to grid, z to random within range)
+          point: {
+            x,
+            y,
+            z: -gap + Math.random() * 2 * gap,
+          },
+          // set colors
+          color: baseColor,
+          colorTarget: baseColor,
+          // set random starting angle and spin
+          angle: Math.random() * 360,
+          spin: -0.5 + Math.random() * 1,
+        });
+    }
+  }
+
+  // hard limit dots for performance
+  while (dots.length > 200)
+    dots.splice(Math.floor(dots.length * Math.random()), 1);
+
+  // sort dots by z
+  dots.sort((a, b) => a.point.z - b.point.z);
+
+  // go through each pair of dots
+  links = [];
+  for (let a = 0; a < dots.length; a++) {
+    for (let b = 0; b < dots.length; b++) {
+      // upper triangular matrix to only count each pair once
+      if (a > b) {
+        const from = dots[a];
+        const to = dots[b];
+        // only link if within a certain distance
+        if (dist(from.point.x, from.point.y, to.point.x, to.point.y) < gap * 2)
+          links.push({
+            // set linked dots
+            from,
+            to,
+            // set colors
+            color: baseColor,
+            colorTarget: baseColor,
+          });
+      }
+    }
+  }
+
+  // eliminate dots with no links
+  dots = dots.filter((dot) =>
+    links.find(({ from, to }) => dot === from || dot === to)
+  );
+}, 50);
+
+// move physics simulation one step
+const move = () => {
+  // move 3d world rotation toward target smoothly
+  rx += (rxTarget - rx) / 50;
+  ry += (ryTarget - ry) / 50;
+
+  // for each dot
+  for (const dot of dots) {
+    // giving dots actual velocity makes them wander off and become less uniformly distributed
+    // instead, slowly orbit around center point to give illusion of random movement
+    dot.angle += dot.spin;
+    const orbit = {
+      x: (cos(dot.angle) * gap) / 4,
+      y: (sin(dot.angle) * gap) / 4,
+      z: 0,
+    };
+
+    // project from 3d into 2d using 3d rotation matrix
+    dot.projected = project(
+      translate(dot.point, orbit),
+      rx,
+      ry,
+      width / 2,
+      height / 2
+    );
+  }
+
+  // for each entity (dot or link)
+  // move color toward target color smoothly
+  for (const entity of [...dots, ...links])
+    entity.color = "#" + mix(entity.color, entity.colorTarget, 10).toHex();
+};
+
+// clear canvas for redrawing
 const clear = () => {
   if (!canvas || !ctx) return;
   ctx.clearRect(0, 0, width || 0, height || 0);
@@ -126,103 +195,41 @@ const draw = () => {
   }
 };
 
+// pulse color of field of dots and links from inward to outward
+const pulse = () => {
+  for (const entity of [...dots, ...links]) {
+    // get center position of entity
+    const center =
+      "point" in entity
+        ? entity.point
+        : getMidpoint(entity.from.point, entity.to.point);
+
+    // time delays
+    const speed = 2 / 10; // how fast pulse propagates outward
+    const start = dist(center.x - width / 2, center.y - height / 2) / speed;
+    const reset = start + 100 / speed;
+    // set timers
+    window.setTimeout(() => (entity.colorTarget = pulseColor), start);
+    window.setTimeout(() => (entity.colorTarget = baseColor), reset);
+  }
+};
+
+// one step/tick/frame
+const step = () => {
+  move();
+  clear();
+  draw();
+};
+
 // rotate 3d world
 const rotate = (event: MouseEvent | TouchEvent) => {
+  // point touched
   const x = "clientY" in event ? event.clientY : event.touches[0].clientY;
   const y = "clientX" in event ? event.clientX : event.touches[0].clientX;
-  rx = (0.5 - x / window.innerHeight) * 135;
-  ry = -(0.5 - y / window.innerWidth) * 90;
+  // set destination 3d world rotation
+  rxTarget = (0.5 - x / window.innerHeight) * 90;
+  ryTarget = -(0.5 - y / window.innerWidth) * 90;
 };
-
-// move physics simulation one step
-const move = () => {
-  // for each dot
-  for (const dot of dots) {
-    // giving dots actual velocity makes them wander off and become less uniformly distributed
-    // instead, move in circles around center point to give illusion of random movement
-    dot.angle += dot.spin;
-    const wander = {
-      x: (cos(dot.angle) * gap) / 4,
-      y: (sin(dot.angle) * gap) / 4,
-      z: 0,
-    };
-
-    // project from 3d into 2d using 3d rotation matrix
-    dot.projected = project(
-      translate(dot.point, wander),
-      rx,
-      ry,
-      width / 2,
-      height / 2
-    );
-  }
-
-  // for each entity (dot or link)
-  const speed = 10;
-  // move color toward target color smoothly
-  for (const entity of [...dots, ...links])
-    entity.color = "#" + mix(entity.color, entity.colorTarget, speed).toHex();
-};
-
-// generate field of dots and links
-const generate = debounce(() => {
-  // generate field of dots
-  dots = [];
-  for (let x = -gap; x <= width + gap; x += gap) {
-    for (let y = -gap; y <= height + gap; y += gap) {
-      // eliminate some to make more "organic" and less "grid"
-      if (Math.random() > 0.5)
-        dots.push({
-          // set positions
-          point: {
-            x,
-            y,
-            z: -gap + Math.random() * 2 * gap,
-          },
-          // set colors
-          color: baseColor,
-          colorTarget: baseColor,
-          // set random starting angle and spin
-          angle: Math.random() * 360,
-          spin: -0.5 + Math.random() * 1,
-        });
-    }
-  }
-
-  // hard limit dots for performance
-  while (dots.length > 200)
-    dots.splice(Math.floor(dots.length * Math.random()), 1);
-
-  // sort dots by z
-  dots.sort((a, b) => a.point.z - b.point.z);
-
-  // go through each pair of dots
-  links = [];
-  for (let a = 0; a < dots.length; a++) {
-    for (let b = 0; b < dots.length; b++) {
-      // upper triangular
-      if (a > b) {
-        const from = dots[a];
-        const to = dots[b];
-        // only link if within a certain distance
-        if (dist(from.point.x, from.point.y, to.point.x, to.point.y) < gap * 2)
-          links.push({
-            // set linked dots
-            from,
-            to,
-            // set colors
-            color: baseColor,
-            colorTarget: baseColor,
-          });
-      }
-    }
-  }
-
-  // eliminate dots with no links
-  dots = dots.filter((dot) =>
-    links.find(({ from, to }) => dot === from || dot === to)
-  );
-}, 50);
 
 // fps
 window.setInterval(step, 1000 / 60);
@@ -236,11 +243,11 @@ export default defineComponent({
     canvas = this.$refs.canvas as HTMLCanvasElement;
     ctx = canvas.getContext("2d");
 
-    // listen for resizes to container element
+    // listen for resizes to canvas element
     new ResizeObserver(() => {
       // resize canvas
       resize();
-      // regenerate field when container size changes
+      // regenerate field
       generate();
     }).observe(canvas);
 
