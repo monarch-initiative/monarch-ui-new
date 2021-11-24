@@ -5,7 +5,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { debounce } from "lodash";
-import { mix } from "tinycolor2";
 import {
   sin,
   cos,
@@ -19,8 +18,9 @@ import {
 // settings shared across functions
 const size = 4; // size of dots and links
 const gap = 50; // distance between dots
-const baseColor = "#" + mix("#ffffff", "#00838f", 95).toHex(); // color of elements at rest
-const pulseColor = "#" + mix("#ffffff", "#00838f", 50).toHex(); // color of element when pulsing
+// https://pinetools.com/blend-colors
+const baseColor: Color = [25, 143, 154]; // color of elements at rest (10% white, 90% theme-dark)
+const pulseColor: Color = [127, 193, 199]; // color of element when pulsing (50% white, 50% theme-dark)
 // (other one-off settings in place below)
 
 // 3d axis rotations
@@ -29,23 +29,26 @@ let ry = 0;
 let rxTarget = 0;
 let ryTarget = 0;
 
+// efficient rgb tuple format
+type Color = [number, number, number];
+
 interface Dot {
   // position in 3d space
   point: Point3d;
   // 3d position projected into 2d for canvas rendering
   projected?: Point2d;
   // target and actual color
-  color: string;
-  colorTarget: string;
+  color: Color;
+  colorTarget: Color;
 }
 
 interface Link {
   // dots to link together
   from: Dot;
   to: Dot;
-  // target and actual color
-  color: string;
-  colorTarget: string;
+  // target and actual color (in efficient rgb tuple format)
+  color: Color;
+  colorTarget: Color;
 }
 
 // globals
@@ -82,11 +85,11 @@ const generate = debounce(() => {
             // nudge off grid to make more "organic"
             x: x + sin(angle) * (gap / 4),
             y: y + cos(angle) * (gap / 4),
-            // random range to create nice thin-ish 3d layer of dots
+            // random range to create nice thin-ish 3d layer
             z: -gap + Math.random() * 2 * gap,
           },
-          color: baseColor,
-          colorTarget: baseColor,
+          color: [...baseColor],
+          colorTarget: [...baseColor],
         });
       }
     }
@@ -115,8 +118,8 @@ const generate = debounce(() => {
           links.push({
             from,
             to,
-            color: baseColor,
-            colorTarget: baseColor,
+            color: [...baseColor],
+            colorTarget: [...baseColor],
           });
       }
     }
@@ -143,7 +146,8 @@ const move = () => {
   // for each entity (dot or link)
   // move color toward target color smoothly
   for (const entity of [...dots, ...links])
-    entity.color = "#" + mix(entity.color, entity.colorTarget, 10).toHex();
+    for (let c = 0; c < 3; c++)
+      entity.color[c] += (entity.colorTarget[c] - entity.color[c]) / 20;
 };
 
 // clear canvas for redrawing
@@ -159,7 +163,7 @@ const draw = () => {
   // draw links
   for (const { from, to, color } of links) {
     if (!from.projected || !to.projected) continue;
-    ctx.strokeStyle = color;
+    ctx.strokeStyle = "rgb(" + color.join(",") + ")";
     ctx.lineWidth = size / 3;
     ctx.beginPath();
     ctx.moveTo(from.projected.x, from.projected.y);
@@ -170,7 +174,7 @@ const draw = () => {
   // draw dots
   for (const { projected, color } of dots) {
     if (!projected) continue;
-    ctx.fillStyle = color;
+    ctx.fillStyle = "rgb(" + color.join(",") + ")";
     ctx.beginPath();
     ctx.arc(projected.x, projected.y, size, 0, 2 * Math.PI);
     ctx.fill();
@@ -191,8 +195,8 @@ const pulse = () => {
     const start = dist(center.x - width / 2, center.y - height / 2) / speed;
     const reset = start + 100 / speed;
     // set timers
-    window.setTimeout(() => (entity.colorTarget = pulseColor), start);
-    window.setTimeout(() => (entity.colorTarget = baseColor), reset);
+    window.setTimeout(() => (entity.colorTarget = [...pulseColor]), start);
+    window.setTimeout(() => (entity.colorTarget = [...baseColor]), reset);
   }
 };
 
