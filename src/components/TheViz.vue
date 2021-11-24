@@ -12,7 +12,6 @@ import {
   dist,
   Point3d,
   Point2d,
-  translate,
   project,
   getMidpoint,
 } from "@/util/math";
@@ -38,9 +37,6 @@ interface Dot {
   // target and actual color
   color: string;
   colorTarget: string;
-  // angle and spin
-  angle: number;
-  spin: number;
 }
 
 interface Link {
@@ -75,24 +71,24 @@ const resize = () => {
 const generate = debounce(() => {
   // generate field of dots
   dots = [];
+  // start from grid so dots relatively uniformly distributed
   for (let x = -gap; x <= width + gap; x += gap) {
     for (let y = -gap; y <= height + gap; y += gap) {
       // eliminate some to make more "organic" and less "grid"
-      if (Math.random() > 0.5)
+      if (Math.random() > 0.5) {
+        const angle = Math.random() * 360;
         dots.push({
-          // set positions (x and y to grid, z to random within range)
           point: {
-            x,
-            y,
+            // nudge off grid to make more "organic"
+            x: x + sin(angle) * (gap / 4),
+            y: y + cos(angle) * (gap / 4),
+            // random range to create nice thin-ish 3d layer of dots
             z: -gap + Math.random() * 2 * gap,
           },
-          // set colors
           color: baseColor,
           colorTarget: baseColor,
-          // set random starting angle and spin
-          angle: Math.random() * 360,
-          spin: -0.5 + Math.random() * 1,
         });
+      }
     }
   }
 
@@ -111,13 +107,14 @@ const generate = debounce(() => {
       if (a > b) {
         const from = dots[a];
         const to = dots[b];
-        // only link if within a certain distance
-        if (dist(from.point.x, from.point.y, to.point.x, to.point.y) < gap * 2)
+        // only link if dots close enough together
+        if (
+          dist(from.point.x, from.point.y, to.point.x, to.point.y) <
+          gap * 1.5
+        )
           links.push({
-            // set linked dots
             from,
             to,
-            // set colors
             color: baseColor,
             colorTarget: baseColor,
           });
@@ -133,29 +130,14 @@ const generate = debounce(() => {
 
 // move physics simulation one step
 const move = () => {
-  // move 3d world rotation toward target smoothly
+  // move 3d world rotation toward target rotation smoothly
   rx += (rxTarget - rx) / 50;
   ry += (ryTarget - ry) / 50;
 
   // for each dot
   for (const dot of dots) {
-    // giving dots actual velocity makes them wander off and become less uniformly distributed
-    // instead, slowly orbit around center point to give illusion of random movement
-    dot.angle += dot.spin;
-    const orbit = {
-      x: (cos(dot.angle) * gap) / 4,
-      y: (sin(dot.angle) * gap) / 4,
-      z: 0,
-    };
-
     // project from 3d into 2d using 3d rotation matrix
-    dot.projected = project(
-      translate(dot.point, orbit),
-      rx,
-      ry,
-      width / 2,
-      height / 2
-    );
+    dot.projected = project(dot.point, rx, ry, width / 2, height / 2);
   }
 
   // for each entity (dot or link)
