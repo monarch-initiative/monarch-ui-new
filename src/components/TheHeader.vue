@@ -1,7 +1,7 @@
 <template>
   <header :data-home="home">
     <!-- header background visualization -->
-    <TheViz v-if="home" />
+    <TheViz />
 
     <!-- title bar -->
     <div class="title">
@@ -140,6 +140,7 @@ header[data-home="true"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  // background: radial-gradient($theme-dark 40%, transparent 70%);
 }
 
 .button {
@@ -209,6 +210,7 @@ header[data-home="true"] {
 nav {
   display: flex;
   margin: 20px;
+  // background: radial-gradient($theme-dark 40%, transparent 70%);
 }
 
 .link {

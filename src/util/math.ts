@@ -8,9 +8,7 @@ export const sin = (degrees = 0): number =>
 export const cos = (degrees = 0): number =>
   Math.cos((2 * Math.PI * degrees) / 360);
 
-// round number to divisor
-export const round = (number = 0, divisor = 1): number =>
-  Math.round(number / divisor) * divisor;
+// STUFF ONLY USED FOR HEADER VISUALIZATION
 
 // point tuple types
 export interface Point3d {
