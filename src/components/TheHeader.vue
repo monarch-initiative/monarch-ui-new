@@ -1,5 +1,8 @@
 <template>
   <header :data-home="home">
+    <!-- header background visualization -->
+    <TheViz />
+
     <!-- title bar -->
     <div class="title">
       <!-- logo image and text -->
@@ -67,10 +70,12 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import TheViz from "./TheViz.vue";
 import Logo from "@/assets/Logo.vue";
 
 export default defineComponent({
   components: {
+    TheViz,
     Logo,
   },
   data() {
@@ -135,6 +140,7 @@ header[data-home="true"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  // background: radial-gradient($theme-dark 40%, transparent 70%);
 }
 
 .button {
@@ -204,6 +210,7 @@ header[data-home="true"] {
 nav {
   display: flex;
   margin: 20px;
+  // background: radial-gradient($theme-dark 40%, transparent 70%);
 }
 
 .link {
