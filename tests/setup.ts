@@ -12,8 +12,12 @@ import { sleep } from "./../src/util/debug";
 import { handlers } from "./fixtures";
 import "@/global/icons";
 
-// mock window functions
+// mock global/window/browser functions
 window.scrollTo = jest.fn();
+HTMLCanvasElement.prototype.getContext = jest.fn();
+window.ResizeObserver = jest
+  .fn()
+  .mockImplementation(() => ({ observe: jest.fn() }));
 
 // run before each test
 beforeEach(async () => {

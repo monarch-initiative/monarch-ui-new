@@ -1,11 +1,5 @@
 <template>
-  <svg
-    ref="svg"
-    viewBox="-50 -30 100 60"
-    @mouseenter="replay"
-    @focus="replay"
-    aria-hidden="true"
-  >
+  <svg viewBox="-50 -30 100 60">
     <mask id="logo_mask">
       <rect x="-50" y="-50" width="100" height="100" fill="white" />
       <rect x="-10" y="7.5" width="20" height="5" fill="black" />
@@ -52,25 +46,6 @@
     </g>
   </svg>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  methods: {
-    // restart css animations
-    replay() {
-      // https://stackoverflow.com/questions/6268508/restart-animation-in-css3-any-better-way-than-removing-the-element/67183414#67183414
-      (this.$refs.svg as SVGElement)
-        .getAnimations({ subtree: true })
-        .forEach((animation: Animation) => {
-          animation.cancel();
-          animation.play();
-        });
-    },
-  },
-});
-</script>
 
 <style lang="scss" scoped>
 svg {
