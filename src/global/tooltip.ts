@@ -12,7 +12,7 @@ const mounted = (
   { value }: DirectiveBinding
 ): void => {
   if (value) {
-    tippy(element, { content: value });
+    tippy(element, { content: value, delay: 100, duration: 200 });
     element.setAttribute("aria-label", value);
   }
 };

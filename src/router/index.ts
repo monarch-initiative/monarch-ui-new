@@ -63,6 +63,11 @@ export const routes: Array<RouteRecordRaw> = [
     component: Cite,
   },
   {
+    path: "/sources",
+    name: "Sources",
+    component: Sources,
+  },
+  {
     path: "/team",
     name: "Team",
     component: Team,
@@ -71,11 +76,6 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/publications",
     name: "Publications",
     component: Publications,
-  },
-  {
-    path: "/sources",
-    name: "Sources",
-    component: Sources,
   },
   {
     path: "/terms",

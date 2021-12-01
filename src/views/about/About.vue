@@ -21,6 +21,12 @@
       subtitle="How to cite and attribute Monarch"
     />
     <AppTile
+      to="/sources"
+      icon="database"
+      title="Sources"
+      subtitle="Datasets, ontologies, and downloads"
+    />
+    <AppTile
       to="/team"
       icon="users"
       title="Team"
@@ -31,12 +37,6 @@
       icon="newspaper"
       title="Publications"
       subtitle="Monarch-related published works"
-    />
-    <AppTile
-      to="/sources"
-      icon="database"
-      title="Sources"
-      subtitle="Datasets, ontologies, and downloads"
     />
     <AppTile
       to="/terms"

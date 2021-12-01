@@ -9,20 +9,20 @@
     <AppTile
       icon="comment"
       title="Feedback Form"
-      subtitle="Right here, no account required"
+      subtitle="Right here, no account required, one-way"
       to="/feedback"
     />
     <AppTile
       icon="comments"
       title="Help Desk"
-      subtitle="If you have a GitHub account"
+      subtitle="On GitHub, requires account, two-way"
       to="https://github.com/monarch-initiative/helpdesk"
     />
   </AppSection>
 
-  <!-- tutorials/faqs/etc -->
+  <!-- tutorials/faqs -->
   <AppSection>
-    <AppHeading>How to use Monarch</AppHeading>
+    <AppHeading>How to use this website</AppHeading>
     <AppGallery>
       <AppPlaceholder />
       <AppPlaceholder />
@@ -31,6 +31,11 @@
       <AppPlaceholder />
       <AppPlaceholder />
     </AppGallery>
+  </AppSection>
+
+  <!-- other help -->
+  <AppSection>
+    <AppHeading>How to use the rest of Monarch</AppHeading>
     <AppButton to="/tools" text="API and Tools" icon="tools" />
     <AppButton to="/sources" text="Ontologies and Datasets" icon="database" />
   </AppSection>

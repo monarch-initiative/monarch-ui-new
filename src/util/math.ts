@@ -8,6 +8,10 @@ export const sin = (degrees = 0): number =>
 export const cos = (degrees = 0): number =>
   Math.cos((2 * Math.PI * degrees) / 360);
 
+// absolute value limit
+export const absMax = (value = 0, limit = 0): number =>
+  Math.max(Math.min(value, limit), -limit);
+
 // STUFF ONLY USED FOR HEADER VISUALIZATION
 
 // point tuple types
