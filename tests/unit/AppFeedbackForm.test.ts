@@ -1,7 +1,6 @@
-import { flushPromises, mount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import AppFeedbackForm from "@/components/AppFeedbackForm.vue";
-import { mountOptions } from "../setup";
-import { axiosMock } from "../fixtures/api-mocks";
+import { mountOptions, flush } from "../setup";
 
 test("Submits correctly when filled out", async () => {
   // mount
@@ -17,12 +16,8 @@ test("Submits correctly when filled out", async () => {
   await wrapper.find("form").trigger("submit.prevent");
   expect(wrapper.emitted()).toHaveProperty("submit");
 
-  // check that api was mocked correctly
-  expect(axiosMock.history.post.length).toBe(1);
-  expect(axiosMock.history.post[0].data.includes(testMessage));
-
   // wait for async rendering to finish
-  await flushPromises();
+  await flush();
 
   // test status message and expect to be success
   const link = wrapper.find(".status a");
