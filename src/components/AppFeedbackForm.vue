@@ -126,6 +126,7 @@ export default defineComponent({
       };
     },
   },
+  // custom persist mixin
   persist: {
     keys: ["name", "email", "github", "feedback"],
     namespace: "feedback-form",

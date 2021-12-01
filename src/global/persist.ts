@@ -20,17 +20,18 @@ export default defineComponent({
 
     // get what data keys to persist from $persist option attached to component
     const { keys, namespace } = this.$options.persist as Options;
+    const prefix = namespace + "-" + this.$route.name.toLowerCase();
 
     // read initial values from storage
     for (const key of keys) {
-      const value = read(`${namespace}-${key}`);
+      const value = read(`${prefix}-${key}`);
       if (value !== null) this[key] = value;
     }
 
     // setup listeners for writing values to storage on change
     for (const key of keys)
       this.$watch(key, (value: unknown) =>
-        debouncedWrite(`${namespace}-${key}`, value)
+        debouncedWrite(`${prefix}-${key}`, value)
       );
   },
 

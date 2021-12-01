@@ -134,8 +134,8 @@ const generate = debounce(() => {
 // move physics simulation one step
 const move = () => {
   // move 3d world rotation toward target rotation smoothly
-  rx += (rxTarget - rx) / 50;
-  ry += (ryTarget - ry) / 50;
+  rx += (rxTarget - rx) / 100;
+  ry += (ryTarget - ry) / 100;
 
   // for each dot
   for (const dot of dots) {
