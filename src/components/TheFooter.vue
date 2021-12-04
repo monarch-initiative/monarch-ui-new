@@ -39,6 +39,10 @@ footer {
 a {
   color: $white;
   transition: opacity $fast;
+
+  &:hover {
+    opacity: 0.5;
+  }
 }
 
 .social {
@@ -47,15 +51,8 @@ a {
 }
 
 .social a {
-  padding: 10px;
-}
-
-.social:hover a {
-  opacity: 0.2;
-}
-
-.social:hover a:hover {
-  opacity: 1;
+  margin: 5px;
+  padding: 5px;
 }
 
 .license {

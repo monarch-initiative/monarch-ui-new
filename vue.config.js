@@ -1,18 +1,4 @@
-/* eslint @typescript-eslint/no-var-requires: "off" */
-const SitemapPlugin = require("sitemap-webpack-plugin").default;
-const { paths } = require("./src/router/sitemap.js");
-
-// webpack plugin to generate sitemap with app build
-const sitemapPlugin = new SitemapPlugin({
-  base: process.env.VUE_APP_URL,
-  paths,
-});
-
 module.exports = {
-  // add plugins
-  configureWebpack: {
-    plugins: [sitemapPlugin],
-  },
   // add extra file type loaders
   chainWebpack: (config) => {
     // markdown and raw text

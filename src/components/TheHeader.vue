@@ -1,7 +1,7 @@
 <template>
   <header :data-home="home">
     <!-- header background visualization -->
-    <TheViz />
+    <TheNexus />
 
     <!-- title bar -->
     <div class="title">
@@ -70,12 +70,12 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import TheViz from "./TheViz.vue";
+import TheNexus from "./TheNexus.vue";
 import Logo from "@/assets/Logo.vue";
 
 export default defineComponent({
   components: {
-    TheViz,
+    TheNexus,
     Logo,
   },
   data() {
@@ -214,20 +214,29 @@ nav {
 }
 
 .link {
+  position: relative;
   width: 100%;
-  padding: 15px;
+  margin: 5px;
+  padding: 10px;
   color: $white;
   text-decoration: none;
   text-align: center;
-  transition: opacity $fast;
-}
 
-nav:hover .link {
-  opacity: 0.2;
-}
+  &:after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    bottom: 0;
+    height: 2px;
+    background: $white;
+    transition: left $fast, right $fast;
+  }
 
-nav:hover .link:hover {
-  opacity: 1;
+  &:hover:after {
+    left: 5px;
+    right: 5px;
+  }
 }
 
 @media (max-width: $wrap) {

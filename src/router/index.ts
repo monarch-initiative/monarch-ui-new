@@ -31,6 +31,7 @@ const redirect404 = (): string | void => {
 };
 
 // list of routes and corresponding components
+// CHECK PUBLIC/SITEMAP.XML AND KEEP IN SYNC
 export const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -63,6 +64,11 @@ export const routes: Array<RouteRecordRaw> = [
     component: Cite,
   },
   {
+    path: "/sources",
+    name: "Sources",
+    component: Sources,
+  },
+  {
     path: "/team",
     name: "Team",
     component: Team,
@@ -71,11 +77,6 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/publications",
     name: "Publications",
     component: Publications,
-  },
-  {
-    path: "/sources",
-    name: "Sources",
-    component: Sources,
   },
   {
     path: "/terms",

@@ -9,6 +9,7 @@ import {
   sin,
   cos,
   dist,
+  absMax,
   Point3d,
   Point2d,
   project,
@@ -134,8 +135,8 @@ const generate = debounce(() => {
 // move physics simulation one step
 const move = () => {
   // move 3d world rotation toward target rotation smoothly
-  rx += (rxTarget - rx) / 100;
-  ry += (ryTarget - ry) / 100;
+  rx += absMax((rxTarget - rx) / 100, 0.2);
+  ry += absMax((ryTarget - ry) / 100, 0.2);
 
   // for each dot
   for (const dot of dots) {
@@ -220,7 +221,7 @@ const rotate = (event: MouseEvent | TouchEvent) => {
 // fps
 window.setInterval(step, 1000 / 60);
 // how frequently field pulses
-window.setInterval(pulse, 5000);
+window.setInterval(pulse, 10000);
 
 // fun background visualization element behind header
 export default defineComponent({
