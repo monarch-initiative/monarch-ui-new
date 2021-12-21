@@ -209,7 +209,7 @@ header[data-home="true"] {
 
 nav {
   display: flex;
-  margin: 20px;
+  padding: 20px;
   // background: radial-gradient($theme-dark 40%, transparent 70%);
 }
 
@@ -243,12 +243,16 @@ nav {
   nav {
     flex-direction: column;
     position: unset;
-    margin: 10px;
+    padding: 10px;
     width: 100%;
   }
 
   nav[data-expanded="false"] {
     display: none;
+  }
+
+  .link {
+    margin: 0;
   }
 }
 

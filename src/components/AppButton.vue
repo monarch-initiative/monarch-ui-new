@@ -32,10 +32,12 @@ export default defineComponent({
     click: Function,
   },
   computed: {
+    // type of component to render
     component() {
       if (this.to) return "AppLink";
       else return "button";
     },
+    // is provided slot plain text
     isExternal() {
       return isExternalUrl(this.to);
     },

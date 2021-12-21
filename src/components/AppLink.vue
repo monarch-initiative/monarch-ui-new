@@ -3,7 +3,7 @@
     <slot />
   </span>
   <a v-else-if="isExternal" :href="to" target="_blank">
-    <template v-if="isSlotText">
+    <template v-if="isPlainText">
       <span>
         <slot />
       </span>
@@ -32,8 +32,7 @@ export default defineComponent({
       return isExternalUrl(this.to);
     },
     // is provided slot plain text
-    isSlotText() {
-      console.log(this.$slots.default && this.$slots.default());
+    isPlainText() {
       return (
         this.$slots.default &&
         this.$slots.default().length === 1 &&
