@@ -103,6 +103,6 @@ input:hover,
 input:focus,
 textarea:hover,
 textarea:focus {
-  box-shadow: 0 0 0 2px $theme;
+  box-shadow: $outline;
 }
 </style>

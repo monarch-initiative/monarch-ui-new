@@ -69,7 +69,7 @@ export default defineComponent({
 
   &:focus,
   &:hover {
-    box-shadow: 0 0 0 2px $theme;
+    box-shadow: $outline;
   }
 
   &[data-icon="true"][data-text="false"] {
