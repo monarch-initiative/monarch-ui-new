@@ -27,11 +27,11 @@ export default defineComponent({
     to: String,
   },
   computed: {
-    // is to prop an external url
+    // is "to" prop an external url
     isExternal() {
       return isExternalUrl(this.to);
     },
-    // is provided slot plain text
+    // is provided slot just plain text
     isPlainText() {
       return (
         this.$slots.default &&

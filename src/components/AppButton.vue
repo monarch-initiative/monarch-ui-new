@@ -37,7 +37,7 @@ export default defineComponent({
       if (this.to) return "AppLink";
       else return "button";
     },
-    // is provided slot plain text
+    // is "to" prop an external url
     isExternal() {
       return isExternalUrl(this.to);
     },
