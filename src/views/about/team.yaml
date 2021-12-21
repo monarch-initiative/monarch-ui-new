@@ -55,6 +55,9 @@
     - name: Peter Robinson
       link: https://www.jax.org/research-and-faculty/faculty/peter-robinson
       role: Monarch PI
+    - name: Leigh Carmody
+      role: Scientific Curator
+      link: https://www.linkedin.com/in/leighcarmody/
     - name: Hannah Blau
       role: Research Software Engineer
       link: https://www.jax.org/people/hannah-blau
@@ -64,10 +67,6 @@
     - name: Vida Ravanmehr
       role: Postdoctoral Associate
       link: https://www.jax.org/people/vida-ravanmehr
-    - name: Leigh Carmody
-      role: Scientific Curator
-      alumni: true
-      link: https://www.linkedin.com/in/leighcarmody/
 
 - name: Lawrence Berkeley National Laboratory
   image: berkeley.png
