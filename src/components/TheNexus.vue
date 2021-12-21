@@ -9,7 +9,6 @@ import {
   sin,
   cos,
   dist,
-  absMax,
   Point3d,
   Point2d,
   project,
@@ -27,8 +26,6 @@ const pulseColor: Color = [127, 193, 199]; // color of element when pulsing (50%
 // 3d axis rotations
 let rx = 0;
 let ry = 0;
-let rxTarget = 0;
-let ryTarget = 0;
 
 // efficient rgb tuple format
 type Color = [number, number, number];
@@ -134,9 +131,10 @@ const generate = debounce(() => {
 
 // move physics simulation one step
 const move = () => {
-  // move 3d world rotation toward target rotation smoothly
-  rx += absMax((rxTarget - rx) / 100, 0.2);
-  ry += absMax((ryTarget - ry) / 100, 0.2);
+  // move 3d world rotation in smooth pattern
+  const t = window.performance.now() / 1000;
+  rx = sin(t * 10) * 30;
+  ry = cos(t * 5) * 40;
 
   // for each dot
   for (const dot of dots) {
@@ -208,16 +206,6 @@ const step = () => {
   draw();
 };
 
-// rotate 3d world
-const rotate = (event: MouseEvent | TouchEvent) => {
-  // point touched
-  const x = "clientY" in event ? event.clientY : event.touches[0].clientY;
-  const y = "clientX" in event ? event.clientX : event.touches[0].clientX;
-  // set destination 3d world rotation
-  rxTarget = (0.5 - x / window.innerHeight) * 90;
-  ryTarget = -(0.5 - y / window.innerWidth) * 90;
-};
-
 // fps
 window.setInterval(step, 1000 / 60);
 // how frequently field pulses
@@ -237,10 +225,6 @@ export default defineComponent({
       // regenerate field
       generate();
     }).observe(canvas);
-
-    // listen for mouse move
-    window.addEventListener("mousemove", rotate);
-    window.addEventListener("touchmove", rotate);
   },
 });
 </script>

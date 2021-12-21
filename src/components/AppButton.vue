@@ -8,13 +8,16 @@
     :data-text="text ? true : false"
   >
     <span v-if="text">{{ text }}</span>
-    <AppIcon :icon="icon" v-if="icon" />
-    <slot />
+    <AppIcon
+      v-if="icon"
+      :icon="isExternal && text ? 'external-link-alt' : icon"
+    />
   </component>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { isExternalUrl } from "@/util/url";
 
 // component that looks like a button that either does something or goes somewhere
 export default defineComponent({
@@ -32,6 +35,9 @@ export default defineComponent({
     component() {
       if (this.to) return "AppLink";
       else return "button";
+    },
+    isExternal() {
+      return isExternalUrl(this.to);
     },
   },
 });

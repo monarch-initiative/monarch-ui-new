@@ -53,7 +53,7 @@ $cell: minmax(100px, 1fr);
 }
 
 // force no margins for children since grid already provides gap
-.gallery :deep(*) {
+.gallery > :deep(*) {
   margin: 0 !important;
 }
 </style>

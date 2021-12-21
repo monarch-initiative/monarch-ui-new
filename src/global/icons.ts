@@ -23,6 +23,7 @@ library.add(fas.faDatabase);
 library.add(fas.faDownload);
 library.add(fas.faEnvelopeOpenText);
 library.add(fas.faExclamationCircle);
+library.add(fas.faExternalLinkAlt);
 library.add(fas.faFeatherAlt);
 library.add(fas.faHandsHelping);
 library.add(fas.faHistory);

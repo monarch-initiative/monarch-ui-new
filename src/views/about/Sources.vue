@@ -16,7 +16,9 @@
     <AppAccordion v-for="(source, index) in filteredSources" :key="index">
       <!-- title of accordion button -->
       <template #title>
-        {{ source.name || source.id || "" }}
+        <span>
+          {{ source.name || source.id || "" }}
+        </span>
         <AppIcon
           v-if="source.type"
           class="icon"
@@ -201,11 +203,6 @@ export default defineComponent({
     margin: 20px 0;
     @include trim-v-margins;
   }
-}
-
-.icon {
-  margin-left: 5px;
-  color: $gray;
 }
 
 .details {

@@ -1,18 +1,18 @@
 <template>
   <AppLink :to="link" class="member">
     <div class="image">
-      <img :src="src" :alt="name" loading="lazy" />
+      <div class="portrait">
+        <img :src="src" :alt="name" loading="lazy" />
+      </div>
+      <AppIcon
+        icon="history"
+        class="icon"
+        v-if="alumni"
+        v-tooltip="'Alumni team member'"
+      />
     </div>
     <div v-if="role" class="text">
-      <div class="name">
-        {{ name
-        }}<span class="icon"
-          ><AppIcon
-            icon="history"
-            v-if="alumni"
-            v-tooltip="'Alumni team member'"
-        /></span>
-      </div>
+      <div class="name">{{ name }}</div>
       <div v-if="role" class="role">{{ role }}</div>
     </div>
   </AppLink>
@@ -63,16 +63,36 @@ a.member:hover {
 }
 
 .image {
+  position: relative;
   width: 80px;
   height: 80px;
   flex-shrink: 0;
-  border-radius: 999px;
-  overflow: hidden;
+
+  .portrait {
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+    overflow: hidden;
+  }
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .icon {
+    position: absolute;
+    // align to 45 degree edge of circle (for aesthetics)
+    left: 14%;
+    top: 14%;
+    width: 30px;
+    height: 30px;
+    padding: 7px;
+    background: $white;
+    border-radius: 999px;
+    // align center
+    transform: translate(-50%, -50%);
   }
 }
 
@@ -88,14 +108,5 @@ a.member:hover {
 .name,
 .role {
   margin: 10px 0;
-}
-
-.icon {
-  display: inline-block;
-  width: 0;
-
-  svg {
-    margin-left: 10px;
-  }
 }
 </style>

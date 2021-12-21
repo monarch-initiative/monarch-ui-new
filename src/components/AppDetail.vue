@@ -28,7 +28,7 @@ export default defineComponent({
   text-decoration: none;
 
   span {
-    margin-left: 10px;
+    // margin-left: 10px;
     font-weight: 500;
   }
 

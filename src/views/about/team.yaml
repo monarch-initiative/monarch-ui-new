@@ -19,6 +19,7 @@
     - name: Kent Shefchek
       role: Bioinformatics Software Engineer
       link: https://tislab.org/members/kent-shefchek.html
+      alumni: true
     - name: Vincent Rubinetti
       role: Frontend and UI/UX Dev
       link: https://greenelab.com/members/vincent-rubinetti.html
