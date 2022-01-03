@@ -14,6 +14,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
+// block quote specifically for a citation
 export default defineComponent({
   props: {
     // work title

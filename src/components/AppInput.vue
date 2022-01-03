@@ -27,6 +27,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
+// basic text box input, single line or multi-line
 export default defineComponent({
   emits: ["update:modelValue"],
   props: {

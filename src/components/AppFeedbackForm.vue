@@ -81,6 +81,7 @@ import { truncate, collapse } from "@/util/string";
 import { postFeedback } from "@/api/feedback";
 import AppStatus from "./AppStatus.vue";
 
+// feedback form
 export default defineComponent({
   components: {
     AppInput,

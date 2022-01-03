@@ -7,6 +7,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 
+// utility component to conveniently and consistently align and space items
 export default defineComponent({
   props: {
     // horizontal or vertical

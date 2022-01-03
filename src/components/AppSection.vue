@@ -8,6 +8,8 @@
 import { defineComponent, PropType } from "vue";
 
 // section that spans width of page
+// contains, aligns, and evenly vertically spaces its contents
+// all main page content should be contained within one of these
 export default defineComponent({
   props: {
     // width of section

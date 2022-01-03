@@ -18,6 +18,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
+// button with expandable/collapsible content
 export default defineComponent({
   data() {
     return {

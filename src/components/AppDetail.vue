@@ -8,7 +8,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-// an icon and text, with optional link
+// horizontal icon and text, with optional link
 export default defineComponent({
   props: {
     // optional location to link to

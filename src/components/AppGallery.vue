@@ -8,6 +8,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 
+// grid of items
 export default defineComponent({
   props: {
     // size of items in gallery

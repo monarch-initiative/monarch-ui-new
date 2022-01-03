@@ -9,6 +9,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 
+// big circular link button with text and sub text
 export default defineComponent({
   props: {
     // where to link to
