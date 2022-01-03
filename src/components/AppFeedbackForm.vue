@@ -1,9 +1,9 @@
 <template>
-  <!-- heading -->
-  <div v-if="modal" class="heading">Feedback Form</div>
+  <!-- add heading -->
+  <AppHeading :level="1" v-if="modal">Feedback Form</AppHeading>
 
   <!-- overview info -->
-  <p v-if="!status" class="center">
+  <p v-if="!status">
     Request a feature, report a bug, or chat with us about anything
     Monarch-related.
   </p>
@@ -59,7 +59,7 @@
       on GitHub with <em>all of the information above</em>. You'll get a link to
       the discussion once it's created.
     </p>
-    <p class="center">
+    <p>
       <!-- result status -->
       <AppStatus v-if="status" :status="status">
         <AppLink v-if="link" :to="link"
@@ -198,13 +198,13 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .heading {
-  margin-bottom: 30px;
   font-size: 1.3rem;
   text-align: center;
   font-weight: 600;
 }
 
 form {
+  display: contents;
   margin-top: 40px;
 }
 
@@ -212,6 +212,7 @@ form {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 40px;
+  width: 100%;
 }
 
 .feedback {
@@ -233,7 +234,7 @@ form {
   grid-template-columns: 100px 1fr 100px 1fr;
   gap: 10px;
   justify-items: flex-start;
-  margin: 50px 0;
+  width: 100%;
   color: $dark-gray;
   text-align: left;
 

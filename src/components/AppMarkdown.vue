@@ -11,7 +11,10 @@ import { micromark } from "micromark";
 export default defineComponent({
   props: {
     // markdown input source
-    source: { type: String, required: true },
+    source: {
+      type: String,
+      required: true,
+    },
     // what component to wrap source in (defaults to div)
     component: String,
   },

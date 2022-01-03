@@ -2,7 +2,7 @@ import { mount } from "@vue/test-utils";
 import AppHeadings from "./AppHeadings.vue";
 import { mountOptions, flush } from "../setup";
 
-const tags = "h1, h2, h3, h4";
+const tags = "h1, h2, h3";
 
 test("Chooses heading levels correctly", async () => {
   // mount hoc

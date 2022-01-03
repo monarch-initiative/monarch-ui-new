@@ -14,9 +14,15 @@ export default defineComponent({
     // optional location to link to
     to: String,
     // icon to show
-    icon: { type: String, required: true },
+    icon: {
+      type: String,
+      required: true,
+    },
     // text to show
-    text: { type: String, required: true },
+    text: {
+      type: String,
+      required: true,
+    },
   },
 });
 </script>

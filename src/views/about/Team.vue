@@ -7,7 +7,7 @@
       biologists, scientists, and programmers from various schools and
       institutes.
     </p>
-    <p class="center">
+    <p>
       <template v-for="(group, index) in team" :key="index">
         <a :href="'#' + toKebabCase(group.name)">{{ group.name }}</a>
         <span v-if="index !== team.length - 1"> · </span>
@@ -123,7 +123,6 @@ export default defineComponent({
   display: block;
   max-width: 100%;
   max-height: 60px;
-  margin: 60px auto;
 }
 
 .icon {

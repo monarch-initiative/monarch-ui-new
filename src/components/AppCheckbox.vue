@@ -37,8 +37,7 @@ export default defineComponent({
 .checkbox {
   display: inline-flex;
   align-items: center;
-  margin: 10px;
-  padding: 5px 10px;
+  padding: 10px;
   cursor: pointer;
   transition: background $fast;
 

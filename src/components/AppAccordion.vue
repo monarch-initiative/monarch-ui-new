@@ -31,8 +31,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .title {
   width: 100%;
-  margin: 10px 0;
-  @include trim-v-margins;
   padding: 10px;
   border-bottom: solid 2px $light-gray;
   font-size: 1.1rem;
@@ -49,6 +47,9 @@ export default defineComponent({
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   padding: 20px;
 }
 

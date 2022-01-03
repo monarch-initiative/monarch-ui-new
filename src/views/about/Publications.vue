@@ -1,7 +1,7 @@
 <template>
   <AppSection>
     <AppHeading>Publications</AppHeading>
-    <p class="center">
+    <p>
       <template
         class="link"
         v-for="(group, index) in publications"

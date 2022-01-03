@@ -124,6 +124,10 @@ export default defineComponent({
 
 .modal {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
   max-width: min(800px, calc(100vw - 80px));
   max-height: calc(100vh - 80px);
   padding: 40px;

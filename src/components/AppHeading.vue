@@ -19,46 +19,41 @@
 import { defineComponent } from "vue";
 import { kebabCase } from "lodash";
 
-// set heading level and tag, i.e. h1, h2, h3, etc
-function setTag(this: Heading) {
-  // level to set
-  let level;
-
+// get heading level/tag, i.e. h1, h2, h3, etc
+function getTag(this: Heading) {
   // if level manually specified, just use that
-  if (this.level) {
-    level = this.level;
-  }
+  if (this.level) return "h" + this.level;
 
   // otherwise, determine automatically based on heading's position in document
   // https://dequeuniversity.com/rules/axe/4.1/page-has-heading-one
-  else {
-    // heading element
-    const element = this?.$refs?.heading as HTMLElement;
 
-    // if heading is first in parent
-    const firstInParent = element.matches("*:first-child");
-    // if heading is first in document
-    const firstInDoc = element.matches(
-      "main > section:first-child > *:first-child, main > *:first-child"
-    );
+  // heading element
+  const element = this?.$refs?.heading as HTMLElement;
+  // section element
+  const parent = element.parentElement as HTMLElement;
 
-    // determine level
-    if (firstInDoc) level = 1;
-    else if (firstInParent) level = 2;
-    else level = 3;
+  // if heading is first in section
+  const firstHeading = element.matches("*:first-child");
+  // if section is first in main
+  const firstSection = parent.matches("*:first-child");
+
+  // determine level
+  if (firstSection) {
+    if (firstHeading) return "h1";
+    else return "h2";
+  } else {
+    if (firstHeading) return "h2";
+    else return "h3";
   }
-
-  // set tag/component
-  this.tag = "h" + level;
 }
 
 // determine hash link
-function setLink(this: Heading) {
+function getLink(this: Heading) {
   // heading element
   const element = this?.$refs?.heading as HTMLElement;
 
   // determine link from text content of heading
-  this.link = kebabCase(element.textContent || "");
+  return kebabCase(element.textContent || "");
 }
 
 // heading component with anchor link and (optionally) automatic level
@@ -76,12 +71,12 @@ const heading = defineComponent({
     };
   },
   mounted() {
-    setTag.call(this);
-    setLink.call(this);
+    this.tag = getTag.call(this);
+    this.link = getLink.call(this);
   },
   updated() {
-    setTag.call(this);
-    setLink.call(this);
+    this.tag = getTag.call(this);
+    this.link = getLink.call(this);
   },
 });
 
@@ -109,8 +104,7 @@ export default heading;
 
 h1,
 h2,
-h3,
-h4 {
+h3 {
   &:hover .anchor {
     opacity: 1;
   }

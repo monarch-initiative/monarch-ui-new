@@ -1,9 +1,12 @@
 <template>
   <span v-if="!to" role="link">
+    <!-- placeholder if no url provided -->
     <slot />
   </span>
-  <a v-else-if="isExternal" :href="to" target="_blank">
-    <template v-if="isPlainText">
+
+  <a v-else-if="isAbsolute" :href="to" target="_blank">
+    <!-- use regular html link for absolute urls -->
+    <template v-if="isExternal && isPlainText">
       <span>
         <slot />
       </span>
@@ -11,14 +14,16 @@
     </template>
     <slot v-else />
   </a>
+
   <router-link v-else :to="to">
+    <!-- use vue router component for relative urls -->
     <slot />
   </router-link>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { isExternalUrl } from "@/util/url";
+import { isExternal, isAbsolute } from "@/util/url";
 
 // unified wrapper for internal (router) or external (other-domain) links
 export default defineComponent({
@@ -29,7 +34,11 @@ export default defineComponent({
   computed: {
     // is "to" prop an external url
     isExternal() {
-      return isExternalUrl(this.to);
+      return isExternal(this.to);
+    },
+    // is "to" prop an absolute url
+    isAbsolute() {
+      return isAbsolute(this.to);
     },
     // is provided slot just plain text
     isPlainText() {

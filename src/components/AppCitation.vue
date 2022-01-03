@@ -33,10 +33,11 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .citation {
-  & > div {
-    margin: 10px 0;
-    @include trim-v-margins;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
+  & > div {
     &:nth-child(1) {
       font-weight: 600;
     }

@@ -4,10 +4,10 @@
 
 <style lang="scss" scoped>
 .placeholder {
-  margin: 40px 0;
-  background: $gray;
+  width: 100%;
   aspect-ratio: 16 / 9;
   min-height: 100px;
+  background: $gray;
   box-shadow: $shadow;
 }
 </style>

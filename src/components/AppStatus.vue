@@ -31,9 +31,10 @@ export default defineComponent({
     // status object
     status: Object as PropType<Status>,
     // visual design
-    // default: background and centered
-    // "plain": no bg, padding, align, etc
-    design: String as PropType<"plain" | undefined>,
+    design: {
+      default: "normal",
+      type: String as PropType<"normal" | "plain">,
+    },
   },
   computed: {
     icon() {

@@ -1,2 +1,15 @@
-export const isExternalUrl = (url = ""): boolean =>
-  url.startsWith("http") || url.startsWith("ftp") || url.startsWith("mailto:");
+// is url absolute (as opposed to relative)
+export const isAbsolute = (url = ""): boolean =>
+  ["http:", "https:", "mailto:"].some((prefix) => url.startsWith(prefix));
+
+// is url outside of monarch domain
+export const isExternal = (url = ""): boolean =>
+  isAbsolute(url) && !getDomain(url).endsWith("monarchinitiative.org");
+
+const getDomain = (url = ""): string => {
+  try {
+    return new URL(url).hostname;
+  } catch (error) {
+    return "";
+  }
+};
