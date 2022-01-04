@@ -8,23 +8,23 @@
   <AppSection>
     <AppFlex>
       <AppButton design="primary" text="primary" />
-      <AppButton design="primary" text="primary" icon="fab twitter" />
-      <AppButton design="primary" icon="fab twitter" />
+      <AppButton design="primary" text="primary" icon="download" />
+      <AppButton design="primary" icon="download" />
     </AppFlex>
     <AppFlex>
       <AppButton design="secondary" text="secondary" />
-      <AppButton design="secondary" text="secondary" icon="fab twitter" />
-      <AppButton design="secondary" icon="fab twitter" />
+      <AppButton design="secondary" text="secondary" icon="download" />
+      <AppButton design="secondary" icon="download" />
     </AppFlex>
     <AppFlex>
       <AppButton design="small" text="small" />
-      <AppButton design="small" text="small" icon="fab twitter" />
-      <AppButton design="small" icon="fab twitter" />
+      <AppButton design="small" text="small" icon="download" />
+      <AppButton design="small" icon="download" />
     </AppFlex>
     <AppFlex>
       <AppButton design="circle" text="circle" />
-      <AppButton design="circle" text="circle" icon="fab twitter" />
-      <AppButton design="circle" icon="fab twitter" />
+      <AppButton design="circle" text="circle" icon="download" />
+      <AppButton design="circle" icon="download" />
     </AppFlex>
   </AppSection>
 

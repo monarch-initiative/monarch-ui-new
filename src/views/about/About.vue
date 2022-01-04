@@ -94,14 +94,14 @@
       />
       <AppTile
         to="https://github.com/monarch-initiative"
-        icon="fab github"
+        icon="github"
         title="GitHub"
         subtitle="Star and follow for new releases"
         design="small"
       />
       <AppTile
         to="https://twitter.com/MonarchInit"
-        icon="fab twitter"
+        icon="twitter"
         title="Twitter"
         subtitle="Quick updates and musings"
         design="small"
