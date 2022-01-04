@@ -29,7 +29,7 @@ import { defineComponent, nextTick } from "vue";
 import AppModal from "@/components/AppModal.vue";
 import AppFeedbackForm from "@/components/AppFeedbackForm.vue";
 
-// floating button that lets user conveniently jump to top of page
+// buttons that float on side of page for handy functions
 export default defineComponent({
   components: {
     AppModal,

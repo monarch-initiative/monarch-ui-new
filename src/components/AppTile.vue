@@ -9,20 +9,28 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 
+// big circular link button with text and sub text
 export default defineComponent({
   props: {
     // where to link to
     to: String,
     // icon to show in button
-    icon: { type: String, required: true },
+    icon: {
+      type: String,
+      required: true,
+    },
     // main text
-    title: { type: String, required: true },
+    title: {
+      type: String,
+      required: true,
+    },
     // secondary text
     subtitle: String,
     // visual design
-    // default: big
-    // "small": smaller button
-    design: String as PropType<"small" | undefined>,
+    design: {
+      default: "big",
+      type: String as PropType<"small" | "big">,
+    },
   },
 });
 </script>
@@ -34,16 +42,14 @@ export default defineComponent({
   flex-direction: column;
   gap: 15px;
   width: 180px;
-  margin: 20px;
-}
 
-.button {
-  font-size: 2rem;
+  .button {
+    font-size: 2rem;
+  }
 }
 
 .tile[data-design="small"] {
   width: 160px;
-  margin: 10px;
 
   .button {
     font-size: 1.4rem;

@@ -3,91 +3,99 @@
     <AppHeading>Sources</AppHeading>
 
     <!-- filters -->
-    <p class="center">
+    <AppFlex>
       <AppCheckbox v-model="showDatasets" icon="database">
         Datasets
       </AppCheckbox>
       <AppCheckbox v-model="showOntologies" icon="puzzle-piece">
         Ontologies
       </AppCheckbox>
-    </p>
+    </AppFlex>
 
     <!-- list of all sources -->
-    <AppAccordion v-for="(source, index) in filteredSources" :key="index">
-      <!-- title of accordion button -->
-      <template #title>
-        {{ source.name || source.id || "" }}
-        <AppIcon
-          v-if="source.type"
-          class="icon"
-          :icon="source.type === 'dataset' ? 'database' : 'puzzle-piece'"
-        />
-      </template>
+    <AppFlex direction="col">
+      <AppAccordion v-for="(source, index) in filteredSources" :key="index">
+        <!-- title of accordion button -->
+        <template #title>
+          <span>
+            {{ source.name || source.id || "" }}
+          </span>
+          <AppIcon
+            v-if="source.type"
+            class="icon"
+            :icon="source.type === 'dataset' ? 'database' : 'puzzle-piece'"
+          />
+        </template>
 
-      <!-- content when accordion expanded -->
-      <template #content>
-        <!-- row of details and links -->
-        <div class="details">
-          <AppDetail
-            v-if="source.link"
-            icon="home"
-            text="Home"
-            :to="source.link"
-            v-tooltip="'Homepage or repository for this source'"
-          />
-          <AppDetail
-            v-if="source.license"
-            icon="balance-scale"
-            text="License"
-            :to="source.license"
-            v-tooltip="'Link to licensing information for this source'"
-          />
-          <AppDetail
-            v-if="source.rdf"
-            icon="download"
-            text="RDF"
-            :to="source.rdf"
-            v-tooltip="'Download Resource Description Framework file'"
-          />
-          <AppDetail
-            v-if="source.date"
-            icon="calendar-alt"
-            :text="source.date"
-            v-tooltip="'Date when this source was ingested into Monarch'"
-          />
-        </div>
+        <!-- content when accordion expanded -->
+        <template #content>
+          <!-- row of details and links -->
+          <div class="details">
+            <AppDetail
+              v-if="source.link"
+              icon="home"
+              text="Home"
+              :to="source.link"
+              v-tooltip="'Homepage or repository for this source'"
+            />
+            <AppDetail
+              v-if="source.license"
+              icon="balance-scale"
+              text="License"
+              :to="source.license"
+              v-tooltip="'Link to licensing information for this source'"
+            />
+            <AppDetail
+              v-if="source.rdf"
+              icon="download"
+              text="RDF"
+              :to="source.rdf"
+              v-tooltip="'Download Resource Description Framework file'"
+            />
+            <AppDetail
+              v-if="source.date"
+              icon="calendar-alt"
+              :text="source.date"
+              v-tooltip="'Date when this source was ingested into Monarch'"
+            />
+          </div>
 
-        <!-- row of picture, description, and other summary info -->
-        <img
-          v-if="getSrc(source.image)"
-          class="image"
-          :src="getSrc(source.image)"
-          :alt="source.name"
-        />
-        <p v-if="source.description" v-html="source.description" />
-        <AppMarkdown v-if="source.usage" :source="source.usage" component="p" />
+          <!-- row of picture, description, and other summary info -->
+          <img
+            v-if="getSrc(source.image)"
+            class="image"
+            :src="getSrc(source.image)"
+            :alt="source.name"
+          />
+          <p v-if="source.description" v-html="source.description" />
+          <AppMarkdown
+            v-if="source.usage"
+            :source="source.usage"
+            component="p"
+          />
 
-        <!-- row of file download links -->
-        <p v-if="source.files?.length">
-          <strong>Ingested Files:</strong>
-        </p>
-        <div class="files" v-if="source.files?.length">
-          <AppLink
-            v-for="(file, index) in source.files"
-            :key="index"
-            :to="file"
-            class="truncate"
-          >
-            {{ getFilename(file) }}
-          </AppLink>
-        </div>
-      </template>
-    </AppAccordion>
+          <!-- row of file download links -->
+          <p v-if="source.files?.length">
+            <strong>Ingested Files:</strong>
+          </p>
+          <div class="files" v-if="source.files?.length">
+            <AppLink
+              v-for="(file, index) in source.files"
+              :key="index"
+              :to="file"
+              class="truncate"
+            >
+              {{ getFilename(file) }}
+            </AppLink>
+          </div>
+        </template>
+      </AppAccordion>
+    </AppFlex>
   </AppSection>
 
   <!-- all downloads -->
   <AppSection>
-    <p class="center">
+    <p>
       A listing of all data that Monarch archives for use in its knowledge graph
       and tools:
     </p>
@@ -196,18 +204,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.content {
-  & > * {
-    margin: 20px 0;
-    @include trim-v-margins;
-  }
-}
-
-.icon {
-  margin-left: 5px;
-  color: $gray;
-}
-
 .details {
   text-align: left;
 }

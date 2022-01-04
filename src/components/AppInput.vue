@@ -27,6 +27,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
+// basic text box input, single line or multi-line
 export default defineComponent({
   emits: ["update:modelValue"],
   props: {
@@ -61,6 +62,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
 }
 
 .title {
@@ -103,6 +105,6 @@ input:hover,
 input:focus,
 textarea:hover,
 textarea:focus {
-  box-shadow: 0 0 0 2px $theme;
+  box-shadow: $outline;
 }
 </style>

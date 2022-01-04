@@ -2,22 +2,24 @@
   <!-- main links -->
   <AppSection>
     <AppHeading>Help</AppHeading>
-    <p class="center">
+    <p>
       Request a feature, report a bug, or chat with us about anything
       Monarch-related.
     </p>
-    <AppTile
-      icon="comment"
-      title="Feedback Form"
-      subtitle="Right here, no account required, one-way"
-      to="/feedback"
-    />
-    <AppTile
-      icon="comments"
-      title="Help Desk"
-      subtitle="On GitHub, requires account, two-way"
-      to="https://github.com/monarch-initiative/helpdesk"
-    />
+    <AppFlex gap="big">
+      <AppTile
+        icon="comment"
+        title="Feedback Form"
+        subtitle="Right here, no account required, one-way"
+        to="/feedback"
+      />
+      <AppTile
+        icon="comments"
+        title="Help Desk"
+        subtitle="On GitHub, requires account, two-way"
+        to="https://github.com/monarch-initiative/helpdesk"
+      />
+    </AppFlex>
   </AppSection>
 
   <!-- tutorials/faqs -->
@@ -36,15 +38,17 @@
   <!-- other help -->
   <AppSection>
     <AppHeading>How to use the rest of Monarch</AppHeading>
-    <AppButton to="/tools" text="API and Tools" icon="tools" />
-    <AppButton to="/sources" text="Ontologies and Datasets" icon="database" />
+    <AppFlex>
+      <AppButton to="/tools" text="API and Tools" icon="tools" />
+      <AppButton to="/sources" text="Ontologies and Datasets" icon="database" />
+    </AppFlex>
   </AppSection>
 
   <!-- api and service statuses -->
   <AppSection>
     <AppHeading>Status</AppHeading>
     <!-- main status of all checks -->
-    <p v-if="status" class="center">
+    <p v-if="status">
       <AppStatus :status="status" />
     </p>
     <!-- indiviual statuses -->
@@ -66,7 +70,7 @@
 
   <!-- last resort contact methods -->
   <AppSection>
-    <p class="center">
+    <p>
       If you still need help, or for general inquires, you can
       <AppLink to="mailto:info@monarchinitiative.org">email us</AppLink> or
       <AppLink to="https://twitter.com/MonarchInit">tweet us</AppLink>.

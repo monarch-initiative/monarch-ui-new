@@ -8,15 +8,21 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-// an icon and text, with optional link
+// horizontal icon and text, with optional link
 export default defineComponent({
   props: {
     // optional location to link to
     to: String,
     // icon to show
-    icon: { type: String, required: true },
+    icon: {
+      type: String,
+      required: true,
+    },
     // text to show
-    text: { type: String, required: true },
+    text: {
+      type: String,
+      required: true,
+    },
   },
 });
 </script>
@@ -28,7 +34,6 @@ export default defineComponent({
   text-decoration: none;
 
   span {
-    margin-left: 10px;
     font-weight: 500;
   }
 

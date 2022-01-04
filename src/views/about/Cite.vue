@@ -6,7 +6,7 @@
   <!-- general acknowledgement -->
   <AppSection>
     <AppHeading>Acknowledgement</AppHeading>
-    <p class="center">
+    <p>
       If you use Monarch, please acknolwedge us with a paragraph like the
       following:
     </p>
@@ -22,7 +22,7 @@
   <!-- typical citing -->
   <AppSection>
     <AppHeading>In Publications</AppHeading>
-    <p class="center">
+    <p>
       To cite the use of Monarch in publications, please use these two
       references:
     </p>
@@ -74,11 +74,10 @@
     <AppHeading>Page or Algorithmic Results</AppHeading>
     <p>
       To link to a specific page or to algorithmic results presented on this
-      website, please use the URL in your browser's address bar or from the
-      share button. Example suggested citation for the prefixed identifier
-      <AppLink href="https://monarchinitiative.org/OMIM:154700"
-        >OMIM:154700</AppLink
-      >:
+      website, please use the URL in your browser's address bar. For example,
+      you would cite the prefixed identifier
+      <AppLink to="OMIM:154700">OMIM:154700</AppLink>
+      as:
     </p>
     <blockquote>
       Monarch Consortium. Accessed 2016-09-22. Marfan Syndrome.

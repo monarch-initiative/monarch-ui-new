@@ -8,13 +8,16 @@
     :data-text="text ? true : false"
   >
     <span v-if="text">{{ text }}</span>
-    <AppIcon :icon="icon" v-if="icon" />
-    <slot />
+    <AppIcon
+      v-if="icon"
+      :icon="isExternal && text ? 'external-link-alt' : icon"
+    />
   </component>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { isExternal } from "@/util/url";
 
 // component that looks like a button that either does something or goes somewhere
 export default defineComponent({
@@ -29,9 +32,14 @@ export default defineComponent({
     click: Function,
   },
   computed: {
+    // type of component to render
     component() {
       if (this.to) return "AppLink";
       else return "button";
+    },
+    // is "to" prop an external url
+    isExternal() {
+      return isExternal(this.to);
     },
   },
 });
@@ -46,7 +54,7 @@ export default defineComponent({
   min-width: 200px; // fallback
   min-width: min(200px, calc(100% - 40px));
   min-height: 40px;
-  margin: 20px;
+  margin: 0;
   padding: 5px 20px;
   flex-shrink: 0;
   background: $theme-light;
@@ -61,7 +69,7 @@ export default defineComponent({
 
   &:focus,
   &:hover {
-    box-shadow: 0 0 0 2px $theme;
+    box-shadow: $outline;
   }
 
   &[data-icon="true"][data-text="false"] {

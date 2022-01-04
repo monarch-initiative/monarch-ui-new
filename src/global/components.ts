@@ -1,4 +1,5 @@
 import AppButton from "@/components/AppButton.vue";
+import AppFlex from "@/components/AppFlex.vue";
 import AppGallery from "@/components/AppGallery.vue";
 import AppHeading from "@/components/AppHeading.vue";
 import AppIcon from "@/components/AppIcon.vue";
@@ -12,6 +13,7 @@ import AppTile from "@/components/AppTile.vue";
 // only include components used very repetitively
 const globalComponents = {
   AppButton,
+  AppFlex,
   AppGallery,
   AppHeading,
   AppIcon,
@@ -28,6 +30,7 @@ export default globalComponents;
 declare module "@vue/runtime-core" {
   export interface GlobalComponents {
     AppButton: typeof AppButton;
+    AppFlex: typeof AppFlex;
     AppGallery: typeof AppGallery;
     AppHeading: typeof AppHeading;
     AppIcon: typeof AppIcon;

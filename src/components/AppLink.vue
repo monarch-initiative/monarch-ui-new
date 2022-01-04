@@ -1,17 +1,29 @@
 <template>
   <span v-if="!to" role="link">
+    <!-- placeholder if no url provided -->
     <slot />
   </span>
-  <a v-else-if="isExternal" :href="to" target="_blank">
-    <slot />
+
+  <a v-else-if="isAbsolute" :href="to" target="_blank">
+    <!-- use regular html link for absolute urls -->
+    <template v-if="isExternal && isPlainText">
+      <span>
+        <slot />
+      </span>
+      <AppIcon icon="external-link-alt" />
+    </template>
+    <slot v-else />
   </a>
+
   <router-link v-else :to="to">
+    <!-- use vue router component for relative urls -->
     <slot />
   </router-link>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { isExternal, isAbsolute } from "@/util/url";
 
 // unified wrapper for internal (router) or external (other-domain) links
 export default defineComponent({
@@ -20,12 +32,20 @@ export default defineComponent({
     to: String,
   },
   computed: {
+    // is "to" prop an external url
     isExternal() {
-      const url = String(this.to || "");
+      return isExternal(this.to);
+    },
+    // is "to" prop an absolute url
+    isAbsolute() {
+      return isAbsolute(this.to);
+    },
+    // is provided slot just plain text
+    isPlainText() {
       return (
-        url.startsWith("http") ||
-        url.startsWith("ftp") ||
-        url.startsWith("mailto:")
+        this.$slots.default &&
+        this.$slots.default().length === 1 &&
+        typeof this.$slots.default()[0].children === "string"
       );
     },
   },

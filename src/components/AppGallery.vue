@@ -8,13 +8,14 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 
+// grid of items
 export default defineComponent({
   props: {
     // size of items in gallery
-    // default: medium
-    // "small": smaller spacing
-    // "big": larger and fewer items
-    size: String as PropType<"small" | "big" | undefined>,
+    size: {
+      default: "medium",
+      type: String as PropType<"small" | "medium" | "big">,
+    },
   },
 });
 </script>
@@ -28,14 +29,17 @@ $cell: minmax(100px, 1fr);
   display: grid;
   grid-template-columns: $cell $cell $cell;
   justify-items: stretch;
-  gap: 40px;
-  margin: 40px auto;
 
   &[data-size="small"] {
     gap: 20px;
   }
 
+  &[data-size="medium"] {
+    gap: 40px;
+  }
+
   &[data-size="big"] {
+    gap: 40px;
     grid-template-columns: $cell $cell;
 
     @media (max-width: $one) {
@@ -53,7 +57,7 @@ $cell: minmax(100px, 1fr);
 }
 
 // force no margins for children since grid already provides gap
-.gallery :deep(*) {
+.gallery > :deep(*) {
   margin: 0 !important;
 }
 </style>

@@ -2,8 +2,10 @@
   <label class="checkbox">
     <input type="checkbox" :checked="modelValue" @change="onChange" />
     <span>
-      <slot />
-      <AppIcon v-if="icon" class="icon" :icon="icon" />
+      <span>
+        <slot />
+      </span>
+      <AppIcon v-if="icon" :icon="icon" />
     </span>
   </label>
 </template>
@@ -35,8 +37,7 @@ export default defineComponent({
 .checkbox {
   display: inline-flex;
   align-items: center;
-  margin: 10px;
-  padding: 5px 10px;
+  padding: 10px;
   cursor: pointer;
   transition: background $fast;
 
@@ -65,10 +66,5 @@ export default defineComponent({
     background-position: center;
     background-repeat: no-repeat;
   }
-}
-
-.icon {
-  margin-left: 5px;
-  color: $gray;
 }
 </style>
