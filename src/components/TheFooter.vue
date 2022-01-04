@@ -48,10 +48,10 @@ a {
 .social {
   display: flex;
   font-size: 1.1rem;
+  gap: 10px;
 }
 
 .social a {
-  margin: 5px;
   padding: 5px;
 }
 

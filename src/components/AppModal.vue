@@ -6,11 +6,16 @@
         class="overlay"
         @mousedown="close"
         @touchstart="close"
-        role="dialog"
-        aria-modal="true"
-        :aria-label="label"
       >
-        <div ref="modal" class="modal" @mousedown.stop @touchstart.stop>
+        <div
+          ref="modal"
+          class="modal"
+          @mousedown.stop
+          @touchstart.stop
+          role="dialog"
+          aria-modal="true"
+          :aria-label="label"
+        >
           <AppButton
             class="close"
             icon="times"

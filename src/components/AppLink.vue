@@ -10,7 +10,7 @@
       <span>
         <slot />
       </span>
-      <AppIcon icon="external-link-alt" />
+      <AppIcon class="icon" icon="external-link-alt" />
     </template>
     <slot v-else />
   </a>
@@ -51,3 +51,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.icon {
+  margin-left: 5px;
+}
+</style>

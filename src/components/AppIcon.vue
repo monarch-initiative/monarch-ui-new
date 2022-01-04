@@ -1,6 +1,6 @@
 <template>
-  <component v-if="custom" :is="custom" class="icon" />
-  <FontAwesomeIcon v-else :icon="[prefix, name]" class="icon" />
+  <component v-if="custom" :is="custom" />
+  <FontAwesomeIcon v-else :icon="[prefix, name]" />
 </template>
 
 <script lang="ts">
@@ -44,25 +44,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss">
-// when combining text and icon, wrap text in span to get proper spacing
-span + .icon,
-.icon + span {
-  margin-left: 0.5em;
-}
-</style>
-
-<style lang="scss" scoped>
-// color icon when next to plain text
-.icon {
-  color: $gray;
-}
-
-// use default color in all other cases
-a > .icon,
-button > .icon,
-.icon:only-child {
-  color: currentColor;
-}
-</style>

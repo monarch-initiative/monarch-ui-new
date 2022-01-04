@@ -3,6 +3,7 @@
     <transition name="fade">
       <AppButton
         v-if="showJump"
+        design="circle"
         class="button"
         icon="angle-up"
         v-tooltip="'Jump to top of page'"
@@ -12,6 +13,7 @@
     <transition name="fade">
       <AppButton
         v-if="showFeedback"
+        design="circle"
         class="button"
         icon="comment"
         @click="showModal = true"
@@ -108,12 +110,10 @@ export default defineComponent({
   position: fixed;
   right: 0;
   padding: var(--spacing);
-  padding-right: 0;
   z-index: 2;
 }
 
 .button {
-  margin: 0 !important;
-  border-radius: 3px 0 0 3px !important;
+  // border-radius: 3px 0 0 3px !important;
 }
 </style>

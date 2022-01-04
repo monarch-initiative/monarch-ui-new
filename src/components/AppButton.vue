@@ -4,8 +4,9 @@
     :is="component"
     :to="to"
     @click="click"
-    :data-icon="icon ? true : false"
-    :data-text="text ? true : false"
+    :data-design="design"
+    :data-text="!!text"
+    :data-active="active"
   >
     <span v-if="text">{{ text }}</span>
     <AppIcon
@@ -16,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import { isExternal } from "@/util/url";
 
 // component that looks like a button that either does something or goes somewhere
@@ -30,12 +31,23 @@ export default defineComponent({
     to: String,
     // on click action
     click: Function,
+    // whether button is "on" or not
+    active: {
+      default: true,
+      type: Boolean,
+    },
+    // visual design
+    design: {
+      default: "primary",
+      type: String as PropType<"primary" | "secondary" | "small" | "circle">,
+    },
   },
   computed: {
     // type of component to render
     component() {
       if (this.to) return "AppLink";
-      else return "button";
+      else if (this.$attrs.onClick) return "button";
+      else return "span";
     },
     // is "to" prop an external url
     isExternal() {
@@ -47,38 +59,92 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .button {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  min-width: 200px; // fallback
-  min-width: min(200px, calc(100% - 40px));
-  min-height: 40px;
-  margin: 0;
-  padding: 5px 20px;
-  flex-shrink: 0;
-  background: $theme-light;
-  color: $off-black;
-  border-radius: 3px;
-  font-size: 1rem;
-  font-weight: 500;
-  text-decoration: none;
-  outline: none;
-  cursor: pointer;
-  transition: box-shadow $fast, opacity $fast;
-
-  &:focus,
-  &:hover {
-    box-shadow: $outline;
+  &[data-design="primary"],
+  &[data-design="secondary"],
+  &[data-design="small"],
+  &[data-design="circle"] {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    text-decoration: none;
+    transition: color $fast, background $fast, opacity $fast, box-shadow $fast;
   }
 
-  &[data-icon="true"][data-text="false"] {
-    min-width: unset;
-    min-height: unset;
-    width: 2.5em;
-    height: 2.5em;
-    padding: unset;
+  &[data-design="primary"],
+  &[data-design="secondary"] {
+    min-width: 200px; // fallback
+    min-width: min(200px, calc(100% - 40px));
+    min-height: 40px;
+    padding: 5px 20px;
+    color: $off-black;
+    border-radius: 3px;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  &[data-design="primary"] {
+    background: $theme-light;
+  }
+
+  &[data-design="secondary"] {
+    background: $light-gray;
+  }
+
+  &[data-design="small"] {
+    flex-direction: row-reverse;
+    padding: 3px;
+    border-radius: 3px;
+    color: $theme;
+  }
+
+  &[data-design="circle"] {
+    background: $theme-light;
+    color: $off-black;
     border-radius: 999px;
+
+    &[data-text="true"] {
+      min-width: 2.5em;
+      min-height: 2.5em;
+      padding: 0.5em 1em;
+    }
+
+    &:not([data-text="true"]) {
+      width: 2.5em;
+      height: 2.5em;
+    }
+  }
+
+  &:hover,
+  &:focus {
+    &[data-design="primary"],
+    &[data-design="secondary"],
+    &[data-design="circle"] {
+      outline: none;
+      box-shadow: $outline;
+    }
+
+    &[data-design="small"] {
+      color: $black;
+    }
+  }
+
+  &[data-active="false"] {
+    &[data-design="primary"],
+    &[data-design="secondary"] {
+      background: none;
+    }
+
+    &[data-design="small"] {
+      color: $gray;
+    }
+  }
+
+  &[disabled] {
+    pointer-events: none;
+    opacity: 0.5;
   }
 }
 </style>

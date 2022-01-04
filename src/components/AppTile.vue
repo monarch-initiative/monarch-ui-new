@@ -1,6 +1,12 @@
 <template>
   <div class="tile" :data-design="design">
-    <AppButton :to="to || ''" class="button" :icon="icon" :aria-label="title" />
+    <AppButton
+      design="circle"
+      :to="to || ''"
+      class="button"
+      :icon="icon"
+      :aria-label="title"
+    />
     <div class="title">{{ title }}</div>
     <div v-if="subtitle" class="subtitle">{{ subtitle }}</div>
   </div>
