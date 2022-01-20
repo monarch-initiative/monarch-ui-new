@@ -26,6 +26,7 @@ import { defineComponent } from "vue";
 import { isExternal, isAbsolute } from "@/util/url";
 
 // unified wrapper for internal (router) or external (other-domain) links
+// can be wrapped around any component or plain  text
 export default defineComponent({
   props: {
     // location to link to

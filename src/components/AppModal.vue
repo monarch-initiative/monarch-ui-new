@@ -18,6 +18,7 @@
         >
           <AppButton
             class="close"
+            design="circle"
             icon="times"
             @click="close"
             v-tooltip="'Close dialog (esc)'"
@@ -144,14 +145,9 @@ export default defineComponent({
 // close button
 .close {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  margin: 0 !important;
-  font-size: 0.8rem !important;
-
-  @media (max-width: 400px) {
-    top: 10px;
-    right: 10px;
-  }
+  top: 10px;
+  right: 10px;
+  margin: 0;
+  font-size: 0.8rem;
 }
 </style>

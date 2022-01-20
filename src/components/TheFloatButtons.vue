@@ -21,7 +21,7 @@
       />
     </transition>
     <AppModal v-model="showModal" label="Feedback form">
-      <AppFeedbackForm :modal="true" />
+      <TheFeedbackForm :modal="true" />
     </AppModal>
   </div>
 </template>
@@ -29,13 +29,13 @@
 <script lang="ts">
 import { defineComponent, nextTick } from "vue";
 import AppModal from "@/components/AppModal.vue";
-import AppFeedbackForm from "@/components/AppFeedbackForm.vue";
+import TheFeedbackForm from "@/components/TheFeedbackForm.vue";
 
 // buttons that float on side of page for handy functions
 export default defineComponent({
   components: {
     AppModal,
-    AppFeedbackForm,
+    TheFeedbackForm,
   },
   data() {
     return {

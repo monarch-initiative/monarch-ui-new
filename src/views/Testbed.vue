@@ -7,24 +7,24 @@
   <!-- buttons -->
   <AppSection>
     <AppFlex>
-      <AppButton design="primary" text="primary" />
-      <AppButton design="primary" text="primary" icon="download" />
-      <AppButton design="primary" icon="download" />
+      <AppButton to="/" design="primary" text="primary" />
+      <AppButton to="/" design="primary" text="primary" icon="download" />
+      <AppButton to="/" design="primary" icon="download" />
     </AppFlex>
     <AppFlex>
-      <AppButton design="secondary" text="secondary" />
-      <AppButton design="secondary" text="secondary" icon="download" />
-      <AppButton design="secondary" icon="download" />
+      <AppButton to="/" design="secondary" text="secondary" />
+      <AppButton to="/" design="secondary" text="secondary" icon="download" />
+      <AppButton to="/" design="secondary" icon="download" />
     </AppFlex>
     <AppFlex>
-      <AppButton design="small" text="small" />
-      <AppButton design="small" text="small" icon="download" />
-      <AppButton design="small" icon="download" />
+      <AppButton to="/" design="small" text="small" />
+      <AppButton to="/" design="small" text="small" icon="download" />
+      <AppButton to="/" design="small" icon="download" />
     </AppFlex>
     <AppFlex>
-      <AppButton design="circle" text="circle" />
-      <AppButton design="circle" text="circle" icon="download" />
-      <AppButton design="circle" icon="download" />
+      <AppButton to="/" design="circle" text="circle" />
+      <AppButton to="/" design="circle" text="circle" icon="download" />
+      <AppButton to="/" design="circle" icon="download" />
     </AppFlex>
   </AppSection>
 

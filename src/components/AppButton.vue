@@ -45,8 +45,12 @@ export default defineComponent({
   computed: {
     // type of component to render
     component() {
+      // if a link to somewhere, use link component (<a> or <router-link>)
       if (this.to) return "AppLink";
-      else if (this.$attrs.onClick) return "button";
+      // if has attached click event or submit button for form, make it a <button>
+      else if (this.$attrs.onClick || this.$attrs.type === "submit")
+        return "button";
+      // fallback, use <span>
       else return "span";
     },
     // is "to" prop an external url

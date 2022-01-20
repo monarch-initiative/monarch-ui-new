@@ -1,10 +1,10 @@
 import { mount } from "@vue/test-utils";
-import AppFeedbackForm from "@/components/AppFeedbackForm.vue";
+import TheFeedbackForm from "@/components/TheFeedbackForm.vue";
 import { mountOptions, flush } from "../setup";
 
 test("Submits correctly when filled out", async () => {
   // mount
-  const wrapper = mount(AppFeedbackForm, mountOptions);
+  const wrapper = mount(TheFeedbackForm, mountOptions);
 
   // fill out feedback textarea
   const textarea = wrapper.find("textarea");
