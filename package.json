@@ -5,7 +5,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit /unit",
-    "test:e2e": "DEBUG=cypress:* vue-cli-service test:e2e --headless",
+    "test:e2e": "vue-cli-service test:e2e --headless",
     "lint": "vue-cli-service lint && prettier --check ./src/**/*.yaml",
     "fresh": "yarn cache clean && rm -rf node_modules && yarn install",
     "test": "yarn test:lint && yarn test:unit && yarn test:e2e && yarn test:axe",

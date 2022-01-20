@@ -1,6 +1,6 @@
 it("Document title updates on navigation", () => {
   // pages to test
-  const pages = ["home", "explore", "tools", "about", "help"];
+  const pages = ["home", "explore", "about", "help"];
 
   // visit each page and check doc title
   for (const page of pages) {

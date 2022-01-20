@@ -9,7 +9,7 @@ test("Renders as link", () => {
 });
 
 test("Renders as button", () => {
-  const props = { text: "Test link", click: () => null };
+  const props = { text: "Test link", onClick: () => null };
   const wrapper = mount(AppButton, { ...mountOptions, props });
   expect(wrapper.find("button").exists()).toBeTruthy();
 });
