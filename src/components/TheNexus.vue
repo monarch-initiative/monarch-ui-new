@@ -250,7 +250,7 @@ export default defineComponent({
   },
   beforeUnmount() {
     // stop listening for resizes
-    if (observer) observer.disconnect();
+    if (observer.disconnect) observer.disconnect();
   },
 });
 </script>
