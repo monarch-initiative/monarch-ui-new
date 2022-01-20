@@ -35,15 +35,6 @@
     </AppGallery>
   </AppSection>
 
-  <!-- other help -->
-  <AppSection>
-    <AppHeading>How to use the rest of Monarch</AppHeading>
-    <AppFlex>
-      <AppButton to="/tools" text="API and Tools" icon="tools" />
-      <AppButton to="/sources" text="Ontologies and Datasets" icon="database" />
-    </AppFlex>
-  </AppSection>
-
   <!-- api and service statuses -->
   <AppSection>
     <AppHeading>Status</AppHeading>

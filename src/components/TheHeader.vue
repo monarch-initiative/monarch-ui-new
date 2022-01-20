@@ -1,7 +1,7 @@
 <template>
   <header :data-home="home">
     <!-- header background visualization -->
-    <TheNexus />
+    <TheNexus v-if="home" />
 
     <!-- title bar -->
     <div class="title">
@@ -42,13 +42,6 @@
         v-tooltip="'Dive right in and use Monarch'"
       >
         Explore
-      </AppLink>
-      <AppLink
-        class="link"
-        to="/tools"
-        v-tooltip="'Monarch\'s ecosystem of tools'"
-      >
-        Tools
       </AppLink>
       <AppLink
         class="link"

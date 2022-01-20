@@ -55,21 +55,11 @@ export default defineComponent({
       if (!footerEl) return;
       const footer = footerEl.getBoundingClientRect();
 
-      // if user has scrolled far down enough
-      const downEnough = window.scrollY > window.innerHeight * 0.1;
-
-      // if user has scrolled to bottom of page (and not at top)
-      const atBottom =
-        window.scrollY > 0 &&
-        footer.bottom < footer.height / 2 + window.innerHeight;
-
-      // if user already on dedicated feedback page
-      const onFeedback =
-        ((this.$route.name || "") as string).toLowerCase() === "feedback";
-
-      // show/hide buttons based on scroll
-      this.showJump = downEnough && !atBottom;
-      this.showFeedback = !onFeedback && !atBottom;
+      // show jump button if user has scrolled far down enough
+      this.showJump = window.scrollY > window.innerHeight * 0.1;
+      // show feedback button if user not already on dedicated feedback page
+      this.showFeedback =
+        ((this.$route.name || "") as string).toLowerCase() !== "feedback";
 
       // calculate nudge
       this.nudge = Math.max(

@@ -8,12 +8,12 @@ import {
 import { hideAll } from "tippy.js";
 import Home from "@/views/Home.vue";
 import Explore from "@/views/explore/Explore.vue";
-import Tools from "@/views/tools/Tools.vue";
 import About from "@/views/about/About.vue";
+import Overview from "@/views/about/Overview.vue";
+import Sources from "@/views/about/Sources.vue";
 import Cite from "@/views/about/Cite.vue";
 import Team from "@/views/about/Team.vue";
 import Publications from "@/views/about/Publications.vue";
-import Sources from "@/views/about/Sources.vue";
 import Terms from "@/views/about/Terms.vue";
 import Help from "@/views/help/Help.vue";
 import Feedback from "@/views/help/Feedback.vue";
@@ -49,24 +49,24 @@ export const routes: Array<RouteRecordRaw> = [
     component: Explore,
   },
   {
-    path: "/tools",
-    name: "Tools",
-    component: Tools,
-  },
-  {
     path: "/about",
     name: "About",
     component: About,
   },
   {
-    path: "/cite",
-    name: "Cite",
-    component: Cite,
+    path: "/overview",
+    name: "Overview",
+    component: Overview,
   },
   {
     path: "/sources",
     name: "Sources",
     component: Sources,
+  },
+  {
+    path: "/cite",
+    name: "Cite",
+    component: Cite,
   },
   {
     path: "/team",

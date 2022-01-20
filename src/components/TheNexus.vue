@@ -26,6 +26,8 @@ const pulseColor: Color = [127, 193, 199]; // color of element when pulsing (50%
 // 3d axis rotations
 let rx = 0;
 let ry = 0;
+let rxTarget = 0;
+let ryTarget = 0;
 
 // efficient rgb tuple format
 type Color = [number, number, number];
@@ -73,16 +75,16 @@ const generate = debounce(() => {
   // generate field of dots
   dots = [];
   // start from grid so dots relatively uniformly distributed
-  for (let x = -gap; x <= width + gap; x += gap) {
-    for (let y = -gap; y <= height + gap; y += gap) {
+  for (let x = width * 0; x <= width * 1; x += gap) {
+    for (let y = height * 0; y <= height * 1; y += gap) {
       // eliminate some to make more "organic" and less "grid"
       if (Math.random() > 0.5) {
         const angle = Math.random() * 360;
         dots.push({
           point: {
             // nudge off grid to make more "organic"
-            x: x + sin(angle) * (gap / 4),
-            y: y + cos(angle) * (gap / 4),
+            x: x + sin(angle) * (gap / 4) + gap / 2,
+            y: y + cos(angle) * (gap / 4) + gap / 2,
             // random range to create nice thin-ish 3d layer
             z: -gap + Math.random() * 2 * gap,
           },
@@ -129,12 +131,21 @@ const generate = debounce(() => {
   );
 }, 50);
 
+// rotate 3d world
+const rotate = (event: MouseEvent | TouchEvent) => {
+  // point touched
+  const x = "clientY" in event ? event.clientY : event.touches[0].clientY;
+  const y = "clientX" in event ? event.clientX : event.touches[0].clientX;
+  // set destination 3d world rotation
+  rxTarget = (0.5 - x / window.innerHeight) * 90;
+  ryTarget = -(0.5 - y / window.innerWidth) * 90;
+};
+
 // move physics simulation one step
 const move = () => {
-  // move 3d world rotation in smooth pattern
-  const t = window.performance.now() / 1000;
-  rx = sin(t * 10) * 30;
-  ry = cos(t * 5) * 40;
+  // move 3d world rotation toward target rotation smoothly
+  rx += (rxTarget - rx) / 100;
+  ry += (ryTarget - ry) / 100;
 
   // for each dot
   for (const dot of dots) {
@@ -143,7 +154,7 @@ const move = () => {
   }
 
   // for each entity (dot or link)
-  // move color toward target color smoothly
+  // move color toward target smoothly
   for (const entity of [...dots, ...links])
     for (let c = 0; c < 3; c++)
       entity.color[c] += (entity.colorTarget[c] - entity.color[c]) / 20;
@@ -206,10 +217,14 @@ const step = () => {
   draw();
 };
 
-// fps
+// frames
 window.setInterval(step, 1000 / 60);
-// how frequently field pulses
+// pulse animation
 window.setInterval(pulse, 10000);
+
+// listen for mouse move
+window.addEventListener("mousemove", rotate);
+window.addEventListener("touchmove", rotate);
 
 // fun background visualization element behind header
 export default defineComponent({
