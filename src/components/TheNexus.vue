@@ -230,6 +230,8 @@ window.setInterval(pulse, 10000);
 window.addEventListener("mousemove", rotate);
 window.addEventListener("touchmove", rotate);
 
+let observer: ResizeObserver;
+
 // fun background visualization element behind header
 export default defineComponent({
   mounted() {
@@ -238,12 +240,17 @@ export default defineComponent({
     ctx = canvas.getContext("2d");
 
     // listen for resizes to canvas element
-    new ResizeObserver(() => {
+    observer = new ResizeObserver(() => {
       // resize canvas
       resize();
       // regenerate field
       generate();
-    }).observe(canvas);
+    });
+    observer.observe(canvas);
+  },
+  beforeUnmount() {
+    // stop listening for resizes
+    if (observer) observer.disconnect();
   },
 });
 </script>
