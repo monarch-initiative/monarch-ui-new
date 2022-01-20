@@ -75,16 +75,20 @@ const generate = debounce(() => {
   // generate field of dots
   dots = [];
   // start from grid so dots relatively uniformly distributed
-  for (let x = width * 0; x <= width * 1; x += gap) {
-    for (let y = height * 0; y <= height * 1; y += gap) {
-      // eliminate some to make more "organic" and less "grid"
-      if (Math.random() > 0.5) {
+  for (let x = 0; x <= width; x += gap) {
+    for (let y = 0; y <= height; y += gap) {
+      if (
+        // eliminate some to make more "organic" and less "grid"
+        Math.random() > 0.4 &&
+        // avoid direct center to make visual space for log
+        (Math.abs(x - width / 2) > gap * 2 || Math.abs(y - height / 2) > gap)
+      ) {
         const angle = Math.random() * 360;
         dots.push({
           point: {
             // nudge off grid to make more "organic"
-            x: x + sin(angle) * (gap / 4) + gap / 2,
-            y: y + cos(angle) * (gap / 4) + gap / 2,
+            x: x + sin(angle) * (gap / 4),
+            y: y + cos(angle) * (gap / 4),
             // random range to create nice thin-ish 3d layer
             z: -gap + Math.random() * 2 * gap,
           },
@@ -134,11 +138,11 @@ const generate = debounce(() => {
 // rotate 3d world
 const rotate = (event: MouseEvent | TouchEvent) => {
   // point touched
-  const x = "clientY" in event ? event.clientY : event.touches[0].clientY;
-  const y = "clientX" in event ? event.clientX : event.touches[0].clientX;
+  const x = "clientX" in event ? event.clientX : event.touches[0].clientX;
+  const y = "clientY" in event ? event.clientY : event.touches[0].clientY;
   // set destination 3d world rotation
-  rxTarget = (0.5 - x / window.innerHeight) * 90;
-  ryTarget = -(0.5 - y / window.innerWidth) * 90;
+  rxTarget = (0.5 - y / window.innerHeight) * 90;
+  ryTarget = -(0.5 - x / window.innerWidth) * 90;
 };
 
 // move physics simulation one step
