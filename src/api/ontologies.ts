@@ -21,8 +21,7 @@ interface Ontology {
 export const getOntologies = async (): Promise<Array<Source>> => {
   // get data from endpoint
   const { data } = await axios.get(obo, { responseType: "json" });
-  const json = data as Response;
-  const { ontologies = [] } = json;
+  const { ontologies = [] } = data as Response;
 
   // convert results to desired format
   const results = ontologies.map(
