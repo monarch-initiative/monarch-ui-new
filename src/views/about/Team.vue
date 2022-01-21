@@ -89,7 +89,7 @@
 import { defineComponent } from "vue";
 import { kebabCase } from "lodash";
 import AppMember from "@/components/AppMember.vue";
-import team from "./team.yaml";
+import team from "./team.json";
 
 export default defineComponent({
   components: {

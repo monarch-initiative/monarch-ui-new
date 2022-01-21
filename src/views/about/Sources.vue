@@ -117,7 +117,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import sources from "./sources.yaml";
+import sources from "./sources.json";
 import AppCheckbox from "@/components/AppCheckbox.vue";
 import AppAccordion from "@/components/AppAccordion.vue";
 import { getDatasets } from "@/api/datasets";
@@ -196,7 +196,7 @@ export default defineComponent({
 .image {
   max-width: min(100%, 200px);
   max-height: 100px;
-  margin: 10px;
+  margin: 10px auto;
 }
 
 .files {
