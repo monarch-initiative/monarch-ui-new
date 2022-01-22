@@ -10,7 +10,7 @@
       <span>
         <slot />
       </span>
-      <AppIcon icon="external-link-alt" />
+      <AppIcon class="icon" icon="external-link-alt" />
     </template>
     <slot v-else />
   </a>
@@ -26,6 +26,7 @@ import { defineComponent } from "vue";
 import { isExternal, isAbsolute } from "@/util/url";
 
 // unified wrapper for internal (router) or external (other-domain) links
+// can be wrapped around any component or plain  text
 export default defineComponent({
   props: {
     // location to link to
@@ -51,3 +52,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.icon {
+  margin-left: 5px;
+}
+</style>

@@ -1,17 +1,17 @@
 <template>
   <AppSection>
     <AppHeading>Feedback Form</AppHeading>
-    <AppFeedbackForm />
+    <TheFeedbackForm />
   </AppSection>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import AppFeedbackForm from "@/components/AppFeedbackForm.vue";
+import TheFeedbackForm from "@/components/TheFeedbackForm.vue";
 
 export default defineComponent({
   components: {
-    AppFeedbackForm,
+    TheFeedbackForm,
   },
 });
 </script>

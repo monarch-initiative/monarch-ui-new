@@ -31,7 +31,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import AppCitation from "@/components/AppCitation.vue";
-import publications from "./publications.yaml";
+import publications from "./publications.json";
 
 export default defineComponent({
   components: {

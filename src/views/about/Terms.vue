@@ -13,7 +13,7 @@
       the Monarch knowledge graph can be found on the
       <AppLink to="/sources">sources page</AppLink>. Licensing information for
       tools, APIs, algorithms, and workflows can be found on the
-      <AppLink to="/tools">tools page</AppLink>.
+      <AppLink to="/overview">overview page</AppLink>.
     </p>
     <AppHeading>Tracking</AppHeading>
     <p>

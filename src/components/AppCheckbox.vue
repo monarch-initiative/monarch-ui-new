@@ -1,11 +1,9 @@
 <template>
   <label class="checkbox">
     <input type="checkbox" :checked="modelValue" @change="onChange" />
-    <span>
-      <span>
-        <slot />
-      </span>
-      <AppIcon v-if="icon" :icon="icon" />
+    <span class="text">
+      <span v-if="text">{{ text }}</span>
+      <AppIcon v-if="icon" class="icon" :icon="icon" />
     </span>
   </label>
 </template>
@@ -18,7 +16,9 @@ export default defineComponent({
   props: {
     // checked state
     modelValue: Boolean,
-    // icon to show next to slot content
+    // text to show in label
+    text: String,
+    // icon to show in label
     icon: String,
   },
   emits: ["update:modelValue"],
@@ -40,6 +40,11 @@ export default defineComponent({
   padding: 10px;
   cursor: pointer;
   transition: background $fast;
+
+  .icon {
+    margin-left: 10px;
+    color: $gray;
+  }
 
   &:focus-within,
   &:hover {

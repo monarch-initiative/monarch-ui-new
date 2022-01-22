@@ -7,9 +7,6 @@ module.exports = {
   // jest needs its own loaders analogous to webpack loaders
   transform: {
     "\\.vue$": "vue-jest",
-    "\\.yaml$": "yaml-jest",
-    "\\.md$": "jest-raw-loader",
-    "\\.txt$": "jest-raw-loader",
   },
 
   // force babel to transpile everything in node_modules to avoid "import" errors

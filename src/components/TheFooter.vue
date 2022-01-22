@@ -5,10 +5,10 @@
         <AppIcon icon="envelope-open-text" />
       </AppLink>
       <AppLink to="https://github.com/monarch-initiative" v-tooltip="'GitHub'">
-        <AppIcon icon="fab github" />
+        <AppIcon icon="github" />
       </AppLink>
       <AppLink to="https://twitter.com/MonarchInit" v-tooltip="'Twitter'">
-        <AppIcon icon="fab twitter" />
+        <AppIcon icon="twitter" />
       </AppLink>
       <AppLink to="https://medium.com/@MonarchInit" v-tooltip="'Blog'">
         <AppIcon icon="blog" />
@@ -48,10 +48,10 @@ a {
 .social {
   display: flex;
   font-size: 1.1rem;
+  gap: 10px;
 }
 
 .social a {
-  margin: 5px;
   padding: 5px;
 }
 

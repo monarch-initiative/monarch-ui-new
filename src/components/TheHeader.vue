@@ -1,7 +1,7 @@
 <template>
   <header :data-home="home">
     <!-- header background visualization -->
-    <TheNexus />
+    <TheNexus v-if="home" />
 
     <!-- title bar -->
     <div class="title">
@@ -42,13 +42,6 @@
         v-tooltip="'Dive right in and use Monarch'"
       >
         Explore
-      </AppLink>
-      <AppLink
-        class="link"
-        to="/tools"
-        v-tooltip="'Monarch\'s ecosystem of tools'"
-      >
-        Tools
       </AppLink>
       <AppLink
         class="link"
@@ -210,13 +203,13 @@ header[data-home="true"] {
 nav {
   display: flex;
   padding: 20px;
+  gap: 10px;
   // background: radial-gradient($theme-dark 40%, transparent 70%);
 }
 
 .link {
   position: relative;
   width: 100%;
-  margin: 5px;
   padding: 10px;
   color: $white;
   text-decoration: none;

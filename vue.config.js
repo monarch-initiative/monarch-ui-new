@@ -1,23 +1,4 @@
 module.exports = {
-  // add extra file type loaders
-  chainWebpack: (config) => {
-    // markdown and raw text
-    config.module
-      .rule("raw")
-      .test(/\.(md|txt)$/)
-      .use("raw-loader")
-      .loader("raw-loader")
-      .end();
-
-    // yaml
-    config.module
-      .rule("yaml")
-      .test(/\.yaml$/)
-      .type("json")
-      .use("yaml-loader")
-      .loader("yaml-loader")
-      .end();
-  },
   // configure dev options
   devServer: {
     // disable hot (state-preserving) reload on windows environments due to vue cli bugginess

@@ -3,6 +3,7 @@
     <transition name="fade">
       <AppButton
         v-if="showJump"
+        design="circle"
         class="button"
         icon="angle-up"
         v-tooltip="'Jump to top of page'"
@@ -12,6 +13,7 @@
     <transition name="fade">
       <AppButton
         v-if="showFeedback"
+        design="circle"
         class="button"
         icon="comment"
         @click="showModal = true"
@@ -19,7 +21,7 @@
       />
     </transition>
     <AppModal v-model="showModal" label="Feedback form">
-      <AppFeedbackForm :modal="true" />
+      <TheFeedbackForm :modal="true" />
     </AppModal>
   </div>
 </template>
@@ -27,13 +29,13 @@
 <script lang="ts">
 import { defineComponent, nextTick } from "vue";
 import AppModal from "@/components/AppModal.vue";
-import AppFeedbackForm from "@/components/AppFeedbackForm.vue";
+import TheFeedbackForm from "@/components/TheFeedbackForm.vue";
 
 // buttons that float on side of page for handy functions
 export default defineComponent({
   components: {
     AppModal,
-    AppFeedbackForm,
+    TheFeedbackForm,
   },
   data() {
     return {
@@ -55,21 +57,11 @@ export default defineComponent({
       if (!footerEl) return;
       const footer = footerEl.getBoundingClientRect();
 
-      // if user has scrolled far down enough
-      const downEnough = window.scrollY > window.innerHeight * 0.1;
-
-      // if user has scrolled to bottom of page (and not at top)
-      const atBottom =
-        window.scrollY > 0 &&
-        footer.bottom < footer.height / 2 + window.innerHeight;
-
-      // if user already on dedicated feedback page
-      const onFeedback =
-        ((this.$route.name || "") as string).toLowerCase() === "feedback";
-
-      // show/hide buttons based on scroll
-      this.showJump = downEnough && !atBottom;
-      this.showFeedback = !onFeedback && !atBottom;
+      // show jump button if user has scrolled far down enough
+      this.showJump = window.scrollY > window.innerHeight * 0.1;
+      // show feedback button if user not already on dedicated feedback page
+      this.showFeedback =
+        ((this.$route.name || "") as string).toLowerCase() !== "feedback";
 
       // calculate nudge
       this.nudge = Math.max(
@@ -118,12 +110,10 @@ export default defineComponent({
   position: fixed;
   right: 0;
   padding: var(--spacing);
-  padding-right: 0;
   z-index: 2;
 }
 
 .button {
-  margin: 0 !important;
-  border-radius: 3px 0 0 3px !important;
+  // border-radius: 3px 0 0 3px !important;
 }
 </style>

@@ -4,6 +4,30 @@
   in production build of site.
 -->
 <template>
+  <!-- buttons -->
+  <AppSection>
+    <AppFlex>
+      <AppButton to="/" design="primary" text="primary" />
+      <AppButton to="/" design="primary" text="primary" icon="download" />
+      <AppButton to="/" design="primary" icon="download" />
+    </AppFlex>
+    <AppFlex>
+      <AppButton to="/" design="secondary" text="secondary" />
+      <AppButton to="/" design="secondary" text="secondary" icon="download" />
+      <AppButton to="/" design="secondary" icon="download" />
+    </AppFlex>
+    <AppFlex>
+      <AppButton to="/" design="small" text="small" />
+      <AppButton to="/" design="small" text="small" icon="download" />
+      <AppButton to="/" design="small" icon="download" />
+    </AppFlex>
+    <AppFlex>
+      <AppButton to="/" design="circle" text="circle" />
+      <AppButton to="/" design="circle" text="circle" icon="download" />
+      <AppButton to="/" design="circle" icon="download" />
+    </AppFlex>
+  </AppSection>
+
   <!-- status component -->
   <AppSection>
     <AppGallery>

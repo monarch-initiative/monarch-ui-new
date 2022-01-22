@@ -5,13 +5,13 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit /unit",
-    "test:e2e": "DEBUG=cypress:* vue-cli-service test:e2e --headless",
-    "lint": "vue-cli-service lint && prettier --check ./src/**/*.yaml",
+    "test:e2e": "vue-cli-service test:e2e --headless",
+    "lint": "vue-cli-service lint && prettier --write {*.,./src/**/*.,./tests/**/*.}{js,ts,json,vue} --no-error-on-unmatched-pattern",
     "fresh": "yarn cache clean && rm -rf node_modules && yarn install",
     "test": "yarn test:lint && yarn test:unit && yarn test:e2e && yarn test:axe",
     "test:axe": "vue-cli-service test:unit /axe",
     "test:gui": "vue-cli-service test:e2e",
-    "test:lint": "vue-cli-service lint --no-fix"
+    "test:lint": "vue-cli-service lint --no-fix && prettier --check {*.,./src/**/*.,./tests/**/*.}{js,ts,json,vue} --no-error-on-unmatched-pattern"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
@@ -22,7 +22,6 @@
     "axios": "^0.23.0",
     "body-scroll-lock": "^4.0.0-beta.0",
     "core-js": "^3.6.5",
-    "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "micromark": "^3.0.5",
     "normalize.css": "^8.0.1",
@@ -37,9 +36,7 @@
     "@types/body-scroll-lock": "^3.1.0",
     "@types/jest": "^24.0.19",
     "@types/jest-axe": "^3.5.3",
-    "@types/js-yaml": "^4.0.3",
     "@types/lodash": "^4.14.175",
-    "@types/markdown-it": "^12.2.1",
     "@types/ua-parser-js": "^0.7.36",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
@@ -61,17 +58,13 @@
     "eslint-plugin-vue": "^7.0.0",
     "eslint-plugin-vuejs-accessibility": "^0.7.1",
     "jest-axe": "^5.0.1",
-    "jest-raw-loader": "^1.0.1",
     "msw": "^0.35.0",
     "prettier": "^2.2.1",
-    "raw-loader": "^4.0.2",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "tslib": "^2.3.1",
     "typescript": "^4.4.4",
-    "vue-jest": "^5.0.0-0",
-    "yaml-jest": "^1.0.5",
-    "yaml-loader": "^0.6.0"
+    "vue-jest": "^5.0.0-0"
   },
   "msw": {
     "workerDirectory": "public"

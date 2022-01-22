@@ -6,12 +6,13 @@
     :aria-label="expanded ? 'Collapse section' : 'Expand section'"
   >
     <span class="text">
-      <slot name="title" />
+      <span v-if="text">{{ text }}</span>
+      <AppIcon v-if="icon" class="icon" :icon="icon" />
     </span>
-    <AppIcon class="icon" icon="angle-down" :data-expanded="expanded" />
+    <AppIcon class="caret" icon="angle-down" :data-expanded="expanded" />
   </button>
   <div v-if="expanded" class="content">
-    <slot name="content" />
+    <slot />
   </div>
 </template>
 
@@ -20,6 +21,12 @@ import { defineComponent } from "vue";
 
 // button with expandable/collapsible content
 export default defineComponent({
+  props: {
+    // text to show in title
+    text: String,
+    // icon to show in title
+    icon: String,
+  },
   data() {
     return {
       // whether accordion is open or not
@@ -47,6 +54,11 @@ export default defineComponent({
   text-align: left;
 }
 
+.icon {
+  margin-left: 10px;
+  color: $gray;
+}
+
 .content {
   display: flex;
   flex-direction: column;
@@ -54,7 +66,7 @@ export default defineComponent({
   padding: 20px;
 }
 
-.icon {
+.caret {
   position: relative;
   top: 2px;
   transition: transform $fast;

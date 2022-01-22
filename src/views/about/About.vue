@@ -10,6 +10,8 @@
       connects phenotypes to genotypes across species and bridges basic and
       applied research with semantics-based analysis.
     </p>
+
+    <!-- mission statement -->
     <AppHeading>Our Vision</AppHeading>
     <ol>
       <li>
@@ -32,16 +34,28 @@
   <AppSection>
     <AppFlex gap="big">
       <AppTile
-        to="/cite"
-        icon="feather-alt"
-        title="Cite"
-        subtitle="How to cite and attribute Monarch"
+        to="/overview"
+        icon="cogs"
+        title="Overview"
+        subtitle="How all the pieces of Monarch fit together"
+      />
+      <AppTile
+        to="https://github.com/biolink/biolink-api"
+        icon="code"
+        title="API"
+        subtitle="The API behind this website"
       />
       <AppTile
         to="/sources"
         icon="database"
         title="Sources"
         subtitle="Datasets, ontologies, and downloads"
+      />
+      <AppTile
+        to="/cite"
+        icon="feather-alt"
+        title="Cite"
+        subtitle="How to cite and attribute Monarch"
       />
       <AppTile
         to="/team"
@@ -80,14 +94,14 @@
       />
       <AppTile
         to="https://github.com/monarch-initiative"
-        icon="fab github"
+        icon="github"
         title="GitHub"
         subtitle="Star and follow for new releases"
         design="small"
       />
       <AppTile
         to="https://twitter.com/MonarchInit"
-        icon="fab twitter"
+        icon="twitter"
         title="Twitter"
         subtitle="Quick updates and musings"
         design="small"
