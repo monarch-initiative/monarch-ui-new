@@ -4,8 +4,13 @@
   in production build of site.
 -->
 <template>
-  <!-- buttons -->
   <AppSection>
+    <AppHeading>Testbed</AppHeading>
+  </AppSection>
+
+  <!-- button component -->
+  <AppSection>
+    <AppHeading>Button</AppHeading>
     <AppFlex>
       <AppButton to="/" design="primary" text="primary" />
       <AppButton to="/" design="primary" text="primary" icon="download" />
@@ -28,8 +33,24 @@
     </AppFlex>
   </AppSection>
 
+  <!-- tabs component -->
+  <AppSection>
+    <AppHeading>Tabs</AppHeading>
+    <AppTabs
+      :tabs="[
+        { id: 'apple', text: 'Apple', icon: 'info-circle' },
+        { id: 'pear', text: 'Pear', icon: 'info-circle' },
+      ]"
+      default="apple"
+    >
+      <template #apple>I'm a little apple</template>
+      <template #pear>I'm a little pear</template>
+    </AppTabs>
+  </AppSection>
+
   <!-- status component -->
   <AppSection>
+    <AppHeading>Status</AppHeading>
     <AppGallery>
       <AppStatus :status="{ code: 'loading', text: 'Loading some results' }" />
       <AppStatus :status="{ code: 'success', text: 'Action was a success' }" />
@@ -47,10 +68,12 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import AppStatus from "@/components/AppStatus.vue";
+import AppTabs from "@/components/AppTabs.vue";
 
 export default defineComponent({
   components: {
     AppStatus,
+    AppTabs,
   },
 });
 </script>

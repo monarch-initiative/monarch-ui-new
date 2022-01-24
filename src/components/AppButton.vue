@@ -79,7 +79,6 @@ export default defineComponent({
 
   &[data-design="primary"],
   &[data-design="secondary"] {
-    min-width: 200px; // fallback
     min-width: min(200px, calc(100% - 40px));
     min-height: 40px;
     padding: 5px 20px;
@@ -137,7 +136,8 @@ export default defineComponent({
 
   &[data-active="false"] {
     &[data-design="primary"],
-    &[data-design="secondary"] {
+    &[data-design="secondary"],
+    &[data-design="circle"] {
       background: none;
     }
 

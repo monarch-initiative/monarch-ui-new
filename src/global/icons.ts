@@ -37,6 +37,7 @@ library.add(
   fas.faHandsHelping,
   fas.faHistory,
   fas.faHome,
+  fas.faInfoCircle,
   fas.faLink,
   fas.faNewspaper,
   fas.faPaperPlane,
