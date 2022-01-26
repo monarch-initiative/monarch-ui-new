@@ -13,6 +13,7 @@
       :aria-controls="`${selected}-panel`"
       role="tab"
       :tooltip="tab.tooltip"
+      :aria-label="`Switch to ${tab.text} mode`"
     />
   </AppFlex>
 
@@ -42,7 +43,7 @@ type Tabs = Array<Tab>;
 export default defineComponent({
   props: {
     tabs: {
-      type: [] as PropType<Tabs>,
+      type: Array as PropType<Tabs>,
       required: true,
     },
     default: String,

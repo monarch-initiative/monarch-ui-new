@@ -110,7 +110,7 @@ export default defineComponent({
   position: fixed;
   right: 0;
   padding: var(--spacing);
-  z-index: 2;
+  z-index: 20;
 }
 
 .button {

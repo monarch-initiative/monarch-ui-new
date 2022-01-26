@@ -8,6 +8,17 @@
     <AppHeading>Testbed</AppHeading>
   </AppSection>
 
+  <!-- select component -->
+  <AppSection>
+    <AppFlex>
+      <span>{{ singleSelect }}</span>
+      <AppSelectSingle
+        :options="['apple', 'banana', 'durian durian durian', 'pear']"
+        v-model="singleSelect"
+      />
+    </AppFlex>
+  </AppSection>
+
   <!-- button component -->
   <AppSection>
     <AppHeading>Button</AppHeading>
@@ -69,11 +80,18 @@
 import { defineComponent } from "vue";
 import AppStatus from "@/components/AppStatus.vue";
 import AppTabs from "@/components/AppTabs.vue";
+import AppSelectSingle from "@/components/AppSelectSingle.vue";
 
 export default defineComponent({
   components: {
     AppStatus,
     AppTabs,
+    AppSelectSingle,
+  },
+  data() {
+    return {
+      singleSelect: "pear",
+    };
   },
 });
 </script>

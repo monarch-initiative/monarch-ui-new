@@ -13,7 +13,8 @@ const mounted = (
 ): void => {
   if (value) {
     tippy(element, { content: value, delay: 100, duration: 200 });
-    element.setAttribute("aria-label", value);
+    if (!element.getAttribute("aria-label"))
+      element.setAttribute("aria-label", value);
   }
 };
 
@@ -24,7 +25,8 @@ const updated = (
 ): void => {
   if (value) {
     (element._tippy as Instance)?.setContent(value);
-    element.setAttribute("aria-label", value);
+    if (!element.getAttribute("aria-label"))
+      element.setAttribute("aria-label", value);
   } else {
     (element._tippy as Instance)?.destroy();
   }
