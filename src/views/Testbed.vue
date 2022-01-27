@@ -13,6 +13,7 @@
     <AppFlex>
       <span>{{ singleSelect }}</span>
       <AppSelectSingle
+        name="Single select test"
         :options="['apple', 'banana', 'durian durian durian', 'pear']"
         v-model="singleSelect"
       />

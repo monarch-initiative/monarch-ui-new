@@ -1,14 +1,15 @@
 <template>
   <div class="select">
+    <!-- button -->
     <button
       ref="button"
       :id="`select_${id}`"
       class="combobox"
+      :aria-label="name"
       :aria-expanded="expanded"
       :aria-controls="`list_${id}`"
       aria-haspopup="listbox"
-      aria-label=""
-      :aria-activedescendant="`option_${id}_${focused}`"
+      :aria-activedescendant="`option_${id}_${highlighted}`"
       @click="onClick"
       @keydown="onKeydown"
       @blur="onBlur"
@@ -17,6 +18,7 @@
       <AppIcon :icon="expanded ? 'angle-up' : 'angle-down'" />
     </button>
 
+    <!-- options list -->
     <div v-if="expanded" :id="`list_${id}`" class="listbox" role="listbox">
       <div
         v-for="(option, index) in options"
@@ -26,7 +28,7 @@
         role="option"
         :aria-selected="option === modelValue"
         :data-selected="option === modelValue"
-        :data-focused="index === focused"
+        :data-highlighted="index === highlighted"
         @click="selected = index"
         @mouseenter="focused = index"
         @mousedown.prevent=""
@@ -44,19 +46,24 @@
 <script lang="ts">
 import { wrap } from "@/util/math";
 import { defineComponent, PropType } from "vue";
+import { uniqueId } from "lodash";
 
 // references
 // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/listbox_role
 // https://vuetifyjs.com/en/components/selects/
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
 
 type Option = string;
 type Options = Array<Option>;
 
-let id = 0;
-
-// custom select component for single, multi, and tags
+// custom single select
 export default defineComponent({
   props: {
+    // name of the field
+    name: {
+      type: String,
+      required: true,
+    },
     // currently selected item
     modelValue: {
       required: true,
@@ -68,16 +75,15 @@ export default defineComponent({
     },
   },
   data() {
-    id++;
     return {
       // unique id for instance of component
-      id: id,
+      id: uniqueId(),
       // whether dropdown is open
       expanded: false,
-      // index of option that is selecte
+      // index of option that is selected
       selected: this.getSelected(),
-      // index of option that is focused
-      focused: 0,
+      // index of option that is highlighted
+      highlighted: 0,
     };
   },
   methods: {
@@ -92,9 +98,9 @@ export default defineComponent({
     // when button clicked
     onClick() {
       this.open();
-      this.focused = this.selected;
+      this.highlighted = this.selected;
     },
-    // when button de-focused
+    // when button blurred
     onBlur() {
       this.close();
     },
@@ -105,9 +111,9 @@ export default defineComponent({
         // prevent page scroll
         event.preventDefault();
 
-        // if dropdown open, control focused option
+        // if dropdown open, control highlighted option
         // if dropdown closed, control selected option
-        const prop = this.expanded ? "focused" : "selected";
+        const prop = this.expanded ? "highlighted" : "selected";
 
         // move value up/down
         let value = this[prop];
@@ -120,8 +126,15 @@ export default defineComponent({
         this[prop] = wrap(value, this.options.length);
       }
 
-      // enter key to select focused option
-      if (this.expanded && event.key === "Enter") this.selected = this.focused;
+      // enter key to select highlighted option
+      if (this.expanded && event.key === "Enter") this.selected = this.highlighted;
+
+      // esc key to close dropdown
+      if (this.expanded && event.key === "Escape") this.close();
+
+      // TODO: type ahead
+      // not strictly necessary for now because this component only used for
+      // small number of options
     },
     // get selected option index from model value prop
     getSelected() {
@@ -172,7 +185,7 @@ export default defineComponent({
   transition: background $fast;
 }
 
-.option[data-focused="true"] {
+.option[data-highlighted="true"] {
   background: $light-gray;
 }
 

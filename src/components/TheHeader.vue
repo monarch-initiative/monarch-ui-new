@@ -17,7 +17,7 @@
         <component :is="home ? 'h1' : 'div'" class="text">
           Monarch
           <br />
-          Intiative
+          Initiative
         </component>
       </AppLink>
 

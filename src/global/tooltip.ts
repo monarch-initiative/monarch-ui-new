@@ -6,6 +6,14 @@ import "tippy.js/dist/tippy.css";
 // usage: v-tooltip="Tooltip text"
 // shows a tooltip on hover or focus
 
+const setAriaLabel = (element: ReferenceElement, tooltip: string) => {
+  if (!element.getAttribute("aria-label"))
+    element.setAttribute(
+      "aria-label",
+      ((element as HTMLElement).innerText + " - " + tooltip).toLowerCase()
+    );
+};
+
 // when element created
 const mounted = (
   element: ReferenceElement,
@@ -13,8 +21,7 @@ const mounted = (
 ): void => {
   if (value) {
     tippy(element, { content: value, delay: 100, duration: 200 });
-    if (!element.getAttribute("aria-label"))
-      element.setAttribute("aria-label", value);
+    setAriaLabel(element, value);
   }
 };
 
@@ -23,13 +30,9 @@ const updated = (
   element: ReferenceElement,
   { value }: DirectiveBinding
 ): void => {
-  if (value) {
-    (element._tippy as Instance)?.setContent(value);
-    if (!element.getAttribute("aria-label"))
-      element.setAttribute("aria-label", value);
-  } else {
-    (element._tippy as Instance)?.destroy();
-  }
+  if (value) (element._tippy as Instance)?.setContent(value);
+  else (element._tippy as Instance)?.destroy();
+  setAriaLabel(element, value);
 };
 
 // when element destroyed
