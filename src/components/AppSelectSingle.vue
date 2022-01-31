@@ -1,10 +1,10 @@
 <template>
   <div class="select">
-    <!-- button -->
+    <!-- select button -->
     <button
-      ref="button"
       :id="`select_${id}`"
-      class="combobox"
+      class="button"
+      role="combobox"
       :aria-label="name"
       :aria-expanded="expanded"
       :aria-controls="`list_${id}`"
@@ -19,7 +19,13 @@
     </button>
 
     <!-- options list -->
-    <div v-if="expanded" :id="`list_${id}`" class="listbox" role="listbox">
+    <div
+      v-if="expanded"
+      :id="`list_${id}`"
+      class="list"
+      role="listbox"
+      tabindex="-1"
+    >
       <div
         v-for="(option, index) in options"
         :key="index"
@@ -30,7 +36,7 @@
         :data-selected="option === modelValue"
         :data-highlighted="index === highlighted"
         @click="selected = index"
-        @mouseenter="focused = index"
+        @mouseenter="highlighted = index"
         @mousedown.prevent=""
         @touchstart.prevent=""
         @focusin="() => null"
@@ -48,7 +54,8 @@ import { wrap } from "@/util/math";
 import { defineComponent, PropType } from "vue";
 import { uniqueId } from "lodash";
 
-// references
+// references:
+// https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/combobox/combobox-select-only.html
 // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/listbox_role
 // https://vuetifyjs.com/en/components/selects/
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
@@ -127,7 +134,8 @@ export default defineComponent({
       }
 
       // enter key to select highlighted option
-      if (this.expanded && event.key === "Enter") this.selected = this.highlighted;
+      if (this.expanded && (event.key === "Enter" || event.key === "Space"))
+        this.selected = this.highlighted;
 
       // esc key to close dropdown
       if (this.expanded && event.key === "Escape") this.close();
@@ -160,7 +168,7 @@ export default defineComponent({
   position: relative;
 }
 
-.combobox {
+.button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -170,7 +178,7 @@ export default defineComponent({
   background: $light-gray;
 }
 
-.listbox {
+.list {
   position: absolute;
   background: $white;
   box-shadow: $shadow;

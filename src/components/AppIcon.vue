@@ -1,6 +1,6 @@
 <template>
-  <component v-if="custom" :is="custom" />
-  <FontAwesomeIcon v-else-if="fa" :icon="fa" />
+  <component v-if="custom" :is="custom" aria-hidden="true" />
+  <FontAwesomeIcon v-else-if="fa" :icon="fa" aria-hidden="true" />
 </template>
 
 <script lang="ts">
