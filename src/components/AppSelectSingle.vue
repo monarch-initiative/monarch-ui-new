@@ -134,8 +134,12 @@ export default defineComponent({
       }
 
       // enter key to select highlighted option
-      if (this.expanded && (event.key === "Enter" || event.key === "Space"))
+      if (this.expanded && (event.key === "Enter" || event.key === " ")) {
+        // prevent browser re-clicking open button
+        event.preventDefault();
         this.selected = this.highlighted;
+        this.close();
+      }
 
       // esc key to close dropdown
       if (this.expanded && event.key === "Escape") this.close();
