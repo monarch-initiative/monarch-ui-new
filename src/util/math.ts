@@ -9,10 +9,9 @@ export const cos = (degrees = 0): number =>
   Math.cos((2 * Math.PI * degrees) / 360);
 
 // wrap number between range
-export const wrap = (value = 0, range = 1): number => {
-  const mod = value % range;
-  return mod >= 0 ? mod : Math.abs(range + mod);
-};
+// modified true modulo from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Remainder
+export const wrap = (value = 0, min = 0, max = 10): number =>
+  ((((value - min) % (max - min)) + (max - min)) % (max - min)) + min;
 
 // STUFF ONLY USED FOR HEADER VISUALIZATION
 

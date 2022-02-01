@@ -15,7 +15,7 @@
     <AppFlex direction="col">
       <span>{{ singleSelectValue }}</span>
       <AppSelectSingle
-        name="Single select test"
+        name="Fruit"
         :options="singleSelectOptions"
         v-model="singleSelectValue"
       />
@@ -29,12 +29,12 @@
     <AppFlex direction="col">
       <span>{{ multiSelectValue }}</span>
       <AppSelectMulti
-        name="Multi select test"
+        name="Category"
         :options="multiSelectOptions"
         v-model="multiSelectValue"
       />
       <AppSelectMulti
-        name="Multi select test"
+        name="Category"
         :options="multiSelectOptions"
         v-model="multiSelectValue"
         v-slot="props"

@@ -1,5 +1,5 @@
 <template>
-  <div class="select">
+  <div class="select" :style="{ width: hasSlot ? '' : width }">
     <!-- select button -->
     <slot
       v-if="hasSlot"
@@ -14,7 +14,7 @@
       @click="onClick"
       @keydown="onKeydown"
       @blur="onBlur"
-      :notification="!!selected.length"
+      :notification="!allSelected"
     ></slot>
     <button
       v-else
@@ -31,14 +31,20 @@
       @keydown="onKeydown"
       @blur="onBlur"
     >
-      <span v-if="selected.length">
-        {{ abbreviated.first }}
-        <span v-if="abbreviated.more" class="more">
-          (+{{ abbreviated.more }} more)
+      <span class="button-label">
+        {{ name }}
+        <span class="button-more">
+          <template v-if="selected.length === 0">(none selected)</template>
+          <template v-else-if="selected.length === options.length">
+            (all selected)
+          </template>
+          <template v-else>({{ selected.length }} selected)</template>
         </span>
       </span>
-      <span v-else>{{ name }}</span>
-      <AppIcon :icon="expanded ? 'angle-up' : 'angle-down'" />
+      <AppIcon
+        class="button-icon"
+        :icon="expanded ? 'angle-up' : 'angle-down'"
+      />
     </button>
 
     <!-- options list -->
@@ -47,9 +53,35 @@
       :id="`list_${id}`"
       class="list"
       role="listbox"
-      tabindex="-1"
+      tabindex="0"
     >
-      <table ref="list">
+      <table>
+        <!-- select all -->
+        <tr
+          :id="`option_${id}_-1`"
+          class="option"
+          role="menuitem"
+          :aria-label="allSelected ? 'Deselect all' : 'Select all'"
+          :data-selected="allSelected"
+          :data-highlighted="highlighted === -1"
+          @click="() => toggleSelect(-1)"
+          @mouseenter="highlighted = -1"
+          @mousedown.prevent=""
+          @touchstart.prevent=""
+          @focusin="() => null"
+          @keydown="() => null"
+          tabindex="0"
+        >
+          <td class="option-check">
+            <div :data-checked="allSelected" />
+          </td>
+          <td class="option-label">All</td>
+          <td class="option-count"></td>
+        </tr>
+        <tr>
+          <td class="option-spacer" colspan="3"></td>
+        </tr>
+        <!-- options -->
         <tr
           v-for="(option, index) in options"
           :key="index"
@@ -67,11 +99,11 @@
           @keydown="() => null"
           tabindex="0"
         >
-          <td class="check">
+          <td class="option-check">
             <div :data-checked="selected.includes(index)" />
           </td>
-          <td class="label">{{ option.label || option.value }}</td>
-          <td class="count">{{ option.count }}</td>
+          <td class="option-label">{{ option.label || option.value }}</td>
+          <td class="option-count">{{ option.count }}</td>
         </tr>
       </table>
     </div>
@@ -114,6 +146,10 @@ export default defineComponent({
     options: {
       type: Array as PropType<Options>,
       required: true,
+    },
+    // width style of button
+    width: {
+      type: String,
     },
   },
   data() {
@@ -162,8 +198,8 @@ export default defineComponent({
         if (event.key === "Home") value = 0;
         if (event.key === "End") value = this.options.length - 1;
 
-        // update value, wrapping beyond 0 or options length
-        this.highlighted = wrap(value, this.options.length);
+        // update value, wrapping beyond -1 or options length
+        this.highlighted = wrap(value, -1, this.options.length);
       }
 
       // enter key to de/select highlighted option
@@ -192,12 +228,23 @@ export default defineComponent({
     getModel(): Options {
       return this.options.filter((_, index) => this.selected.includes(index));
     },
-    // select or deselect option
-    toggleSelect(index: number) {
-      if (this.selected.includes(index))
-        this.selected = this.selected.filter((value) => value !== index);
-      else this.selected.push(index);
-      this.selected.sort();
+    // select or deselect option(s)
+    toggleSelect(index = -1) {
+      // toggle all
+      if (index === -1) {
+        if (this.allSelected) this.selected = [];
+        else
+          this.selected = Array(this.options.length)
+            .fill(0)
+            .map((_, index) => index);
+      }
+      // toggle one
+      else {
+        if (this.selected.includes(index))
+          this.selected = this.selected.filter((value) => value !== index);
+        else this.selected.push(index);
+        this.selected.sort();
+      }
     },
   },
   watch: {
@@ -221,24 +268,19 @@ export default defineComponent({
     },
     // when highlighted index changes, scroll to it in dropdown
     highlighted() {
-      const list = this.$refs.list as HTMLElement;
-      if (list)
-        list.children[this.highlighted].scrollIntoView({ block: "nearest" });
+      document
+        .querySelector(`#option_${this.id}_${this.highlighted}`)
+        ?.scrollIntoView({ block: "nearest" });
     },
   },
   computed: {
     // if has slot
     hasSlot() {
-      console.log(!!this.$slots.default);
       return !!this.$slots.default;
     },
-    // abbreviated model value
-    abbreviated() {
-      let first = this.options[this.selected[0]];
-      return {
-        first: first.label || first.value,
-        more: this.selected.length - 1,
-      };
+    // are all options selected
+    allSelected() {
+      return this.selected.length === this.options.length;
     },
   },
 });
@@ -247,6 +289,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .select {
   position: relative;
+  max-width: 100%;
 }
 
 .button {
@@ -254,14 +297,26 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   gap: 10px;
+  width: 100%;
   padding: 5px 10px;
   border-radius: $rounded;
   background: $light-gray;
 }
 
+.button-label {
+  flex-grow: 1;
+  text-align: left;
+}
+
+.button-more {
+  color: $gray;
+  font-size: 0.9rem;
+}
+
 .list {
   position: absolute;
   max-height: 200px;
+  min-width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   background: $white;
@@ -270,6 +325,8 @@ export default defineComponent({
 }
 
 table {
+  table-layout: fixed;
+  min-width: 100%;
   border-collapse: collapse;
 }
 
@@ -279,15 +336,20 @@ table {
 }
 
 .option[data-selected="true"] {
-  background: $theme-light;
+  // background: $theme-light;
 }
 
 .option[data-highlighted="true"] {
   background: $light-gray;
 }
 
-.check {
-  padding: 8px;
+.option-spacer {
+  height: 5px;
+}
+
+.option-check {
+  padding: 10px;
+  width: 40px;
 
   div {
     width: 20px;
@@ -305,20 +367,15 @@ table {
   }
 }
 
-.label {
+.option-label {
   padding: 5px;
   text-align: left;
 }
 
-.count {
-  padding: 5px;
+.option-count {
+  padding: 10px;
   padding-left: 20px;
   color: $gray;
   text-align: right;
-}
-
-.more {
-  color: $gray;
-  font-size: 0.9rem;
 }
 </style>

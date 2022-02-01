@@ -14,18 +14,20 @@
       @keydown="onKeydown"
       @blur="onBlur"
     >
-      <span>{{ modelValue }}</span>
-      <AppIcon :icon="expanded ? 'angle-up' : 'angle-down'" />
+      <span class="button-label">{{ modelValue }}</span>
+      <AppIcon
+        class="button-icon"
+        :icon="expanded ? 'angle-up' : 'angle-down'"
+      />
     </button>
 
     <!-- options list -->
     <div
       v-if="expanded"
-      ref="list"
       :id="`list_${id}`"
       class="list"
       role="listbox"
-      tabindex="-1"
+      tabindex="0"
     >
       <div
         v-for="(option, index) in options"
@@ -131,7 +133,7 @@ export default defineComponent({
         if (event.key === "End") value = this.options.length - 1;
 
         // update value, wrapping beyond 0 or options length
-        this[prop] = wrap(value, this.options.length);
+        this[prop] = wrap(value, 0, this.options.length);
       }
 
       // enter key to select highlighted option
@@ -165,9 +167,9 @@ export default defineComponent({
     },
     // when highlighted index changes, scroll to it in dropdown
     highlighted() {
-      const list = this.$refs.list as HTMLElement;
-      if (list)
-        list.children[this.highlighted].scrollIntoView({ block: "nearest" });
+      document
+        .querySelector(`#option_${this.id}_${this.highlighted}`)
+        ?.scrollIntoView({ block: "nearest" });
     },
   },
 });
@@ -176,6 +178,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .select {
   position: relative;
+  max-width: 100%;
 }
 
 .button {
@@ -183,14 +186,24 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   gap: 10px;
+  width: 100%;
   padding: 5px 10px;
   border-radius: $rounded;
   background: $light-gray;
 }
 
+.button-label {
+  flex-grow: 1;
+  text-align: left;
+}
+
+.button-icon {
+}
+
 .list {
   position: absolute;
   max-height: 200px;
+  min-width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   background: $white;
