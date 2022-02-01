@@ -21,6 +21,7 @@
     <!-- options list -->
     <div
       v-if="expanded"
+      ref="list"
       :id="`list_${id}`"
       class="list"
       role="listbox"
@@ -58,7 +59,6 @@ import { uniqueId } from "lodash";
 // https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/combobox/combobox-select-only.html
 // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/listbox_role
 // https://vuetifyjs.com/en/components/selects/
-// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
 
 type Option = string;
 type Options = Array<Option>;
@@ -73,6 +73,7 @@ export default defineComponent({
     },
     // currently selected item
     modelValue: {
+      type: String as PropType<Option>,
       required: true,
     },
     // list of options to show
@@ -104,7 +105,7 @@ export default defineComponent({
     },
     // when button clicked
     onClick() {
-      this.open();
+      this.expanded ? this.close() : this.open();
       this.highlighted = this.selected;
     },
     // when button blurred
@@ -138,7 +139,6 @@ export default defineComponent({
         // prevent browser re-clicking open button
         event.preventDefault();
         this.selected = this.highlighted;
-        this.close();
       }
 
       // esc key to close dropdown
@@ -148,13 +148,13 @@ export default defineComponent({
       // not strictly necessary for now because this component only used for
       // small number of options
     },
-    // get selected option index from model value prop
+    // get selected option index from model
     getSelected() {
       return this.options.findIndex((option) => option === this.modelValue);
     },
   },
   watch: {
-    // when modelValue (selected option) changes, update selected index
+    // when model changes, update selected index
     modelValue() {
       this.selected = this.getSelected();
     },
@@ -162,6 +162,12 @@ export default defineComponent({
     selected() {
       this.$emit("update:modelValue", this.options[this.selected]);
       this.close();
+    },
+    // when highlighted index changes, scroll to it in dropdown
+    highlighted() {
+      const list = this.$refs.list as HTMLElement;
+      if (list)
+        list.children[this.highlighted].scrollIntoView({ block: "nearest" });
     },
   },
 });
@@ -178,12 +184,15 @@ export default defineComponent({
   align-items: center;
   gap: 10px;
   padding: 5px 10px;
-  border-radius: 3px;
+  border-radius: $rounded;
   background: $light-gray;
 }
 
 .list {
   position: absolute;
+  max-height: 200px;
+  overflow-x: hidden;
+  overflow-y: auto;
   background: $white;
   box-shadow: $shadow;
   z-index: 2;
@@ -197,11 +206,11 @@ export default defineComponent({
   transition: background $fast;
 }
 
-.option[data-highlighted="true"] {
-  background: $light-gray;
-}
-
 .option[data-selected="true"] {
   background: $theme-light;
+}
+
+.option[data-highlighted="true"] {
+  background: $light-gray;
 }
 </style>

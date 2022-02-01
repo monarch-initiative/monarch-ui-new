@@ -114,6 +114,6 @@ export default defineComponent({
 }
 
 .button {
-  // border-radius: 3px 0 0 3px !important;
+  font-size: 0.9rem;
 }
 </style>

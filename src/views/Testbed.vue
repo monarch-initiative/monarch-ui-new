@@ -8,15 +8,39 @@
     <AppHeading>Testbed</AppHeading>
   </AppSection>
 
-  <!-- select component -->
+  <!-- single select component -->
   <AppSection>
-    <AppFlex>
-      <span>{{ singleSelect }}</span>
+    <AppHeading>Single Select</AppHeading>
+
+    <AppFlex direction="col">
+      <span>{{ singleSelectValue }}</span>
       <AppSelectSingle
         name="Single select test"
-        :options="['apple', 'banana', 'durian durian durian', 'pear']"
-        v-model="singleSelect"
+        :options="singleSelectOptions"
+        v-model="singleSelectValue"
       />
+    </AppFlex>
+  </AppSection>
+
+  <!-- multi select component -->
+  <AppSection>
+    <AppHeading>Multi Select</AppHeading>
+
+    <AppFlex direction="col">
+      <span>{{ multiSelectValue }}</span>
+      <AppSelectMulti
+        name="Multi select test"
+        :options="multiSelectOptions"
+        v-model="multiSelectValue"
+      />
+      <AppSelectMulti
+        name="Multi select test"
+        :options="multiSelectOptions"
+        v-model="multiSelectValue"
+        v-slot="props"
+      >
+        <AppButton icon="filter" v-bind="props" design="small" />
+      </AppSelectMulti>
     </AppFlex>
   </AppSection>
 
@@ -29,9 +53,14 @@
       <AppButton to="/" design="primary" icon="download" />
     </AppFlex>
     <AppFlex>
-      <AppButton to="/" design="secondary" text="secondary" />
-      <AppButton to="/" design="secondary" text="secondary" icon="download" />
-      <AppButton to="/" design="secondary" icon="download" />
+      <AppButton @click="alert('test')" design="secondary" text="secondary" />
+      <AppButton
+        @click="alert('test')"
+        design="secondary"
+        text="secondary"
+        icon="download"
+      />
+      <AppButton @click="alert('test')" design="secondary" icon="download" />
     </AppFlex>
     <AppFlex>
       <AppButton to="/" design="small" text="small" />
@@ -82,17 +111,44 @@ import { defineComponent } from "vue";
 import AppStatus from "@/components/AppStatus.vue";
 import AppTabs from "@/components/AppTabs.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
+import AppSelectMulti from "@/components/AppSelectMulti.vue";
 
 export default defineComponent({
   components: {
     AppStatus,
     AppTabs,
     AppSelectSingle,
+    AppSelectMulti,
   },
   data() {
     return {
-      singleSelect: "pear",
+      singleSelectOptions: [
+        "apple",
+        "banana",
+        "cherry",
+        "durian",
+        "elderberry",
+        "fig",
+        "grape",
+        "honeydew",
+      ],
+      singleSelectValue: "durian",
+      multiSelectOptions: [
+        { value: "fruits", count: 0 },
+        { value: "vegetables", count: 7 },
+        { value: "colors", count: 42 },
+        { value: "animals", count: 999 },
+        { value: "cars" },
+        { value: "schools" },
+        { value: "appliances" },
+      ],
+      multiSelectValue: [{ value: "vegetables" }],
     };
+  },
+  methods: {
+    alert(message = "") {
+      window.alert(message);
+    },
   },
 });
 </script>

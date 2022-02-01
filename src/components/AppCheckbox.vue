@@ -58,7 +58,7 @@ export default defineComponent({
     margin-right: 10px;
     appearance: none;
     background: none;
-    border-radius: 3px;
+    border-radius: $rounded;
     border: solid 2px $theme;
     outline: none;
     cursor: pointer;
