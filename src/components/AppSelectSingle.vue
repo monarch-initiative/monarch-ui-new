@@ -41,7 +41,6 @@
         @click="selected = index"
         @mouseenter="highlighted = index"
         @mousedown.prevent=""
-        @touchstart.prevent=""
         @focusin="() => null"
         @keydown="() => null"
         tabindex="0"
