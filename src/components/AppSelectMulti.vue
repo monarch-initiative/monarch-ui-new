@@ -3,14 +3,14 @@
     <!-- select button -->
     <slot
       v-if="hasSlot"
-      :id="`select_${id}`"
+      :id="`select-${id}`"
       role="combobox"
       :aria-label="name"
       aria-multiselectable="true"
       :aria-expanded="expanded"
-      :aria-controls="`list_${id}`"
+      :aria-controls="`list-${id}`"
       aria-haspopup="listbox"
-      :aria-activedescendant="`option_${id}_${highlighted}`"
+      :aria-activedescendant="`option-${id}-${highlighted}`"
       @click="onClick"
       @keydown="onKeydown"
       @blur="onBlur"
@@ -18,15 +18,15 @@
     ></slot>
     <button
       v-else
-      :id="`select_${id}`"
+      :id="`select-${id}`"
       class="button"
       role="combobox"
       :aria-label="name"
       aria-multiselectable="true"
       :aria-expanded="expanded"
-      :aria-controls="`list_${id}`"
+      :aria-controls="`list-${id}`"
       aria-haspopup="listbox"
-      :aria-activedescendant="`option_${id}_${highlighted}`"
+      :aria-activedescendant="`option-${id}-${highlighted}`"
       @click="onClick"
       @keydown="onKeydown"
       @blur="onBlur"
@@ -50,7 +50,7 @@
     <!-- options list -->
     <div
       v-if="expanded"
-      :id="`list_${id}`"
+      :id="`list-${id}`"
       class="list"
       role="listbox"
       tabindex="0"
@@ -58,7 +58,7 @@
       <table>
         <!-- select all -->
         <tr
-          :id="`option_${id}_-1`"
+          :id="`option-${id}--1`"
           class="option"
           role="menuitem"
           :aria-label="allSelected ? 'Deselect all' : 'Select all'"
@@ -84,7 +84,7 @@
         <tr
           v-for="(option, index) in options"
           :key="index"
-          :id="`option_${id}_${index}`"
+          :id="`option-${id}-${index}`"
           class="option"
           role="option"
           :aria-selected="selected.includes(index)"
@@ -166,6 +166,10 @@ export default defineComponent({
     // open dropdown
     open() {
       this.expanded = true;
+      // focus button (needed for iOS)
+      (
+        document.querySelector(`#select-${this.id}`) as HTMLButtonElement
+      )?.focus();
       // auto highlight first selected option
       this.highlighted = this.selected[0] || 0;
     },
@@ -272,7 +276,7 @@ export default defineComponent({
     highlighted() {
       // scroll to highlighted in dropdown
       document
-        .querySelector(`#option_${this.id}_${this.highlighted}`)
+        .querySelector(`#option-${this.id}-${this.highlighted}`)
         ?.scrollIntoView({ block: "nearest" });
     },
   },

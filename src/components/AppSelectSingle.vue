@@ -2,14 +2,14 @@
   <div class="select">
     <!-- select button -->
     <button
-      :id="`select_${id}`"
+      :id="`select-${id}`"
       class="button"
       role="combobox"
       :aria-label="name"
       :aria-expanded="expanded"
-      :aria-controls="`list_${id}`"
+      :aria-controls="`list-${id}`"
       aria-haspopup="listbox"
-      :aria-activedescendant="`option_${id}_${highlighted}`"
+      :aria-activedescendant="`option-${id}-${highlighted}`"
       @click="onClick"
       @keydown="onKeydown"
       @blur="onBlur"
@@ -32,7 +32,7 @@
       <div
         v-for="(option, index) in options"
         :key="index"
-        :id="`option_${id}_${index}`"
+        :id="`option-${id}-${index}`"
         class="option"
         role="option"
         :aria-selected="option === modelValue"
@@ -99,6 +99,10 @@ export default defineComponent({
     // open dropdown
     open() {
       this.expanded = true;
+      // focus button (needed for iOS)
+      (
+        document.querySelector(`#select-${this.id}`) as HTMLButtonElement
+      )?.focus();
       // auto highlight selected option
       this.highlighted = this.selected;
     },
@@ -172,7 +176,7 @@ export default defineComponent({
     highlighted() {
       // scroll to highlighted in dropdown
       document
-        .querySelector(`#option_${this.id}_${this.highlighted}`)
+        .querySelector(`#option-${this.id}-${this.highlighted}`)
         ?.scrollIntoView({ block: "nearest" });
     },
   },

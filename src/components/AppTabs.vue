@@ -3,7 +3,7 @@
     <AppButton
       v-for="(tab, index) in tabs"
       :key="index"
-      :id="`tab_${id}_${tab.id}`"
+      :id="`tab-${id}-${tab.id}`"
       :text="tab.text"
       :icon="tab.icon"
       @click="selected = tab.id"
@@ -11,7 +11,7 @@
       :active="selected === tab.id"
       :aria-selected="selected === tab.id"
       :tabindex="selected === tab.id ? 0 : -1"
-      :aria-controls="`panel_${id}_${tab.id}`"
+      :aria-controls="`panel-${id}-${tab.id}`"
       role="tab"
       :tooltip="tab.tooltip"
       :aria-label="name"
@@ -20,8 +20,8 @@
   </AppFlex>
 
   <div
-    :id="`panel_${id}_${selected}`"
-    :aria-labelledby="`tab_${id}_${selected}`"
+    :id="`panel-${id}-${selected}`"
+    :aria-labelledby="`tab-${id}-${selected}`"
     role="tabpanel"
   >
     <slot :name="selected"></slot>
@@ -93,7 +93,7 @@ export default defineComponent({
     selected() {
       (
         document.querySelector(
-          `#tab_${this.id}_${this.selected}`
+          `#tab-${this.id}-${this.selected}`
         ) as HTMLButtonElement
       )?.focus();
     },
