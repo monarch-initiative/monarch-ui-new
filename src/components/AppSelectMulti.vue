@@ -192,14 +192,14 @@ export default defineComponent({
         event.preventDefault();
 
         // move value up/down
-        let value = this.highlighted;
-        if (event.key === "ArrowUp") value = this.highlighted - 1;
-        if (event.key === "ArrowDown") value = this.highlighted + 1;
-        if (event.key === "Home") value = 0;
-        if (event.key === "End") value = this.options.length - 1;
+        let highlighted = this.highlighted;
+        if (event.key === "ArrowUp") highlighted--;
+        if (event.key === "ArrowDown") highlighted++;
+        if (event.key === "Home") highlighted = 0;
+        if (event.key === "End") highlighted = this.options.length - 1;
 
-        // update value, wrapping beyond -1 or options length
-        this.highlighted = wrap(value, -1, this.options.length);
+        // update highlighted, wrapping beyond -1 or options length
+        this.highlighted = wrap(highlighted, -1, this.options.length);
       }
 
       // enter key to de/select highlighted option

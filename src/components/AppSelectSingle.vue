@@ -127,8 +127,8 @@ export default defineComponent({
 
         // move value up/down
         let value = this[prop];
-        if (event.key === "ArrowUp") value = this[prop] - 1;
-        if (event.key === "ArrowDown") value = this[prop] + 1;
+        if (event.key === "ArrowUp") value--;
+        if (event.key === "ArrowDown") value++;
         if (event.key === "Home") value = 0;
         if (event.key === "End") value = this.options.length - 1;
 

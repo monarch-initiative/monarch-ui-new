@@ -78,14 +78,21 @@
   <AppSection>
     <AppHeading>Tabs</AppHeading>
     <AppTabs
+      name="Tab group"
       :tabs="[
-        { id: 'apple', text: 'Apple', icon: 'info-circle' },
-        { id: 'pear', text: 'Pear', icon: 'info-circle' },
+        { id: 'apple', text: 'Apple', icon: 'asterisk' },
+        { id: 'banana', text: 'Banana', icon: 'cogs' },
+        { id: 'cherry', text: 'Cherry', icon: 'home' },
+        { id: 'durian', text: 'Durian', icon: 'puzzle-piece' },
+        { id: 'elderberry', text: 'Elderberry', icon: 'tools' },
       ]"
       default="apple"
     >
       <template #apple>I'm a little apple</template>
-      <template #pear>I'm a little pear</template>
+      <template #banana>I'm a little banana</template>
+      <template #cherry>I'm a little cherry</template>
+      <template #durian>I'm a little durian</template>
+      <template #elderberry>I'm a little elderberry</template>
     </AppTabs>
   </AppSection>
 
