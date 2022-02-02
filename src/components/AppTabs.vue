@@ -14,7 +14,7 @@
       :aria-controls="`panel_${id}_${tab.id}`"
       role="tab"
       :tooltip="tab.tooltip"
-      :aria-label="label"
+      :aria-label="name"
       @keydown="onKeydown"
     />
   </AppFlex>

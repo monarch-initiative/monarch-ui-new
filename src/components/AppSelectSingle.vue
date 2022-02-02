@@ -100,6 +100,8 @@ export default defineComponent({
     // open dropdown
     open() {
       this.expanded = true;
+      // auto highlight selected option
+      this.highlighted = this.selected;
     },
     // close dropdown
     close() {
@@ -156,17 +158,20 @@ export default defineComponent({
     },
   },
   watch: {
-    // when model changes, update selected index
+    // when model changes
     modelValue() {
+      // update selected index
       this.selected = this.getSelected();
     },
-    // when selected index changes, emit change to selected option
+    // when selected index changes
     selected() {
+      // emit updated model
       this.$emit("update:modelValue", this.options[this.selected]);
       this.close();
     },
-    // when highlighted index changes, scroll to it in dropdown
+    // when highlighted index changes
     highlighted() {
+      // scroll to highlighted in dropdown
       document
         .querySelector(`#option_${this.id}_${this.highlighted}`)
         ?.scrollIntoView({ block: "nearest" });

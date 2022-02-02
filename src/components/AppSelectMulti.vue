@@ -168,6 +168,8 @@ export default defineComponent({
     // open dropdown
     open() {
       this.expanded = true;
+      // auto highlight first selected option
+      this.highlighted = this.selected[0] || 0;
     },
     // close dropdown
     close() {
@@ -175,6 +177,7 @@ export default defineComponent({
     },
     // when button clicked
     onClick() {
+      // toggle dropdown
       this.expanded ? this.close() : this.open();
     },
     // when button blurred
@@ -243,8 +246,9 @@ export default defineComponent({
         if (this.selected.includes(index))
           this.selected = this.selected.filter((value) => value !== index);
         else this.selected.push(index);
-        this.selected.sort();
       }
+      // keep in order for easy comparison
+      this.selected.sort();
     },
   },
   watch: {
@@ -261,13 +265,14 @@ export default defineComponent({
     // when selected index changes
     selected: {
       handler() {
-        // emit change to selected option
+        // emit updated model
         this.$emit("update:modelValue", this.getModel());
       },
       deep: true,
     },
-    // when highlighted index changes, scroll to it in dropdown
+    // when highlighted index changes
     highlighted() {
+      // scroll to highlighted in dropdown
       document
         .querySelector(`#option_${this.id}_${this.highlighted}`)
         ?.scrollIntoView({ block: "nearest" });
