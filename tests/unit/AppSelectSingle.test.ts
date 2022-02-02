@@ -35,7 +35,7 @@ test("Selects by click", async () => {
   const option = wrapper.find("[role='option']");
   await option.trigger("click");
   expect(wrapper.find("[role='listbox']").exists()).toBe(false);
-  expect(lastValue(wrapper)).toEqual([props.options[0]]);
+  expect(lastValue(wrapper)).toEqual(props.options[0]);
 });
 
 test("Selects by keyboard", async () => {
