@@ -3,10 +3,10 @@
     <div v-if="title" class="truncate-2" tabindex="0">{{ title }}</div>
     <div v-if="authors" class="truncate-2" tabindex="0">{{ authors }}</div>
     <AppMarkdown
-      v-if="_details"
+      v-if="detailsString"
       class="truncate-2"
       tabindex="0"
-      :source="_details"
+      :source="detailsString"
     />
   </blockquote>
 </template>
@@ -25,7 +25,7 @@ export default defineComponent({
     details: Array,
   },
   computed: {
-    _details() {
+    detailsString() {
       return (this.details || []).filter((e) => e).join("&nbsp; · &nbsp;");
     },
   },

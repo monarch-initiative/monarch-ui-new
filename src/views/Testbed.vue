@@ -4,17 +4,63 @@
   in production build of site.
 -->
 <template>
-  <!-- buttons -->
   <AppSection>
+    <AppHeading>Testbed</AppHeading>
+  </AppSection>
+
+  <!-- single select component -->
+  <AppSection>
+    <AppHeading>Single Select</AppHeading>
+
+    <AppFlex direction="col">
+      <span>{{ singleSelectValue }}</span>
+      <AppSelectSingle
+        name="Fruit"
+        :options="singleSelectOptions"
+        v-model="singleSelectValue"
+      />
+    </AppFlex>
+  </AppSection>
+
+  <!-- multi select component -->
+  <AppSection>
+    <AppHeading>Multi Select</AppHeading>
+
+    <AppFlex direction="col">
+      <span>{{ multiSelectValue }}</span>
+      <AppSelectMulti
+        name="Category"
+        :options="multiSelectOptions"
+        v-model="multiSelectValue"
+      />
+      <AppSelectMulti
+        name="Category"
+        :options="multiSelectOptions"
+        v-model="multiSelectValue"
+        v-slot="props"
+      >
+        <AppButton icon="filter" v-bind="props" design="small" />
+      </AppSelectMulti>
+    </AppFlex>
+  </AppSection>
+
+  <!-- button component -->
+  <AppSection>
+    <AppHeading>Button</AppHeading>
     <AppFlex>
       <AppButton to="/" design="primary" text="primary" />
       <AppButton to="/" design="primary" text="primary" icon="download" />
       <AppButton to="/" design="primary" icon="download" />
     </AppFlex>
     <AppFlex>
-      <AppButton to="/" design="secondary" text="secondary" />
-      <AppButton to="/" design="secondary" text="secondary" icon="download" />
-      <AppButton to="/" design="secondary" icon="download" />
+      <AppButton @click="alert('test')" design="secondary" text="secondary" />
+      <AppButton
+        @click="alert('test')"
+        design="secondary"
+        text="secondary"
+        icon="download"
+      />
+      <AppButton @click="alert('test')" design="secondary" icon="download" />
     </AppFlex>
     <AppFlex>
       <AppButton to="/" design="small" text="small" />
@@ -28,8 +74,31 @@
     </AppFlex>
   </AppSection>
 
+  <!-- tabs component -->
+  <AppSection>
+    <AppHeading>Tabs</AppHeading>
+    <AppTabs
+      name="Tab group"
+      :tabs="[
+        { id: 'apple', text: 'Apple', icon: 'asterisk' },
+        { id: 'banana', text: 'Banana', icon: 'cogs' },
+        { id: 'cherry', text: 'Cherry', icon: 'home' },
+        { id: 'durian', text: 'Durian', icon: 'puzzle-piece' },
+        { id: 'elderberry', text: 'Elderberry', icon: 'tools' },
+      ]"
+      default="apple"
+    >
+      <template #apple>I'm a little apple</template>
+      <template #banana>I'm a little banana</template>
+      <template #cherry>I'm a little cherry</template>
+      <template #durian>I'm a little durian</template>
+      <template #elderberry>I'm a little elderberry</template>
+    </AppTabs>
+  </AppSection>
+
   <!-- status component -->
   <AppSection>
+    <AppHeading>Status</AppHeading>
     <AppGallery>
       <AppStatus :status="{ code: 'loading', text: 'Loading some results' }" />
       <AppStatus :status="{ code: 'success', text: 'Action was a success' }" />
@@ -47,10 +116,46 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import AppStatus from "@/components/AppStatus.vue";
+import AppTabs from "@/components/AppTabs.vue";
+import AppSelectSingle from "@/components/AppSelectSingle.vue";
+import AppSelectMulti from "@/components/AppSelectMulti.vue";
 
 export default defineComponent({
   components: {
     AppStatus,
+    AppTabs,
+    AppSelectSingle,
+    AppSelectMulti,
+  },
+  data() {
+    return {
+      singleSelectOptions: [
+        "apple",
+        "banana",
+        "cherry",
+        "durian",
+        "elderberry",
+        "fig",
+        "grape",
+        "honeydew",
+      ],
+      singleSelectValue: "durian",
+      multiSelectOptions: [
+        { value: "fruits", count: 0 },
+        { value: "vegetables", count: 7 },
+        { value: "colors", count: 42 },
+        { value: "animals", count: 999 },
+        { value: "cars" },
+        { value: "schools" },
+        { value: "appliances" },
+      ],
+      multiSelectValue: [{ value: "vegetables" }],
+    };
+  },
+  methods: {
+    alert(message = "") {
+      window.alert(message);
+    },
   },
 });
 </script>

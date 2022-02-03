@@ -7,6 +7,7 @@
     :data-design="design"
     :data-text="!!text"
     :data-active="active"
+    :data-notification="notification"
   >
     <span v-if="text">{{ text }}</span>
     <AppIcon
@@ -40,6 +41,11 @@ export default defineComponent({
     design: {
       default: "primary",
       type: String as PropType<"primary" | "secondary" | "small" | "circle">,
+    },
+    // whether to show little notification dot
+    notification: {
+      default: false,
+      type: Boolean,
     },
   },
   computed: {
@@ -79,12 +85,11 @@ export default defineComponent({
 
   &[data-design="primary"],
   &[data-design="secondary"] {
-    min-width: 200px; // fallback
     min-width: min(200px, calc(100% - 40px));
     min-height: 40px;
     padding: 5px 20px;
     color: $off-black;
-    border-radius: 3px;
+    border-radius: $rounded;
     font-size: 1rem;
     font-weight: 500;
   }
@@ -100,7 +105,7 @@ export default defineComponent({
   &[data-design="small"] {
     flex-direction: row-reverse;
     padding: 3px;
-    border-radius: 3px;
+    border-radius: $rounded;
     color: $theme;
   }
 
@@ -137,7 +142,8 @@ export default defineComponent({
 
   &[data-active="false"] {
     &[data-design="primary"],
-    &[data-design="secondary"] {
+    &[data-design="secondary"],
+    &[data-design="circle"] {
       background: none;
     }
 
@@ -149,6 +155,17 @@ export default defineComponent({
   &[disabled] {
     pointer-events: none;
     opacity: 0.5;
+  }
+
+  &[data-notification="true"]:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: $error;
   }
 }
 </style>

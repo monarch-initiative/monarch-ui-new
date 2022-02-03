@@ -110,10 +110,10 @@ export default defineComponent({
   position: fixed;
   right: 0;
   padding: var(--spacing);
-  z-index: 2;
+  z-index: 20;
 }
 
 .button {
-  // border-radius: 3px 0 0 3px !important;
+  font-size: 0.9rem;
 }
 </style>

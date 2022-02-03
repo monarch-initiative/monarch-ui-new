@@ -91,7 +91,7 @@ textarea {
   min-height: 40px;
   padding: 10px;
   border: solid 2px $off-black;
-  border-radius: 3px;
+  border-radius: $rounded;
   outline: none;
   transition: box-shadow $fast;
 }

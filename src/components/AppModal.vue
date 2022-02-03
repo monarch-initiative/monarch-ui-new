@@ -34,6 +34,9 @@
 import { defineComponent, nextTick } from "vue";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 
+// references:
+// https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/dialog.html
+
 // basic modal component with arbitrary content
 export default defineComponent({
   props: {
