@@ -99,10 +99,6 @@ export default defineComponent({
     // open dropdown
     open() {
       this.expanded = true;
-      // focus button (needed for iOS)
-      (
-        document.querySelector(`#select-${this.id}`) as HTMLButtonElement
-      )?.focus();
       // auto highlight selected option
       this.highlighted = this.selected;
     },
@@ -112,8 +108,12 @@ export default defineComponent({
     },
     // when button clicked
     onClick() {
+      // toggle dropdown
       this.expanded ? this.close() : this.open();
-      this.highlighted = this.selected;
+      // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#clicking_and_focus
+      (
+        document.querySelector(`#select-${this.id}`) as HTMLButtonElement
+      )?.focus();
     },
     // when button blurred
     onBlur() {
