@@ -51,7 +51,6 @@ export default defineComponent({
   align-items: center;
   gap: 15px;
   padding: 20px;
-  background: $light-gray;
   text-decoration: none;
 
   &[data-design="plain"] {

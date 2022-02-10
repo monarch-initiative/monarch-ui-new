@@ -7,8 +7,8 @@ export const sleep = async (ms = 0): Promise<void> =>
 export const syncLog = (...args: Array<unknown>): void => {
   try {
     args = args.map((arg) => JSON.parse(JSON.stringify(arg)));
-    console.log(...args);
+    console.info(...args);
   } catch (error) {
-    console.log("Error trying to console.logSync()", ...args);
+    console.info("Error trying to log to console synchronously", ...args);
   }
 };

@@ -1,4 +1,9 @@
 import axios from "axios";
+import { Api, HttpClient } from "./types/types";
+
+export const biolink = new Api(
+  new HttpClient({ baseUrl: "https://api.monarchinitiative.org/api" })
+);
 
 // generic method for handling api call errors
 export const handleError = (error: unknown): unknown => {

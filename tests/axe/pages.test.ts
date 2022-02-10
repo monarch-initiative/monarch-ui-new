@@ -20,7 +20,7 @@ test(
     // go through each page/route
     for (const page of pages) {
       // log progress
-      console.log(`\n========== Testing page ${page} ==========\n`);
+      console.info(`\n========== Testing page ${page} ==========\n`);
 
       // navigate to new page
       router.push(page);

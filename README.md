@@ -86,7 +86,7 @@ Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-
 - `.env` - Environment variable file.
   A convenient place to set static string values that need to be repeated throughout the app.
 
-### Guidelines
+### Guidelines and notes
 
 Where possible and appropriate, use custom components like `AppHeading` and `AppLink` instead of native elements like `h1` and `a`.
 
@@ -97,3 +97,6 @@ For example, avoid overriding default eslint rules as much as possible.
 
 Keep long lists, such as those in `/global`, sorted alphabetically for consistency and ease of lookup and comparison.
 Tip: use VS Code extension "Sort Lines".
+
+TypeScript definitions for the BioLink were generated automatically using the `swagger-typescript-api` with the command:
+`npx swagger-typescript-api -p https://api.monarchinitiative.org/api/swagger.json -o ./src/api -n types.ts`
