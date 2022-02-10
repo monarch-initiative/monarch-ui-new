@@ -66,8 +66,6 @@ export const getDatasets = async (): Promise<Array<Source>> => {
     })
   );
 
-  console.log(datasets);
-
   // merge static (manually entered) data in with dynamic (fetched) data
   datasets = merge(datasets, staticData);
 

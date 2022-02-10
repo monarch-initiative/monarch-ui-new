@@ -21,8 +21,6 @@ generateApi({
   singleHttpClient: true,
 })
   .then(({ files }) =>
-    files.forEach(({ name, content }) =>
-      fs.writeFileSync(name, content)
-    )
+    files.forEach(({ name, content }) => fs.writeFileSync(name, content))
   )
   .catch(console.error);

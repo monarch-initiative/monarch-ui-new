@@ -1,6 +1,6 @@
 import { rest } from "msw";
 
-import datasets from "./datasets.json"
+import datasets from "./datasets.json";
 import ontologies from "./ontologies.json";
 import uptime from "./uptime.json";
 import feedback from "./feedback.json";

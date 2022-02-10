@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Api, HttpClient } from "./types/types";
 
+// client for biolink api
 export const biolink = new Api(
   new HttpClient({ baseUrl: "https://api.monarchinitiative.org/api" })
 );

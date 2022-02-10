@@ -35,7 +35,9 @@ export class HttpClient {
   };
   encodeQueryParam(key, value) {
     const encodedKey = encodeURIComponent(key);
-    return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
+    return `${encodedKey}=${encodeURIComponent(
+      typeof value === "number" ? value : `${value}`
+    )}`;
   }
   addQueryParam(query, key) {
     return this.encodeQueryParam(key, query[key]);
@@ -46,9 +48,15 @@ export class HttpClient {
   }
   toQueryString(rawQuery) {
     const query = rawQuery || {};
-    const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
+    const keys = Object.keys(query).filter(
+      (key) => "undefined" !== typeof query[key]
+    );
     return keys
-      .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
+      .map((key) =>
+        Array.isArray(query[key])
+          ? this.addArrayQueryParam(query, key)
+          : this.addQueryParam(query, key)
+      )
       .join("&");
   }
   addQueryParams(rawQuery) {
@@ -57,7 +65,9 @@ export class HttpClient {
   }
   contentFormatters = {
     [ContentType.Json]: (input) =>
-      input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
+      input !== null && (typeof input === "object" || typeof input === "string")
+        ? JSON.stringify(input)
+        : input,
     [ContentType.FormData]: (input) =>
       Object.keys(input || {}).reduce((formData, key) => {
         const property = input[key];
@@ -67,7 +77,7 @@ export class HttpClient {
             ? property
             : typeof property === "object" && property !== null
             ? JSON.stringify(property)
-            : `${property}`,
+            : `${property}`
         );
         return formData;
       }, new FormData()),
@@ -104,7 +114,17 @@ export class HttpClient {
       this.abortControllers.delete(cancelToken);
     }
   };
-  request = async ({ body, secure, path, type, query, format, baseUrl, cancelToken, ...params }) => {
+  request = async ({
+    body,
+    secure,
+    path,
+    type,
+    query,
+    format,
+    baseUrl,
+    cancelToken,
+    ...params
+  }) => {
     const secureParams =
       ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
         this.securityWorker &&
@@ -114,15 +134,25 @@ export class HttpClient {
     const queryString = query && this.toQueryString(query);
     const payloadFormatter = this.contentFormatters[type || ContentType.Json];
     const responseFormat = format || requestParams.format;
-    return this.customFetch(`${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`, {
-      ...requestParams,
-      headers: {
-        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
-        ...(requestParams.headers || {}),
-      },
-      signal: cancelToken ? this.createAbortSignal(cancelToken) : void 0,
-      body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
-    }).then(async (response) => {
+    return this.customFetch(
+      `${baseUrl || this.baseUrl || ""}${path}${
+        queryString ? `?${queryString}` : ""
+      }`,
+      {
+        ...requestParams,
+        headers: {
+          ...(type && type !== ContentType.FormData
+            ? { "Content-Type": type }
+            : {}),
+          ...(requestParams.headers || {}),
+        },
+        signal: cancelToken ? this.createAbortSignal(cancelToken) : void 0,
+        body:
+          typeof body === "undefined" || body === null
+            ? null
+            : payloadFormatter(body),
+      }
+    ).then(async (response) => {
       const r = response;
       r.data = null;
       r.error = null;
@@ -191,7 +221,11 @@ export class Api {
      * @request GET:/association/find/{subject_category}
      * @response `200` `(AssociationResults)[]` Success
      */
-    getAssociationBySubjectCategorySearch: (subjectCategory, query, params = {}) =>
+    getAssociationBySubjectCategorySearch: (
+      subjectCategory,
+      query,
+      params = {}
+    ) =>
       this.http.request({
         path: `/association/find/${subjectCategory}`,
         method: "GET",
@@ -208,7 +242,12 @@ export class Api {
      * @request GET:/association/find/{subject_category}/{object_category}
      * @response `200` `(AssociationResults)[]` Success
      */
-    getAssociationBySubjectAndObjectCategorySearch: (objectCategory, subjectCategory, query, params = {}) =>
+    getAssociationBySubjectAndObjectCategorySearch: (
+      objectCategory,
+      subjectCategory,
+      query,
+      params = {}
+    ) =>
       this.http.request({
         path: `/association/find/${subjectCategory}/${objectCategory}`,
         method: "GET",
@@ -259,7 +298,11 @@ export class Api {
      * @request GET:/association/type/{association_type}
      * @response `200` `(AssociationResults)[]` Success
      */
-    getAssociationBySubjectAndAssocType: (associationType, query, params = {}) =>
+    getAssociationBySubjectAndAssocType: (
+      associationType,
+      query,
+      params = {}
+    ) =>
       this.http.request({
         path: `/association/type/${associationType}`,
         method: "GET",
@@ -2179,7 +2222,12 @@ export class Api {
      * @request GET:/mart/case/{object_category}/{taxon}
      * @response `200` `void` Success
      */
-    getMartCaseAssociationsResource: (taxon, objectCategory, query, params = {}) =>
+    getMartCaseAssociationsResource: (
+      taxon,
+      objectCategory,
+      query,
+      params = {}
+    ) =>
       this.http.request({
         path: `/mart/case/${objectCategory}/${taxon}`,
         method: "GET",
@@ -2195,7 +2243,12 @@ export class Api {
      * @request GET:/mart/disease/{object_category}/{taxon}
      * @response `200` `void` Success
      */
-    getMartDiseaseAssociationsResource: (taxon, objectCategory, query, params = {}) =>
+    getMartDiseaseAssociationsResource: (
+      taxon,
+      objectCategory,
+      query,
+      params = {}
+    ) =>
       this.http.request({
         path: `/mart/disease/${objectCategory}/${taxon}`,
         method: "GET",
@@ -2211,7 +2264,12 @@ export class Api {
      * @request GET:/mart/gene/{object_category}/{taxon}
      * @response `200` `void` Success
      */
-    getMartGeneAssociationsResource: (taxon, objectCategory, query, params = {}) =>
+    getMartGeneAssociationsResource: (
+      taxon,
+      objectCategory,
+      query,
+      params = {}
+    ) =>
       this.http.request({
         path: `/mart/gene/${objectCategory}/${taxon}`,
         method: "GET",
@@ -2426,7 +2484,13 @@ export class Api {
      * @request GET:/ontol/information_content/{subject_category}/{object_category}/{subject_taxon}
      * @response `200` `void` Success
      */
-    getInformationContentResource: (subjectCategory, objectCategory, subjectTaxon, query, params = {}) =>
+    getInformationContentResource: (
+      subjectCategory,
+      objectCategory,
+      subjectTaxon,
+      query,
+      params = {}
+    ) =>
       this.http.request({
         path: `/ontol/information_content/${subjectCategory}/${objectCategory}/${subjectTaxon}`,
         method: "GET",
@@ -2655,7 +2719,12 @@ export class Api {
      * @request GET:/relation/usage/between/{subject_category}/{object_category}
      * @response `200` `(AssociationResults)[]` Success
      */
-    getRelationUsageBetweenResource: (subjectCategory, objectCategory, query, params = {}) =>
+    getRelationUsageBetweenResource: (
+      subjectCategory,
+      objectCategory,
+      query,
+      params = {}
+    ) =>
       this.http.request({
         path: `/relation/usage/between/${subjectCategory}/${objectCategory}`,
         method: "GET",
