@@ -89,15 +89,20 @@ export default defineComponent({
     };
   },
   async mounted() {
-    // get statuses from uptimerobot api
+    // loading...
     this.status = {
       code: "loading",
       text: "Loading service statuses",
     };
+
     try {
+      // get statuses from uptimerobot api
       this.statuses = await getStatuses();
+
+      // clear status
       this.status = null;
     } catch (error) {
+      // error...
       this.status = { code: "error", text: (error as Error).message };
     }
   },

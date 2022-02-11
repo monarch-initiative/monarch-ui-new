@@ -4,13 +4,22 @@
 
     <!-- filters -->
     <AppFlex>
-      <AppCheckbox v-model="showDatasets" text="Datasets" icon="database" />
+      <AppCheckbox
+        v-model="showDatasets"
+        :text="`Datasets (${datasetCount})`"
+        icon="database"
+      />
       <AppCheckbox
         v-model="showOntologies"
-        text="Ontologies"
+        :text="`Ontologies (${ontolotyCount})`"
         icon="puzzle-piece"
       />
     </AppFlex>
+
+    <!-- status -->
+    <p v-if="status">
+      <AppStatus :status="status" />
+    </p>
 
     <!-- list of all sources -->
     <AppFlex direction="col">
@@ -39,11 +48,11 @@
             v-tooltip="'Link to licensing information for this source'"
           />
           <AppButton
-            v-if="source.rdf"
+            v-if="source.distribution"
             design="small"
             icon="download"
             text="RDF"
-            :to="source.rdf"
+            :to="source.distribution"
             v-tooltip="'Download Resource Description Framework file'"
           />
           <AppButton
@@ -76,6 +85,7 @@
             :key="index"
             :to="file"
             class="truncate"
+            v-tooltip.break="file"
           >
             {{ getFilename(file) }}
           </AppLink>
@@ -117,27 +127,31 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import sources from "./sources.json";
 import AppCheckbox from "@/components/AppCheckbox.vue";
 import AppAccordion from "@/components/AppAccordion.vue";
 import { getDatasets } from "@/api/datasets";
 import { getOntologies } from "@/api/ontologies";
+import AppStatus from "@/components/AppStatus.vue";
 import { Source } from "@/types/sources";
+import { Status } from "@/types/status";
 
 // sources page
 export default defineComponent({
   components: {
     AppCheckbox,
     AppAccordion,
+    AppStatus,
   },
   data() {
     return {
       // sources data
-      sources: sources as Array<Source>,
+      sources: [] as Array<Source>,
       // whether to show dataset sources
       showDatasets: true,
       // whether to show ontology sources
       showOntologies: true,
+      // status of query
+      status: null as Status | null,
     };
   },
   methods: {
@@ -152,10 +166,14 @@ export default defineComponent({
     },
     // get filename from full path
     getFilename(path = "") {
-      return path.split("/").pop();
+      return path
+        .split("/")
+        .filter((part) => part)
+        .pop();
     },
   },
   computed: {
+    // shown sources
     filteredSources(): Array<Source> {
       return this.sources.filter(
         (source: Source) =>
@@ -163,31 +181,44 @@ export default defineComponent({
           (source.type === "ontology" && this.showOntologies)
       );
     },
+    // number of dataset sources
+    datasetCount(): number {
+      return this.sources.filter((source) => source.type === "dataset").length;
+    },
+    // number of ontology sources
+    ontolotyCount(): number {
+      return this.sources.filter((source) => source.type === "ontology").length;
+    },
   },
   async mounted() {
-    // get dynamic source info
-    const datasets = await getDatasets();
-    const ontologies = await getOntologies();
-    const dynamic = [...datasets, ...ontologies];
+    // loading...
+    this.status = {
+      code: "loading",
+      text: "Loading sources",
+    };
 
-    // merge dynamic source info into static source info
-    for (const source of this.sources) {
-      // find match between static and dynamic by id
-      const match = dynamic.find((d: Source) => source.id === d.id);
+    try {
+      // get sources from apis
+      const datasets = await getDatasets();
+      const ontologies = await getOntologies();
+      this.sources = [...datasets, ...ontologies];
 
-      // merge props
-      if (match) Object.assign(source, match);
+      // sort sources alphabetically by name or id
+      this.sources.sort((a: Source, b: Source) => {
+        if (
+          (a?.name || a?.id || "").toLowerCase() <
+          (b?.name || b?.id || "").toLowerCase()
+        )
+          return -1;
+        else return 1;
+      });
+
+      // clear status
+      this.status = null;
+    } catch (error) {
+      // error...
+      this.status = { code: "error", text: (error as Error).message };
     }
-
-    // sort sources alphabetically by name or id
-    this.sources.sort((a: Source, b: Source) => {
-      if (
-        (a?.name || a?.id || "").toLowerCase() <
-        (b?.name || b?.id || "").toLowerCase()
-      )
-        return -1;
-      else return 1;
-    });
   },
 });
 </script>
