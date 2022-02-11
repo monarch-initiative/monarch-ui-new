@@ -4,10 +4,14 @@
 
     <!-- filters -->
     <AppFlex>
-      <AppCheckbox v-model="showDatasets" text="Datasets" icon="database" />
+      <AppCheckbox
+        v-model="showDatasets"
+        :text="`Datasets (${datasetCount})`"
+        icon="database"
+      />
       <AppCheckbox
         v-model="showOntologies"
-        text="Ontologies"
+        :text="`Ontologies (${ontolotyCount})`"
         icon="puzzle-piece"
       />
     </AppFlex>
@@ -165,12 +169,21 @@ export default defineComponent({
     },
   },
   computed: {
+    // shown sources
     filteredSources(): Array<Source> {
       return this.sources.filter(
         (source: Source) =>
           (source.type === "dataset" && this.showDatasets) ||
           (source.type === "ontology" && this.showOntologies)
       );
+    },
+    // number of dataset sources
+    datasetCount(): number {
+      return this.sources.filter((source) => source.type === "dataset").length;
+    },
+    // number of ontology sources
+    ontolotyCount(): number {
+      return this.sources.filter((source) => source.type === "ontology").length;
     },
   },
   async mounted() {

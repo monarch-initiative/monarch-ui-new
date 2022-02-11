@@ -1,7 +1,7 @@
 import axios from "axios";
 import { handleError } from ".";
 import staticData from "./ontologies.json";
-import { merge } from "@/util/object";
+import { mergeArrays } from "@/util/object";
 import { Source } from "@/types/sources";
 
 // source for ontology metadata
@@ -28,8 +28,6 @@ export const getOntologies = async (): Promise<Array<Source>> => {
     // get data from endpoint
     const { data } = (await axios.get(obo)) as Response;
 
-    console.log(data);
-
     // convert results to desired format
     let ontologies = data.ontologies.map(
       (ontology: Ontology): Source => ({
@@ -44,7 +42,8 @@ export const getOntologies = async (): Promise<Array<Source>> => {
     );
 
     // merge static (manually entered) data in with dynamic (fetched) data
-    ontologies = merge(ontologies, staticData);
+    // (but only including entries in static)
+    ontologies = mergeArrays(staticData, ontologies, true);
 
     return ontologies;
   } catch (error) {

@@ -1,6 +1,6 @@
 import { biolink, handleError } from "./";
 import staticData from "./datasets.json";
-import { merge } from "@/util/object";
+import { mergeArrays } from "@/util/object";
 import { Source } from "@/types/sources";
 
 // expected schemas to be returned from api
@@ -69,7 +69,9 @@ export const getDatasets = async (): Promise<Array<Source>> => {
     );
 
     // merge static (manually entered) data in with dynamic (fetched) data
-    datasets = merge(datasets, staticData);
+    datasets = mergeArrays(staticData, datasets);
+
+    console.log(datasets);
 
     return datasets;
   } catch (error) {
