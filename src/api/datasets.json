@@ -241,7 +241,7 @@
     "name": "Elements of Morphology",
     "image": "eom.png",
     "description": "Elements of Morphology is a resource from NHGRI that has definitions of morphological abnormalities, together with image depictions.",
-    "usage": "We pull those relationships, as well as our local mapping of equivalences between EOM and HP terminologies.",
+    "usage": "We pull those relationships, as well as our local mapping of equivalences between EOM and HP terminologies."
   },
   {
     "id": "MonarchArchive:#mgislim",
@@ -249,15 +249,6 @@
     "image": "mgi.png",
     "description": "See 'Mouse Genome Informatics'",
     "usage": "Slim MGI model only containing Gene to phenotype associations. This uses mousemine: http://www.mousemine.org/mousemine/begin.do",
-    "license": "http://reusabledata.org/mgi.html"
-  },
-  {
-    "id": "MonarchArchive:#mgi_slim",
-    "name": "Mouse Genome Informatics (MGI Slim)",
-    "image": "mgi.png",
-    "description": "See 'Mouse Genome Informatics'",
-    "usage": "Slim MGI model only containing Gene to phenotype associations. This uses mousemine: http://www.mousemine.org/mousemine/begin.do",
-    "vocabulary": "",
     "license": "http://reusabledata.org/mgi.html"
   },
   {
