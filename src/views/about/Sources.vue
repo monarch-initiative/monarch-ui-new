@@ -85,6 +85,7 @@
             :key="index"
             :to="file"
             class="truncate"
+            v-tooltip.break="file"
           >
             {{ getFilename(file) }}
           </AppLink>
