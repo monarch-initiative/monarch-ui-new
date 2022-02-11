@@ -32,7 +32,6 @@ export const getOntologies = async (): Promise<Array<Source>> => {
     let ontologies = data.ontologies.map(
       (ontology: Ontology): Source => ({
         id: ontology.id,
-        type: "ontology",
         name: ontology.title,
         link: ontology.homepage,
         license: ontology.license?.url,
@@ -44,6 +43,9 @@ export const getOntologies = async (): Promise<Array<Source>> => {
     // merge static (manually entered) data in with dynamic (fetched) data
     // (but only including entries in static)
     ontologies = mergeArrays(staticData, ontologies, true);
+
+    // tag as ontology type of source
+    ontologies.forEach((ontology) => (ontology.type = "ontology"));
 
     return ontologies;
   } catch (error) {

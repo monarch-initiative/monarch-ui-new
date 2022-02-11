@@ -55,7 +55,6 @@ export const getDatasets = async (): Promise<Array<Source>> => {
           edges.find(
             (edge) => edge.obj === node.id && edge.pred === "versionIRI"
           )?.sub || "",
-        type: "dataset",
         date: node.meta["http://purl.org/dc/terms/created"][0],
         distribution: expand(
           edges.find(
@@ -71,7 +70,8 @@ export const getDatasets = async (): Promise<Array<Source>> => {
     // merge static (manually entered) data in with dynamic (fetched) data
     datasets = mergeArrays(staticData, datasets);
 
-    console.log(datasets);
+    // tag as dataset type of source
+    datasets.forEach((dataset) => (dataset.type = "dataset"));
 
     return datasets;
   } catch (error) {
