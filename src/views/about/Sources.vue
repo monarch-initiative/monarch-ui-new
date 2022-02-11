@@ -166,7 +166,10 @@ export default defineComponent({
     },
     // get filename from full path
     getFilename(path = "") {
-      return path.split("/").pop();
+      return path
+        .split("/")
+        .filter((part) => part)
+        .pop();
     },
   },
   computed: {
