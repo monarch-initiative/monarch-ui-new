@@ -63,6 +63,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 100%;
   padding: 20px;
 }
 
