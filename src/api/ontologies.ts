@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleError } from ".";
 import staticData from "./ontologies.json";
 import { merge } from "@/util/object";
 import { Source } from "@/types/sources";
@@ -23,24 +24,33 @@ interface Ontology {
 
 // get metadata of all ontologies listed on obo
 export const getOntologies = async (): Promise<Array<Source>> => {
-  // get data from endpoint
-  const { data } = (await axios.get(obo)) as Response;
+  try {
+    // get data from endpoint
+    const { data } = (await axios.get(obo)) as Response;
 
-  // convert results to desired format
-  let ontologies = data.ontologies.map(
-    (ontology: Ontology): Source => ({
-      id: ontology.id,
-      type: "ontology",
-      name: ontology.title,
-      link: ontology.homepage,
-      license: ontology.license?.url,
-      image: ontology.depicted_by,
-      description: ontology.description,
-    })
-  );
+    console.log(data);
 
-  // merge static (manually entered) data in with dynamic (fetched) data
-  ontologies = merge(ontologies, staticData);
+    // convert results to desired format
+    let ontologies = data.ontologies.map(
+      (ontology: Ontology): Source => ({
+        id: ontology.id,
+        type: "ontology",
+        name: ontology.title,
+        link: ontology.homepage,
+        license: ontology.license?.url,
+        image: ontology.depicted_by,
+        description: ontology.description,
+      })
+    );
 
-  return ontologies;
+    // merge static (manually entered) data in with dynamic (fetched) data
+    ontologies = merge(ontologies, staticData);
+
+    return ontologies;
+  } catch (error) {
+    handleError(error);
+  }
+
+  // default return
+  return [];
 };
