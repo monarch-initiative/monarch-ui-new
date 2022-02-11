@@ -137,7 +137,7 @@
     "id": "MonarchArchive:#biogrid",
     "name": "BioGRID",
     "image": "biogrid.png",
-    "usage": "Monarch indicates gene-gene/protein-protein interactions on gene pages. We also use many of the id mapMonarchArchive:#pings to resolve ids in our own site.",
+    "usage": "Monarch indicates gene-gene/protein-protein interactions on gene pages. We also use many of the id mappings to resolve ids in our own site.",
     "description": "BioGRID is an curated gene and protein interaction repository with for major model organism species.",
     "vocabulary": "MI",
     "license": "http://reusabledata.org/biogrid.html"
@@ -242,7 +242,14 @@
     "image": "eom.png",
     "description": "Elements of Morphology is a resource from NHGRI that has definitions of morphological abnormalities, together with image depictions.",
     "usage": "We pull those relationships, as well as our local mapping of equivalences between EOM and HP terminologies.",
-    "vocabulary": ""
+  },
+  {
+    "id": "MonarchArchive:#mgislim",
+    "name": "Mouse Genome Informatics (MGI Slim)",
+    "image": "mgi.png",
+    "description": "See 'Mouse Genome Informatics'",
+    "usage": "Slim MGI model only containing Gene to phenotype associations. This uses mousemine: http://www.mousemine.org/mousemine/begin.do",
+    "license": "http://reusabledata.org/mgi.html"
   },
   {
     "id": "MonarchArchive:#mgi_slim",
@@ -303,7 +310,12 @@
     "description": "ClinVar archives and aggregates information about relationships among variation and human health. ClinVar collects reports of variants found in patient samples, assertions made regarding their clinical significance, information about the submitter, and other supporting data.",
     "usage": "disease-gene association, variant-disease association, variant definitions",
     "vocabulary": "UMLS",
-    "license": "http://reusabledata.org/clinvar.html"
+    "distribution": "https://archive.monarchinitiative.org/latest/rdf/clinvar.nt",
+    "license": "http://reusabledata.org/clinvar.html",
+    "files": [
+      "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/xml/ClinVarFullRelease_00-latest.xml.gz",
+      "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/gene_condition_source_id"
+    ]
   },
   {
     "id": "MonarchArchive:#udp",
@@ -311,6 +323,7 @@
     "image": "udp.png",
     "description": "The National Institutes of Health (NIH) Undiagnosed Diseases Program (UDP) is part of the Undiagnosed Disease Network (UDN), an NIH Common Fund initiative that focuses on the most puzzling medical cases referred to the NIH Clinical Center in Bethesda, Maryland.",
     "usage": "Monarch stores phenotypes for each case and variants of interest",
+    "distribution": "https://archive.monarchinitiative.org/latest/rdf/udp.ttl",
     "vocabulary": "RO"
   }
 ]
