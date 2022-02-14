@@ -7,16 +7,21 @@
     <div class="input">
       <textarea
         v-if="multi"
+        ref="input"
         :value="modelValue"
         @input="onInput"
+        @change="$emit('submit', $event)"
         :placeholder="placeholder"
         :required="required"
       >
       </textarea>
       <input
         v-else
+        ref="input"
         :value="modelValue"
+        @focus.prevent
         @input="onInput"
+        @change="$emit('submit', $event)"
         :placeholder="placeholder"
         :type="type"
         :required="required"
@@ -34,7 +39,7 @@ import { defineComponent } from "vue";
 
 // basic text box input, single line or multi-line
 export default defineComponent({
-  emits: ["update:modelValue"],
+  emits: ["update:modelValue", "submit"],
   props: {
     //  state
     modelValue: String,
@@ -54,11 +59,13 @@ export default defineComponent({
     icon: String,
   },
   methods: {
-    onInput(event: Event) {
-      this.$emit(
-        "update:modelValue",
-        (event?.target as HTMLInputElement).value
-      );
+    // when user types in box
+    onInput({ target }: Event) {
+      this.$emit("update:modelValue", (target as HTMLInputElement).value);
+    },
+    // method to be called from outside of component
+    focus() {
+      (this.$refs.input as HTMLInputElement).focus();
     },
   },
 });

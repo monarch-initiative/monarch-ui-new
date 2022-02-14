@@ -264,5 +264,16 @@ canvas {
   height: 100%;
   overflow: hidden;
   z-index: -1;
+  animation: fade-in forwards 1s linear;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 </style>

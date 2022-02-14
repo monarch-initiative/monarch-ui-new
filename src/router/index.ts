@@ -19,6 +19,7 @@ import Help from "@/views/help/Help.vue";
 import Feedback from "@/views/help/Feedback.vue";
 import Testbed from "@/views/Testbed.vue";
 import { sleep } from "@/util/debug";
+import { lowerCase } from "lodash";
 
 // handle redirect from 404
 const redirect404 = (): string | void => {
@@ -148,11 +149,23 @@ const router = createRouter({
 });
 
 // set document title after route
-router.afterEach((to) => {
+router.afterEach(({ name, query, hash }) => {
   // https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
   nextTick(() => {
-    const page = typeof to.name === "string" ? to.name : "";
-    document.title = process.env.VUE_APP_TITLE_SHORT + " - " + page;
+    // get name of page
+    const page = typeof name === "string" ? name : "";
+
+    // get "sub page"
+    const subpage = lowerCase(hash.slice(1));
+
+    // get extra details from url params
+    let details = "";
+    if (query.search) details = `"${query.search}"`;
+
+    // combine into document title
+    document.title = [process.env.VUE_APP_TITLE_SHORT, page, subpage, details]
+      .filter((part) => part)
+      .join(" - ");
   });
 });
 

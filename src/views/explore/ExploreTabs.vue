@@ -2,17 +2,22 @@
   <AppTabs
     name="Explore Mode"
     :tabs="[
-      { id: 'search', text: 'Node Search', icon: 'search' },
-      { id: 'annotator', text: 'Text Annotator', icon: 'subscript' },
-      { id: 'phenotype', text: 'Phenotype Explorer', icon: 'bars-progress' },
+      { id: 'node-search', text: 'Node Search', icon: 'search' },
+      { id: 'text-annotator', text: 'Text Annotator', icon: 'subscript' },
+      {
+        id: 'phenotype-explorer',
+        text: 'Phenotype Explorer',
+        icon: 'bars-progress',
+      },
     ]"
-    default="search"
+    default="node-search"
+    route-on-switch="Explore"
   >
-    <template #search>
+    <template #node-search>
       <NodeSearch />
     </template>
-    <template #annotator>Text Annotator</template>
-    <template #phenotype>Phenotype Explorer</template>
+    <template #text-annotator>Text Annotator</template>
+    <template #phenotype-explorer>Phenotype Explorer</template>
   </AppTabs>
 </template>
 
