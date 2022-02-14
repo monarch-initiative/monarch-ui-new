@@ -86,8 +86,8 @@ a.member:hover {
     // align to 45 degree edge of circle (for aesthetics)
     left: 14%;
     top: 14%;
-    width: 30px;
-    height: 30px;
+    width: 15px;
+    height: 15px;
     padding: 7px;
     background: $white;
     border-radius: 999px;

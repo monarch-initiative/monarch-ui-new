@@ -10,16 +10,12 @@
     :data-notification="notification"
   >
     <span v-if="text">{{ text }}</span>
-    <AppIcon
-      v-if="icon"
-      :icon="isExternal && text ? 'external-link-alt' : icon"
-    />
+    <AppIcon v-if="icon" :icon="icon" />
   </component>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { isExternal } from "@/util/url";
 
 // component that looks like a button that either does something or goes somewhere
 export default defineComponent({
@@ -34,8 +30,8 @@ export default defineComponent({
     click: Function,
     // whether button is "on" or not
     active: {
-      default: true,
       type: Boolean,
+      default: undefined,
     },
     // visual design
     design: {
@@ -58,10 +54,6 @@ export default defineComponent({
         return "button";
       // fallback, use <span>
       else return "span";
-    },
-    // is "to" prop an external url
-    isExternal() {
-      return isExternal(this.to);
     },
   },
 });
@@ -107,6 +99,10 @@ export default defineComponent({
     padding: 3px;
     border-radius: $rounded;
     color: $theme;
+
+    &[data-active="false"] {
+      color: $gray;
+    }
   }
 
   &[data-design="circle"] {
@@ -124,6 +120,10 @@ export default defineComponent({
       width: 2.5em;
       height: 2.5em;
     }
+
+    &[data-active="false"] {
+      background: none;
+    }
   }
 
   &:hover,
@@ -137,18 +137,6 @@ export default defineComponent({
 
     &[data-design="small"] {
       color: $black;
-    }
-  }
-
-  &[data-active="false"] {
-    &[data-design="primary"],
-    &[data-design="secondary"],
-    &[data-design="circle"] {
-      background: none;
-    }
-
-    &[data-design="small"] {
-      color: $gray;
     }
   }
 
@@ -167,5 +155,11 @@ export default defineComponent({
     border-radius: 999px;
     background: $error;
   }
+}
+</style>
+
+<style lang="scss">
+[data-design="fill"] .button[data-design="circle"][data-active="true"] {
+  background: $theme-mid;
 }
 </style>

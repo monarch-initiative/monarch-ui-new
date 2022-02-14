@@ -1,25 +1,30 @@
 <template>
-  <label class="input">
+  <label class="label">
     <div v-if="title" class="title">
       {{ title }}
       <AppIcon v-if="required" icon="asterisk" class="asterisk" />
     </div>
-    <textarea
-      v-if="multi"
-      :value="modelValue"
-      @input="onInput"
-      :placeholder="placeholder"
-      :required="required"
-    >
-    </textarea>
-    <input
-      v-else
-      :value="modelValue"
-      @input="onInput"
-      :placeholder="placeholder"
-      :type="type"
-      :required="required"
-    />
+    <div class="input">
+      <textarea
+        v-if="multi"
+        :value="modelValue"
+        @input="onInput"
+        :placeholder="placeholder"
+        :required="required"
+      >
+      </textarea>
+      <input
+        v-else
+        :value="modelValue"
+        @input="onInput"
+        :placeholder="placeholder"
+        :type="type"
+        :required="required"
+      />
+      <div class="icon">
+        <AppIcon v-if="icon" :icon="icon" />
+      </div>
+    </div>
     <div v-if="description" class="description">{{ description }}</div>
   </label>
 </template>
@@ -45,6 +50,8 @@ export default defineComponent({
     required: Boolean,
     // whether field is multi-line
     multi: Boolean,
+    // optional side icon
+    icon: String,
   },
   methods: {
     onInput(event: Event) {
@@ -58,7 +65,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.input {
+.label {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -82,6 +89,23 @@ export default defineComponent({
   color: $dark-gray;
   text-align: left;
   font-size: 0.9rem;
+}
+
+.input {
+  position: relative;
+  width: 100%;
+}
+
+.icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $gray;
 }
 
 input,

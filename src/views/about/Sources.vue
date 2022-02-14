@@ -11,7 +11,7 @@
       />
       <AppCheckbox
         v-model="showOntologies"
-        :text="`Ontologies (${ontolotyCount})`"
+        :text="`Ontologies (${ontologyCount})`"
         icon="puzzle-piece"
       />
     </AppFlex>
@@ -186,7 +186,7 @@ export default defineComponent({
       return this.sources.filter((source) => source.type === "dataset").length;
     },
     // number of ontology sources
-    ontolotyCount(): number {
+    ontologyCount(): number {
       return this.sources.filter((source) => source.type === "ontology").length;
     },
   },

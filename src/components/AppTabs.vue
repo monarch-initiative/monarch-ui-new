@@ -21,6 +21,7 @@
 
   <div
     :id="`panel-${id}-${selected}`"
+    class="panel"
     :aria-labelledby="`tab-${id}-${selected}`"
     role="tabpanel"
   >
@@ -100,3 +101,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.panel {
+  width: 100%;
+}
+</style>

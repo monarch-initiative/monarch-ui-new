@@ -71,7 +71,7 @@
       />
       <AppTile
         to="/terms"
-        icon="signature"
+        icon="balance-scale"
         title="Terms of Use"
         subtitle="Disclaimers and agreements"
       />
