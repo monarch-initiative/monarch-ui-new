@@ -1,5 +1,5 @@
 <template>
-  <AppFlex gap="small" role="tablist">
+  <AppFlex role="tablist">
     <AppButton
       v-for="(tab, index) in tabs"
       :key="index"

@@ -59,5 +59,9 @@ section {
   &[data-design="fill"] {
     background: $theme-light;
   }
+
+  &:last-of-type {
+    flex-grow: 1;
+  }
 }
 </style>

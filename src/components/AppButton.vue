@@ -115,9 +115,9 @@ export default defineComponent({
     border-radius: 999px;
 
     &[data-text="true"] {
-      min-width: 2.5em;
-      min-height: 2.5em;
-      padding: 0.5em 1em;
+      min-width: 2em;
+      min-height: 2em;
+      padding: 0.5em 0.75em;
     }
 
     &:not([data-text="true"]) {
