@@ -38,17 +38,17 @@
   <!-- api and service statuses -->
   <AppSection>
     <AppHeading>Status</AppHeading>
+
     <!-- main status of all checks -->
-    <p v-if="status">
-      <AppStatus :status="status" />
-    </p>
+    <AppStatus v-if="status" :status="status" />
+
     <!-- indiviual statuses -->
     <AppGallery v-else size="small">
       <AppStatus
+        class="status"
         v-for="(status, index) in statuses"
         :key="index"
         :status="status"
-        design="plain"
       />
     </AppGallery>
     <!-- link to uptime bot site for full details -->
@@ -72,7 +72,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { getStatuses } from "@/api/uptime";
-import { Status } from "@/types/status";
+import { Status } from "@/components/AppStatus";
 import AppStatus from "@/components/AppStatus.vue";
 
 // help landing page
@@ -108,3 +108,11 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.status {
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 0;
+}
+</style>

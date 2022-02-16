@@ -120,15 +120,18 @@ textarea {
   width: 100%;
   max-width: 100%;
   min-height: 40px;
-  padding: 10px;
   border: solid 2px $off-black;
   border-radius: $rounded;
   outline: none;
   transition: box-shadow $fast;
 }
 
+input {
+  padding: 0 10px;
+}
+
 textarea {
-  min-width: 100%;
+  padding: 10px;
   min-height: 160px;
 }
 

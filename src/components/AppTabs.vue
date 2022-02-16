@@ -19,14 +19,14 @@
     />
   </AppFlex>
 
-  <div
+  <AppFlex
     :id="`panel-${id}-${selected}`"
     class="panel"
     :aria-labelledby="`tab-${id}-${selected}`"
     role="tabpanel"
   >
     <slot :name="selected"></slot>
-  </div>
+  </AppFlex>
 </template>
 
 <script lang="ts">

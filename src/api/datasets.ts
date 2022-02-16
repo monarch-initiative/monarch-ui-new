@@ -1,9 +1,8 @@
-import { biolink, handleError } from "./";
+import { biolink, request, cleanError } from ".";
 import staticData from "./datasets.json";
 import { mergeArrays } from "@/util/object";
-import { Source } from "@/types/sources";
+import { Source } from "./source";
 
-// expected schemas to be returned from api
 interface Response {
   nodes: Array<Node>;
   edges: Array<Edge>;
@@ -34,11 +33,11 @@ const expand = (string = "") =>
   );
 
 // get metadata of all datasets used in monarch from biolink, in format of source
-export const getDatasets = async (): Promise<Array<Source>> => {
+export const getDatasets = async (): Promise<Result> => {
   try {
-    const { nodes, edges } = (await (
-      await biolink.metadata.getMetadataForDatasets()
-    ).json()) as Response;
+    const { nodes, edges } = await request<Response>(
+      `${biolink}/metadata/datasets`
+    );
 
     const filteredNodes = edges
       // only get edges whose type is a dataset
@@ -75,9 +74,8 @@ export const getDatasets = async (): Promise<Array<Source>> => {
 
     return datasets;
   } catch (error) {
-    handleError(error);
+    throw cleanError(error);
   }
-
-  // default return
-  return [];
 };
+
+type Result = Array<Source>;

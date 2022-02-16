@@ -64,6 +64,7 @@ Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-
 
   - `/api` - Code that acts as an interface between external resources and components.
     Code here should do as much work as possible to transform data into the format that `.vue` files need so that they can remain mostly presentational.
+    Each file that queries an API should define a `Response` type (expected schema to be returned from api) and `Result` type (expected schema to be returned from function and provided to component using it).
   - `/assets` - Static resources like images.
   - `/components` - Reusable building blocks of UI.
   - `/directives` - See [Vue directives](https://v3.vuejs.org/guide/custom-directive.html#custom-directives).
@@ -71,8 +72,6 @@ Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-
   - `/router` - See [Vue router](https://router.vuejs.org/).
   - `/store` - See [Vuex](https://vuex.vuejs.org/) (similar to Redux).
     Most useful for managing global and complex state.
-  - `/types` - Folder for any TypeScript types that need to be shared across files.
-    Any types needed only in a single file should just go in that file.
   - `/util` - Miscellaneous utility functions to do generic tasks.
   - `/views` - Organizes the site into pages.
     Directory structure and file names should correlate to urls.

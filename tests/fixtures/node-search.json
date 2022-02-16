@@ -1,0 +1,883 @@
+{
+  "numFound": 63,
+  "docs": [
+    {
+      "id": "MONDO:0017310",
+      "id_std": "MONDO:0017310",
+      "id_eng": "MONDO:0017310",
+      "id_kw": "MONDO:0017310",
+      "prefix": "MONDO",
+      "label": ["Marfan and Marfan-related disorder"],
+      "label_std": ["Marfan and Marfan-related disorder"],
+      "label_eng": ["Marfan and Marfan-related disorder"],
+      "label_kw": ["Marfan and Marfan-related disorder"],
+      "edges": 164,
+      "has_phenotype": false,
+      "category": ["disease"],
+      "category_std": ["disease"],
+      "category_eng": ["disease"],
+      "category_kw": ["disease"],
+      "equivalent_curie": [
+        "ORPHA:284993",
+        "ORDO:284993",
+        "Orphanet:284993",
+        "UMLS:CN227112"
+      ],
+      "equivalent_curie_std": [
+        "ORPHA:284993",
+        "ORDO:284993",
+        "Orphanet:284993",
+        "UMLS:CN227112"
+      ],
+      "equivalent_curie_eng": [
+        "ORPHA:284993",
+        "ORDO:284993",
+        "Orphanet:284993",
+        "UMLS:CN227112"
+      ],
+      "equivalent_curie_kw": [
+        "ORPHA:284993",
+        "ORDO:284993",
+        "Orphanet:284993",
+        "UMLS:CN227112"
+      ],
+      "leaf": false,
+      "_version_": 1696524895947587600,
+      "score": 82.62439
+    },
+    {
+      "id": "MONDO:0007947",
+      "id_std": "MONDO:0007947",
+      "id_eng": "MONDO:0007947",
+      "id_kw": "MONDO:0007947",
+      "prefix": "MONDO",
+      "label": ["Marfan syndrome"],
+      "label_std": ["Marfan syndrome"],
+      "label_eng": ["Marfan syndrome"],
+      "label_kw": ["Marfan syndrome"],
+      "definition": [
+        "Marfan syndrome is a disorder of the connective tissue. Connective tissue provides strength and flexibility to structures throughout the body such as bones, ligaments, muscles, walls of blood vessels, and heart valves. Marfan syndrome affects most organs and tissues, especially the skeleton, lungs, eyes, heart, and the large blood vessel that distributes blood from the heart to the rest of the body (the aorta). It is caused by mutations in the FBN1 gene, which provides instructions for making a protein called fibrillin-1. Marfan syndrome is inherited in an autosomal dominant pattern. At least 25% of cases are due to a new (de novo) mutation. Treatment is based on the signs and symptoms in each person."
+      ],
+      "definition_std": [
+        "Marfan syndrome is a disorder of the connective tissue. Connective tissue provides strength and flexibility to structures throughout the body such as bones, ligaments, muscles, walls of blood vessels, and heart valves. Marfan syndrome affects most organs and tissues, especially the skeleton, lungs, eyes, heart, and the large blood vessel that distributes blood from the heart to the rest of the body (the aorta). It is caused by mutations in the FBN1 gene, which provides instructions for making a protein called fibrillin-1. Marfan syndrome is inherited in an autosomal dominant pattern. At least 25% of cases are due to a new (de novo) mutation. Treatment is based on the signs and symptoms in each person."
+      ],
+      "definition_eng": [
+        "Marfan syndrome is a disorder of the connective tissue. Connective tissue provides strength and flexibility to structures throughout the body such as bones, ligaments, muscles, walls of blood vessels, and heart valves. Marfan syndrome affects most organs and tissues, especially the skeleton, lungs, eyes, heart, and the large blood vessel that distributes blood from the heart to the rest of the body (the aorta). It is caused by mutations in the FBN1 gene, which provides instructions for making a protein called fibrillin-1. Marfan syndrome is inherited in an autosomal dominant pattern. At least 25% of cases are due to a new (de novo) mutation. Treatment is based on the signs and symptoms in each person."
+      ],
+      "definition_kw": [
+        "Marfan syndrome is a disorder of the connective tissue. Connective tissue provides strength and flexibility to structures throughout the body such as bones, ligaments, muscles, walls of blood vessels, and heart valves. Marfan syndrome affects most organs and tissues, especially the skeleton, lungs, eyes, heart, and the large blood vessel that distributes blood from the heart to the rest of the body (the aorta). It is caused by mutations in the FBN1 gene, which provides instructions for making a protein called fibrillin-1. Marfan syndrome is inherited in an autosomal dominant pattern. At least 25% of cases are due to a new (de novo) mutation. Treatment is based on the signs and symptoms in each person."
+      ],
+      "edges": 5475,
+      "has_phenotype": true,
+      "category": ["disease"],
+      "category_std": ["disease"],
+      "category_eng": ["disease"],
+      "category_kw": ["disease"],
+      "synonym": [
+        "Marfan's syndrome",
+        "MFS1",
+        "Marfan Syndrome, Type 1",
+        "Marfan syndrome type 1",
+        "MARFAN SYNDROME; MFS",
+        "MFS",
+        "Marfan syndrome",
+        "Marfan syndrome, type 1"
+      ],
+      "synonym_std": [
+        "Marfan's syndrome",
+        "MFS1",
+        "Marfan Syndrome, Type 1",
+        "Marfan syndrome type 1",
+        "MARFAN SYNDROME; MFS",
+        "MFS",
+        "Marfan syndrome",
+        "Marfan syndrome, type 1"
+      ],
+      "synonym_eng": [
+        "Marfan's syndrome",
+        "MFS1",
+        "Marfan Syndrome, Type 1",
+        "Marfan syndrome type 1",
+        "MARFAN SYNDROME; MFS",
+        "MFS",
+        "Marfan syndrome",
+        "Marfan syndrome, type 1"
+      ],
+      "synonym_kw": [
+        "Marfan's syndrome",
+        "MFS1",
+        "Marfan Syndrome, Type 1",
+        "Marfan syndrome type 1",
+        "MARFAN SYNDROME; MFS",
+        "MFS",
+        "Marfan syndrome",
+        "Marfan syndrome, type 1"
+      ],
+      "equivalent_curie": [
+        "UMLS:CN202883",
+        "COHD:258540",
+        "OMIM:154700",
+        "MIM:154700",
+        "SCTID:19346006",
+        "ORPHA:284963",
+        "ORDO:284963",
+        "Orphanet:284963",
+        "ORPHA:558",
+        "ORDO:558",
+        "Orphanet:558",
+        "DOID:14323",
+        "GARD:0006975",
+        "ICD9:759.82",
+        "NCIT:C34807",
+        "UMLS:C0024796",
+        "MESH:D008382"
+      ],
+      "equivalent_curie_std": [
+        "UMLS:CN202883",
+        "COHD:258540",
+        "OMIM:154700",
+        "MIM:154700",
+        "SCTID:19346006",
+        "ORPHA:284963",
+        "ORDO:284963",
+        "Orphanet:284963",
+        "ORPHA:558",
+        "ORDO:558",
+        "Orphanet:558",
+        "DOID:14323",
+        "GARD:0006975",
+        "ICD9:759.82",
+        "NCIT:C34807",
+        "UMLS:C0024796",
+        "MESH:D008382"
+      ],
+      "equivalent_curie_eng": [
+        "UMLS:CN202883",
+        "COHD:258540",
+        "OMIM:154700",
+        "MIM:154700",
+        "SCTID:19346006",
+        "ORPHA:284963",
+        "ORDO:284963",
+        "Orphanet:284963",
+        "ORPHA:558",
+        "ORDO:558",
+        "Orphanet:558",
+        "DOID:14323",
+        "GARD:0006975",
+        "ICD9:759.82",
+        "NCIT:C34807",
+        "UMLS:C0024796",
+        "MESH:D008382"
+      ],
+      "equivalent_curie_kw": [
+        "UMLS:CN202883",
+        "COHD:258540",
+        "OMIM:154700",
+        "MIM:154700",
+        "SCTID:19346006",
+        "ORPHA:284963",
+        "ORDO:284963",
+        "Orphanet:284963",
+        "ORPHA:558",
+        "ORDO:558",
+        "Orphanet:558",
+        "DOID:14323",
+        "GARD:0006975",
+        "ICD9:759.82",
+        "NCIT:C34807",
+        "UMLS:C0024796",
+        "MESH:D008382"
+      ],
+      "leaf": true,
+      "_version_": 1696524903676641300,
+      "score": 82.10119
+    },
+    {
+      "id": "MONDO:0014831",
+      "id_std": "MONDO:0014831",
+      "id_eng": "MONDO:0014831",
+      "id_kw": "MONDO:0014831",
+      "prefix": "MONDO",
+      "label": ["progeroid and marfanoid aspect-lipodystrophy syndrome"],
+      "label_std": ["progeroid and marfanoid aspect-lipodystrophy syndrome"],
+      "label_eng": ["progeroid and marfanoid aspect-lipodystrophy syndrome"],
+      "label_kw": ["progeroid and marfanoid aspect-lipodystrophy syndrome"],
+      "edges": 194,
+      "has_phenotype": true,
+      "category": ["disease"],
+      "category_std": ["disease"],
+      "category_eng": ["disease"],
+      "category_kw": ["disease"],
+      "synonym": [
+        "Marfanoid-Progeroid Syndrome",
+        "Marfanoid-progeroid syndrome",
+        "MFLS",
+        "MARFANOID-PROGEROID-LIPODYSTROPHY SYNDROME; MFLS",
+        "Marfan-Progeroid-Lipodystrophy Syndrome",
+        "Marfan-progeroid-lipodystrophy syndrome",
+        "Marfan Lipodystrophy Syndrome",
+        "Marfan lipodystrophy syndrome"
+      ],
+      "synonym_std": [
+        "Marfanoid-Progeroid Syndrome",
+        "Marfanoid-progeroid syndrome",
+        "MFLS",
+        "MARFANOID-PROGEROID-LIPODYSTROPHY SYNDROME; MFLS",
+        "Marfan-Progeroid-Lipodystrophy Syndrome",
+        "Marfan-progeroid-lipodystrophy syndrome",
+        "Marfan Lipodystrophy Syndrome",
+        "Marfan lipodystrophy syndrome"
+      ],
+      "synonym_eng": [
+        "Marfanoid-Progeroid Syndrome",
+        "Marfanoid-progeroid syndrome",
+        "MFLS",
+        "MARFANOID-PROGEROID-LIPODYSTROPHY SYNDROME; MFLS",
+        "Marfan-Progeroid-Lipodystrophy Syndrome",
+        "Marfan-progeroid-lipodystrophy syndrome",
+        "Marfan Lipodystrophy Syndrome",
+        "Marfan lipodystrophy syndrome"
+      ],
+      "synonym_kw": [
+        "Marfanoid-Progeroid Syndrome",
+        "Marfanoid-progeroid syndrome",
+        "MFLS",
+        "MARFANOID-PROGEROID-LIPODYSTROPHY SYNDROME; MFLS",
+        "Marfan-Progeroid-Lipodystrophy Syndrome",
+        "Marfan-progeroid-lipodystrophy syndrome",
+        "Marfan Lipodystrophy Syndrome",
+        "Marfan lipodystrophy syndrome"
+      ],
+      "equivalent_curie": [
+        "ORPHA:300382",
+        "ORDO:300382",
+        "Orphanet:300382",
+        "UMLS:C4310796",
+        "OMIM:616914",
+        "MIM:616914"
+      ],
+      "equivalent_curie_std": [
+        "ORPHA:300382",
+        "ORDO:300382",
+        "Orphanet:300382",
+        "UMLS:C4310796",
+        "OMIM:616914",
+        "MIM:616914"
+      ],
+      "equivalent_curie_eng": [
+        "ORPHA:300382",
+        "ORDO:300382",
+        "Orphanet:300382",
+        "UMLS:C4310796",
+        "OMIM:616914",
+        "MIM:616914"
+      ],
+      "equivalent_curie_kw": [
+        "ORPHA:300382",
+        "ORDO:300382",
+        "Orphanet:300382",
+        "UMLS:C4310796",
+        "OMIM:616914",
+        "MIM:616914"
+      ],
+      "leaf": true,
+      "_version_": 1696524889852215300,
+      "score": 77.39321
+    },
+    {
+      "id": "KEGG-ds:H00653",
+      "id_std": "KEGG-ds:H00653",
+      "id_eng": "KEGG-ds:H00653",
+      "id_kw": "KEGG-ds:H00653",
+      "prefix": "KEGG-ds",
+      "label": ["Marfan syndrome"],
+      "label_std": ["Marfan syndrome"],
+      "label_eng": ["Marfan syndrome"],
+      "label_kw": ["Marfan syndrome"],
+      "edges": 2,
+      "has_phenotype": false,
+      "leaf": true,
+      "_version_": 1696525583802957800,
+      "score": 77.23756
+    },
+    {
+      "id": "OMIA:000628",
+      "id_std": "OMIA:000628",
+      "id_eng": "OMIA:000628",
+      "id_kw": "OMIA:000628",
+      "prefix": "OMIA",
+      "label": ["Marfan syndrome"],
+      "label_std": ["Marfan syndrome"],
+      "label_eng": ["Marfan syndrome"],
+      "label_kw": ["Marfan syndrome"],
+      "edges": 5,
+      "has_phenotype": false,
+      "category": ["disease"],
+      "category_std": ["disease"],
+      "category_eng": ["disease"],
+      "category_kw": ["disease"],
+      "leaf": false,
+      "_version_": 1696524911063859200,
+      "score": 77.23756
+    },
+    {
+      "id": "OMIA:000628-9913",
+      "id_std": "OMIA:000628-9913",
+      "id_eng": "OMIA:000628-9913",
+      "id_kw": "OMIA:000628-9913",
+      "prefix": "OMIA",
+      "label": ["Marfan Syndrome"],
+      "label_std": ["Marfan Syndrome"],
+      "label_eng": ["Marfan Syndrome"],
+      "label_kw": ["Marfan Syndrome"],
+      "edges": 34,
+      "has_phenotype": true,
+      "category": ["disease"],
+      "category_std": ["disease"],
+      "category_eng": ["disease"],
+      "category_kw": ["disease"],
+      "leaf": true,
+      "_version_": 1696524911274623000,
+      "score": 77.23756
+    },
+    {
+      "id": "MONDO:0017309",
+      "id_std": "MONDO:0017309",
+      "id_eng": "MONDO:0017309",
+      "id_kw": "MONDO:0017309",
+      "prefix": "MONDO",
+      "label": ["neonatal Marfan syndrome", "Marfan syndrome, neonatal"],
+      "label_std": ["neonatal Marfan syndrome", "Marfan syndrome, neonatal"],
+      "label_eng": ["neonatal Marfan syndrome", "Marfan syndrome, neonatal"],
+      "label_kw": ["neonatal Marfan syndrome", "Marfan syndrome, neonatal"],
+      "definition": [
+        "Neonatal Marfan syndrome is a rare, severe and life-threatening genetic disease, occuring during the neonatal period, characterized by classical Marfan syndrome manifestations in addition to facial dysmorphism (megalocornea, iridodonesis, ectopia lentis, crumpled ears, loose redundant skin giving a 'senile' facial appearance), flexion joint contractures, pulmonary emphysema, and a severe, rapidly progressive cardiovascular disease (including ascending aortic dilatation and severe mitral and/or tricuspid valve insufficiency). Additionally, skeletal manifestations (arachnodactyly, dolichostenomelia, pectus deformities) are also associated."
+      ],
+      "definition_std": [
+        "Neonatal Marfan syndrome is a rare, severe and life-threatening genetic disease, occuring during the neonatal period, characterized by classical Marfan syndrome manifestations in addition to facial dysmorphism (megalocornea, iridodonesis, ectopia lentis, crumpled ears, loose redundant skin giving a 'senile' facial appearance), flexion joint contractures, pulmonary emphysema, and a severe, rapidly progressive cardiovascular disease (including ascending aortic dilatation and severe mitral and/or tricuspid valve insufficiency). Additionally, skeletal manifestations (arachnodactyly, dolichostenomelia, pectus deformities) are also associated."
+      ],
+      "definition_eng": [
+        "Neonatal Marfan syndrome is a rare, severe and life-threatening genetic disease, occuring during the neonatal period, characterized by classical Marfan syndrome manifestations in addition to facial dysmorphism (megalocornea, iridodonesis, ectopia lentis, crumpled ears, loose redundant skin giving a 'senile' facial appearance), flexion joint contractures, pulmonary emphysema, and a severe, rapidly progressive cardiovascular disease (including ascending aortic dilatation and severe mitral and/or tricuspid valve insufficiency). Additionally, skeletal manifestations (arachnodactyly, dolichostenomelia, pectus deformities) are also associated."
+      ],
+      "definition_kw": [
+        "Neonatal Marfan syndrome is a rare, severe and life-threatening genetic disease, occuring during the neonatal period, characterized by classical Marfan syndrome manifestations in addition to facial dysmorphism (megalocornea, iridodonesis, ectopia lentis, crumpled ears, loose redundant skin giving a 'senile' facial appearance), flexion joint contractures, pulmonary emphysema, and a severe, rapidly progressive cardiovascular disease (including ascending aortic dilatation and severe mitral and/or tricuspid valve insufficiency). Additionally, skeletal manifestations (arachnodactyly, dolichostenomelia, pectus deformities) are also associated."
+      ],
+      "edges": 207,
+      "has_phenotype": true,
+      "category": ["disease"],
+      "category_std": ["disease"],
+      "category_eng": ["disease"],
+      "category_kw": ["disease"],
+      "synonym": ["neonatal MFS"],
+      "synonym_std": ["neonatal MFS"],
+      "synonym_eng": ["neonatal MFS"],
+      "synonym_kw": ["neonatal MFS"],
+      "equivalent_curie": [
+        "SCTID:763839005",
+        "ORPHA:284979",
+        "ORDO:284979",
+        "Orphanet:284979",
+        "UMLS:CN202885",
+        "UMLS:CN536247"
+      ],
+      "equivalent_curie_std": [
+        "SCTID:763839005",
+        "ORPHA:284979",
+        "ORDO:284979",
+        "Orphanet:284979",
+        "UMLS:CN202885",
+        "UMLS:CN536247"
+      ],
+      "equivalent_curie_eng": [
+        "SCTID:763839005",
+        "ORPHA:284979",
+        "ORDO:284979",
+        "Orphanet:284979",
+        "UMLS:CN202885",
+        "UMLS:CN536247"
+      ],
+      "equivalent_curie_kw": [
+        "SCTID:763839005",
+        "ORPHA:284979",
+        "ORDO:284979",
+        "Orphanet:284979",
+        "UMLS:CN202885",
+        "UMLS:CN536247"
+      ],
+      "leaf": true,
+      "_version_": 1696524895942344700,
+      "score": 72.11784
+    },
+    {
+      "id": "MONDO:0017308",
+      "id_std": "MONDO:0017308",
+      "id_eng": "MONDO:0017308",
+      "id_kw": "MONDO:0017308",
+      "prefix": "MONDO",
+      "label": ["obsolete Marfan syndrome type 2"],
+      "label_std": ["obsolete Marfan syndrome type 2"],
+      "label_eng": ["obsolete Marfan syndrome type 2"],
+      "label_kw": ["obsolete Marfan syndrome type 2"],
+      "definition": ["Hypothesized form of Marfan; dubious"],
+      "definition_std": ["Hypothesized form of Marfan; dubious"],
+      "definition_eng": ["Hypothesized form of Marfan; dubious"],
+      "definition_kw": ["Hypothesized form of Marfan; dubious"],
+      "edges": 9,
+      "has_phenotype": false,
+      "synonym": ["Marfan syndrome type II", "MFS2"],
+      "synonym_std": ["Marfan syndrome type II", "MFS2"],
+      "synonym_eng": ["Marfan syndrome type II", "MFS2"],
+      "synonym_kw": ["Marfan syndrome type II", "MFS2"],
+      "leaf": true,
+      "_version_": 1696524895942344700,
+      "score": 70.44626
+    },
+    {
+      "id": "MONDO:0044766",
+      "id_std": "MONDO:0044766",
+      "id_eng": "MONDO:0044766",
+      "id_kw": "MONDO:0044766",
+      "prefix": "MONDO",
+      "label": ["obsolete Marfan Syndrome 3"],
+      "label_std": ["obsolete Marfan Syndrome 3"],
+      "label_eng": ["obsolete Marfan Syndrome 3"],
+      "label_kw": ["obsolete Marfan Syndrome 3"],
+      "edges": 3,
+      "has_phenotype": false,
+      "synonym": ["MFS 3", "Marfan syndrome type 3"],
+      "synonym_std": ["MFS 3", "Marfan syndrome type 3"],
+      "synonym_eng": ["MFS 3", "Marfan syndrome type 3"],
+      "synonym_kw": ["MFS 3", "Marfan syndrome type 3"],
+      "leaf": true,
+      "_version_": 1696524860563390500,
+      "score": 66.6902
+    },
+    {
+      "id": "AQTLTrait:1530",
+      "id_std": "AQTLTrait:1530",
+      "id_eng": "AQTLTrait:1530",
+      "id_kw": "AQTLTrait:1530",
+      "prefix": "AQTLTrait",
+      "label": ["Marfan syndrome-like disease"],
+      "label_std": ["Marfan syndrome-like disease"],
+      "label_eng": ["Marfan syndrome-like disease"],
+      "label_kw": ["Marfan syndrome-like disease"],
+      "edges": 6,
+      "has_phenotype": false,
+      "leaf": true,
+      "_version_": 1696525065541124000,
+      "score": 63.9439
+    },
+    {
+      "id": "ORPHA:284973",
+      "id_std": "ORPHA:284973",
+      "id_eng": "ORPHA:284973",
+      "id_kw": "ORPHA:284973",
+      "prefix": "ORPHA",
+      "label": ["Marfan syndrome type 2"],
+      "label_std": ["Marfan syndrome type 2"],
+      "label_eng": ["Marfan syndrome type 2"],
+      "label_kw": ["Marfan syndrome type 2"],
+      "edges": 7,
+      "has_phenotype": false,
+      "equivalent_curie": ["ORDO:284973", "Orphanet:284973"],
+      "equivalent_curie_std": ["ORDO:284973", "Orphanet:284973"],
+      "equivalent_curie_eng": ["ORDO:284973", "Orphanet:284973"],
+      "equivalent_curie_kw": ["ORDO:284973", "Orphanet:284973"],
+      "leaf": true,
+      "_version_": 1696524773249515500,
+      "score": 63.9439
+    },
+    {
+      "id": "UMLS:C4016059",
+      "id_std": "UMLS:C4016059",
+      "id_eng": "UMLS:C4016059",
+      "id_kw": "UMLS:C4016059",
+      "prefix": "UMLS",
+      "label": ["Marfan syndrome, autosomal recessive"],
+      "label_std": ["Marfan syndrome, autosomal recessive"],
+      "label_eng": ["Marfan syndrome, autosomal recessive"],
+      "label_kw": ["Marfan syndrome, autosomal recessive"],
+      "edges": 4,
+      "has_phenotype": false,
+      "leaf": true,
+      "_version_": 1696526517102706700,
+      "score": 63.9439
+    },
+    {
+      "id": "UMLS:C4016055",
+      "id_std": "UMLS:C4016055",
+      "id_eng": "UMLS:C4016055",
+      "id_kw": "UMLS:C4016055",
+      "prefix": "UMLS",
+      "label": ["Marfan syndrome, atypical"],
+      "label_std": ["Marfan syndrome, atypical"],
+      "label_eng": ["Marfan syndrome, atypical"],
+      "label_kw": ["Marfan syndrome, atypical"],
+      "edges": 4,
+      "has_phenotype": false,
+      "leaf": true,
+      "_version_": 1696526539016896500,
+      "score": 63.9439
+    },
+    {
+      "id": "UMLS:C4016053",
+      "id_std": "UMLS:C4016053",
+      "id_eng": "UMLS:C4016053",
+      "id_kw": "UMLS:C4016053",
+      "prefix": "UMLS",
+      "label": ["Marfan syndrome, mild variable"],
+      "label_std": ["Marfan syndrome, mild variable"],
+      "label_eng": ["Marfan syndrome, mild variable"],
+      "label_kw": ["Marfan syndrome, mild variable"],
+      "edges": 2,
+      "has_phenotype": false,
+      "leaf": true,
+      "_version_": 1696526539303157800,
+      "score": 63.9439
+    },
+    {
+      "id": "UMLS:C4016052",
+      "id_std": "UMLS:C4016052",
+      "id_eng": "UMLS:C4016052",
+      "id_kw": "UMLS:C4016052",
+      "prefix": "UMLS",
+      "label": ["Marfan syndrome, severe classic"],
+      "label_std": ["Marfan syndrome, severe classic"],
+      "label_eng": ["Marfan syndrome, severe classic"],
+      "label_kw": ["Marfan syndrome, severe classic"],
+      "edges": 2,
+      "has_phenotype": false,
+      "leaf": true,
+      "_version_": 1696526198315679700,
+      "score": 63.9439
+    },
+    {
+      "id": "MONDO:0018917",
+      "id_std": "MONDO:0018917",
+      "id_eng": "MONDO:0018917",
+      "id_kw": "MONDO:0018917",
+      "prefix": "MONDO",
+      "label": ["obsolete Marfan syndrome"],
+      "label_std": ["obsolete Marfan syndrome"],
+      "label_eng": ["obsolete Marfan syndrome"],
+      "label_kw": ["obsolete Marfan syndrome"],
+      "edges": 2,
+      "has_phenotype": false,
+      "leaf": true,
+      "_version_": 1696524899458220000,
+      "score": 63.9439
+    },
+    {
+      "id": "UMLS:C4016056",
+      "id_std": "UMLS:C4016056",
+      "id_eng": "UMLS:C4016056",
+      "id_kw": "UMLS:C4016056",
+      "prefix": "UMLS",
+      "label": ["Marfan syndrome, mild"],
+      "label_std": ["Marfan syndrome, mild"],
+      "label_eng": ["Marfan syndrome, mild"],
+      "label_kw": ["Marfan syndrome, mild"],
+      "edges": 2,
+      "has_phenotype": false,
+      "leaf": true,
+      "_version_": 1696526547775651800,
+      "score": 63.9439
+    },
+    {
+      "id": "MONDO:0007948",
+      "id_std": "MONDO:0007948",
+      "id_eng": "MONDO:0007948",
+      "id_kw": "MONDO:0007948",
+      "prefix": "MONDO",
+      "label": ["marfanoid hypermobility syndrome"],
+      "label_std": ["marfanoid hypermobility syndrome"],
+      "label_eng": ["marfanoid hypermobility syndrome"],
+      "label_kw": ["marfanoid hypermobility syndrome"],
+      "edges": 114,
+      "has_phenotype": true,
+      "category": ["disease"],
+      "category_std": ["disease"],
+      "category_eng": ["disease"],
+      "category_kw": ["disease"],
+      "synonym": [
+        "MARFANOID HYPERMOBILITY SYNDROME",
+        "marfanoid hypermobility syndrome"
+      ],
+      "synonym_std": [
+        "MARFANOID HYPERMOBILITY SYNDROME",
+        "marfanoid hypermobility syndrome"
+      ],
+      "synonym_eng": [
+        "MARFANOID HYPERMOBILITY SYNDROME",
+        "marfanoid hypermobility syndrome"
+      ],
+      "synonym_kw": [
+        "MARFANOID HYPERMOBILITY SYNDROME",
+        "marfanoid hypermobility syndrome"
+      ],
+      "equivalent_curie": [
+        "GARD:0003387",
+        "UMLS:C0268365",
+        "MESH:C531742",
+        "OMIM:154750",
+        "MIM:154750"
+      ],
+      "equivalent_curie_std": [
+        "GARD:0003387",
+        "UMLS:C0268365",
+        "MESH:C531742",
+        "OMIM:154750",
+        "MIM:154750"
+      ],
+      "equivalent_curie_eng": [
+        "GARD:0003387",
+        "UMLS:C0268365",
+        "MESH:C531742",
+        "OMIM:154750",
+        "MIM:154750"
+      ],
+      "equivalent_curie_kw": [
+        "GARD:0003387",
+        "UMLS:C0268365",
+        "MESH:C531742",
+        "OMIM:154750",
+        "MIM:154750"
+      ],
+      "leaf": true,
+      "_version_": 1696524903678738400,
+      "score": 62.485897
+    },
+    {
+      "id": "MONDO:0009120",
+      "id_std": "MONDO:0009120",
+      "id_eng": "MONDO:0009120",
+      "id_kw": "MONDO:0009120",
+      "prefix": "MONDO",
+      "label": ["marfanoid syndrome, De Silva type"],
+      "label_std": ["marfanoid syndrome, De Silva type"],
+      "label_eng": ["marfanoid syndrome, De Silva type"],
+      "label_kw": ["marfanoid syndrome, De Silva type"],
+      "definition": [
+        "Marfanoid syndrome, da Silva type is characterized by the association of marfanoid habitus with visceral diverticula. It has been reported in four adults and two siblings from a consanguineous marriage in two different publications. Pediatric cases also presented with diaphragmatic hernia. Other connective tissue disorders with visceral diverticula have been reported previously, suggesting a relationship between these two conditions."
+      ],
+      "definition_std": [
+        "Marfanoid syndrome, da Silva type is characterized by the association of marfanoid habitus with visceral diverticula. It has been reported in four adults and two siblings from a consanguineous marriage in two different publications. Pediatric cases also presented with diaphragmatic hernia. Other connective tissue disorders with visceral diverticula have been reported previously, suggesting a relationship between these two conditions."
+      ],
+      "definition_eng": [
+        "Marfanoid syndrome, da Silva type is characterized by the association of marfanoid habitus with visceral diverticula. It has been reported in four adults and two siblings from a consanguineous marriage in two different publications. Pediatric cases also presented with diaphragmatic hernia. Other connective tissue disorders with visceral diverticula have been reported previously, suggesting a relationship between these two conditions."
+      ],
+      "definition_kw": [
+        "Marfanoid syndrome, da Silva type is characterized by the association of marfanoid habitus with visceral diverticula. It has been reported in four adults and two siblings from a consanguineous marriage in two different publications. Pediatric cases also presented with diaphragmatic hernia. Other connective tissue disorders with visceral diverticula have been reported previously, suggesting a relationship between these two conditions."
+      ],
+      "edges": 83,
+      "has_phenotype": true,
+      "category": ["disease"],
+      "category_std": ["disease"],
+      "category_eng": ["disease"],
+      "category_kw": ["disease"],
+      "synonym": [
+        "diverticulosis of bowel, hernia, and retinal detachment",
+        "Marphanoid syndrome type De Silva",
+        "DIVERTICULOSIS OF BOWEL, HERNIA, AND RETINAL DETACHMENT"
+      ],
+      "synonym_std": [
+        "diverticulosis of bowel, hernia, and retinal detachment",
+        "Marphanoid syndrome type De Silva",
+        "DIVERTICULOSIS OF BOWEL, HERNIA, AND RETINAL DETACHMENT"
+      ],
+      "synonym_eng": [
+        "diverticulosis of bowel, hernia, and retinal detachment",
+        "Marphanoid syndrome type De Silva",
+        "DIVERTICULOSIS OF BOWEL, HERNIA, AND RETINAL DETACHMENT"
+      ],
+      "synonym_kw": [
+        "diverticulosis of bowel, hernia, and retinal detachment",
+        "Marphanoid syndrome type De Silva",
+        "DIVERTICULOSIS OF BOWEL, HERNIA, AND RETINAL DETACHMENT"
+      ],
+      "equivalent_curie": [
+        "ORPHA:2464",
+        "ORDO:2464",
+        "Orphanet:2464",
+        "GARD:0003401",
+        "MESH:C565619",
+        "UMLS:C1857227",
+        "OMIM:223330",
+        "MIM:223330"
+      ],
+      "equivalent_curie_std": [
+        "ORPHA:2464",
+        "ORDO:2464",
+        "Orphanet:2464",
+        "GARD:0003401",
+        "MESH:C565619",
+        "UMLS:C1857227",
+        "OMIM:223330",
+        "MIM:223330"
+      ],
+      "equivalent_curie_eng": [
+        "ORPHA:2464",
+        "ORDO:2464",
+        "Orphanet:2464",
+        "GARD:0003401",
+        "MESH:C565619",
+        "UMLS:C1857227",
+        "OMIM:223330",
+        "MIM:223330"
+      ],
+      "equivalent_curie_kw": [
+        "ORPHA:2464",
+        "ORDO:2464",
+        "Orphanet:2464",
+        "GARD:0003401",
+        "MESH:C565619",
+        "UMLS:C1857227",
+        "OMIM:223330",
+        "MIM:223330"
+      ],
+      "leaf": true,
+      "_version_": 1696524908805226500,
+      "score": 62.485897
+    },
+    {
+      "id": "CLO:0003279",
+      "id_std": "CLO:0003279",
+      "id_eng": "CLO:0003279",
+      "id_kw": "CLO:0003279",
+      "prefix": "CLO",
+      "label": ["FIB-MARFAN1 cell"],
+      "label_std": ["FIB-MARFAN1 cell"],
+      "label_eng": ["FIB-MARFAN1 cell"],
+      "label_kw": ["FIB-MARFAN1 cell"],
+      "edges": 2,
+      "has_phenotype": false,
+      "category": ["anatomical entity", "cell"],
+      "category_std": ["anatomical entity", "cell"],
+      "category_eng": ["anatomical entity", "cell"],
+      "category_kw": ["anatomical entity", "cell"],
+      "leaf": true,
+      "_version_": 1696524878145912800,
+      "score": 62.485897
+    }
+  ],
+  "facet_counts": {
+    "category": {
+      "disease": 27,
+      "publication": 9,
+      "anatomical entity": 5,
+      "cell": 5,
+      "gene": 2,
+      "sequence feature": 2,
+      "phenotype": 1,
+      "quality": 1
+    },
+    "taxon_label": {
+      "Gallus gallus": 1,
+      "Homo sapiens": 1
+    }
+  },
+  "highlighting": {
+    "MONDO:0017310": {
+      "highlight": "<em class=\"hilite\">Marfan</em> and <em class=\"hilite\">Marfan</em>-related disorder",
+      "match": "Marfan and Marfan-related disorder",
+      "has_highlight": true
+    },
+    "MONDO:0007947": {
+      "highlight": "<em class=\"hilite\">Marfan</em> syndrome",
+      "match": "Marfan syndrome",
+      "has_highlight": true
+    },
+    "MONDO:0014831": {
+      "highlight": "progeroid and <em class=\"hilite\">marfanoid</em> aspect-lipodystrophy syndrome",
+      "match": "progeroid and marfanoid aspect-lipodystrophy syndrome",
+      "has_highlight": true
+    },
+    "KEGG-ds:H00653": {
+      "highlight": "<em class=\"hilite\">Marfan</em> syndrome",
+      "match": "Marfan syndrome",
+      "has_highlight": true
+    },
+    "OMIA:000628": {
+      "highlight": "<em class=\"hilite\">Marfan</em> syndrome",
+      "match": "Marfan syndrome",
+      "has_highlight": true
+    },
+    "OMIA:000628-9913": {
+      "highlight": "<em class=\"hilite\">Marfan</em> Syndrome",
+      "match": "Marfan Syndrome",
+      "has_highlight": true
+    },
+    "MONDO:0017309": {
+      "highlight": "neonatal <em class=\"hilite\">Marfan</em> syndrome",
+      "match": "neonatal Marfan syndrome",
+      "has_highlight": true
+    },
+    "MONDO:0017308": {
+      "highlight": "obsolete <em class=\"hilite\">Marfan</em> syndrome type 2",
+      "match": "obsolete Marfan syndrome type 2",
+      "has_highlight": true
+    },
+    "MONDO:0044766": {
+      "highlight": "obsolete <em class=\"hilite\">Marfan</em> Syndrome 3",
+      "match": "obsolete Marfan Syndrome 3",
+      "has_highlight": true
+    },
+    "AQTLTrait:1530": {
+      "highlight": "<em class=\"hilite\">Marfan</em> syndrome-like disease",
+      "match": "Marfan syndrome-like disease",
+      "has_highlight": true
+    },
+    "ORPHA:284973": {
+      "highlight": "<em class=\"hilite\">Marfan</em> syndrome type 2",
+      "match": "Marfan syndrome type 2",
+      "has_highlight": true
+    },
+    "UMLS:C4016059": {
+      "highlight": "<em class=\"hilite\">Marfan</em> syndrome, autosomal recessive",
+      "match": "Marfan syndrome, autosomal recessive",
+      "has_highlight": true
+    },
+    "UMLS:C4016055": {
+      "highlight": "<em class=\"hilite\">Marfan</em> syndrome, atypical",
+      "match": "Marfan syndrome, atypical",
+      "has_highlight": true
+    },
+    "UMLS:C4016053": {
+      "highlight": "<em class=\"hilite\">Marfan</em> syndrome, mild variable",
+      "match": "Marfan syndrome, mild variable",
+      "has_highlight": true
+    },
+    "UMLS:C4016052": {
+      "highlight": "<em class=\"hilite\">Marfan</em> syndrome, severe classic",
+      "match": "Marfan syndrome, severe classic",
+      "has_highlight": true
+    },
+    "MONDO:0018917": {
+      "highlight": "obsolete <em class=\"hilite\">Marfan</em> syndrome",
+      "match": "obsolete Marfan syndrome",
+      "has_highlight": true
+    },
+    "UMLS:C4016056": {
+      "highlight": "<em class=\"hilite\">Marfan</em> syndrome, mild",
+      "match": "Marfan syndrome, mild",
+      "has_highlight": true
+    },
+    "MONDO:0007948": {
+      "highlight": "<em class=\"hilite\">marfanoid</em> hypermobility syndrome",
+      "match": "marfanoid hypermobility syndrome",
+      "has_highlight": true
+    },
+    "MONDO:0009120": {
+      "highlight": "<em class=\"hilite\">marfanoid</em> syndrome, De Silva type",
+      "match": "marfanoid syndrome, De Silva type",
+      "has_highlight": true
+    },
+    "CLO:0003279": {
+      "highlight": "FIB-<em class=\"hilite\">MARFAN1</em> cell",
+      "match": "FIB-MARFAN1 cell",
+      "has_highlight": true
+    }
+  }
+}

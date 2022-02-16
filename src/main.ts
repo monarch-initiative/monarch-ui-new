@@ -25,3 +25,12 @@ for (const [name, Component] of Object.entries(components))
 
 // render app
 app.mount("#app");
+
+// set up mock apis so we don't hit real apis while developing
+// put VUE_APP_MOCK_API=true in .env.local file to use this
+const mockApis = async () => {
+  const { setupWorker } = await import("msw");
+  const { handlers } = await import("../tests/fixtures");
+  setupWorker(...handlers).start();
+};
+if (process.env.VUE_APP_MOCK_API === "true") mockApis();

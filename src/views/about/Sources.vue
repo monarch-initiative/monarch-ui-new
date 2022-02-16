@@ -17,9 +17,7 @@
     </AppFlex>
 
     <!-- status -->
-    <p v-if="status">
-      <AppStatus :status="status" />
-    </p>
+    <AppStatus v-if="status" :status="status" />
 
     <!-- list of all sources -->
     <AppFlex direction="col">
@@ -131,9 +129,9 @@ import AppCheckbox from "@/components/AppCheckbox.vue";
 import AppAccordion from "@/components/AppAccordion.vue";
 import { getDatasets } from "@/api/datasets";
 import { getOntologies } from "@/api/ontologies";
+import { Source } from "@/api/source";
 import AppStatus from "@/components/AppStatus.vue";
-import { Source } from "@/types/sources";
-import { Status } from "@/types/status";
+import { Status } from "@/components/AppStatus";
 
 // sources page
 export default defineComponent({

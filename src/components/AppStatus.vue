@@ -2,7 +2,6 @@
   <AppLink
     :to="status?.link || ''"
     class="status"
-    :data-design="design"
     :data-code="status?.code || ''"
     :aria-label="status?.code || ''"
   >
@@ -13,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { Status } from "@/types/status";
+import { Status } from "@/components/AppStatus";
 
 // icons for status codes
 const icons: Record<string, string> = {
@@ -29,12 +28,7 @@ const icons: Record<string, string> = {
 export default defineComponent({
   props: {
     // status object
-    status: Object as PropType<Status>,
-    // visual design
-    design: {
-      default: "normal",
-      type: String as PropType<"normal" | "plain">,
-    },
+    status: Object as PropType<Status>
   },
   computed: {
     icon() {
@@ -49,15 +43,9 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 15px;
-  padding: 20px;
+  gap: 20px;
+  padding: 10px;
   text-decoration: none;
-
-  &[data-design="plain"] {
-    padding: unset;
-    background: unset;
-    justify-content: unset;
-  }
 }
 
 // icon
@@ -79,7 +67,7 @@ export default defineComponent({
 }
 
 .status[data-code="warning"] .icon {
-  color: $warning;
+  color: $gray;
 }
 
 .status[data-code="error"] .icon {
@@ -95,5 +83,6 @@ export default defineComponent({
 .text {
   text-align: left;
   color: $off-black;
+  line-height: $spacing;
 }
 </style>

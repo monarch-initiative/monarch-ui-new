@@ -59,16 +59,16 @@
       on GitHub with <em>all of the information above</em>. You'll get a link to
       the discussion once it's created.
     </p>
-    <p>
-      <!-- result status -->
-      <AppStatus v-if="status" :status="status">
-        <AppLink v-if="link" :to="link"
-          >View your submitted feedback here.</AppLink
-        >
-      </AppStatus>
-      <!-- submit button -->
-      <AppButton text="Submit" icon="paper-plane" type="submit" />
-    </p>
+
+    <!-- result status -->
+    <AppStatus v-if="status" :status="status">
+      <AppLink v-if="link" :to="link"
+        >View your submitted feedback here.</AppLink
+      >
+    </AppStatus>
+
+    <!-- submit button -->
+    <AppButton v-else text="Submit" icon="paper-plane" type="submit" />
   </form>
 </template>
 
@@ -76,7 +76,7 @@
 import { defineComponent } from "vue";
 import parser from "ua-parser-js";
 import AppInput from "@/components/AppInput.vue";
-import { Status } from "@/types/status";
+import { Status } from "@/components/AppStatus";
 import { truncate, collapse } from "@/util/string";
 import { postFeedback } from "@/api/feedback";
 import AppStatus from "./AppStatus.vue";
