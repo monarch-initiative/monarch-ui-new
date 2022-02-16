@@ -128,11 +128,18 @@ strong {
   white-space: nowrap;
 }
 
-.truncate-2:not(:focus) {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
+@for $i from 1 through 5 {
+  .truncate-#{$i}:focus {
+    outline: solid 2px $black;
+  }
+  
+  .truncate-#{$i}:not(:focus) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: $i;
+    overflow: hidden;
+    cursor: zoom-in;
+  }
 }
 
 // transitions

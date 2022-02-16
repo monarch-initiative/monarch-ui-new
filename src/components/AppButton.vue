@@ -3,13 +3,13 @@
     class="button"
     :is="component"
     :to="to"
-    @click="click"
+    @click="copy ? copyToClipboard() : click"
     :data-design="design"
+    :data-color="color"
     :data-text="!!text"
-    :data-active="active"
     :data-notification="notification"
   >
-    <span v-if="text">{{ text }}</span>
+    <span v-if="text">{{ copied ? "Copied!" : text }}</span>
     <AppIcon v-if="icon" :icon="icon" />
   </component>
 </template>
@@ -28,32 +28,51 @@ export default defineComponent({
     to: String,
     // on click action
     click: Function,
-    // whether button is "on" or not
-    active: {
-      type: Boolean,
-      default: undefined,
-    },
     // visual design
     design: {
+      default: "normal",
+      type: String as PropType<"normal" | "circle" | "small">,
+    },
+    // color
+    color: {
       default: "primary",
-      type: String as PropType<"primary" | "secondary" | "small" | "circle">,
+      type: String as PropType<"primary" | "secondary" | "none">,
     },
     // whether to show little notification dot
     notification: {
       default: false,
       type: Boolean,
     },
+    // whether to copy text prop to clipboard on click
+    copy: {
+      default: false,
+      type: Boolean,
+    },
+  },
+  data() {
+    return {
+      // flag for clipboard copy notification
+      copied: false,
+    };
   },
   computed: {
     // type of component to render
     component() {
-      // if a link to somewhere, use link component (<a> or <router-link>)
       if (this.to) return "AppLink";
-      // if has attached click event or submit button for form, make it a <button>
-      else if (this.$attrs.onClick || this.$attrs.type === "submit")
+      else if (
+        this.$attrs.onClick ||
+        this.$attrs.type === "submit" ||
+        this.copy
+      )
         return "button";
-      // fallback, use <span>
       else return "span";
+    },
+  },
+  methods: {
+    async copyToClipboard() {
+      await window.navigator.clipboard.writeText(this.text || "");
+      this.copied = true;
+      window.setTimeout(() => (this.copied = false), 1000);
     },
   },
 });
@@ -61,22 +80,16 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .button {
-  &[data-design="primary"],
-  &[data-design="secondary"],
-  &[data-design="small"],
-  &[data-design="circle"] {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    flex-grow: 0;
-    flex-shrink: 0;
-    text-decoration: none;
-    transition: color $fast, background $fast, opacity $fast, box-shadow $fast;
-  }
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: color $fast, background $fast, opacity $fast, box-shadow $fast;
 
-  &[data-design="primary"],
-  &[data-design="secondary"] {
+  &[data-design="normal"] {
     min-width: min(200px, calc(100% - 40px));
     min-height: 40px;
     padding: 5px 20px;
@@ -84,29 +97,23 @@ export default defineComponent({
     border-radius: $rounded;
     font-size: 1rem;
     font-weight: 500;
-  }
 
-  &[data-design="primary"] {
-    background: $theme-light;
-  }
+    &[data-color="primary"] {
+      background: $theme-light;
+    }
 
-  &[data-design="secondary"] {
-    background: $light-gray;
-  }
+    &[data-color="secondary"] {
+      background: $light-gray;
+    }
 
-  &[data-design="small"] {
-    flex-direction: row-reverse;
-    padding: 3px;
-    border-radius: $rounded;
-    color: $theme;
-
-    &[data-active="false"] {
-      color: $gray;
+    &:hover,
+    &:focus {
+      outline: none;
+      box-shadow: $outline;
     }
   }
 
   &[data-design="circle"] {
-    background: $theme-light;
     color: $off-black;
     border-radius: 999px;
 
@@ -121,21 +128,36 @@ export default defineComponent({
       height: 2.5em;
     }
 
-    &[data-active="false"] {
-      background: none;
+    &[data-color="primary"] {
+      background: $theme-light;
     }
-  }
 
-  &:hover,
-  &:focus {
-    &[data-design="primary"],
-    &[data-design="secondary"],
-    &[data-design="circle"] {
+    &[data-color="secondary"] {
+      background: $light-gray;
+    }
+
+    &:hover,
+    &:focus {
       outline: none;
       box-shadow: $outline;
     }
+  }
 
-    &[data-design="small"] {
+  &[data-design="small"] {
+    flex-direction: row-reverse;
+    padding: 3px;
+    border-radius: $rounded;
+
+    &[data-color="primary"] {
+      color: $theme;
+    }
+
+    &[data-color="secondary"] {
+      color: $dark-gray;
+    }
+
+    &:hover,
+    &:focus {
       color: $black;
     }
   }
@@ -159,7 +181,7 @@ export default defineComponent({
 </style>
 
 <style lang="scss">
-[data-design="fill"] .button[data-design="circle"][data-active="true"] {
+[data-design="fill"] .button[data-design="circle"][data-color="primary"] {
   background: $theme-mid;
 }
 </style>

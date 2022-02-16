@@ -18,7 +18,7 @@ export default defineComponent({
     // spacing between items
     gap: {
       default: "medium",
-      type: String as PropType<"small" | "medium" | "big">,
+      type: String as PropType<"none" | "small" | "medium" | "big">,
     },
   },
 });
@@ -36,6 +36,9 @@ export default defineComponent({
     flex-direction: column;
   }
 
+  &[data-gap="none"] {
+    gap: 0;
+  }
   &[data-gap="small"] {
     gap: 10px;
   }

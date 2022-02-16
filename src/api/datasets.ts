@@ -4,19 +4,17 @@ import { mergeArrays } from "@/util/object";
 import { Source } from "./source";
 
 interface Response {
-  nodes: Array<Node>;
-  edges: Array<Edge>;
-}
-interface Node {
-  id: string;
-  meta: {
-    "http://purl.org/dc/terms/created": Array<string>;
-  };
-}
-interface Edge {
-  sub: string;
-  obj: string;
-  pred: string;
+  nodes: Array<{
+    id: string;
+    meta: {
+      "http://purl.org/dc/terms/created": Array<string>;
+    };
+  }>;
+  edges: Array<{
+    sub: string;
+    obj: string;
+    pred: string;
+  }>;
 }
 
 // replace key words in fields with actual "expanded" value
@@ -45,7 +43,7 @@ export const getDatasets = async (): Promise<Result> => {
       // find corresponding node by id
       .map((edge) => nodes.find((node) => node.id === edge.sub))
       // filter out any un-found nodes
-      .filter((node) => node) as Array<Node>;
+      .filter((node) => node) as Response["nodes"];
 
     // convert results to desired format
     let datasets = filteredNodes.map(

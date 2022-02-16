@@ -47,30 +47,18 @@
   <!-- button component -->
   <AppSection>
     <AppHeading>Button</AppHeading>
+
     <AppFlex>
-      <AppButton to="/" design="primary" text="primary" />
-      <AppButton to="/" design="primary" text="primary" icon="download" />
-      <AppButton to="/" design="primary" icon="download" />
-    </AppFlex>
-    <AppFlex>
-      <AppButton @click="alert('test')" design="secondary" text="secondary" />
       <AppButton
-        @click="alert('test')"
-        design="secondary"
-        text="secondary"
-        icon="download"
+        v-for="([design, color, text, icon], index) of buttons"
+        :key="index"
+        to="/"
+        @click="alert"
+        :design="design"
+        :color="color"
+        :text="text"
+        :icon="icon"
       />
-      <AppButton @click="alert('test')" design="secondary" icon="download" />
-    </AppFlex>
-    <AppFlex>
-      <AppButton to="/" design="small" text="small" />
-      <AppButton to="/" design="small" text="small" icon="download" />
-      <AppButton to="/" design="small" icon="download" />
-    </AppFlex>
-    <AppFlex>
-      <AppButton to="/" design="circle" text="circle" />
-      <AppButton to="/" design="circle" text="circle" icon="download" />
-      <AppButton to="/" design="circle" icon="download" />
     </AppFlex>
   </AppSection>
 
@@ -128,7 +116,18 @@ export default defineComponent({
     AppSelectMulti,
   },
   data() {
+    const buttons = [];
+    for (const design of ["normal", "rounded", "small"])
+      for (const color of ["primary", "secondary"])
+        for (const [text, icon] of [
+          ["Text", ""],
+          ["Text", "download"],
+          ["", "download"],
+        ])
+          buttons.push([design, color, text, icon]);
+
     return {
+      buttons,
       singleSelectOptions: [
         "apple",
         "banana",
@@ -153,8 +152,8 @@ export default defineComponent({
     };
   },
   methods: {
-    alert(message = "") {
-      window.alert(message);
+    alert() {
+      window.alert("alert");
     },
   },
 });

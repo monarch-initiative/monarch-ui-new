@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import AppTabs from "../../components/AppTabs.vue";
+import AppTabs from "@/components/AppTabs.vue";
 import NodeSearch from "./NodeSearch.vue";
 
 export default defineComponent({

@@ -31,6 +31,8 @@ import { defineComponent, nextTick } from "vue";
 import AppModal from "@/components/AppModal.vue";
 import TheFeedbackForm from "@/components/TheFeedbackForm.vue";
 
+let mutationObserver: MutationObserver;
+
 // buttons that float on side of page for handy functions
 export default defineComponent({
   components: {
@@ -90,11 +92,14 @@ export default defineComponent({
     // listen for events that would affect calcs in update and run update
     window.addEventListener("scroll", this.update);
     window.addEventListener("resize", this.update);
+    mutationObserver = new MutationObserver(this.update);
+    mutationObserver.observe(document.body, { subtree: true, childList: true });
   },
   beforeUnmount() {
     // detach/cleanup event listeners
     window.removeEventListener("scroll", this.update);
     window.removeEventListener("resize", this.update);
+    if (mutationObserver) mutationObserver.disconnect();
   },
 });
 </script>

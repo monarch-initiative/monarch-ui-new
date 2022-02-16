@@ -12,14 +12,16 @@ export const request = async <T = unknown>(
   // get string of url parameters/options
   const paramsObject = new URLSearchParams();
   for (const [key, value] of Object.entries(params))
-    paramsObject.set(String(key), String(value));
+    for (const part of String(value).split(",")) paramsObject.append(key, part);
+
   paramsObject.sort();
   const paramsString = "?" + paramsObject.toString();
 
   // assemble url to query
   const url = path + paramsString;
 
-  // make query
+  // make request
+  console.info("Making request", url, { path, params, options });
   const response = await window.fetch(url, options);
   if (!response.ok)
     throw new ApiError(`Response not OK - ${response.statusText}`);

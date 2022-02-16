@@ -8,7 +8,7 @@
       :icon="tab.icon"
       @click="selected = tab.id"
       design="circle"
-      :active="selected === tab.id"
+      :color="selected === tab.id ? 'primary' : 'none'"
       :aria-selected="selected === tab.id"
       :tabindex="selected === tab.id ? 0 : -1"
       :aria-controls="`panel-${id}-${tab.id}`"
@@ -20,6 +20,7 @@
   </AppFlex>
 
   <AppFlex
+    gap="big"
     :id="`panel-${id}-${selected}`"
     class="panel"
     :aria-labelledby="`tab-${id}-${selected}`"

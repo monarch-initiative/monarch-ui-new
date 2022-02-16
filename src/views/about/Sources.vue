@@ -56,7 +56,7 @@
           <AppButton
             v-if="source.date"
             design="small"
-            :active="false"
+            color="secondary"
             icon="calendar-alt"
             :text="source.date"
             v-tooltip="'Date when this source was ingested into Monarch'"

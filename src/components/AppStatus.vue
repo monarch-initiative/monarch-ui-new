@@ -28,7 +28,7 @@ const icons: Record<string, string> = {
 export default defineComponent({
   props: {
     // status object
-    status: Object as PropType<Status>
+    status: Object as PropType<Status>,
   },
   computed: {
     icon() {

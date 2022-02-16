@@ -118,9 +118,6 @@ const scrollBehavior: RouterScrollBehavior = async (
   // scroll to previous position if exists
   if (savedPosition) return savedPosition;
 
-  // default return
-  let result: ReturnType<RouterScrollBehavior> = { left: 0, top: 0 };
-
   if (to.hash) {
     // get target element of hash
     let target = document.getElementById(to.hash.slice(1));
@@ -134,11 +131,9 @@ const scrollBehavior: RouterScrollBehavior = async (
       // get offset to account for header
       const offset = document.querySelector("header")?.clientHeight || 0;
 
-      result = { el: target, top: offset };
+      return { el: target, top: offset };
     }
   }
-
-  return result;
 };
 
 // router object

@@ -32,7 +32,7 @@
       @blur="onBlur"
     >
       <span class="button-label">
-        {{ name }}
+        {{ startCase(name) }}
         <span class="button-more">
           <template v-if="selected.length === 0">(none selected)</template>
           <template v-else-if="selected.length === options.length">
@@ -100,7 +100,7 @@
           <td class="option-check">
             <div :data-checked="selected.includes(index)" />
           </td>
-          <td class="option-label">{{ option.label || option.value }}</td>
+          <td class="option-label">{{ startCase(String(option.value)) }}</td>
           <td class="option-count">{{ option.count }}</td>
         </tr>
       </table>
@@ -109,23 +109,16 @@
 </template>
 
 <script lang="ts">
-import { wrap } from "@/util/math";
 import { defineComponent, PropType } from "vue";
-import { isEqual, uniqueId } from "lodash";
+import { isEqual, uniqueId, startCase } from "lodash";
+import { Options } from "./AppSelectMulti";
+import { wrap } from "@/util/math";
 
 // references:
 // https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/listbox/listbox-rearrangeable.html
 // https://w3c.github.io/aria/#aria-multiselectable
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaMultiSelectable
 // https://vuetifyjs.com/en/components/selects/
-
-interface Option {
-  value: number | string;
-  icon?: string;
-  label?: string;
-  count?: number | string;
-}
-type Options = Array<Option>;
 
 // custom single select
 export default defineComponent({
@@ -252,6 +245,7 @@ export default defineComponent({
       // keep in order for easy comparison
       this.selected.sort();
     },
+    startCase,
   },
   watch: {
     // when model changes, update selected indices

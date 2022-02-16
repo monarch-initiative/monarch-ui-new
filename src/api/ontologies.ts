@@ -7,15 +7,14 @@ import { Source } from "./source";
 const api = "https://obofoundry.org/registry/ontologies.jsonld";
 
 interface Response {
-  ontologies: Array<Ontology>;
-}
-interface Ontology {
-  id: string;
-  title?: string;
-  homepage?: string;
-  license?: { url?: string };
-  depicted_by?: string;
-  description?: string;
+  ontologies: Array<{
+    id: string;
+    title?: string;
+    homepage?: string;
+    license?: { url?: string };
+    depicted_by?: string;
+    description?: string;
+  }>;
 }
 
 // get metadata of all ontologies listed on obo
@@ -25,7 +24,7 @@ export const getOntologies = async (): Promise<Result> => {
 
     // convert results to desired format
     let ontologies = response.ontologies.map(
-      (ontology: Ontology): Source => ({
+      (ontology): Source => ({
         id: ontology.id,
         name: ontology.title,
         link: ontology.homepage,
