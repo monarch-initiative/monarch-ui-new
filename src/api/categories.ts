@@ -10,7 +10,6 @@ const map: Record<string, Category> = {
   "anatomical entity": "anatomy",
   publication: "publication",
   case: "case",
-  "sequence featurevariant": "variant",
   "cell line": "model",
   organism: "model",
 };

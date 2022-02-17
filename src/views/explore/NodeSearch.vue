@@ -4,18 +4,21 @@
     placeholder="Search for a gene, disease, phenotype, etc."
     icon="search"
     v-model="search"
-    @submit="onSubmit"
+    @input="onInput"
+    @change="onChange"
   />
 
   <!-- filters -->
-  <AppFlex>
-    <AppSelectMulti
-      v-for="(filter, name, index) in availableFilters"
-      :key="index"
-      :name="name"
-      :options="availableFilters[name]"
-      v-model="activeFilters[name]"
-    />
+  <AppFlex v-if="Object.keys(availableFilters).length">
+    <template v-for="(filter, name, index) in availableFilters" :key="index">
+      <AppSelectMulti
+        v-if="filter.length"
+        :name="name"
+        :options="availableFilters[name]"
+        v-model="activeFilters[name]"
+        @change="onFilterChange"
+      />
+    </template>
   </AppFlex>
 
   <!-- status -->
@@ -23,7 +26,7 @@
 
   <!-- results -->
   <AppFlex
-    v-for="(result, index) in results.slice(0, cutoff)"
+    v-for="(result, index) in results"
     :key="index"
     direction="col"
     gap="small"
@@ -55,19 +58,10 @@
       {{ result.altIds.join(" &nbsp; ") }}
     </p>
   </AppFlex>
-
-  <!-- show more button -->
-  <AppButton
-    v-if="cutoff < results.length"
-    design="small"
-    icon="angle-down"
-    text="Show More"
-    @click="cutoff += 10"
-  />
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick } from "vue";
+import { defineComponent } from "vue";
 import { debounce, kebabCase, capitalize } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
@@ -76,68 +70,68 @@ import { getNodeSearchResults, Result } from "@/api/node-search";
 import { Status } from "@/components/AppStatus";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import { Options } from "@/components/AppSelectMulti";
-import { syncLog } from "@/util/debug";
-
-// push permanent history entry
-const pushHistory = function (
-  this: InstanceType<typeof NodeSearch>,
-  route?: string
-) {
-  // cancel any pending debounced calls
-  debouncedPushHistory.cancel();
-
-  // get push props
-  const name = route || this.$route.name || "";
-  // if force nav'ing, keep already-typed-in search value "invisibly" (not in url)
-  const props = {
-    [route ? "params" : "query"]: { search: this.search },
-  };
-  const hash = this.$route.hash;
-
-  // only force nav if something has been searched
-  // (needed for when user clicks home page link from explore page with search)
-  if (route && !this.search) return;
-
-  // push history entry to router
-  this.$router.push({ name, ...props, hash });
-};
-
-// debounced version of push history
-const debouncedPushHistory = debounce(pushHistory, 1000);
 
 // get search results
-const getResults = async function (this: InstanceType<typeof NodeSearch>) {
+const getResults = async function (
+  this: InstanceType<typeof NodeSearch>,
+  useFilters: boolean,
+  pushHistory: boolean
+) {
+  // cancel any pending debounced calls
   debouncedGetResults.cancel();
+
+  // push permanent history entry
+  if (pushHistory) {
+    const query: Record<string, string> = {};
+    if (this.search) query.search = this.search;
+    this.$router.push({ ...this.$route, name: "Explore", query });
+  }
 
   // loading...
   this.status = { code: "loading", text: "Loading results" };
+  this.results = [];
 
   try {
     // get results from api
-    const { results, facets } = await getNodeSearchResults(this.search, {
-      category: this.categories,
-      taxon: this.taxons,
-    });
+    const { results, facets } = await getNodeSearchResults(
+      this.search,
+      ...(useFilters ? [this.availableFilters, this.activeFilters] : [])
+    );
     this.results = results;
 
-    // update filters based on facets from api
-    this.availableFilters = { ...facets };
-    this.activeFilters = { ...facets };
+    // if search text changed, run query with no filters, and update available
+    // filters from facet response
 
-    // reset cutoff
-    this.cutoff = 10;
+    // update filters based on facets from api
+    if (!useFilters) {
+      this.availableFilters = { ...facets };
+      this.activeFilters = { ...facets };
+    }
 
     // clear status
     this.status = null;
   } catch (error) {
     // error...
     this.status = error as ApiError;
+    // clear results and filters
     this.results = [];
+    this.availableFilters = {};
+    this.activeFilters = {};
   }
 };
 
 // debounced version of push
 const debouncedGetResults = debounce(getResults, 1000);
+
+// const defaultFilters = {
+//   category: [
+//     { value: "gene" },
+//     { value: "genotype" },
+//     { value: "variant" },
+//     { value: "phenotype" },
+//     { value: "disease" },
+//   ],
+// };
 
 // node search explore mode
 const NodeSearch = defineComponent({
@@ -149,7 +143,7 @@ const NodeSearch = defineComponent({
   data() {
     return {
       // current search text
-      search: this.getSearch(),
+      search: String(this.$route.query.search || ""),
       // search results
       results: [] as Result["results"],
       // status of query
@@ -157,77 +151,39 @@ const NodeSearch = defineComponent({
       // filters (facets) for search
       availableFilters: {} as Record<string, Options>,
       activeFilters: {} as Record<string, Options>,
-      // how many results to display
-      cutoff: 10,
     };
   },
   watch: {
-    // when search text changes
-    search() {
-      // update route
-      if (this.$route.name === "Home") pushHistory.call(this, "Explore");
-      else debouncedPushHistory.call(this);
-
-      // update search results
-      debouncedGetResults.call(this);
-    },
     // when route changes
     $route() {
-      // update search text from url
-      this.search = this.getSearch();
-    },
-    // when filters change
-    categories() {
-      debouncedGetResults.call(this);
-    },
-    taxons() {
-      debouncedGetResults.call(this);
-    },
-  },
-  computed: {
-    categories(): string {
-      syncLog(this.activeFilters.category);
-      return (this.activeFilters.category || [])
-        .map(({ value }) => value)
-        .filter((value) => value)
-        .sort()
-        .join(",");
-    },
-    taxons(): string {
-      syncLog(this.activeFilters.taxon_label);
-      return (this.activeFilters.taxon_label || [])
-        .map(({ value }) => value)
-        .filter((value) => value)
-        .sort()
-        .join(",");
+      // update search text from route (if not already)
+      const fromUrl = String(this.$route.query.search || "");
+      if (this.search !== fromUrl) {
+        this.search = fromUrl;
+        getResults.call(this, false, false);
+      }
     },
   },
   methods: {
-    // get search text from route params (invisible) or query (url params)
-    getSearch() {
-      return String(
-        this.$route.params.search || this.$route.query.search || ""
-      );
+    // when user types in text box
+    onInput() {
+      debouncedGetResults.call(this, false, true);
     },
-    // "instant" submit
-    onSubmit(event: Event) {
-      // https://bugs.chromium.org/p/chromium/issues/detail?id=1297334#c4
-      nextTick(() => {
-        if (document.contains(event.target as Node)) pushHistory.call(this);
-        getResults.call(this);
-      });
+    // when user "submits" text box
+    onChange() {
+      getResults.call(this, false, true);
+    },
+    // when user changes active filters
+    onFilterChange() {
+      // update search
+      debouncedGetResults.call(this, true, false);
     },
     kebabCase,
     capitalize,
   },
   mounted() {
-    // if already-typed-in search text passed to route, focus search box on
-    // page load so user can continue typing
-    if (this.$route.params.search)
-      (this.$refs.searchBox as typeof AppInput).focus();
-
-    // search on page load
-    debouncedGetResults.call(this);
+    // instantly submit
+    getResults.call(this, true, false);
   },
 });
 
@@ -243,6 +199,7 @@ export default NodeSearch;
   display: flex;
   align-items: center;
   gap: 10px;
+  text-align: left;
 
   svg {
     font-size: 2rem;

@@ -10,7 +10,7 @@
         ref="input"
         :value="modelValue"
         @input="onInput"
-        @change="$emit('submit', $event)"
+        @change="onChange"
         :placeholder="placeholder"
         :required="required"
       >
@@ -19,9 +19,8 @@
         v-else
         ref="input"
         :value="modelValue"
-        @focus.prevent
         @input="onInput"
-        @change="$emit('submit', $event)"
+        @change="onChange"
         :placeholder="placeholder"
         :type="type"
         :required="required"
@@ -35,11 +34,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, nextTick } from "vue";
 
 // basic text box input, single line or multi-line
 export default defineComponent({
-  emits: ["update:modelValue", "submit"],
+  emits: ["update:modelValue", "input", "change"],
   props: {
     //  state
     modelValue: String,
@@ -62,10 +61,14 @@ export default defineComponent({
     // when user types in box
     onInput({ target }: Event) {
       this.$emit("update:modelValue", (target as HTMLInputElement).value);
+      this.$emit("input");
     },
-    // method to be called from outside of component
-    focus() {
-      (this.$refs.input as HTMLInputElement).focus();
+    // when user "commits" change to value, e.g. pressing enter, defocusing, etc
+    onChange(event: Event) {
+      // https://bugs.chromium.org/p/chromium/issues/detail?id=1297334
+      nextTick(() => {
+        if (document.contains(event.target as Node)) this.$emit("change");
+      });
     },
   },
 });

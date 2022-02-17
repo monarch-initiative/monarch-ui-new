@@ -50,6 +50,7 @@ type Tabs = Array<Tab>;
 
 // tab buttons that conditionally show their corresponding slots
 export default defineComponent({
+  emits: ["change"],
   props: {
     // list of tabs with info
     tabs: {
@@ -63,8 +64,6 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    // if set, navigates to this route name when selected tab switched
-    routeOnSwitch: String,
   },
   data() {
     return {
@@ -110,12 +109,8 @@ export default defineComponent({
       const button = document.querySelector(selector) as HTMLButtonElement;
       button?.focus();
 
-      // update url hash
-      this.$router.push({
-        name: this.routeOnSwitch || this.$route.name || "",
-        // query: this.$route.query,
-        hash: "#" + this.selected,
-      });
+      // emit event to parent that tab changed.
+      this.$emit("change", this.selected);
     },
     // when url hash changes
     $route() {

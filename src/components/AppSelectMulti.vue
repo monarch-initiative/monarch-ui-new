@@ -122,6 +122,7 @@ import { wrap } from "@/util/math";
 
 // custom single select
 export default defineComponent({
+  emits: ["update:modelValue", "change"],
   props: {
     // name of the field
     name: {
@@ -244,6 +245,8 @@ export default defineComponent({
       }
       // keep in order for easy comparison
       this.selected.sort();
+      // emit change event for listening for only user-originated changes
+      this.$emit("change");
     },
     startCase,
   },
@@ -318,7 +321,6 @@ export default defineComponent({
   position: absolute;
   max-height: 200px;
   min-width: 100%;
-  overflow-x: hidden;
   overflow-y: auto;
   background: $white;
   box-shadow: $shadow;
@@ -329,15 +331,12 @@ table {
   table-layout: fixed;
   min-width: 100%;
   border-collapse: collapse;
+  white-space: nowrap;
 }
 
 .option {
   cursor: pointer;
   transition: background $fast;
-}
-
-.option[data-selected="true"] {
-  // background: $theme-light;
 }
 
 .option[data-highlighted="true"] {

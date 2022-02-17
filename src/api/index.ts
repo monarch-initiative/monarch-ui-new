@@ -21,7 +21,7 @@ export const request = async <T = unknown>(
   const url = path + paramsString;
 
   // make request
-  console.info("Making request", url, { path, params, options });
+  console.info("Making request", url);
   const response = await window.fetch(url, options);
   if (!response.ok)
     throw new ApiError(`Response not OK - ${response.statusText}`);

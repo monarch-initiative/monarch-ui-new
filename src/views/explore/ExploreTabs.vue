@@ -11,7 +11,6 @@
       },
     ]"
     default="node-search"
-    route-on-switch="Explore"
   >
     <template #node-search>
       <NodeSearch />

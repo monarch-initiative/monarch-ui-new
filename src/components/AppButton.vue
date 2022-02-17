@@ -182,6 +182,6 @@ export default defineComponent({
 
 <style lang="scss">
 [data-design="fill"] .button[data-design="circle"][data-color="primary"] {
-  background: $theme-mid;
+  background: $theme-pale;
 }
 </style>
