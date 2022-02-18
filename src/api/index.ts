@@ -22,7 +22,7 @@ export const request = async <T = unknown>(
 
   // make request
   console.info("Making request", url);
-  const response = await window.fetch(url, options);
+  const response = await fetch(url, options);
   if (!response.ok)
     throw new ApiError(`Response not OK - ${response.statusText}`);
   const json = await response.json();

@@ -55,7 +55,7 @@ export default defineComponent({
     // update data state
     update() {
       // get dimensions of footer
-      const footerEl = document.querySelector("footer");
+      const footerEl = document?.querySelector("footer");
       if (!footerEl) return;
       const footer = footerEl.getBoundingClientRect();
 
@@ -93,7 +93,7 @@ export default defineComponent({
     window.addEventListener("scroll", this.update);
     window.addEventListener("resize", this.update);
     mutationObserver = new MutationObserver(this.update);
-    mutationObserver.observe(document.body, { subtree: true, childList: true });
+    mutationObserver.observe(document?.body, { subtree: true, childList: true });
   },
   beforeUnmount() {
     // detach/cleanup event listeners

@@ -3,6 +3,7 @@
 import { MountingOptions } from "@vue/test-utils";
 import { nextTick, ComponentCustomProps } from "vue";
 import { setupServer } from "msw/node";
+import fetch from "node-fetch";
 import router from "@/router";
 import components from "@/global/components";
 import mixins from "@/global/mixins";
@@ -18,6 +19,7 @@ HTMLCanvasElement.prototype.getContext = jest.fn();
 window.ResizeObserver = jest
   .fn()
   .mockImplementation(() => ({ observe: jest.fn() }));
+window.fetch = jest.fn().mockImplementation(fetch);
 
 // run before each test
 beforeEach(async () => {

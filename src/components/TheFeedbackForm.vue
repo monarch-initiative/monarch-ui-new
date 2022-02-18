@@ -135,7 +135,7 @@ export default defineComponent({
   methods: {
     async onSubmit() {
       // only proceed if submitted through button, not "implicitly" (enter press)
-      const active = document.activeElement;
+      const active = document?.activeElement;
       if (active && active.getAttribute("type") !== "submit") return;
 
       // make issue title (unclear what char limit is?)

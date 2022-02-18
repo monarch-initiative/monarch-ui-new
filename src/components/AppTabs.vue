@@ -106,7 +106,7 @@ export default defineComponent({
     selected() {
       // focus the selected tab
       const selector = `#tab-${this.id}-${this.selected}`;
-      const button = document.querySelector(selector) as HTMLButtonElement;
+      const button = document?.querySelector(selector) as HTMLButtonElement;
       button?.focus();
 
       // emit event to parent that tab changed.

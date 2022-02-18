@@ -67,7 +67,7 @@ export default defineComponent({
     onChange(event: Event) {
       // https://bugs.chromium.org/p/chromium/issues/detail?id=1297334
       nextTick(() => {
-        if (document.contains(event.target as Node)) this.$emit("change");
+        if (document?.contains(event.target as Node)) this.$emit("change");
       });
     },
   },

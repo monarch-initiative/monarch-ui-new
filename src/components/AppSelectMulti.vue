@@ -173,7 +173,7 @@ export default defineComponent({
       this.expanded ? this.close() : this.open();
       // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#clicking_and_focus
       (
-        document.querySelector(`#select-${this.id}`) as HTMLButtonElement
+        document?.querySelector(`#select-${this.id}`) as HTMLButtonElement
       )?.focus();
     },
     // when button blurred

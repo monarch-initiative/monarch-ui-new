@@ -132,7 +132,7 @@ strong {
   .truncate-#{$i}:focus {
     outline: solid 2px $black;
   }
-  
+
   .truncate-#{$i}:not(:focus) {
     display: -webkit-box;
     -webkit-box-orient: vertical;

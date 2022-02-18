@@ -72,7 +72,7 @@ export default defineComponent({
     // modal element
     const modal = this.$refs.modal as HTMLElement;
     // rest of app besides modal
-    const app = document.querySelector("#app");
+    const app = document?.querySelector("#app");
 
     // if modal just opened
     if (this.modelValue) {
@@ -92,11 +92,11 @@ export default defineComponent({
     // modal element
     const modal = this.$refs.modal as HTMLElement;
     // rest of app besides modal
-    const app = document.querySelector("#app");
+    const app = document?.querySelector("#app");
 
     // if modal about to be opened
     if (this.modelValue) {
-      this.originalFocus = document.activeElement as HTMLElement;
+      this.originalFocus = document?.activeElement as HTMLElement;
     }
     // if modal about to be closed
     else {

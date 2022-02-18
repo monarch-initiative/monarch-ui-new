@@ -120,7 +120,7 @@ const scrollBehavior: RouterScrollBehavior = async (
 
   if (to.hash) {
     // get target element of hash
-    let target = document.getElementById(to.hash.slice(1));
+    let target = document?.getElementById(to.hash.slice(1));
 
     if (target) {
       // move target to parent section element if first child
