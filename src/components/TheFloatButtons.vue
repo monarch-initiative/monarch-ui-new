@@ -93,7 +93,10 @@ export default defineComponent({
     window.addEventListener("scroll", this.update);
     window.addEventListener("resize", this.update);
     mutationObserver = new MutationObserver(this.update);
-    mutationObserver.observe(document?.body, { subtree: true, childList: true });
+    mutationObserver.observe(document?.body, {
+      subtree: true,
+      childList: true,
+    });
   },
   beforeUnmount() {
     // detach/cleanup event listeners

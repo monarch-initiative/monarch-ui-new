@@ -162,11 +162,6 @@ export default defineComponent({
     }
   }
 
-  &[disabled] {
-    pointer-events: none;
-    opacity: 0.5;
-  }
-
   &[data-notification="true"]:after {
     content: "";
     position: absolute;
@@ -182,6 +177,6 @@ export default defineComponent({
 
 <style lang="scss">
 [data-design="fill"] .button[data-design="circle"][data-color="primary"] {
-  background: $theme-pale;
+  background: $theme-mid;
 }
 </style>

@@ -32,14 +32,18 @@ export const request = async <T = unknown>(
 
 // takes generic error and turns it into consistent api error
 export const cleanError = (error: unknown): ApiError => {
+  // if not manually created error
+  if (!(error instanceof ApiError))
+    // turn it into one with user-readable error message
+    error = new ApiError("Error: " + (error as Error).message);
+
   // log error to console like normal for advanced debugging
   // (log as info instead of error to distinguish between uncaught errors)
+  console.groupCollapsed((error as ApiError).text);
   console.info(error);
+  console.groupEnd();
 
-  // if manually created error, pass through
-  if (error instanceof ApiError) return error;
-  // otherwise, get user-readable error message
-  else return new ApiError("Error: " + (error as Error).message);
+  return error as ApiError;
 };
 
 // custom error type to throw with extra details to easily integrate into status

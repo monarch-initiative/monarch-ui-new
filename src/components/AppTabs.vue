@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, nextTick, PropType } from "vue";
 import { uniqueId } from "lodash";
 import { wrap } from "@/util/math";
 
@@ -103,13 +103,16 @@ export default defineComponent({
   },
   watch: {
     // when selected tab changes
-    selected() {
+    async selected() {
       // focus the selected tab
       const selector = `#tab-${this.id}-${this.selected}`;
       const button = document?.querySelector(selector) as HTMLButtonElement;
       button?.focus();
 
-      // emit event to parent that tab changed.
+      // update hash in url
+      await this.$router.replace({ ...this.$route, hash: "#" + this.selected });
+
+      // emit event to parent that tab changed
       this.$emit("change", this.selected);
     },
     // when url hash changes

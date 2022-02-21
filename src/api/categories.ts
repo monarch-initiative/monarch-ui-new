@@ -24,12 +24,12 @@ export const mapCategory = (category: Array<string>): Category => {
   if (mappedCategory.includes("variant")) return "variant";
 
   // otherwise just return map of first category part
-  return mappedCategory[0] || "";
+  return mappedCategory[0] || "unknown";
 };
 
 // categories that app supports
 export const categories = [
-  "",
+  "unknown",
   "anatomy",
   "case",
   "cell-line",

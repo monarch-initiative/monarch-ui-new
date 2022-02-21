@@ -33,6 +33,7 @@ section {
   flex-direction: column;
   gap: 40px;
   text-align: center;
+  transition: background $fast;
 
   &[data-width="full"] {
     padding: 50px 40px;

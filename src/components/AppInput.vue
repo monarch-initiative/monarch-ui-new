@@ -9,6 +9,7 @@
         v-if="multi"
         ref="input"
         :value="modelValue"
+        @focus="onFocus"
         @input="onInput"
         @change="onChange"
         :placeholder="placeholder"
@@ -19,6 +20,7 @@
         v-else
         ref="input"
         :value="modelValue"
+        @focus="onFocus"
         @input="onInput"
         @change="onChange"
         :placeholder="placeholder"
@@ -38,7 +40,7 @@ import { defineComponent, nextTick } from "vue";
 
 // basic text box input, single line or multi-line
 export default defineComponent({
-  emits: ["update:modelValue", "input", "change"],
+  emits: ["update:modelValue", "focus", "input", "change"],
   props: {
     //  state
     modelValue: String,
@@ -58,6 +60,14 @@ export default defineComponent({
     icon: String,
   },
   methods: {
+    // method to programmatically focus from outside componend
+    focus() {
+      (this.$refs.input as HTMLInputElement | HTMLTextAreaElement).focus();
+    },
+    // when user focuses box
+    onFocus() {
+      this.$emit("focus");
+    },
     // when user types in box
     onInput({ target }: Event) {
       this.$emit("update:modelValue", (target as HTMLInputElement).value);

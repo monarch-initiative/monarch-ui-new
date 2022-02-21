@@ -132,6 +132,7 @@ import { getOntologies } from "@/api/ontologies";
 import { Source } from "@/api/source";
 import AppStatus from "@/components/AppStatus.vue";
 import { Status } from "@/components/AppStatus";
+import { ApiError } from "@/api";
 
 // sources page
 export default defineComponent({
@@ -190,10 +191,7 @@ export default defineComponent({
   },
   async mounted() {
     // loading...
-    this.status = {
-      code: "loading",
-      text: "Loading sources",
-    };
+    this.status = { code: "loading", text: "Loading sources" };
 
     try {
       // get sources from apis
@@ -215,7 +213,7 @@ export default defineComponent({
       this.status = null;
     } catch (error) {
       // error...
-      this.status = { code: "error", text: (error as Error).message };
+      this.status = error as ApiError;
     }
   },
 });

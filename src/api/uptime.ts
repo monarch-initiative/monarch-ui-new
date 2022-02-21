@@ -26,7 +26,7 @@ enum Code {
 }
 
 // get list of uptimerobot monitors and their statuses, names, and other info
-export const getStatuses = async (): Promise<Result> => {
+export const getUptimes = async (): Promise<Result> => {
   try {
     // get data from endpoint
     const params = { api_key: key };

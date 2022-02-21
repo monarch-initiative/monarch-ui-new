@@ -32,5 +32,4 @@ app.mount("#app");
 
 // set up mock apis so we don't hit real apis while developing
 // put VUE_APP_MOCK_API=true in .env.local file to use this
-
 if (process.env.VUE_APP_MOCK_API === "true") setupWorker(...handlers).start();

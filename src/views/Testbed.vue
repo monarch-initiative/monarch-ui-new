@@ -48,9 +48,9 @@
   <AppSection>
     <AppHeading>Button</AppHeading>
 
-    <AppFlex>
+    <AppFlex v-for="(row, index) of buttons" :key="index">
       <AppButton
-        v-for="([design, color, text, icon], index) of buttons"
+        v-for="([design, color, text, icon], index) of row"
         :key="index"
         to="/"
         @click="alert"
@@ -117,14 +117,19 @@ export default defineComponent({
   },
   data() {
     const buttons = [];
-    for (const design of ["normal", "rounded", "small"])
-      for (const color of ["primary", "secondary"])
+    for (const design of ["normal", "circle", "small"]) {
+      for (const color of ["primary", "secondary"]) {
+        const row = [];
         for (const [text, icon] of [
           ["Text", ""],
           ["Text", "download"],
           ["", "download"],
-        ])
-          buttons.push([design, color, text, icon]);
+        ]) {
+          row.push([design, color, text, icon]);
+        }
+        buttons.push(row);
+      }
+    }
 
     return {
       buttons,

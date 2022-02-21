@@ -6,58 +6,85 @@
     v-model="search"
     @input="onInput"
     @change="onChange"
+    @focus="onFocus"
   />
 
-  <!-- filters -->
-  <AppFlex v-if="Object.keys(availableFilters).length">
-    <template v-for="(filter, name, index) in availableFilters" :key="index">
-      <AppSelectMulti
-        v-if="filter.length"
-        :name="name"
-        :options="availableFilters[name]"
-        v-model="activeFilters[name]"
-        @change="onFilterChange"
-      />
-    </template>
-  </AppFlex>
+  <template v-if="!home">
+    <!-- filters -->
+    <AppFlex v-if="Object.keys(availableFilters).length">
+      <template v-for="(filter, name, index) in availableFilters" :key="index">
+        <AppSelectMulti
+          v-if="filter.length"
+          :name="name"
+          :options="availableFilters[name]"
+          v-model="activeFilters[name]"
+          @change="onFilterChange"
+        />
+      </template>
+    </AppFlex>
 
-  <!-- status -->
-  <AppStatus v-if="status" ref="status" :status="status" />
+    <!-- status -->
+    <AppStatus v-if="status" ref="status" :status="status" />
 
-  <!-- results -->
-  <AppFlex
-    v-for="(result, index) in results"
-    :key="index"
-    direction="col"
-    gap="small"
-    class="result"
-  >
-    <div class="title">
-      <AppIcon
-        :icon="`category-${kebabCase(result.category || 'unknown')}`"
-        v-tooltip="`Category: ${capitalize(result.category || 'unknown')}`"
-      />
-      <AppLink :to="`/explore/`">
-        <span v-html="result.highlight"></span>
-      </AppLink>
-      <AppButton
-        :text="result.id"
-        icon="hashtag"
-        design="small"
-        :copy="true"
-        color="secondary"
-      />
-    </div>
-    <p class="truncate-3" tabindex="0">
-      {{ result.description || "No description available" }}
-    </p>
-    <p v-if="result.altNames?.length" class="names truncate-1" tabindex="0">
-      {{ result.altNames.join(" &nbsp; ") }}
-    </p>
-    <p v-if="result.altIds?.length" class="ids truncate-1" tabindex="0">
-      {{ result.altIds.join(" &nbsp; ") }}
-    </p>
-  </AppFlex>
+    <!-- results -->
+
+    <AppFlex
+      v-for="(result, index) in results"
+      :key="index"
+      direction="col"
+      gap="small"
+      class="result"
+    >
+      <div class="title">
+        <AppIcon
+          :icon="`category-${kebabCase(result.category)}`"
+          class="type"
+          v-tooltip="`Category: ${capitalize(result.category)}`"
+        />
+        <AppLink :to="`/explore/`" class="name">
+          <span v-html="result.highlight"></span>
+        </AppLink>
+        <AppButton
+          class="id"
+          :text="result.id"
+          icon="hashtag"
+          design="small"
+          :copy="true"
+          color="secondary"
+          v-tooltip="'Node ID (click to copy)'"
+        />
+      </div>
+      <p class="truncate-3" tabindex="0">
+        {{ result.description || "No description available" }}
+      </p>
+      <p v-if="result.altNames?.length" class="names truncate-1" tabindex="0">
+        {{ result.altNames.join(" &nbsp; ") }}
+      </p>
+      <p v-if="result.altIds?.length" class="ids truncate-1" tabindex="0">
+        {{ result.altIds.join(" &nbsp; ") }}
+      </p>
+    </AppFlex>
+
+    <!-- results nav -->
+    <AppFlex v-if="results.length" direction="col">
+      <div>
+        <b>{{ from + 1 }}</b> to <b>{{ to + 1 }}</b> of
+        <b>{{ count }}</b> results
+      </div>
+      <AppFlex gap="small">
+        <button
+          v-for="index of pages"
+          :key="index"
+          @click="page = index"
+          class="nav-button"
+          :disabled="index === page"
+          v-tooltip="`Go to page ${index + 1} of results`"
+        >
+          {{ index + 1 }}
+        </button>
+      </AppFlex>
+    </AppFlex>
+  </template>
 </template>
 
 <script lang="ts">
@@ -74,17 +101,20 @@ import { Options } from "@/components/AppSelectMulti";
 // get search results
 const getResults = async function (
   this: InstanceType<typeof NodeSearch>,
-  useFilters: boolean,
-  pushHistory: boolean
+  // whether to perform "fresh" search, without filters. set to true when
+  // search changing, false when filters or page number changing.
+  fresh: boolean,
+  // whether to push new entry to browser history
+  history: boolean
 ) {
   // cancel any pending debounced calls
   debouncedGetResults.cancel();
 
   // push permanent history entry
-  if (pushHistory) {
+  if (history) {
     const query: Record<string, string> = {};
     if (this.search) query.search = this.search;
-    this.$router.push({ ...this.$route, name: "Explore", query });
+    await this.$router.push({ ...this.$route, name: "Explore", query });
   }
 
   // loading...
@@ -93,17 +123,17 @@ const getResults = async function (
 
   try {
     // get results from api
-    const { results, facets } = await getNodeSearchResults(
+    const { count, results, facets } = await getNodeSearchResults(
       this.search,
-      ...(useFilters ? [this.availableFilters, this.activeFilters] : [])
+      fresh ? undefined : this.availableFilters,
+      fresh ? undefined : this.activeFilters,
+      fresh ? undefined : this.from
     );
     this.results = results;
+    this.count = count;
 
-    // if search text changed, run query with no filters, and update available
-    // filters from facet response
-
-    // update filters based on facets from api
-    if (!useFilters) {
+    if (fresh) {
+      // update filters based on facets from api
       this.availableFilters = { ...facets };
       this.activeFilters = { ...facets };
     }
@@ -115,23 +145,25 @@ const getResults = async function (
     this.status = error as ApiError;
     // clear results and filters
     this.results = [];
-    this.availableFilters = {};
-    this.activeFilters = {};
+    if (fresh) {
+      this.availableFilters = { ...defaultFilters };
+      this.activeFilters = { ...defaultFilters };
+    }
   }
 };
 
 // debounced version of push
 const debouncedGetResults = debounce(getResults, 1000);
 
-// const defaultFilters = {
-//   category: [
-//     { value: "gene" },
-//     { value: "genotype" },
-//     { value: "variant" },
-//     { value: "phenotype" },
-//     { value: "disease" },
-//   ],
-// };
+const defaultFilters = {
+  category: [
+    { value: "gene" },
+    { value: "disease" },
+    { value: "phenotype" },
+    { value: "genotype" },
+    { value: "variant" },
+  ],
+};
 
 // node search explore mode
 const NodeSearch = defineComponent({
@@ -146,11 +178,17 @@ const NodeSearch = defineComponent({
       search: String(this.$route.query.search || ""),
       // search results
       results: [] as Result["results"],
+      // number of results
+      count: 0,
+      // current page number
+      page: 0,
+      // results per page
+      perPage: 10,
       // status of query
       status: null as Status | null,
       // filters (facets) for search
-      availableFilters: {} as Record<string, Options>,
-      activeFilters: {} as Record<string, Options>,
+      availableFilters: { ...defaultFilters } as Record<string, Options>,
+      activeFilters: { ...defaultFilters } as Record<string, Options>,
     };
   },
   watch: {
@@ -160,26 +198,57 @@ const NodeSearch = defineComponent({
       const fromUrl = String(this.$route.query.search || "");
       if (this.search !== fromUrl) {
         this.search = fromUrl;
-        getResults.call(this, false, false);
+        getResults.call(this, true, false);
       }
+    },
+    // when start page changes
+    from() {
+      getResults.call(this, false, false);
     },
   },
   methods: {
+    // when user focuses text box
+    async onFocus() {
+      // navigate to explore page
+      await this.$router.push({ ...this.$route, name: "Explore" });
+      // refocus box
+      document.querySelector("input")?.focus();
+    },
     // when user types in text box
     onInput() {
-      debouncedGetResults.call(this, false, true);
+      debouncedGetResults.call(this, true, true);
     },
     // when user "submits" text box
     onChange() {
-      getResults.call(this, false, true);
+      this.page = 0;
+      getResults.call(this, true, true);
     },
     // when user changes active filters
     onFilterChange() {
-      // update search
-      debouncedGetResults.call(this, true, false);
+      this.page = 0;
+      debouncedGetResults.call(this, false, false);
     },
     kebabCase,
     capitalize,
+  },
+  computed: {
+    // is home page
+    home(): boolean {
+      return String(this.$route.name).toLowerCase() === "home";
+    },
+    // "x of n" pages
+    from(): number {
+      return this.page * this.perPage;
+    },
+    to(): number {
+      return this.from + this.results.length - 1;
+    },
+    // pages of results
+    pages(): Array<number> {
+      return Array(Math.ceil(this.count / 10))
+        .fill(0)
+        .map((_, i) => i);
+    },
   },
   mounted() {
     // instantly submit
@@ -200,9 +269,24 @@ export default NodeSearch;
   align-items: center;
   gap: 10px;
   text-align: left;
+}
 
-  svg {
-    font-size: 2rem;
+.type {
+  font-size: 2rem;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+.name {
+  flex-grow: 1;
+}
+
+.id {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  .title {
+    flex-direction: column;
   }
 }
 
@@ -214,6 +298,22 @@ export default NodeSearch;
 
   span {
     width: 100%;
+  }
+}
+
+b {
+  font-weight: 600;
+}
+
+.nav-button {
+  width: 20px;
+  height: 30px;
+  color: $theme-dark;
+  border-radius: $rounded;
+  transition: box-shadow $fast;
+
+  &:hover {
+    box-shadow: $outline;
   }
 }
 </style>

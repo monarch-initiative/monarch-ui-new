@@ -80,6 +80,7 @@ import { Status } from "@/components/AppStatus";
 import { truncate, collapse } from "@/util/string";
 import { postFeedback } from "@/api/feedback";
 import AppStatus from "./AppStatus.vue";
+import { ApiError } from "@/api";
 
 // feedback form
 export default defineComponent({
@@ -167,10 +168,7 @@ export default defineComponent({
       ].join("\n");
 
       // loading...
-      this.status = {
-        code: "loading",
-        text: "Submitting feedback",
-      };
+      this.status = { code: "loading", text: "Submitting feedback" };
 
       try {
         // post feedback and get link of created issue
@@ -186,7 +184,7 @@ export default defineComponent({
         (this as unknown as { clearPersist: () => void })?.clearPersist();
       } catch (error) {
         // error...
-        this.status = { code: "error", text: (error as Error).message };
+        this.status = error as ApiError;
       }
     },
   },

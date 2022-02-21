@@ -11,6 +11,7 @@
       },
     ]"
     default="node-search"
+    @change="onChange"
   >
     <template #node-search>
       <NodeSearch />
@@ -29,6 +30,12 @@ export default defineComponent({
   components: {
     AppTabs,
     NodeSearch,
+  },
+  methods: {
+    // when tabs change, navigate to explore page
+    onChange() {
+      this.$router.push({ ...this.$route, name: "Explore" });
+    },
   },
 });
 </script>

@@ -34,11 +34,14 @@
       <span class="button-label">
         {{ startCase(name) }}
         <span class="button-more">
-          <template v-if="selected.length === 0">(none selected)</template>
+          <template v-if="selected.length === 0">none selected</template>
           <template v-else-if="selected.length === options.length">
-            (all selected)
+            all selected
           </template>
-          <template v-else>({{ selected.length }} selected)</template>
+          <template v-else-if="selected.length === 1">
+            {{ options[selected[0]]?.value }}
+          </template>
+          <template v-else>{{ selected.length }} selected</template>
         </span>
       </span>
       <AppIcon
@@ -313,8 +316,8 @@ export default defineComponent({
 }
 
 .button-more {
-  color: $gray;
-  font-size: 0.9rem;
+  color: $dark-gray;
+  margin-left: 10px;
 }
 
 .list {

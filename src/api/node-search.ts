@@ -1,8 +1,10 @@
 import { biolink, request, cleanError, ApiError } from ".";
 import { Options } from "./../components/AppSelectMulti.d";
 import { mapCategory } from "./categories";
+import { labelToId } from "./taxons";
 
 interface Response {
+  numFound: number;
   docs: Array<{
     id: string;
     category?: Array<string>;
@@ -25,20 +27,30 @@ interface Response {
 export const getNodeSearchResults = async (
   search = "",
   availableFilters: Record<string, Options> = {},
-  activeFilters: Record<string, Options> = {}
+  activeFilters: Record<string, Options> = {},
+  start = 0
 ): Promise<Result> => {
   try {
-    if (!search.trim()) throw new ApiError("Nothing searched", "warning");
+    // if nothing searched, return empty results (no empty error status)
+    if (!search.trim()) return { count: 0, results: [], facets: {} };
 
     // get facet params
-    let params: Record<string, string> = {};
+    let params: Record<string, string | number> = {};
     for (const [key, value] of Object.entries(activeFilters)) {
-      // transform filters into comma-separated lists for request
-      const string = (value || [])
-        .map(({ value }) => value)
-        .filter((value) => String(value).trim())
-        .sort()
-        .join(",");
+      // transform filter
+      let filter = (value || [])
+        // turn array of option objects into plain array of values
+        .map(({ value }) => String(value))
+        // remove empty
+        .filter((value) => value.trim());
+
+      // do special mapping
+      if (key === "taxon") filter = filter.map(labelToId);
+
+      // sort to make consistent for caching
+      filter.sort();
+      // join into comma-separated string list for request
+      const string = filter.join(",");
 
       // if all available filters are active
       const allActive =
@@ -55,6 +67,8 @@ export const getNodeSearchResults = async (
         "category:disease^5,category:phenotype^5,category:genotype^-10,category:variant^-35",
       prefix: "-OMIA",
       min_match: "67%",
+      rows: 10,
+      start,
     };
 
     // make query
@@ -62,7 +76,12 @@ export const getNodeSearchResults = async (
       `${biolink}/search/entity/${search}`,
       params
     );
-    const { docs = [], facet_counts = {}, highlighting = {} } = response;
+    const {
+      numFound: count = 0,
+      docs = [],
+      facet_counts = {},
+      highlighting = {},
+    } = response;
 
     // convert into desired result format
     const results = docs
@@ -79,6 +98,7 @@ export const getNodeSearchResults = async (
       }))
       .filter(({ category }) => category);
 
+    // empty error status
     if (!results.length) throw new ApiError("No results", "warning");
 
     // get facets for filters
@@ -90,13 +110,20 @@ export const getNodeSearchResults = async (
       }
     }
 
-    return { results, facets };
+    // rename "taxon_label" facet to "taxon" because that's what endpoint expects
+    if (facets.taxon_label) {
+      facets.taxon = facets.taxon_label;
+      delete facets.taxon_label;
+    }
+
+    return { count, results, facets };
   } catch (error) {
     throw cleanError(error);
   }
 };
 
 export interface Result {
+  count: number;
   results: Array<{
     id: string;
     altIds?: Array<string>;

@@ -85,6 +85,12 @@ button {
   cursor: pointer;
 }
 
+[disabled] {
+  pointer-events: none;
+  opacity: 0.35;
+  filter: saturate(0);
+}
+
 li {
   padding: 0;
   padding-left: 10px;
@@ -112,7 +118,7 @@ strong {
 // tooltips
 
 .tippy-box {
-  padding: 10px;
+  padding: 5px;
   font-size: 1rem;
 }
 

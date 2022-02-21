@@ -1,5 +1,5 @@
 {
-  "numFound": 63,
+  "numFound": 61,
   "docs": [
     {
       "id": "MONDO:0017310",
@@ -43,7 +43,7 @@
       ],
       "leaf": false,
       "_version_": 1696524895947587600,
-      "score": 82.62439
+      "score": 108.652695
     },
     {
       "id": "MONDO:0007947",
@@ -191,7 +191,7 @@
       ],
       "leaf": true,
       "_version_": 1696524903676641300,
-      "score": 82.10119
+      "score": 108.12949
     },
     {
       "id": "MONDO:0014831",
@@ -283,63 +283,7 @@
       ],
       "leaf": true,
       "_version_": 1696524889852215300,
-      "score": 77.39321
-    },
-    {
-      "id": "KEGG-ds:H00653",
-      "id_std": "KEGG-ds:H00653",
-      "id_eng": "KEGG-ds:H00653",
-      "id_kw": "KEGG-ds:H00653",
-      "prefix": "KEGG-ds",
-      "label": ["Marfan syndrome"],
-      "label_std": ["Marfan syndrome"],
-      "label_eng": ["Marfan syndrome"],
-      "label_kw": ["Marfan syndrome"],
-      "edges": 2,
-      "has_phenotype": false,
-      "leaf": true,
-      "_version_": 1696525583802957800,
-      "score": 77.23756
-    },
-    {
-      "id": "OMIA:000628",
-      "id_std": "OMIA:000628",
-      "id_eng": "OMIA:000628",
-      "id_kw": "OMIA:000628",
-      "prefix": "OMIA",
-      "label": ["Marfan syndrome"],
-      "label_std": ["Marfan syndrome"],
-      "label_eng": ["Marfan syndrome"],
-      "label_kw": ["Marfan syndrome"],
-      "edges": 5,
-      "has_phenotype": false,
-      "category": ["disease"],
-      "category_std": ["disease"],
-      "category_eng": ["disease"],
-      "category_kw": ["disease"],
-      "leaf": false,
-      "_version_": 1696524911063859200,
-      "score": 77.23756
-    },
-    {
-      "id": "OMIA:000628-9913",
-      "id_std": "OMIA:000628-9913",
-      "id_eng": "OMIA:000628-9913",
-      "id_kw": "OMIA:000628-9913",
-      "prefix": "OMIA",
-      "label": ["Marfan Syndrome"],
-      "label_std": ["Marfan Syndrome"],
-      "label_eng": ["Marfan Syndrome"],
-      "label_kw": ["Marfan Syndrome"],
-      "edges": 34,
-      "has_phenotype": true,
-      "category": ["disease"],
-      "category_std": ["disease"],
-      "category_eng": ["disease"],
-      "category_kw": ["disease"],
-      "leaf": true,
-      "_version_": 1696524911274623000,
-      "score": 77.23756
+      "score": 103.42152
     },
     {
       "id": "MONDO:0017309",
@@ -407,183 +351,7 @@
       ],
       "leaf": true,
       "_version_": 1696524895942344700,
-      "score": 72.11784
-    },
-    {
-      "id": "MONDO:0017308",
-      "id_std": "MONDO:0017308",
-      "id_eng": "MONDO:0017308",
-      "id_kw": "MONDO:0017308",
-      "prefix": "MONDO",
-      "label": ["obsolete Marfan syndrome type 2"],
-      "label_std": ["obsolete Marfan syndrome type 2"],
-      "label_eng": ["obsolete Marfan syndrome type 2"],
-      "label_kw": ["obsolete Marfan syndrome type 2"],
-      "definition": ["Hypothesized form of Marfan; dubious"],
-      "definition_std": ["Hypothesized form of Marfan; dubious"],
-      "definition_eng": ["Hypothesized form of Marfan; dubious"],
-      "definition_kw": ["Hypothesized form of Marfan; dubious"],
-      "edges": 9,
-      "has_phenotype": false,
-      "synonym": ["Marfan syndrome type II", "MFS2"],
-      "synonym_std": ["Marfan syndrome type II", "MFS2"],
-      "synonym_eng": ["Marfan syndrome type II", "MFS2"],
-      "synonym_kw": ["Marfan syndrome type II", "MFS2"],
-      "leaf": true,
-      "_version_": 1696524895942344700,
-      "score": 70.44626
-    },
-    {
-      "id": "MONDO:0044766",
-      "id_std": "MONDO:0044766",
-      "id_eng": "MONDO:0044766",
-      "id_kw": "MONDO:0044766",
-      "prefix": "MONDO",
-      "label": ["obsolete Marfan Syndrome 3"],
-      "label_std": ["obsolete Marfan Syndrome 3"],
-      "label_eng": ["obsolete Marfan Syndrome 3"],
-      "label_kw": ["obsolete Marfan Syndrome 3"],
-      "edges": 3,
-      "has_phenotype": false,
-      "synonym": ["MFS 3", "Marfan syndrome type 3"],
-      "synonym_std": ["MFS 3", "Marfan syndrome type 3"],
-      "synonym_eng": ["MFS 3", "Marfan syndrome type 3"],
-      "synonym_kw": ["MFS 3", "Marfan syndrome type 3"],
-      "leaf": true,
-      "_version_": 1696524860563390500,
-      "score": 66.6902
-    },
-    {
-      "id": "AQTLTrait:1530",
-      "id_std": "AQTLTrait:1530",
-      "id_eng": "AQTLTrait:1530",
-      "id_kw": "AQTLTrait:1530",
-      "prefix": "AQTLTrait",
-      "label": ["Marfan syndrome-like disease"],
-      "label_std": ["Marfan syndrome-like disease"],
-      "label_eng": ["Marfan syndrome-like disease"],
-      "label_kw": ["Marfan syndrome-like disease"],
-      "edges": 6,
-      "has_phenotype": false,
-      "leaf": true,
-      "_version_": 1696525065541124000,
-      "score": 63.9439
-    },
-    {
-      "id": "ORPHA:284973",
-      "id_std": "ORPHA:284973",
-      "id_eng": "ORPHA:284973",
-      "id_kw": "ORPHA:284973",
-      "prefix": "ORPHA",
-      "label": ["Marfan syndrome type 2"],
-      "label_std": ["Marfan syndrome type 2"],
-      "label_eng": ["Marfan syndrome type 2"],
-      "label_kw": ["Marfan syndrome type 2"],
-      "edges": 7,
-      "has_phenotype": false,
-      "equivalent_curie": ["ORDO:284973", "Orphanet:284973"],
-      "equivalent_curie_std": ["ORDO:284973", "Orphanet:284973"],
-      "equivalent_curie_eng": ["ORDO:284973", "Orphanet:284973"],
-      "equivalent_curie_kw": ["ORDO:284973", "Orphanet:284973"],
-      "leaf": true,
-      "_version_": 1696524773249515500,
-      "score": 63.9439
-    },
-    {
-      "id": "UMLS:C4016059",
-      "id_std": "UMLS:C4016059",
-      "id_eng": "UMLS:C4016059",
-      "id_kw": "UMLS:C4016059",
-      "prefix": "UMLS",
-      "label": ["Marfan syndrome, autosomal recessive"],
-      "label_std": ["Marfan syndrome, autosomal recessive"],
-      "label_eng": ["Marfan syndrome, autosomal recessive"],
-      "label_kw": ["Marfan syndrome, autosomal recessive"],
-      "edges": 4,
-      "has_phenotype": false,
-      "leaf": true,
-      "_version_": 1696526517102706700,
-      "score": 63.9439
-    },
-    {
-      "id": "UMLS:C4016055",
-      "id_std": "UMLS:C4016055",
-      "id_eng": "UMLS:C4016055",
-      "id_kw": "UMLS:C4016055",
-      "prefix": "UMLS",
-      "label": ["Marfan syndrome, atypical"],
-      "label_std": ["Marfan syndrome, atypical"],
-      "label_eng": ["Marfan syndrome, atypical"],
-      "label_kw": ["Marfan syndrome, atypical"],
-      "edges": 4,
-      "has_phenotype": false,
-      "leaf": true,
-      "_version_": 1696526539016896500,
-      "score": 63.9439
-    },
-    {
-      "id": "UMLS:C4016053",
-      "id_std": "UMLS:C4016053",
-      "id_eng": "UMLS:C4016053",
-      "id_kw": "UMLS:C4016053",
-      "prefix": "UMLS",
-      "label": ["Marfan syndrome, mild variable"],
-      "label_std": ["Marfan syndrome, mild variable"],
-      "label_eng": ["Marfan syndrome, mild variable"],
-      "label_kw": ["Marfan syndrome, mild variable"],
-      "edges": 2,
-      "has_phenotype": false,
-      "leaf": true,
-      "_version_": 1696526539303157800,
-      "score": 63.9439
-    },
-    {
-      "id": "UMLS:C4016052",
-      "id_std": "UMLS:C4016052",
-      "id_eng": "UMLS:C4016052",
-      "id_kw": "UMLS:C4016052",
-      "prefix": "UMLS",
-      "label": ["Marfan syndrome, severe classic"],
-      "label_std": ["Marfan syndrome, severe classic"],
-      "label_eng": ["Marfan syndrome, severe classic"],
-      "label_kw": ["Marfan syndrome, severe classic"],
-      "edges": 2,
-      "has_phenotype": false,
-      "leaf": true,
-      "_version_": 1696526198315679700,
-      "score": 63.9439
-    },
-    {
-      "id": "MONDO:0018917",
-      "id_std": "MONDO:0018917",
-      "id_eng": "MONDO:0018917",
-      "id_kw": "MONDO:0018917",
-      "prefix": "MONDO",
-      "label": ["obsolete Marfan syndrome"],
-      "label_std": ["obsolete Marfan syndrome"],
-      "label_eng": ["obsolete Marfan syndrome"],
-      "label_kw": ["obsolete Marfan syndrome"],
-      "edges": 2,
-      "has_phenotype": false,
-      "leaf": true,
-      "_version_": 1696524899458220000,
-      "score": 63.9439
-    },
-    {
-      "id": "UMLS:C4016056",
-      "id_std": "UMLS:C4016056",
-      "id_eng": "UMLS:C4016056",
-      "id_kw": "UMLS:C4016056",
-      "prefix": "UMLS",
-      "label": ["Marfan syndrome, mild"],
-      "label_std": ["Marfan syndrome, mild"],
-      "label_eng": ["Marfan syndrome, mild"],
-      "label_kw": ["Marfan syndrome, mild"],
-      "edges": 2,
-      "has_phenotype": false,
-      "leaf": true,
-      "_version_": 1696526547775651800,
-      "score": 63.9439
+      "score": 98.14615
     },
     {
       "id": "MONDO:0007948",
@@ -647,7 +415,7 @@
       ],
       "leaf": true,
       "_version_": 1696524903678738400,
-      "score": 62.485897
+      "score": 88.514206
     },
     {
       "id": "MONDO:0009120",
@@ -739,32 +507,362 @@
       ],
       "leaf": true,
       "_version_": 1696524908805226500,
-      "score": 62.485897
+      "score": 88.514206
     },
     {
-      "id": "CLO:0003279",
-      "id_std": "CLO:0003279",
-      "id_eng": "CLO:0003279",
-      "id_kw": "CLO:0003279",
-      "prefix": "CLO",
-      "label": ["FIB-MARFAN1 cell"],
-      "label_std": ["FIB-MARFAN1 cell"],
-      "label_eng": ["FIB-MARFAN1 cell"],
-      "label_kw": ["FIB-MARFAN1 cell"],
-      "edges": 2,
-      "has_phenotype": false,
-      "category": ["anatomical entity", "cell"],
-      "category_std": ["anatomical entity", "cell"],
-      "category_eng": ["anatomical entity", "cell"],
-      "category_kw": ["anatomical entity", "cell"],
+      "id": "MONDO:0013574",
+      "id_std": "MONDO:0013574",
+      "id_eng": "MONDO:0013574",
+      "id_kw": "MONDO:0013574",
+      "prefix": "MONDO",
+      "label": ["cutis laxa - Marfanoid syndrome"],
+      "label_std": ["cutis laxa - Marfanoid syndrome"],
+      "label_eng": ["cutis laxa - Marfanoid syndrome"],
+      "label_kw": ["cutis laxa - Marfanoid syndrome"],
+      "edges": 113,
+      "has_phenotype": true,
+      "category": ["disease"],
+      "category_std": ["disease"],
+      "category_eng": ["disease"],
+      "category_kw": ["disease"],
+      "synonym": [
+        "cutis laxa, neonatal, with MARFANOID phenotype",
+        "CUTIS LAXA, NEONATAL, WITH MARFANOID PHENOTYPE",
+        "cutis laxa - Marfanoid syndrome",
+        "Cutis Laxa-Marfanoid Syndrome"
+      ],
+      "synonym_std": [
+        "cutis laxa, neonatal, with MARFANOID phenotype",
+        "CUTIS LAXA, NEONATAL, WITH MARFANOID PHENOTYPE",
+        "cutis laxa - Marfanoid syndrome",
+        "Cutis Laxa-Marfanoid Syndrome"
+      ],
+      "synonym_eng": [
+        "cutis laxa, neonatal, with MARFANOID phenotype",
+        "CUTIS LAXA, NEONATAL, WITH MARFANOID PHENOTYPE",
+        "cutis laxa - Marfanoid syndrome",
+        "Cutis Laxa-Marfanoid Syndrome"
+      ],
+      "synonym_kw": [
+        "cutis laxa, neonatal, with MARFANOID phenotype",
+        "CUTIS LAXA, NEONATAL, WITH MARFANOID PHENOTYPE",
+        "cutis laxa - Marfanoid syndrome",
+        "Cutis Laxa-Marfanoid Syndrome"
+      ],
+      "equivalent_curie": [
+        "SCTID:254221009",
+        "ORPHA:171719",
+        "ORDO:171719",
+        "Orphanet:171719",
+        "OMIM:614100",
+        "MIM:614100",
+        "MESH:C563639",
+        "UMLS:C0432335"
+      ],
+      "equivalent_curie_std": [
+        "SCTID:254221009",
+        "ORPHA:171719",
+        "ORDO:171719",
+        "Orphanet:171719",
+        "OMIM:614100",
+        "MIM:614100",
+        "MESH:C563639",
+        "UMLS:C0432335"
+      ],
+      "equivalent_curie_eng": [
+        "SCTID:254221009",
+        "ORPHA:171719",
+        "ORDO:171719",
+        "Orphanet:171719",
+        "OMIM:614100",
+        "MIM:614100",
+        "MESH:C563639",
+        "UMLS:C0432335"
+      ],
+      "equivalent_curie_kw": [
+        "SCTID:254221009",
+        "ORPHA:171719",
+        "ORDO:171719",
+        "Orphanet:171719",
+        "OMIM:614100",
+        "MIM:614100",
+        "MESH:C563639",
+        "UMLS:C0432335"
+      ],
       "leaf": true,
-      "_version_": 1696524878145912800,
-      "score": 62.485897
+      "_version_": 1696524887435247600,
+      "score": 88.514206
+    },
+    {
+      "id": "MONDO:0009565",
+      "id_std": "MONDO:0009565",
+      "id_eng": "MONDO:0009565",
+      "id_kw": "MONDO:0009565",
+      "prefix": "MONDO",
+      "label": ["microcephaly-glomerulonephritis-marfanoid habitus syndrome"],
+      "label_std": [
+        "microcephaly-glomerulonephritis-marfanoid habitus syndrome"
+      ],
+      "label_eng": [
+        "microcephaly-glomerulonephritis-marfanoid habitus syndrome"
+      ],
+      "label_kw": [
+        "microcephaly-glomerulonephritis-marfanoid habitus syndrome"
+      ],
+      "definition": [
+        "This syndrome is characterised by intellectual deficit, marfanoid habitus, microcephaly, and glomerulonephritis."
+      ],
+      "definition_std": [
+        "This syndrome is characterised by intellectual deficit, marfanoid habitus, microcephaly, and glomerulonephritis."
+      ],
+      "definition_eng": [
+        "This syndrome is characterised by intellectual deficit, marfanoid habitus, microcephaly, and glomerulonephritis."
+      ],
+      "definition_kw": [
+        "This syndrome is characterised by intellectual deficit, marfanoid habitus, microcephaly, and glomerulonephritis."
+      ],
+      "edges": 163,
+      "has_phenotype": true,
+      "category": ["disease"],
+      "category_std": ["disease"],
+      "category_eng": ["disease"],
+      "category_kw": ["disease"],
+      "synonym": [
+        "MARFANOID HABITUS WITH MICROCEPHALY AND GLOMERULONEPHRITIS",
+        "MARFANOID habitus with microcephaly and glomerulonephritis",
+        "microcephaly glomerulonephritis Marfanoid habitus"
+      ],
+      "synonym_std": [
+        "MARFANOID HABITUS WITH MICROCEPHALY AND GLOMERULONEPHRITIS",
+        "MARFANOID habitus with microcephaly and glomerulonephritis",
+        "microcephaly glomerulonephritis Marfanoid habitus"
+      ],
+      "synonym_eng": [
+        "MARFANOID HABITUS WITH MICROCEPHALY AND GLOMERULONEPHRITIS",
+        "MARFANOID habitus with microcephaly and glomerulonephritis",
+        "microcephaly glomerulonephritis Marfanoid habitus"
+      ],
+      "synonym_kw": [
+        "MARFANOID HABITUS WITH MICROCEPHALY AND GLOMERULONEPHRITIS",
+        "MARFANOID habitus with microcephaly and glomerulonephritis",
+        "microcephaly glomerulonephritis Marfanoid habitus"
+      ],
+      "equivalent_curie": [
+        "UMLS:C1855348",
+        "OMIM:248760",
+        "MIM:248760",
+        "GARD:0003615",
+        "ORPHA:2172",
+        "ORDO:2172",
+        "Orphanet:2172",
+        "MESH:C565411"
+      ],
+      "equivalent_curie_std": [
+        "UMLS:C1855348",
+        "OMIM:248760",
+        "MIM:248760",
+        "GARD:0003615",
+        "ORPHA:2172",
+        "ORDO:2172",
+        "Orphanet:2172",
+        "MESH:C565411"
+      ],
+      "equivalent_curie_eng": [
+        "UMLS:C1855348",
+        "OMIM:248760",
+        "MIM:248760",
+        "GARD:0003615",
+        "ORPHA:2172",
+        "ORDO:2172",
+        "Orphanet:2172",
+        "MESH:C565411"
+      ],
+      "equivalent_curie_kw": [
+        "UMLS:C1855348",
+        "OMIM:248760",
+        "MIM:248760",
+        "GARD:0003615",
+        "ORPHA:2172",
+        "ORDO:2172",
+        "Orphanet:2172",
+        "MESH:C565411"
+      ],
+      "leaf": true,
+      "_version_": 1696524908473876500,
+      "score": 84.862335
+    },
+    {
+      "id": "MONDO:0012171",
+      "id_std": "MONDO:0012171",
+      "id_eng": "MONDO:0012171",
+      "id_kw": "MONDO:0012171",
+      "prefix": "MONDO",
+      "label": ["marfanoid habitus with situs inversus"],
+      "label_std": ["marfanoid habitus with situs inversus"],
+      "label_eng": ["marfanoid habitus with situs inversus"],
+      "label_kw": ["marfanoid habitus with situs inversus"],
+      "edges": 108,
+      "has_phenotype": true,
+      "category": ["disease"],
+      "category_std": ["disease"],
+      "category_eng": ["disease"],
+      "category_kw": ["disease"],
+      "synonym": [
+        "MARFANOID HABITUS WITH SITUS INVERSUS",
+        "marfanoid habitus with situs inversus"
+      ],
+      "synonym_std": [
+        "MARFANOID HABITUS WITH SITUS INVERSUS",
+        "marfanoid habitus with situs inversus"
+      ],
+      "synonym_eng": [
+        "MARFANOID HABITUS WITH SITUS INVERSUS",
+        "marfanoid habitus with situs inversus"
+      ],
+      "synonym_kw": [
+        "MARFANOID HABITUS WITH SITUS INVERSUS",
+        "marfanoid habitus with situs inversus"
+      ],
+      "equivalent_curie": [
+        "MESH:C563814",
+        "UMLS:C1836994",
+        "OMIM:609008",
+        "MIM:609008"
+      ],
+      "equivalent_curie_std": [
+        "MESH:C563814",
+        "UMLS:C1836994",
+        "OMIM:609008",
+        "MIM:609008"
+      ],
+      "equivalent_curie_eng": [
+        "MESH:C563814",
+        "UMLS:C1836994",
+        "OMIM:609008",
+        "MIM:609008"
+      ],
+      "equivalent_curie_kw": [
+        "MESH:C563814",
+        "UMLS:C1836994",
+        "OMIM:609008",
+        "MIM:609008"
+      ],
+      "leaf": true,
+      "_version_": 1696524884378648600,
+      "score": 84.862335
+    },
+    {
+      "id": "MONDO:0009566",
+      "id_std": "MONDO:0009566",
+      "id_eng": "MONDO:0009566",
+      "id_kw": "MONDO:0009566",
+      "prefix": "MONDO",
+      "label": [
+        "marfanoid habitus-autosomal recessive intellectual disability syndrome"
+      ],
+      "label_std": [
+        "marfanoid habitus-autosomal recessive intellectual disability syndrome"
+      ],
+      "label_eng": [
+        "marfanoid habitus-autosomal recessive intellectual disability syndrome"
+      ],
+      "label_kw": [
+        "marfanoid habitus-autosomal recessive intellectual disability syndrome"
+      ],
+      "definition": [
+        "Marfanoid habitus B intellectual deficit, autosomal recessive is a very rare multiple congenital anomalies syndrome described in four sibs and characterized by intellectual deficit, flat face and some skeletelal features of Marfan syndrome such as tall stature, dolichostenomelia, arm span larger than height, arachnodactyly of hands and feet, little subcutaneous fat, muscle hypotonia and intellectual deficit."
+      ],
+      "definition_std": [
+        "Marfanoid habitus B intellectual deficit, autosomal recessive is a very rare multiple congenital anomalies syndrome described in four sibs and characterized by intellectual deficit, flat face and some skeletelal features of Marfan syndrome such as tall stature, dolichostenomelia, arm span larger than height, arachnodactyly of hands and feet, little subcutaneous fat, muscle hypotonia and intellectual deficit."
+      ],
+      "definition_eng": [
+        "Marfanoid habitus B intellectual deficit, autosomal recessive is a very rare multiple congenital anomalies syndrome described in four sibs and characterized by intellectual deficit, flat face and some skeletelal features of Marfan syndrome such as tall stature, dolichostenomelia, arm span larger than height, arachnodactyly of hands and feet, little subcutaneous fat, muscle hypotonia and intellectual deficit."
+      ],
+      "definition_kw": [
+        "Marfanoid habitus B intellectual deficit, autosomal recessive is a very rare multiple congenital anomalies syndrome described in four sibs and characterized by intellectual deficit, flat face and some skeletelal features of Marfan syndrome such as tall stature, dolichostenomelia, arm span larger than height, arachnodactyly of hands and feet, little subcutaneous fat, muscle hypotonia and intellectual deficit."
+      ],
+      "edges": 249,
+      "has_phenotype": true,
+      "category": ["disease"],
+      "category_std": ["disease"],
+      "category_eng": ["disease"],
+      "category_kw": ["disease"],
+      "synonym": [
+        "MARFANOID MENTAL RETARDATION SYNDROME, AUTOSOMAL",
+        "MARFANOID mental retardation syndrome, autosomal",
+        "Marfanoid intellectual disability syndrome autosomal",
+        "Marfanoid mental retardation syndrome autosomal",
+        "MARFANOID intellectual disability syndrome, autosomal"
+      ],
+      "synonym_std": [
+        "MARFANOID MENTAL RETARDATION SYNDROME, AUTOSOMAL",
+        "MARFANOID mental retardation syndrome, autosomal",
+        "Marfanoid intellectual disability syndrome autosomal",
+        "Marfanoid mental retardation syndrome autosomal",
+        "MARFANOID intellectual disability syndrome, autosomal"
+      ],
+      "synonym_eng": [
+        "MARFANOID MENTAL RETARDATION SYNDROME, AUTOSOMAL",
+        "MARFANOID mental retardation syndrome, autosomal",
+        "Marfanoid intellectual disability syndrome autosomal",
+        "Marfanoid mental retardation syndrome autosomal",
+        "MARFANOID intellectual disability syndrome, autosomal"
+      ],
+      "synonym_kw": [
+        "MARFANOID MENTAL RETARDATION SYNDROME, AUTOSOMAL",
+        "MARFANOID mental retardation syndrome, autosomal",
+        "Marfanoid intellectual disability syndrome autosomal",
+        "Marfanoid mental retardation syndrome autosomal",
+        "MARFANOID intellectual disability syndrome, autosomal"
+      ],
+      "equivalent_curie": [
+        "ORPHA:2463",
+        "ORDO:2463",
+        "Orphanet:2463",
+        "MESH:C565410",
+        "OMIM:248770",
+        "MIM:248770",
+        "UMLS:C1855347",
+        "GARD:0003388"
+      ],
+      "equivalent_curie_std": [
+        "ORPHA:2463",
+        "ORDO:2463",
+        "Orphanet:2463",
+        "MESH:C565410",
+        "OMIM:248770",
+        "MIM:248770",
+        "UMLS:C1855347",
+        "GARD:0003388"
+      ],
+      "equivalent_curie_eng": [
+        "ORPHA:2463",
+        "ORDO:2463",
+        "Orphanet:2463",
+        "MESH:C565410",
+        "OMIM:248770",
+        "MIM:248770",
+        "UMLS:C1855347",
+        "GARD:0003388"
+      ],
+      "equivalent_curie_kw": [
+        "ORPHA:2463",
+        "ORDO:2463",
+        "Orphanet:2463",
+        "MESH:C565410",
+        "OMIM:248770",
+        "MIM:248770",
+        "UMLS:C1855347",
+        "GARD:0003388"
+      ],
+      "leaf": true,
+      "_version_": 1696524908458147800,
+      "score": 80.002235
     }
   ],
   "facet_counts": {
     "category": {
-      "disease": 27,
+      "disease": 25,
       "publication": 9,
       "anatomical entity": 5,
       "cell": 5,
@@ -794,74 +892,9 @@
       "match": "progeroid and marfanoid aspect-lipodystrophy syndrome",
       "has_highlight": true
     },
-    "KEGG-ds:H00653": {
-      "highlight": "<em class=\"hilite\">Marfan</em> syndrome",
-      "match": "Marfan syndrome",
-      "has_highlight": true
-    },
-    "OMIA:000628": {
-      "highlight": "<em class=\"hilite\">Marfan</em> syndrome",
-      "match": "Marfan syndrome",
-      "has_highlight": true
-    },
-    "OMIA:000628-9913": {
-      "highlight": "<em class=\"hilite\">Marfan</em> Syndrome",
-      "match": "Marfan Syndrome",
-      "has_highlight": true
-    },
     "MONDO:0017309": {
       "highlight": "neonatal <em class=\"hilite\">Marfan</em> syndrome",
       "match": "neonatal Marfan syndrome",
-      "has_highlight": true
-    },
-    "MONDO:0017308": {
-      "highlight": "obsolete <em class=\"hilite\">Marfan</em> syndrome type 2",
-      "match": "obsolete Marfan syndrome type 2",
-      "has_highlight": true
-    },
-    "MONDO:0044766": {
-      "highlight": "obsolete <em class=\"hilite\">Marfan</em> Syndrome 3",
-      "match": "obsolete Marfan Syndrome 3",
-      "has_highlight": true
-    },
-    "AQTLTrait:1530": {
-      "highlight": "<em class=\"hilite\">Marfan</em> syndrome-like disease",
-      "match": "Marfan syndrome-like disease",
-      "has_highlight": true
-    },
-    "ORPHA:284973": {
-      "highlight": "<em class=\"hilite\">Marfan</em> syndrome type 2",
-      "match": "Marfan syndrome type 2",
-      "has_highlight": true
-    },
-    "UMLS:C4016059": {
-      "highlight": "<em class=\"hilite\">Marfan</em> syndrome, autosomal recessive",
-      "match": "Marfan syndrome, autosomal recessive",
-      "has_highlight": true
-    },
-    "UMLS:C4016055": {
-      "highlight": "<em class=\"hilite\">Marfan</em> syndrome, atypical",
-      "match": "Marfan syndrome, atypical",
-      "has_highlight": true
-    },
-    "UMLS:C4016053": {
-      "highlight": "<em class=\"hilite\">Marfan</em> syndrome, mild variable",
-      "match": "Marfan syndrome, mild variable",
-      "has_highlight": true
-    },
-    "UMLS:C4016052": {
-      "highlight": "<em class=\"hilite\">Marfan</em> syndrome, severe classic",
-      "match": "Marfan syndrome, severe classic",
-      "has_highlight": true
-    },
-    "MONDO:0018917": {
-      "highlight": "obsolete <em class=\"hilite\">Marfan</em> syndrome",
-      "match": "obsolete Marfan syndrome",
-      "has_highlight": true
-    },
-    "UMLS:C4016056": {
-      "highlight": "<em class=\"hilite\">Marfan</em> syndrome, mild",
-      "match": "Marfan syndrome, mild",
       "has_highlight": true
     },
     "MONDO:0007948": {
@@ -874,9 +907,24 @@
       "match": "marfanoid syndrome, De Silva type",
       "has_highlight": true
     },
-    "CLO:0003279": {
-      "highlight": "FIB-<em class=\"hilite\">MARFAN1</em> cell",
-      "match": "FIB-MARFAN1 cell",
+    "MONDO:0013574": {
+      "highlight": "cutis laxa - <em class=\"hilite\">Marfanoid</em> syndrome",
+      "match": "cutis laxa - Marfanoid syndrome",
+      "has_highlight": true
+    },
+    "MONDO:0009565": {
+      "highlight": "microcephaly-glomerulonephritis-<em class=\"hilite\">marfanoid</em> habitus syndrome",
+      "match": "microcephaly-glomerulonephritis-marfanoid habitus syndrome",
+      "has_highlight": true
+    },
+    "MONDO:0012171": {
+      "highlight": "<em class=\"hilite\">marfanoid</em> habitus with situs inversus",
+      "match": "marfanoid habitus with situs inversus",
+      "has_highlight": true
+    },
+    "MONDO:0009566": {
+      "highlight": "<em class=\"hilite\">marfanoid</em> habitus-autosomal recessive intellectual disability syndrome",
+      "match": "marfanoid habitus-autosomal recessive intellectual disability syndrome",
       "has_highlight": true
     }
   }
