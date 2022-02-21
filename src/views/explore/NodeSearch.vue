@@ -9,6 +9,20 @@
     @focus="onFocus"
   />
 
+  <!-- examples -->
+  <template v-if="!results.length && !status">
+    <AppFlex>
+      <span>Try:</span>
+      <AppButton
+        v-for="(search, index) of examples"
+        :key="index"
+        :text="search"
+        design="small"
+        @click="doExample(search)"
+      />
+    </AppFlex>
+  </template>
+
   <template v-if="!home">
     <!-- filters -->
     <AppFlex v-if="Object.keys(availableFilters).length">
@@ -27,7 +41,6 @@
     <AppStatus v-if="status" ref="status" :status="status" />
 
     <!-- results -->
-
     <AppFlex
       v-for="(result, index) in results"
       :key="index"
@@ -41,7 +54,7 @@
           class="type"
           v-tooltip="`Category: ${capitalize(result.category)}`"
         />
-        <AppLink :to="`/explore/`" class="name">
+        <AppLink :to="`/${result.category}/${result.id}`" class="name">
           <span v-html="result.highlight"></span>
         </AppLink>
         <AppButton
@@ -146,8 +159,8 @@ const getResults = async function (
     // clear results and filters
     this.results = [];
     if (fresh) {
-      this.availableFilters = { ...defaultFilters };
-      this.activeFilters = { ...defaultFilters };
+      this.availableFilters = {};
+      this.activeFilters = {};
     }
   }
 };
@@ -155,15 +168,19 @@ const getResults = async function (
 // debounced version of push
 const debouncedGetResults = debounce(getResults, 1000);
 
-const defaultFilters = {
-  category: [
-    { value: "gene" },
-    { value: "disease" },
-    { value: "phenotype" },
-    { value: "genotype" },
-    { value: "variant" },
-  ],
-};
+// example searches
+const examples = ["Marfan Syndrome", "Multicystic Kidney Dysplasia", "SSH"];
+
+// default filters to show before anything typed in
+// const defaultFilters = {
+//   category: [
+//     { value: "gene" },
+//     { value: "disease" },
+//     { value: "phenotype" },
+//     { value: "genotype" },
+//     { value: "variant" },
+//   ],
+// };
 
 // node search explore mode
 const NodeSearch = defineComponent({
@@ -187,8 +204,9 @@ const NodeSearch = defineComponent({
       // status of query
       status: null as Status | null,
       // filters (facets) for search
-      availableFilters: { ...defaultFilters } as Record<string, Options>,
-      activeFilters: { ...defaultFilters } as Record<string, Options>,
+      availableFilters: {} as Record<string, Options>,
+      activeFilters: {} as Record<string, Options>,
+      examples,
     };
   },
   watch: {
@@ -227,6 +245,11 @@ const NodeSearch = defineComponent({
     onFilterChange() {
       this.page = 0;
       debouncedGetResults.call(this, false, false);
+    },
+    // enter in clicked example and search
+    doExample(search: string) {
+      this.search = search;
+      getResults.call(this, true, true);
     },
     kebabCase,
     capitalize,

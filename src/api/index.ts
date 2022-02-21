@@ -21,7 +21,7 @@ export const request = async <T = unknown>(
   const url = path + paramsString;
 
   // make request
-  console.info("Making request", url);
+  console.info("Making request", url.replaceAll(" ", "%20"));
   const response = await fetch(url, options);
   if (!response.ok)
     throw new ApiError(`Response not OK - ${response.statusText}`);

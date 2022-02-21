@@ -4,7 +4,9 @@ import {
   createWebHistory,
   RouteRecordRaw,
   RouterScrollBehavior,
+  NavigationGuard,
 } from "vue-router";
+import { lowerCase, startCase } from "lodash";
 import { hideAll } from "tippy.js";
 import Home from "@/views/Home.vue";
 import Explore from "@/views/explore/Explore.vue";
@@ -17,11 +19,12 @@ import Publications from "@/views/about/Publications.vue";
 import Terms from "@/views/about/Terms.vue";
 import Help from "@/views/help/Help.vue";
 import Feedback from "@/views/help/Feedback.vue";
+import Node from "@/views/node/Node.vue";
 import Testbed from "@/views/Testbed.vue";
 import { sleep } from "@/util/debug";
-import { lowerCase } from "lodash";
+import { categories } from "@/api/categories";
 
-// handle redirect from 404
+// handle redirects on 404
 const redirect404 = (): string | void => {
   // look for redirect in session storage (saved from 404 page)
   const redirect = window.sessionStorage.redirect;
@@ -30,6 +33,21 @@ const redirect404 = (): string | void => {
     return redirect;
   }
 };
+
+// handle redirects on node page
+const redirectNode: NavigationGuard = (to) => {
+  // legacy reroute for referral traffic from GARD
+  // https://github.com/monarch-initiative/monarch-ui/issues/325
+  if (to.fullPath.startsWith("/disease/Orphanet:")) {
+    const id = Array.isArray(to.params.id) ? to.params.id[0] : to.params.id;
+    return { path: `/disease/${id.replace("Orphanet", "ORPHA")}` };
+  }
+};
+
+// test pages to only include during development
+let testRoutes: Array<RouteRecordRaw> = [];
+if (process.env.NODE_ENV === "development")
+  testRoutes = [{ path: "/testbed", name: "Testbed", component: Testbed }];
 
 // list of routes and corresponding components
 // CHECK PUBLIC/SITEMAP.XML AND KEEP IN SYNC
@@ -95,16 +113,15 @@ export const routes: Array<RouteRecordRaw> = [
     component: Feedback,
   },
 
-  // test routes (pages to only include during development)
-  ...(process.env.NODE_ENV === "development"
-    ? [
-        {
-          path: "/testbed",
-          name: "Testbed",
-          component: Testbed,
-        },
-      ]
-    : []),
+  // node pages
+  ...categories.map((category) => ({
+    path: `/${category}/:id`,
+    name: `Node ${startCase(category)}`,
+    component: Node,
+    beforeEnter: redirectNode,
+  })),
+
+  ...testRoutes,
 ];
 
 const scrollBehavior: RouterScrollBehavior = async (
