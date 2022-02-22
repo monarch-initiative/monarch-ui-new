@@ -9,7 +9,7 @@
     </p>
     <p>
       <template v-for="(group, index) in team" :key="index">
-        <a :href="'#' + toKebabCase(group.name)">{{ group.name }}</a>
+        <a :href="'#' + kebabCase(group.name)">{{ group.name }}</a>
         <span v-if="index !== team.length - 1"> · </span>
       </template>
     </p>
@@ -110,10 +110,7 @@ export default defineComponent({
         return false;
       }
     },
-    // expose toKebabCase
-    toKebabCase(name: string) {
-      return kebabCase(name);
-    },
+    kebabCase,
   },
 });
 </script>

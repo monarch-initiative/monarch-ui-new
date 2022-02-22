@@ -5,8 +5,11 @@ export const biolink = "https://api.monarchinitiative.org/api";
 
 // generic fetch request wrapper
 export const request = async <T = unknown>(
+  // request url
   path = "",
+  // url params. comma-separated values expand to repeated keys.
   params = {},
+  // fetch options
   options = {}
 ): Promise<T> => {
   // get string of url parameters/options
@@ -14,10 +17,11 @@ export const request = async <T = unknown>(
   for (const [key, value] of Object.entries(params))
     for (const part of String(value).split(",")) paramsObject.append(key, part);
 
+  // sort params for consistency
   paramsObject.sort();
-  const paramsString = "?" + paramsObject.toString();
 
   // assemble url to query
+  const paramsString = "?" + paramsObject.toString();
   const url = path + paramsString;
 
   // make request

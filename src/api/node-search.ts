@@ -47,8 +47,6 @@ export const getNodeSearchResults = async (
       // do special mapping
       if (key === "taxon") filter = filter.map(labelToId);
 
-      // sort to make consistent for caching
-      filter.sort();
       // join into comma-separated string list for request
       const string = filter.join(",");
 
