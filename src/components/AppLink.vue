@@ -1,5 +1,5 @@
 <template>
-  <span v-if="!to" role="link">
+  <span v-if="!to">
     <!-- placeholder if no url provided -->
     <slot />
   </span>

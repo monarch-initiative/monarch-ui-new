@@ -6,7 +6,7 @@ it("Datasets and ontologies populate", () => {
   cy.contains("FlyBase").as("button");
 
   // open accordion
-  cy.get("@button").click();
+  cy.get("@button").trigger("click");
 
   // get expanded content
   cy.get("button[aria-expanded='true'] + .content").as("content");

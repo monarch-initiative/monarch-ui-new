@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, PropType } from "vue";
+import { defineComponent, PropType } from "vue";
 import { uniqueId } from "lodash";
 import { wrap } from "@/util/math";
 
