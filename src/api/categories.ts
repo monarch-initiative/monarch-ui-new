@@ -1,3 +1,10 @@
+// COMMENT OUT THIS CODE UNTIL THIS ISSUE IS RESOLVED:
+
+/* 
+
+// this is a simplified (but hopefully equivalent) port of the code in:
+// https://github.com/monarch-initiative/monarch-ui/blob/master/src/lib/category-map.js
+
 // manually map category parts
 const map: Record<string, Category> = {
   gene: "gene",
@@ -27,6 +34,10 @@ export const mapCategory = (category: Array<string>): Category => {
   return mappedCategory[0] || "unknown";
 };
 
+type Category = typeof categories[number];
+
+*/
+
 // categories that app supports
 export const categories = [
   "unknown",
@@ -47,5 +58,3 @@ export const categories = [
   "publication",
   "variant",
 ] as const;
-
-type Category = typeof categories[number];

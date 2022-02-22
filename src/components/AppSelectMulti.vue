@@ -93,7 +93,7 @@
           :aria-selected="selected.includes(index)"
           :data-selected="selected.includes(index)"
           :data-highlighted="index === highlighted"
-          @click="() => toggleSelect(index)"
+          @click="(event) => toggleSelect(index, event.shiftKey)"
           @mouseenter="highlighted = index"
           @mousedown.prevent=""
           @focusin="() => null"
@@ -231,7 +231,7 @@ export default defineComponent({
       return this.options.filter((_, index) => this.selected.includes(index));
     },
     // select or deselect option(s)
-    toggleSelect(index = -1) {
+    toggleSelect(index = -1, shift = false) {
       // toggle all
       if (index === -1) {
         if (this.allSelected) this.selected = [];
@@ -242,9 +242,13 @@ export default defineComponent({
       }
       // toggle one
       else {
-        if (this.selected.includes(index))
-          this.selected = this.selected.filter((value) => value !== index);
-        else this.selected.push(index);
+        if (shift) {
+          this.selected = [index];
+        } else {
+          if (this.selected.includes(index))
+            this.selected = this.selected.filter((value) => value !== index);
+          else this.selected.push(index);
+        }
       }
       // keep in order for easy comparison
       this.selected.sort();

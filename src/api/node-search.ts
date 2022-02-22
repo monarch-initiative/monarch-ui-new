@@ -1,7 +1,5 @@
 import { biolink, request, cleanError, ApiError } from ".";
 import { Options } from "./../components/AppSelectMulti.d";
-import { mapCategory } from "./categories";
-import { labelToId } from "./taxons";
 
 interface Response {
   numFound: number;
@@ -31,38 +29,35 @@ export const getNodeSearchResults = async (
   start = 0
 ): Promise<Result> => {
   try {
-    // if nothing searched, return empty results (no empty error status)
-    if (!search.trim()) return { count: 0, results: [], facets: {} };
+    // if nothing searched, return empty
+    if (!search.trim()) throw new ApiError("No results", "warning");
 
     // get facet params
     let params: Record<string, string | number> = {};
     for (const [key, value] of Object.entries(activeFilters)) {
       // transform filter
-      let filter = (value || [])
+      const filter = (value || [])
         // turn array of option objects into plain array of values
         .map(({ value }) => String(value))
         // remove empty
         .filter((value) => value.trim());
 
-      // do special mapping
-      if (key === "taxon") filter = filter.map(labelToId);
-
       // join into comma-separated string list for request
-      const string = filter.join(",");
+      const filterString = filter.join(",");
 
       // if all available filters are active
       const allActive =
         activeFilters[key].length === availableFilters[key].length;
 
       // ignore filter if value "empty" (none active) or "full" (all active)
-      if (string && !allActive) params[key] = string;
+      if (filterString && !allActive) params[key] = filterString;
     }
 
     // other params
     params = {
       ...params,
       boost_q:
-        "category:disease^5,category:phenotype^5,category:genotype^-10,category:variant^-35",
+        "category:disease^5,category:phenotype^5,category:gene^5,category:genotype^-10,category:variant^-35",
       prefix: "-OMIA",
       min_match: "67%",
       rows: 10,
@@ -88,7 +83,7 @@ export const getNodeSearchResults = async (
         altIds: doc.equivalent_curie || [],
         name: (doc.label || [])[0] || "",
         altNames: (doc.label || []).slice(1),
-        category: mapCategory(doc.category || []),
+        category: (doc.category || [])[0] || "",
         description: (doc.definition || [])[0] || "",
         score: doc.score || 0,
         prefix: doc.prefix || "",

@@ -38,7 +38,7 @@
     </AppFlex>
 
     <!-- status -->
-    <AppStatus v-if="status" ref="status" :status="status" />
+    <AppStatus v-if="status && search" ref="status" :status="status" />
 
     <!-- results -->
     <AppFlex
@@ -122,11 +122,6 @@ const getResults = async function (
 ) {
   // cancel any pending debounced calls
   debouncedGetResults.cancel();
-
-  // prevent running query if results already match current search text
-  if (this.search === this.originalSearch) return;
-  // should really only be needed in one case: user focuses box, types, waits for
-  // debounced search to run, submits box to run search instantly (again)
 
   // push permanent history entry
   if (history) {
@@ -247,7 +242,9 @@ const NodeSearch = defineComponent({
     // when user "submits" text box
     onChange() {
       this.page = 0;
-      getResults.call(this, true, true);
+      // prevent running query if results already match current search text
+      if (this.search !== this.originalSearch)
+        getResults.call(this, true, true);
     },
     // when user changes active filters
     onFilterChange() {
