@@ -123,6 +123,11 @@ const getResults = async function (
   // cancel any pending debounced calls
   debouncedGetResults.cancel();
 
+  // prevent running query if results already match current search text
+  if (this.search === this.originalSearch) return;
+  // should really only be needed in one case: user focuses box, types, waits for
+  // debounced search to run, submits box to run search instantly (again)
+
   // push permanent history entry
   if (history) {
     const query: Record<string, string> = {};
@@ -143,6 +148,7 @@ const getResults = async function (
       fresh ? undefined : this.from
     );
     this.results = results;
+    this.originalSearch = this.search;
     this.count = count;
 
     if (fresh) {
@@ -193,6 +199,8 @@ const NodeSearch = defineComponent({
     return {
       // current search text
       search: String(this.$route.query.search || ""),
+      // original search text that yielded current results
+      originalSearch: "",
       // search results
       results: [] as Result["results"],
       // number of results
