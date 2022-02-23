@@ -38,17 +38,17 @@
   <!-- api and service statuses -->
   <AppSection>
     <AppHeading>Status</AppHeading>
+
     <!-- main status of all checks -->
-    <p v-if="status">
-      <AppStatus :status="status" />
-    </p>
+    <AppStatus v-if="status" :status="status" />
+
     <!-- indiviual statuses -->
     <AppGallery v-else size="small">
       <AppStatus
-        v-for="(status, index) in statuses"
+        class="status"
+        v-for="(uptime, index) in uptimes"
         :key="index"
-        :status="status"
-        design="plain"
+        :status="uptime"
       />
     </AppGallery>
     <!-- link to uptime bot site for full details -->
@@ -71,9 +71,10 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { getStatuses } from "@/api/uptime";
-import { Status } from "@/types/status";
+import { getUptimes } from "@/api/uptime";
+import { Status } from "@/components/AppStatus";
 import AppStatus from "@/components/AppStatus.vue";
+import { ApiError } from "@/api";
 
 // help landing page
 export default defineComponent({
@@ -83,28 +84,33 @@ export default defineComponent({
   data() {
     return {
       // list of status checks to display
-      statuses: [] as Array<Status>,
+      uptimes: [] as Array<Status>,
       // overall status of query
       status: null as Status | null,
     };
   },
   async mounted() {
     // loading...
-    this.status = {
-      code: "loading",
-      text: "Loading service statuses",
-    };
+    this.status = { code: "loading", text: "Loading service statuses" };
 
     try {
       // get statuses from uptimerobot api
-      this.statuses = await getStatuses();
+      this.uptimes = await getUptimes();
 
       // clear status
       this.status = null;
     } catch (error) {
       // error...
-      this.status = { code: "error", text: (error as Error).message };
+      this.status = error as ApiError;
     }
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.status {
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 0;
+}
+</style>

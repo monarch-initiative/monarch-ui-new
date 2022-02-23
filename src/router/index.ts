@@ -4,7 +4,9 @@ import {
   createWebHistory,
   RouteRecordRaw,
   RouterScrollBehavior,
+  NavigationGuard,
 } from "vue-router";
+import { lowerCase, startCase } from "lodash";
 import { hideAll } from "tippy.js";
 import Home from "@/views/Home.vue";
 import Explore from "@/views/explore/Explore.vue";
@@ -17,10 +19,12 @@ import Publications from "@/views/about/Publications.vue";
 import Terms from "@/views/about/Terms.vue";
 import Help from "@/views/help/Help.vue";
 import Feedback from "@/views/help/Feedback.vue";
+import Node from "@/views/node/Node.vue";
 import Testbed from "@/views/Testbed.vue";
 import { sleep } from "@/util/debug";
+import { categories } from "@/api/categories";
 
-// handle redirect from 404
+// handle redirects on 404
 const redirect404 = (): string | void => {
   // look for redirect in session storage (saved from 404 page)
   const redirect = window.sessionStorage.redirect;
@@ -29,6 +33,21 @@ const redirect404 = (): string | void => {
     return redirect;
   }
 };
+
+// handle redirects on node page
+const redirectNode: NavigationGuard = (to) => {
+  // legacy reroute for referral traffic from GARD
+  // https://github.com/monarch-initiative/monarch-ui/issues/325
+  if (to.fullPath.startsWith("/disease/Orphanet:")) {
+    const id = Array.isArray(to.params.id) ? to.params.id[0] : to.params.id;
+    return { path: `/disease/${id.replace("Orphanet", "ORPHA")}` };
+  }
+};
+
+// test pages to only include during development
+let testRoutes: Array<RouteRecordRaw> = [];
+if (process.env.NODE_ENV === "development")
+  testRoutes = [{ path: "/testbed", name: "Testbed", component: Testbed }];
 
 // list of routes and corresponding components
 // CHECK PUBLIC/SITEMAP.XML AND KEEP IN SYNC
@@ -94,16 +113,15 @@ export const routes: Array<RouteRecordRaw> = [
     component: Feedback,
   },
 
-  // test routes (pages to only include during development)
-  ...(process.env.NODE_ENV === "development"
-    ? [
-        {
-          path: "/testbed",
-          name: "Testbed",
-          component: Testbed,
-        },
-      ]
-    : []),
+  // node pages
+  ...categories.map((category) => ({
+    path: `/${category}/:id`,
+    name: `Node ${startCase(category)}`,
+    component: Node,
+    beforeEnter: redirectNode,
+  })),
+
+  ...testRoutes,
 ];
 
 const scrollBehavior: RouterScrollBehavior = async (
@@ -117,12 +135,9 @@ const scrollBehavior: RouterScrollBehavior = async (
   // scroll to previous position if exists
   if (savedPosition) return savedPosition;
 
-  // default return
-  let result: ReturnType<RouterScrollBehavior> = { left: 0, top: 0 };
-
   if (to.hash) {
     // get target element of hash
-    let target = document.getElementById(to.hash.slice(1));
+    let target = document?.getElementById(to.hash.slice(1));
 
     if (target) {
       // move target to parent section element if first child
@@ -133,11 +148,9 @@ const scrollBehavior: RouterScrollBehavior = async (
       // get offset to account for header
       const offset = document.querySelector("header")?.clientHeight || 0;
 
-      result = { el: target, top: offset };
+      return { el: target, top: offset };
     }
   }
-
-  return result;
 };
 
 // router object
@@ -148,11 +161,23 @@ const router = createRouter({
 });
 
 // set document title after route
-router.afterEach((to) => {
+router.afterEach(({ name, query, hash }) => {
   // https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
   nextTick(() => {
-    const page = typeof to.name === "string" ? to.name : "";
-    document.title = process.env.VUE_APP_TITLE_SHORT + " - " + page;
+    // get name of page
+    const page = typeof name === "string" ? name : "";
+
+    // get "sub page"
+    const subpage = lowerCase(hash.slice(1));
+
+    // get extra details from url params
+    let details = "";
+    if (query.search) details = `"${query.search}"`;
+
+    // combine into document title
+    document.title = [process.env.VUE_APP_TITLE_SHORT, page, subpage, details]
+      .filter((part) => part)
+      .join(" - ");
   });
 });
 

@@ -1,3 +1,4 @@
+import { flush } from "./../setup";
 import { mount } from "@vue/test-utils";
 import AppTabs from "@/components/AppTabs.vue";
 import { mountOptions } from "../setup";
@@ -34,6 +35,7 @@ test("Switches by mouse", async () => {
   const button = wrapper.find("button");
   const content = wrapper.find("[role='tabpanel']");
   await button.trigger("click");
+  await flush();
   expect(content.text()).toContain(slots.apple);
 });
 
@@ -47,11 +49,15 @@ test("Switches by keyboard", async () => {
   const button = wrapper.find("button");
   const content = wrapper.find("[role='tabpanel']");
   await button.trigger("click");
+  await flush();
   expect(content.text()).toContain(slots.apple);
   await button.trigger("keydown", { key: "ArrowLeft" });
+  await flush();
   expect(content.text()).toContain(slots.cherry);
   await button.trigger("keydown", { key: "ArrowLeft" });
+  await flush();
   expect(content.text()).toContain(slots.banana);
   await button.trigger("keydown", { key: "ArrowRight" });
+  await flush();
   expect(content.text()).toContain(slots.cherry);
 });

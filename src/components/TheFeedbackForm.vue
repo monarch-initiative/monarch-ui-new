@@ -59,16 +59,16 @@
       on GitHub with <em>all of the information above</em>. You'll get a link to
       the discussion once it's created.
     </p>
-    <p>
-      <!-- result status -->
-      <AppStatus v-if="status" :status="status">
-        <AppLink v-if="link" :to="link"
-          >View your submitted feedback here.</AppLink
-        >
-      </AppStatus>
-      <!-- submit button -->
-      <AppButton text="Submit" icon="paper-plane" type="submit" />
-    </p>
+
+    <!-- result status -->
+    <AppStatus v-if="status" :status="status">
+      <AppLink v-if="link" :to="link"
+        >View your submitted feedback here.</AppLink
+      >
+    </AppStatus>
+
+    <!-- submit button -->
+    <AppButton v-else text="Submit" icon="paper-plane" type="submit" />
   </form>
 </template>
 
@@ -76,10 +76,11 @@
 import { defineComponent } from "vue";
 import parser from "ua-parser-js";
 import AppInput from "@/components/AppInput.vue";
-import { Status } from "@/types/status";
+import { Status } from "@/components/AppStatus";
 import { truncate, collapse } from "@/util/string";
 import { postFeedback } from "@/api/feedback";
 import AppStatus from "./AppStatus.vue";
+import { ApiError } from "@/api";
 
 // feedback form
 export default defineComponent({
@@ -135,7 +136,7 @@ export default defineComponent({
   methods: {
     async onSubmit() {
       // only proceed if submitted through button, not "implicitly" (enter press)
-      const active = document.activeElement;
+      const active = document?.activeElement;
       if (active && active.getAttribute("type") !== "submit") return;
 
       // make issue title (unclear what char limit is?)
@@ -167,10 +168,7 @@ export default defineComponent({
       ].join("\n");
 
       // loading...
-      this.status = {
-        code: "loading",
-        text: "Submitting feedback",
-      };
+      this.status = { code: "loading", text: "Submitting feedback" };
 
       try {
         // post feedback and get link of created issue
@@ -186,7 +184,7 @@ export default defineComponent({
         (this as unknown as { clearPersist: () => void })?.clearPersist();
       } catch (error) {
         // error...
-        this.status = { code: "error", text: (error as Error).message };
+        this.status = error as ApiError;
       }
     },
   },

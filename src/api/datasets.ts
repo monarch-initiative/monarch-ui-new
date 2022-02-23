@@ -1,23 +1,20 @@
-import { biolink, handleError } from "./";
+import { biolink, request, cleanError } from ".";
 import staticData from "./datasets.json";
 import { mergeArrays } from "@/util/object";
-import { Source } from "@/types/sources";
+import { Source } from "./source";
 
-// expected schemas to be returned from api
 interface Response {
-  nodes: Array<Node>;
-  edges: Array<Edge>;
-}
-interface Node {
-  id: string;
-  meta: {
-    "http://purl.org/dc/terms/created": Array<string>;
-  };
-}
-interface Edge {
-  sub: string;
-  obj: string;
-  pred: string;
+  nodes: Array<{
+    id: string;
+    meta: {
+      "http://purl.org/dc/terms/created": Array<string>;
+    };
+  }>;
+  edges: Array<{
+    sub: string;
+    obj: string;
+    pred: string;
+  }>;
 }
 
 // replace key words in fields with actual "expanded" value
@@ -34,11 +31,11 @@ const expand = (string = "") =>
   );
 
 // get metadata of all datasets used in monarch from biolink, in format of source
-export const getDatasets = async (): Promise<Array<Source>> => {
+export const getDatasets = async (): Promise<Result> => {
   try {
-    const { nodes, edges } = (await (
-      await biolink.metadata.getMetadataForDatasets()
-    ).json()) as Response;
+    const { nodes, edges } = await request<Response>(
+      `${biolink}/metadata/datasets`
+    );
 
     const filteredNodes = edges
       // only get edges whose type is a dataset
@@ -46,7 +43,7 @@ export const getDatasets = async (): Promise<Array<Source>> => {
       // find corresponding node by id
       .map((edge) => nodes.find((node) => node.id === edge.sub))
       // filter out any un-found nodes
-      .filter((node) => node) as Array<Node>;
+      .filter((node) => node) as Response["nodes"];
 
     // convert results to desired format
     let datasets = filteredNodes.map(
@@ -75,9 +72,8 @@ export const getDatasets = async (): Promise<Array<Source>> => {
 
     return datasets;
   } catch (error) {
-    handleError(error);
+    throw cleanError(error);
   }
-
-  // default return
-  return [];
 };
+
+type Result = Array<Source>;

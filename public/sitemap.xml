@@ -14,13 +14,12 @@
     <!-- explore -->
     <loc>https://monarchinitiative.org/explore</loc>
 
-    <!-- tools -->
-    <loc>https://monarchinitiative.org/tools</loc>
-
     <!-- about -->
     <loc>https://monarchinitiative.org/about</loc>
-    <loc>https://monarchinitiative.org/cite</loc>
+    <loc>https://monarchinitiative.org/overview</loc>
+    <loc>https://monarchinitiative.org/api</loc>
     <loc>https://monarchinitiative.org/sources</loc>
+    <loc>https://monarchinitiative.org/cite</loc>
     <loc>https://monarchinitiative.org/team</loc>
     <loc>https://monarchinitiative.org/publications</loc>
     <loc>https://monarchinitiative.org/terms</loc>

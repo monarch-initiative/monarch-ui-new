@@ -1,8 +1,6 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
-
 import * as fas from "@fortawesome/free-solid-svg-icons";
 import * as fab from "@fortawesome/free-brands-svg-icons";
-import Loading from "@/assets/icons/Loading.vue";
 
 // create collection/"palette" of useable icons
 
@@ -21,6 +19,7 @@ library.add(
   fas.faAsterisk,
   fas.faBalanceScale,
   fas.faBars,
+  fas.faBarsProgress,
   fas.faBlog,
   fas.faCalendarAlt,
   fas.faCheck,
@@ -37,6 +36,7 @@ library.add(
   fas.faFeatherAlt,
   fas.faFilter,
   fas.faHandsHelping,
+  fas.faHashtag,
   fas.faHistory,
   fas.faHome,
   fas.faInfoCircle,
@@ -46,14 +46,11 @@ library.add(
   fas.faPauseCircle,
   fas.faPuzzlePiece,
   fas.faQuestionCircle,
+  fas.faSearch,
   fas.faSignature,
+  fas.faSubscript,
   fas.faTimes,
   fas.faTimesCircle,
   fas.faTools,
   fas.faUsers
 );
-
-// custom svg icons
-export const customIcons = {
-  Loading,
-};

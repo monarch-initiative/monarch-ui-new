@@ -11,15 +11,13 @@
       />
       <AppCheckbox
         v-model="showOntologies"
-        :text="`Ontologies (${ontolotyCount})`"
+        :text="`Ontologies (${ontologyCount})`"
         icon="puzzle-piece"
       />
     </AppFlex>
 
     <!-- status -->
-    <p v-if="status">
-      <AppStatus :status="status" />
-    </p>
+    <AppStatus v-if="status" :status="status" />
 
     <!-- list of all sources -->
     <AppFlex direction="col">
@@ -58,7 +56,7 @@
           <AppButton
             v-if="source.date"
             design="small"
-            :active="false"
+            color="secondary"
             icon="calendar-alt"
             :text="source.date"
             v-tooltip="'Date when this source was ingested into Monarch'"
@@ -131,9 +129,10 @@ import AppCheckbox from "@/components/AppCheckbox.vue";
 import AppAccordion from "@/components/AppAccordion.vue";
 import { getDatasets } from "@/api/datasets";
 import { getOntologies } from "@/api/ontologies";
+import { Source } from "@/api/source";
 import AppStatus from "@/components/AppStatus.vue";
-import { Source } from "@/types/sources";
-import { Status } from "@/types/status";
+import { Status } from "@/components/AppStatus";
+import { ApiError } from "@/api";
 
 // sources page
 export default defineComponent({
@@ -186,16 +185,13 @@ export default defineComponent({
       return this.sources.filter((source) => source.type === "dataset").length;
     },
     // number of ontology sources
-    ontolotyCount(): number {
+    ontologyCount(): number {
       return this.sources.filter((source) => source.type === "ontology").length;
     },
   },
   async mounted() {
     // loading...
-    this.status = {
-      code: "loading",
-      text: "Loading sources",
-    };
+    this.status = { code: "loading", text: "Loading sources" };
 
     try {
       // get sources from apis
@@ -217,7 +213,7 @@ export default defineComponent({
       this.status = null;
     } catch (error) {
       // error...
-      this.status = { code: "error", text: (error as Error).message };
+      this.status = error as ApiError;
     }
   },
 });

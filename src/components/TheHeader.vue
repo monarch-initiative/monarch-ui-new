@@ -102,9 +102,11 @@ header {
   align-items: center;
   position: sticky;
   top: 0;
+  min-height: 0;
   background: $theme-dark;
   color: $white;
   z-index: 10;
+  transition: min-height $fast;
 }
 
 @media (max-width: $wrap) {
@@ -123,7 +125,7 @@ header[data-home="true"] {
 
   @media (max-width: $wrap) {
     justify-content: space-between;
-    min-height: unset;
+    min-height: 0;
   }
 }
 

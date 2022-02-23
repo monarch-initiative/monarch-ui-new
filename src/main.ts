@@ -6,6 +6,10 @@ import plugins from "@/global/plugins";
 import directives from "@/global/directives";
 import "wicg-inert";
 
+// delete these when app becomes closer to stable so they're not included in bundle
+import { setupWorker } from "msw";
+import { handlers } from "../tests/fixtures";
+
 // create main app object
 let app = createApp(App);
 
@@ -25,3 +29,7 @@ for (const [name, Component] of Object.entries(components))
 
 // render app
 app.mount("#app");
+
+// set up mock apis so we don't hit real apis while developing
+// put VUE_APP_MOCK_API=true in .env.local file to use this
+if (process.env.VUE_APP_MOCK_API === "true") setupWorker(...handlers).start();

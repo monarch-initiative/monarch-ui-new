@@ -32,13 +32,16 @@
       @blur="onBlur"
     >
       <span class="button-label">
-        {{ name }}
+        {{ startCase(name) }}
         <span class="button-more">
-          <template v-if="selected.length === 0">(none selected)</template>
+          <template v-if="selected.length === 0">none selected</template>
           <template v-else-if="selected.length === options.length">
-            (all selected)
+            all selected
           </template>
-          <template v-else>({{ selected.length }} selected)</template>
+          <template v-else-if="selected.length === 1">
+            {{ options[selected[0]]?.value }}
+          </template>
+          <template v-else>{{ selected.length }} selected</template>
         </span>
       </span>
       <AppIcon
@@ -90,7 +93,7 @@
           :aria-selected="selected.includes(index)"
           :data-selected="selected.includes(index)"
           :data-highlighted="index === highlighted"
-          @click="() => toggleSelect(index)"
+          @click="(event) => toggleSelect(index, event.shiftKey)"
           @mouseenter="highlighted = index"
           @mousedown.prevent=""
           @focusin="() => null"
@@ -100,7 +103,7 @@
           <td class="option-check">
             <div :data-checked="selected.includes(index)" />
           </td>
-          <td class="option-label">{{ option.label || option.value }}</td>
+          <td class="option-label">{{ startCase(String(option.value)) }}</td>
           <td class="option-count">{{ option.count }}</td>
         </tr>
       </table>
@@ -109,9 +112,10 @@
 </template>
 
 <script lang="ts">
-import { wrap } from "@/util/math";
 import { defineComponent, PropType } from "vue";
-import { isEqual, uniqueId } from "lodash";
+import { isEqual, uniqueId, startCase } from "lodash";
+import { Options } from "./AppSelectMulti";
+import { wrap } from "@/util/math";
 
 // references:
 // https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/listbox/listbox-rearrangeable.html
@@ -119,16 +123,9 @@ import { isEqual, uniqueId } from "lodash";
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaMultiSelectable
 // https://vuetifyjs.com/en/components/selects/
 
-interface Option {
-  value: number | string;
-  icon?: string;
-  label?: string;
-  count?: number | string;
-}
-type Options = Array<Option>;
-
 // custom single select
 export default defineComponent({
+  emits: ["update:modelValue", "change"],
   props: {
     // name of the field
     name: {
@@ -179,7 +176,7 @@ export default defineComponent({
       this.expanded ? this.close() : this.open();
       // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#clicking_and_focus
       (
-        document.querySelector(`#select-${this.id}`) as HTMLButtonElement
+        document?.querySelector(`#select-${this.id}`) as HTMLButtonElement
       )?.focus();
     },
     // when button blurred
@@ -234,7 +231,7 @@ export default defineComponent({
       return this.options.filter((_, index) => this.selected.includes(index));
     },
     // select or deselect option(s)
-    toggleSelect(index = -1) {
+    toggleSelect(index = -1, shift = false) {
       // toggle all
       if (index === -1) {
         if (this.allSelected) this.selected = [];
@@ -245,13 +242,20 @@ export default defineComponent({
       }
       // toggle one
       else {
-        if (this.selected.includes(index))
-          this.selected = this.selected.filter((value) => value !== index);
-        else this.selected.push(index);
+        if (shift) {
+          this.selected = [index];
+        } else {
+          if (this.selected.includes(index))
+            this.selected = this.selected.filter((value) => value !== index);
+          else this.selected.push(index);
+        }
       }
       // keep in order for easy comparison
       this.selected.sort();
+      // emit change event for listening for only user-originated changes
+      this.$emit("change");
     },
+    startCase,
   },
   watch: {
     // when model changes, update selected indices
@@ -316,15 +320,14 @@ export default defineComponent({
 }
 
 .button-more {
-  color: $gray;
-  font-size: 0.9rem;
+  color: $dark-gray;
+  margin-left: 10px;
 }
 
 .list {
   position: absolute;
   max-height: 200px;
   min-width: 100%;
-  overflow-x: hidden;
   overflow-y: auto;
   background: $white;
   box-shadow: $shadow;
@@ -335,15 +338,12 @@ table {
   table-layout: fixed;
   min-width: 100%;
   border-collapse: collapse;
+  white-space: nowrap;
 }
 
 .option {
   cursor: pointer;
   transition: background $fast;
-}
-
-.option[data-selected="true"] {
-  // background: $theme-light;
 }
 
 .option[data-highlighted="true"] {

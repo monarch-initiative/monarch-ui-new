@@ -1,7 +1,6 @@
 <template>
   <AppSection design="fill">
-    <AppHeading>Explore</AppHeading>
-    <AppInput placeholder="Search for something" />
+    <ExploreTabs />
   </AppSection>
   <AppSection>
     <AppHeading>What is Monarch</AppHeading>
@@ -16,11 +15,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import AppInput from "@/components/AppInput.vue";
+import ExploreTabs from "./explore/ExploreTabs.vue";
 
 export default defineComponent({
   components: {
-    AppInput,
+    ExploreTabs,
   },
 });
 </script>

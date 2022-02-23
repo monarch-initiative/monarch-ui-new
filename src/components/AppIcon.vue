@@ -1,17 +1,17 @@
 <template>
-  <component v-if="custom" :is="custom" aria-hidden="true" />
+  <InlineSvg v-if="custom" :src="custom" class="icon" aria-hidden="true" />
   <FontAwesomeIcon v-else-if="fa" :icon="fa" aria-hidden="true" />
 </template>
 
 <script lang="ts">
-import { defineComponent, Component } from "vue";
+import { defineComponent } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { customIcons } from "@/global/icons";
 import {
   findIconDefinition,
   IconPrefix,
   IconName,
 } from "@fortawesome/fontawesome-svg-core";
+import InlineSvg from "vue-inline-svg";
 
 // wrapper for font awesome icon component to make it behave more logically
 // and to allow for adding custom icons
@@ -22,17 +22,23 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    // fallback icon to show if custom icon file cannot be found
+    fallback: String,
   },
   components: {
     FontAwesomeIcon,
+    InlineSvg,
   },
   computed: {
     // find custom icon with matching name, if there is one
-    custom(): Component | null {
-      for (const [name, icon] of Object.entries(customIcons))
-        if (name.toLowerCase() === this.icon) return icon;
-
-      return null;
+    custom() {
+      try {
+        return require(`@/assets/icons/${this.icon}.svg`);
+      } catch (error) {
+        if (this.fallback)
+          return require(`@/assets/icons/${this.fallback}.svg`);
+        else return false;
+      }
     },
     // find font awesome icon with matching name, if there is one
     fa() {
@@ -49,3 +55,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.icon {
+  height: 1em;
+}
+</style>

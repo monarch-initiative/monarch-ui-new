@@ -1,6 +1,5 @@
-import { handleError } from "./index";
-import axios from "axios";
-import { Status } from "@/types/status";
+import { request, cleanError } from ".";
+import { Status } from "@/components/AppStatus";
 
 // uptimerobot api endpoint
 const api = "https://api.uptimerobot.com/v2/getMonitors";
@@ -9,16 +8,15 @@ const key = "ur1488940-1c05ba09e0aef926989d6593";
 // uptimerobot.org page for statuses
 const page = "https://stats.uptimerobot.com/XPRo9s4BJ5";
 
-// expected schemas to be returned from uptimerobot
 interface Response {
-  monitors?: Array<Monitor>;
+  monitors?: Array<{
+    id?: string;
+    friendly_name?: string;
+    status?: Code;
+  }>;
 }
-interface Monitor {
-  id?: string;
-  friendly_name?: string;
-  status?: Code;
-}
-// possible status codes returned from api https://uptimerobot.com/api/
+
+// possible status codes https://uptimerobot.com/api/
 enum Code {
   paused = 0,
   unchecked = 1,
@@ -28,12 +26,13 @@ enum Code {
 }
 
 // get list of uptimerobot monitors and their statuses, names, and other info
-export const getStatuses = async (): Promise<Array<Status>> => {
+export const getUptimes = async (): Promise<Result> => {
   try {
     // get data from endpoint
     const params = { api_key: key };
-    const { data } = await axios.post(api, null, { params });
-    const { monitors = [] } = data as Response;
+    const options = { method: "POST" };
+    const response = await request<Response>(api, params, options);
+    const { monitors = [] } = response;
 
     // map uptimerobot status codes to our simplified status codes in status component
     const codeMap = {
@@ -46,7 +45,7 @@ export const getStatuses = async (): Promise<Array<Status>> => {
 
     // convert results to desired format
     const results = monitors.map(
-      (monitor: Monitor): Status => ({
+      (monitor): Status => ({
         code: (typeof monitor.status !== "undefined"
           ? codeMap[monitor.status]
           : "unknown") as Status["code"],
@@ -57,9 +56,8 @@ export const getStatuses = async (): Promise<Array<Status>> => {
 
     return results;
   } catch (error) {
-    handleError(error);
+    throw cleanError(error);
   }
-
-  // default return
-  return [];
 };
+
+type Result = Array<Status>;

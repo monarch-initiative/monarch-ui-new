@@ -10,8 +10,8 @@ it("Header nav bar collapses on small screens", () => {
   // click toggle button and see if nav hides/shows
   cy.get("@toggle").should("be.visible");
   cy.get("@nav").should("not.be.visible");
-  cy.get("@toggle").click();
+  cy.get("@toggle").trigger("click");
   cy.get("@nav").should("be.visible");
-  cy.get("@toggle").click();
+  cy.get("@toggle").trigger("click");
   cy.get("@nav").should("not.be.visible");
 });

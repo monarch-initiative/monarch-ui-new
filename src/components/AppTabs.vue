@@ -1,5 +1,5 @@
 <template>
-  <AppFlex gap="small" role="tablist">
+  <AppFlex role="tablist">
     <AppButton
       v-for="(tab, index) in tabs"
       :key="index"
@@ -8,7 +8,7 @@
       :icon="tab.icon"
       @click="selected = tab.id"
       design="circle"
-      :active="selected === tab.id"
+      :color="selected === tab.id ? 'primary' : 'none'"
       :aria-selected="selected === tab.id"
       :tabindex="selected === tab.id ? 0 : -1"
       :aria-controls="`panel-${id}-${tab.id}`"
@@ -19,13 +19,15 @@
     />
   </AppFlex>
 
-  <div
+  <AppFlex
+    gap="big"
     :id="`panel-${id}-${selected}`"
+    class="panel"
     :aria-labelledby="`tab-${id}-${selected}`"
     role="tabpanel"
   >
     <slot :name="selected"></slot>
-  </div>
+  </AppFlex>
 </template>
 
 <script lang="ts">
@@ -37,7 +39,7 @@ import { wrap } from "@/util/math";
 // https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/tabs/tabs-1/tabs.html
 
 interface Tab {
-  // unique id
+  // page-wide unique id of tab
   id: string;
   // tab button props
   text?: string;
@@ -48,6 +50,7 @@ type Tabs = Array<Tab>;
 
 // tab buttons that conditionally show their corresponding slots
 export default defineComponent({
+  emits: ["change"],
   props: {
     // list of tabs with info
     tabs: {
@@ -67,7 +70,10 @@ export default defineComponent({
       // unique id for instance of component
       id: uniqueId(),
       // id of selected tab
-      selected: (this.$props.default || this.$props.tabs[0].id || "") as string,
+      selected: (this.getHash() ||
+        this.$props.default ||
+        this.$props.tabs[0].id ||
+        "") as string,
     };
   },
   methods: {
@@ -88,15 +94,39 @@ export default defineComponent({
         this.selected = this.tabs[wrap(index, 0, this.tabs.length)].id;
       }
     },
+    // when hash in url is changed or loaded
+    getHash() {
+      // set selected tab to id in hash
+      const hash = this.$route.hash.slice(1);
+      if (this.tabs.find((tab) => tab.id === hash)) return hash;
+    },
   },
   watch: {
-    selected() {
-      (
-        document.querySelector(
-          `#tab-${this.id}-${this.selected}`
-        ) as HTMLButtonElement
-      )?.focus();
+    // when selected tab changes
+    async selected() {
+      // focus the selected tab
+      const selector = `#tab-${this.id}-${this.selected}`;
+      const button = document?.querySelector(selector) as HTMLButtonElement;
+      button?.focus();
+
+      // update hash in url
+      await this.$router.replace({ ...this.$route, hash: "#" + this.selected });
+
+      // emit event to parent that tab changed
+      this.$emit("change", this.selected);
+    },
+    // when url hash changes
+    $route() {
+      // update selected
+      const hash = this.getHash();
+      if (hash) this.selected = hash;
     },
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.panel {
+  width: 100%;
+}
+</style>
