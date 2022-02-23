@@ -95,3 +95,6 @@ For example, avoid overriding default eslint rules as much as possible.
 
 Keep long lists, such as those in `/global`, sorted alphabetically for consistency and ease of lookup and comparison.
 Tip: use VS Code extension "Sort Lines".
+
+Use `// TODO` as a consistent in-code flag for pieces of code that should eventually be replaced with something better.
+Also link to a GitHub issue that tracks the issue.

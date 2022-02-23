@@ -1,4 +1,5 @@
-// COMMENT OUT THIS CODE UNTIL THIS ISSUE IS RESOLVED:
+// TODO: POSSIBLY BRING BACK THIS HARD-CODED MAPPING
+// SEE: https://github.com/monarch-initiative/monarch-ui-new/issues/77
 
 /* 
 
