@@ -1,5 +1,6 @@
 import { biolink, request, cleanError, ApiError } from ".";
 import { Options } from "./../components/AppSelectMulti.d";
+import { labelToId } from "./taxons";
 
 interface Response {
   numFound: number;
@@ -36,11 +37,14 @@ export const getNodeSearchResults = async (
     let params: Record<string, string | number> = {};
     for (const [key, value] of Object.entries(activeFilters)) {
       // transform filter
-      const filter = (value || [])
+      let filter = (value || [])
         // turn array of option objects into plain array of values
         .map(({ value }) => String(value))
         // remove empty
         .filter((value) => value.trim());
+
+      // do special mapping for certain keys
+      if (key === "taxon") filter = filter.map(labelToId);
 
       // join into comma-separated string list for request
       const filterString = filter.join(",");
