@@ -77,19 +77,17 @@ export const getNodeSearchResults = async (
     } = response;
 
     // convert into desired result format
-    const results = docs
-      .map((doc) => ({
-        id: doc.id || "",
-        altIds: doc.equivalent_curie || [],
-        name: (doc.label || [])[0] || "",
-        altNames: (doc.label || []).slice(1),
-        category: (doc.category || [])[0] || "",
-        description: (doc.definition || [])[0] || "",
-        score: doc.score || 0,
-        prefix: doc.prefix || "",
-        highlight: highlighting[doc.id].highlight,
-      }))
-      .filter(({ category }) => category);
+    const results = docs.map((doc) => ({
+      id: doc.id || "",
+      altIds: doc.equivalent_curie || [],
+      name: (doc.label || [])[0] || "",
+      altNames: (doc.label || []).slice(1),
+      category: (doc.category || [])[0] || "",
+      description: (doc.definition || [])[0] || "",
+      score: doc.score || 0,
+      prefix: doc.prefix || "",
+      highlight: highlighting[doc.id].highlight,
+    }));
 
     // empty error status
     if (!results.length) throw new ApiError("No results", "warning");

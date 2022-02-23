@@ -41,7 +41,6 @@ type Category = typeof categories[number];
 
 // categories that app supports
 export const categories = [
-  "unknown",
   "anatomy",
   "case",
   "cell-line",

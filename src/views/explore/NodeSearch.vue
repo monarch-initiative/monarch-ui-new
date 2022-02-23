@@ -51,10 +51,14 @@
       <div class="title">
         <AppIcon
           :icon="`category-${kebabCase(result.category)}`"
+          fallback="category-unknown"
           class="type"
-          v-tooltip="`Category: ${capitalize(result.category)}`"
+          v-tooltip="`Category: ${capitalize(result.category || 'unknown')}`"
         />
-        <AppLink :to="`/${result.category}/${result.id}`" class="name">
+        <AppLink
+          :to="`/${kebabCase(result.category || 'unknown')}/${result.id}`"
+          class="name"
+        >
           <span v-html="result.highlight"></span>
         </AppLink>
         <AppButton
@@ -156,7 +160,8 @@ const getResults = async function (
     this.status = null;
   } catch (error) {
     // error...
-    this.status = error as ApiError;
+    if (this.search.trim()) this.status = error as ApiError;
+    else this.status = null;
     // clear results and filters
     this.results = [];
     if (fresh) {

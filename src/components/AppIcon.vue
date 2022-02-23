@@ -22,6 +22,8 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    // fallback icon to show if custom icon file cannot be found
+    fallback: String,
   },
   components: {
     FontAwesomeIcon,
@@ -33,7 +35,9 @@ export default defineComponent({
       try {
         return require(`@/assets/icons/${this.icon}.svg`);
       } catch (error) {
-        return false;
+        if (this.fallback)
+          return require(`@/assets/icons/${this.fallback}.svg`);
+        else return false;
       }
     },
     // find font awesome icon with matching name, if there is one
