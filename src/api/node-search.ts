@@ -61,7 +61,7 @@ export const getNodeSearchResults = async (
     params = {
       ...params,
       boost_q:
-        "category:disease^5,category:phenotype^5,category:gene^5,category:genotype^-10,category:variant^-35",
+        "category:disease^5,category:phenotype^5,category:gene^0,category:genotype^-10,category:variant^-35",
       prefix: "-OMIA",
       min_match: "67%",
       rows: 10,
