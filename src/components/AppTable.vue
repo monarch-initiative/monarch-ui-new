@@ -39,8 +39,12 @@
               @update:modelValue="(value) => emitFilter(colIndex, value)"
               v-slot="props"
             >
-              {{ props }}
-              <AppButton icon="filter" design="small" v-bind="props" />
+              <AppButton
+                v-tooltip="'Filter by ' + col.heading"
+                icon="filter"
+                design="small"
+                v-bind="kebabify(props)"
+              />
             </AppSelectMulti>
           </th>
         </tr>
@@ -137,6 +141,7 @@ import AppInput from "./AppInput.vue";
 import AppSelectMulti from "./AppSelectMulti.vue";
 import AppSelectSingle from "./AppSelectSingle.vue";
 import { Options } from "./AppSelectMulti";
+import { kebabify } from "@/util/object";
 
 // reference:
 // https://adamlynch.com/flexible-data-tables-with-css-grid/
@@ -236,6 +241,7 @@ export default defineComponent({
     emitDownload() {
       this.$emit("download");
     },
+    kebabify,
   },
   computed: {
     // grid column template widths
@@ -299,6 +305,7 @@ th {
   margin-bottom: 10px;
   font-weight: 400;
 }
+
 th > span {
   font-weight: 600;
 }

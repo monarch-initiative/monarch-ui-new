@@ -57,9 +57,9 @@ test("Changes sort", async () => {
 
 test("Changes filter", async () => {
   const wrapper = mount(AppTable, { ...mountOptions, props });
-  const button = wrapper.find("div[aria-label*='Filter by Score']");
+  const button = wrapper.find("button[aria-label*='Filter by Score']");
   await button.trigger("click");
-  const option = wrapper.find("td[role='option']");
+  const option = wrapper.find("tr[role='option']");
   await option.trigger("click");
   expect(emitted(wrapper, "filter")).toEqual([1, []]);
 });

@@ -153,7 +153,7 @@ export default defineComponent({
     }
 
     &[data-color="secondary"] {
-      color: $dark-gray;
+      color: $gray;
     }
 
     &:hover,

@@ -5,7 +5,7 @@
       v-if="hasSlot"
       :id="`select-${id}`"
       role="combobox"
-      :v-tooltip="name"
+      :aria-label="name"
       aria-multiselectable="true"
       :aria-expanded="expanded"
       :aria-controls="`list-${id}`"

@@ -8,10 +8,6 @@
     <AppHeading>Testbed</AppHeading>
   </AppSection>
 
-  <AppTest v-slot="props">
-    {{ props }}
-  </AppTest>
-
   <!-- table component -->
   <AppSection>
     <span>{{ omit(table, ["cols", "rows"]) }}</span>
@@ -127,7 +123,6 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import AppTest from "@/components/AppTest.vue";
 import AppInput from "@/components/AppInput.vue";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
@@ -145,7 +140,6 @@ export default defineComponent({
     AppStatus,
     AppTable,
     AppTabs,
-    AppTest,
   },
   data() {
     const buttons = [];
