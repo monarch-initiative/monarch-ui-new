@@ -1,6 +1,6 @@
 // jest setup
-
-import { MountingOptions } from "@vue/test-utils";
+import { ComponentPublicInstance } from "vue";
+import { MountingOptions, VueWrapper } from "@vue/test-utils";
 import { nextTick, ComponentCustomProps } from "vue";
 import { setupServer } from "msw/node";
 import fetch from "node-fetch";
@@ -51,3 +51,10 @@ export const flush = async (): Promise<void> => {
   await nextTick(); // for good measure, see https://github.com/vuejs/vue-test-utils-next/issues/137
   await sleep(100); // add wiggle room
 };
+
+// util to get last emitted event from mounted wrapper
+// returns array of event props, i.e. $emit("someEvent", prop1, prop2, ...)
+export const emitted = <T = unknown>(
+  wrapper: VueWrapper<ComponentPublicInstance>,
+  event = "update:modelValue"
+): Array<T> => wrapper.emitted()[event].pop() as Array<T>;

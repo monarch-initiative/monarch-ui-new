@@ -161,7 +161,7 @@ const move = () => {
   // move color toward target smoothly
   for (const entity of [...dots, ...links])
     for (let c = 0; c < 3; c++)
-      entity.color[c] += (entity.colorTarget[c] - entity.color[c]) / 20;
+      entity.color[c] += (entity.colorTarget[c] - entity.color[c]) / 15;
 };
 
 // clear canvas for redrawing
@@ -205,7 +205,7 @@ const pulse = () => {
         : getMidpoint(entity.from.point, entity.to.point);
 
     // time delays
-    const speed = 2 / 10; // how fast pulse propagates outward
+    const speed = 5 / 10; // how fast pulse propagates outward
     const start = dist(center.x - width / 2, center.y - height / 2) / speed;
     const reset = start + 100 / speed;
     // set timers
@@ -221,16 +221,9 @@ const step = () => {
   draw();
 };
 
-// frames
-window.setInterval(step, 1000 / 60);
-// pulse animation
-window.setInterval(pulse, 10000);
-
-// listen for mouse move
-window.addEventListener("mousemove", rotate);
-window.addEventListener("touchmove", rotate);
-
 let observer: ResizeObserver;
+let stepInterval: number;
+let pulseInterval: number;
 
 // fun background visualization element behind header
 export default defineComponent({
@@ -247,10 +240,28 @@ export default defineComponent({
       generate();
     });
     observer.observe(canvas);
+
+    // set intervals
+    stepInterval = window.setInterval(step, 1000 / 60);
+    pulseInterval = window.setInterval(pulse, 10000);
+
+    // attach listeners
+    window.addEventListener("mousemove", rotate);
+    window.addEventListener("touchmove", rotate);
+    window.addEventListener("mousedown", pulse);
   },
   beforeUnmount() {
     // stop listening for resizes
     if (observer.disconnect) observer.disconnect();
+
+    // clear intervals
+    window.clearInterval(stepInterval);
+    window.clearInterval(pulseInterval);
+
+    // detach listeners
+    window.removeEventListener("mousemove", rotate);
+    window.removeEventListener("touchmove", rotate);
+    window.removeEventListener("mousedown", pulse);
   },
 });
 </script>
