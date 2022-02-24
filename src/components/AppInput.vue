@@ -58,11 +58,6 @@ export default defineComponent({
     multi: Boolean,
     // optional side icon
     icon: String,
-    // height of box in pixels
-    height: {
-      type: Number,
-      default: 40,
-    },
   },
   methods: {
     // method to programmatically focus from outside componend

@@ -12,22 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-
-// possible properties of a status for status component
-export const Codes = [
-  "loading",
-  "success",
-  "warning",
-  "error",
-  "paused",
-  "unknown",
-] as const;
-
-export interface Status {
-  code?: typeof Codes[number];
-  text?: string;
-  link?: string;
-}
+import { Status } from "./AppStatus";
 
 // icons for status codes
 const icons: Record<string, string> = {

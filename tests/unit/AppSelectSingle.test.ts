@@ -29,7 +29,7 @@ test("Selects by click", async () => {
   const option = wrapper.find("[role='option']");
   await option.trigger("click");
   expect(wrapper.find("[role='listbox']").exists()).toBe(false);
-  expect(emitted(wrapper)).toEqual(props.options[0]);
+  expect(emitted(wrapper)[0]).toEqual(props.options[0]);
 });
 
 test("Selects by keyboard", async () => {
@@ -37,16 +37,16 @@ test("Selects by keyboard", async () => {
   const button = wrapper.find("button");
   await button.trigger("focus");
   await button.trigger("keydown", { key: "ArrowDown" });
-  expect(emitted(wrapper)).toEqual(props.options[2]);
+  expect(emitted(wrapper)[0]).toEqual(props.options[2]);
   await button.trigger("keydown", { key: "ArrowDown" });
-  expect(emitted(wrapper)).toEqual(props.options[0]);
+  expect(emitted(wrapper)[0]).toEqual(props.options[0]);
   await button.trigger("keydown", { key: "ArrowDown" });
-  expect(emitted(wrapper)).toEqual(props.options[1]);
+  expect(emitted(wrapper)[0]).toEqual(props.options[1]);
   await button.trigger("click");
   await button.trigger("keydown", { key: "ArrowDown" });
   await button.trigger("keydown", { key: "ArrowDown" });
   await button.trigger("keydown", { key: "ArrowDown" });
   await button.trigger("keydown", { key: "ArrowDown" });
   await button.trigger("keydown", { key: "Enter" });
-  expect(emitted(wrapper)).toEqual(props.options[2]);
+  expect(emitted(wrapper)[0]).toEqual(props.options[2]);
 });

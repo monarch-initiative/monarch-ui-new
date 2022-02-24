@@ -66,5 +66,5 @@ test("Selects all by click", async () => {
   await option.trigger("click");
   expect(emitted<T>(wrapper)[0].length).toEqual(4);
   await option.trigger("click");
-  expect(emitted<T>(wrapper).length).toEqual(0);
+  expect(emitted<T>(wrapper)[0].length).toEqual(0);
 });
