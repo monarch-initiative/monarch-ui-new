@@ -91,7 +91,7 @@
       <AppButton
         icon="angle-double-left"
         design="small"
-        @click="$emit('start')"
+        @click="emitFirst"
         v-tooltip="'Go to first page'"
       />
       <AppButton
@@ -113,7 +113,7 @@
       <AppButton
         icon="angle-double-right"
         design="small"
-        @click="$emit('end')"
+        @click="emitLast"
         v-tooltip="'Go to last page'"
       />
     </div>
@@ -146,8 +146,8 @@ import { kebabify } from "@/util/object";
 // reference:
 // https://adamlynch.com/flexible-data-tables-with-css-grid/
 
-// raw/controlled table component
-// takes pre-sorted/filtered/paginated/etc data from parent and displays it
+// raw/controlled table component. takes pre-sorted/filtered/paginated/etc data
+// from parent and simply displays it, with minimal logic
 export default defineComponent({
   components: {
     AppInput,
@@ -158,10 +158,10 @@ export default defineComponent({
     "sort",
     "filter",
     "perPage",
-    "start",
+    "first",
     "prev",
     "next",
-    "end",
+    "last",
     "search",
     "download",
   ],
@@ -217,9 +217,9 @@ export default defineComponent({
     emitPerPage(value: string) {
       this.$emit("perPage", Number(value));
     },
-    // when user clicks to start page
-    emitStart() {
-      this.$emit("start");
+    // when user clicks to first page
+    emitFirst() {
+      this.$emit("first");
     },
     // when user clicks to previous page
     emitPrev() {
@@ -229,9 +229,9 @@ export default defineComponent({
     emitNext() {
       this.$emit("next");
     },
-    // when user clicks to end page
-    emitEnd() {
-      this.$emit("end");
+    // when user clicks to last page
+    emitLast() {
+      this.$emit("last");
     },
     // when user types in search
     emitSearch(value: string) {

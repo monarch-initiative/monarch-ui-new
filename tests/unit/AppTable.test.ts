@@ -47,8 +47,7 @@ const props = {
 
 test("Changes sort", async () => {
   const wrapper = mount(AppTable, { ...mountOptions, props });
-  const button = wrapper.find("button[aria-label*='Sort by Name']");
-  await button.trigger("click");
+  await wrapper.find("button[aria-label*='by name' i]").trigger("click");
   expect(emitted(wrapper, "sort")[0]).toEqual({
     key: "name",
     direction: "down",
@@ -57,9 +56,42 @@ test("Changes sort", async () => {
 
 test("Changes filter", async () => {
   const wrapper = mount(AppTable, { ...mountOptions, props });
-  const button = wrapper.find("button[aria-label*='Filter by Score']");
-  await button.trigger("click");
-  const option = wrapper.find("tr[role='option']");
-  await option.trigger("click");
+  await wrapper
+    .find("button[aria-label*='filter' i][aria-label*='score' i]")
+    .trigger("click");
+  await wrapper.find("tr[role='option']").trigger("click");
   expect(emitted(wrapper, "filter")).toEqual([1, []]);
+  await wrapper.findAll("tr[role='option']").at(1)?.trigger("click");
+  expect(emitted(wrapper, "filter")).toEqual([1, [{ value: "nulls" }]]);
+});
+
+test("Changes per page", async () => {
+  const wrapper = mount(AppTable, { ...mountOptions, props });
+  await wrapper.find("button[aria-label*='rows per page' i]").trigger("click");
+  await wrapper.find("div[role='option']").trigger("click");
+  expect(emitted(wrapper, "perPage")).toEqual([5]);
+});
+
+test("Changes pages", async () => {
+  const wrapper = mount(AppTable, { ...mountOptions, props });
+  await wrapper.find("button[aria-label*='first' i]").trigger("click");
+  expect(emitted(wrapper, "first")).toEqual([]);
+  await wrapper.find("button[aria-label*='previous' i]").trigger("click");
+  expect(emitted(wrapper, "prev")).toEqual([]);
+  await wrapper.find("button[aria-label*='next' i]").trigger("click");
+  expect(emitted(wrapper, "next")).toEqual([]);
+  await wrapper.find("button[aria-label*='last' i]").trigger("click");
+  expect(emitted(wrapper, "last")).toEqual([]);
+});
+
+test("Changes search", async () => {
+  const wrapper = mount(AppTable, { ...mountOptions, props });
+  await wrapper.find("input").setValue("test search");
+  expect(emitted(wrapper, "search")).toEqual(["test search"]);
+});
+
+test("Downloads", async () => {
+  const wrapper = mount(AppTable, { ...mountOptions, props });
+  await wrapper.find("button[aria-label*='download' i]").trigger("click");
+  expect(emitted(wrapper, "download")).toEqual([]);
 });

@@ -30,7 +30,7 @@ export const mergeArrays = (
   return Object.values(result);
 };
 
-// convert all keys
+// convert attributes of a vue slot props object to kebab-case
 // https://github.com/vuejs/core/issues/5477
 export const kebabify = (
   object: Record<string, unknown>
