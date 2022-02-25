@@ -53,7 +53,7 @@
           :icon="`category-${kebabCase(result.category)}`"
           fallback="category-unknown"
           class="type"
-          v-tooltip="`Category: ${capitalize(result.category || 'unknown')}`"
+          v-tippy="`Category: ${capitalize(result.category || 'unknown')}`"
         />
         <AppLink
           :to="`/${kebabCase(result.category || 'unknown')}/${result.id}`"
@@ -68,7 +68,7 @@
           design="small"
           :copy="true"
           color="secondary"
-          v-tooltip="'Node ID (click to copy)'"
+          v-tippy="'Node ID (click to copy)'"
         />
       </div>
       <p class="truncate-3" tabindex="0">
@@ -95,7 +95,7 @@
           @click="page = index"
           class="nav-button"
           :disabled="index === page"
-          v-tooltip="`Go to page ${index + 1} of results`"
+          v-tippy="`Go to page ${index + 1} of results`"
         >
           {{ index + 1 }}
         </button>

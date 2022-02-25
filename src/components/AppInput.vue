@@ -141,6 +141,7 @@ textarea {
 input {
   height: var(--height);
   padding: 0 calc(var(--height) * 0.25);
+  line-height: $spacing;
 }
 
 textarea {
@@ -149,6 +150,7 @@ textarea {
   min-height: calc(var(--height) * 2);
   height: calc(var(--height) * 4);
   padding: calc(var(--height) * 0.25);
+  line-height: $spacing;
 }
 
 .input[data-icon="true"] {

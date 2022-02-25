@@ -25,7 +25,7 @@
               design="small"
               :color="sort?.key === col.key ? 'primary' : 'secondary'"
               @click.stop="emitSort(col)"
-              v-tooltip="'Sort by ' + col.heading"
+              v-tippy="'Sort by ' + col.heading"
             />
             <AppSelectMulti
               v-if="
@@ -34,13 +34,13 @@
                 col.availableFilters?.length
               "
               :name="'Filter by ' + col.heading"
+              v-tippy="'Filter by ' + col.heading"
               :options="col.availableFilters"
               :modelValue="col.activeFilters"
               @update:modelValue="(value) => emitFilter(colIndex, value)"
               v-slot="props"
             >
               <AppButton
-                v-tooltip="'Filter by ' + col.heading"
                 icon="filter"
                 design="small"
                 v-bind="kebabify(props)"
@@ -92,13 +92,13 @@
         icon="angle-double-left"
         design="small"
         @click="emitFirst"
-        v-tooltip="'Go to first page'"
+        v-tippy="'Go to first page'"
       />
       <AppButton
         icon="angle-left"
         design="small"
         @click="emitPrev"
-        v-tooltip="'Go to previous page'"
+        v-tippy="'Go to previous page'"
       />
       <span
         >{{ start || "?" }} &mdash; {{ end || "?" }} of
@@ -108,13 +108,13 @@
         icon="angle-right"
         design="small"
         @click="emitNext"
-        v-tooltip="'Go to next page'"
+        v-tippy="'Go to next page'"
       />
       <AppButton
         icon="angle-double-right"
         design="small"
         @click="emitLast"
-        v-tooltip="'Go to last page'"
+        v-tippy="'Go to last page'"
       />
     </div>
     <div>
@@ -128,7 +128,7 @@
         icon="download"
         design="small"
         @click="emitDownload"
-        v-tooltip="'Download table data'"
+        v-tippy="'Download table data'"
       />
     </div>
   </div>

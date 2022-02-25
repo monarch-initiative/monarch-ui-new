@@ -1,16 +1,16 @@
 <template>
   <footer>
     <div class="social">
-      <AppLink to="https://substack.com/" v-tooltip="'Newsletter'">
+      <AppLink to="https://substack.com/" v-tippy="'Newsletter'">
         <AppIcon icon="envelope-open-text" />
       </AppLink>
-      <AppLink to="https://github.com/monarch-initiative" v-tooltip="'GitHub'">
+      <AppLink to="https://github.com/monarch-initiative" v-tippy="'GitHub'">
         <AppIcon icon="github" />
       </AppLink>
-      <AppLink to="https://twitter.com/MonarchInit" v-tooltip="'Twitter'">
+      <AppLink to="https://twitter.com/MonarchInit" v-tippy="'Twitter'">
         <AppIcon icon="twitter" />
       </AppLink>
-      <AppLink to="https://medium.com/@MonarchInit" v-tooltip="'Blog'">
+      <AppLink to="https://medium.com/@MonarchInit" v-tippy="'Blog'">
         <AppIcon icon="blog" />
       </AppLink>
     </div>

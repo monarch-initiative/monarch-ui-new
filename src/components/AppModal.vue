@@ -21,7 +21,7 @@
             design="circle"
             icon="times"
             @click="close"
-            v-tooltip="'Close dialog (esc)'"
+            v-tippy="'Close dialog (esc)'"
           />
           <slot />
         </div>

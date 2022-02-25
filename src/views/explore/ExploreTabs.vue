@@ -16,7 +16,9 @@
     <template #node-search>
       <NodeSearch />
     </template>
-    <template #text-annotator>Text Annotator</template>
+    <template #text-annotator>
+      <TextAnnotator />
+    </template>
     <template #phenotype-explorer>Phenotype Explorer</template>
   </AppTabs>
 </template>
@@ -25,11 +27,13 @@
 import { defineComponent } from "vue";
 import AppTabs from "@/components/AppTabs.vue";
 import NodeSearch from "./NodeSearch.vue";
+import TextAnnotator from "./TextAnnotator.vue";
 
 export default defineComponent({
   components: {
     AppTabs,
     NodeSearch,
+    TextAnnotator,
   },
   methods: {
     // when tabs change, navigate to explore page
