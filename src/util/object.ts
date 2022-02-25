@@ -1,4 +1,4 @@
-import { merge } from "lodash";
+import { kebabCase, mapKeys, merge } from "lodash";
 
 // merge two arrays of objects by id
 // if exclusive, only include entries that are in array A
@@ -29,3 +29,12 @@ export const mergeArrays = (
   // convert object back to array
   return Object.values(result);
 };
+
+// convert attributes of a vue slot props object to kebab-case
+// https://github.com/vuejs/core/issues/5477
+export const kebabify = (
+  object: Record<string, unknown>
+): Record<string, unknown> =>
+  mapKeys(object, (value, key: string) =>
+    key.includes("on") ? key : kebabCase(key)
+  );

@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { Status } from "@/components/AppStatus";
+import { Status } from "./AppStatus";
 
 // icons for status codes
 const icons: Record<string, string> = {

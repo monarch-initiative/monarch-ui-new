@@ -21,7 +21,7 @@
       :id="`select-${id}`"
       class="button"
       role="combobox"
-      :aria-label="name"
+      v-tooltip="name"
       aria-multiselectable="true"
       :aria-expanded="expanded"
       :aria-controls="`list-${id}`"

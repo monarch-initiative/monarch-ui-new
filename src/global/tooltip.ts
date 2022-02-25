@@ -11,7 +11,9 @@ const setAriaLabel = (element: ReferenceElement, tooltip: string) => {
   if (!element.getAttribute("aria-label"))
     element.setAttribute(
       "aria-label",
-      ((element as HTMLElement).innerText + " - " + tooltip).toLowerCase()
+      [(element as HTMLElement).innerText, tooltip]
+        .filter((part) => part)
+        .join(" - ")
     );
 };
 

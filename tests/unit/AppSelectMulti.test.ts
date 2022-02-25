@@ -1,10 +1,8 @@
-import { ComponentPublicInstance } from "vue";
-import { mount, VueWrapper } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
-import { mountOptions } from "../setup";
+import { mountOptions, emitted } from "../setup";
 
 // some example props for each test
-type Options = Array<Record<string, unknown>>;
 const props = {
   name: "Multi select",
   options: [
@@ -15,10 +13,6 @@ const props = {
   ],
   modelValue: [{ value: "vegetables" }],
 };
-
-// pop last v-model value change from mounted wrapper
-const lastValue = (wrapper: VueWrapper<ComponentPublicInstance>): Options =>
-  (wrapper.emitted()["update:modelValue"].pop() as Array<Options>)[0];
 
 test("Opens/closes on click", async () => {
   const wrapper = mount(AppSelectMulti, { ...mountOptions, props });
@@ -33,16 +27,19 @@ test("Opens/closes on click", async () => {
   expect(wrapper.find("[role='listbox']").exists()).toBe(false);
 });
 
+// expected type of emitted update:modelValue events
+type T = Array<unknown>;
+
 test("Selects by click", async () => {
   const wrapper = mount(AppSelectMulti, { ...mountOptions, props });
   const button = wrapper.find("button");
   await button.trigger("click");
   await wrapper.findAll("[role='option']").at(0)?.trigger("click");
-  expect(lastValue(wrapper).length).toEqual(2);
+  expect(emitted<T>(wrapper)[0].length).toEqual(2);
   await wrapper.findAll("[role='option']").at(2)?.trigger("click");
-  expect(lastValue(wrapper).length).toEqual(3);
+  expect(emitted<T>(wrapper)[0].length).toEqual(3);
   await wrapper.findAll("[role='option']").at(3)?.trigger("click");
-  expect(lastValue(wrapper).length).toEqual(4);
+  expect(emitted<T>(wrapper)[0].length).toEqual(4);
 });
 
 test("Selects by keyboard", async () => {
@@ -51,14 +48,14 @@ test("Selects by keyboard", async () => {
   await button.trigger("click");
   await button.trigger("keydown", { key: "ArrowUp" });
   await button.trigger("keydown", { key: "Enter" });
-  expect(lastValue(wrapper).length).toEqual(2);
+  expect(emitted<T>(wrapper)[0].length).toEqual(2);
   await button.trigger("keydown", { key: "ArrowUp" });
   await button.trigger("keydown", { key: "ArrowUp" });
   await button.trigger("keydown", { key: "Enter" });
-  expect(lastValue(wrapper).length).toEqual(3);
+  expect(emitted<T>(wrapper)[0].length).toEqual(3);
   await button.trigger("keydown", { key: "ArrowUp" });
   await button.trigger("keydown", { key: "Enter" });
-  expect(lastValue(wrapper).length).toEqual(4);
+  expect(emitted<T>(wrapper)[0].length).toEqual(4);
 });
 
 test("Selects all by click", async () => {
@@ -67,7 +64,7 @@ test("Selects all by click", async () => {
   await button.trigger("click");
   const option = wrapper.find("[role='menuitem']");
   await option.trigger("click");
-  expect(lastValue(wrapper).length).toEqual(4);
+  expect(emitted<T>(wrapper)[0].length).toEqual(4);
   await option.trigger("click");
-  expect(lastValue(wrapper).length).toEqual(0);
+  expect(emitted<T>(wrapper)[0].length).toEqual(0);
 });

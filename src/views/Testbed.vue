@@ -8,6 +8,29 @@
     <AppHeading>Testbed</AppHeading>
   </AppSection>
 
+  <!-- table component -->
+  <AppSection>
+    <span>{{ omit(table, ["cols", "rows"]) }}</span>
+    <span>{{ table.cols.map(({ activeFilters }) => activeFilters) }}</span>
+    <AppTable
+      v-bind="table"
+      @sort="(value) => (table.sort = value)"
+      @filter="
+        (colIndex, value) => (table.cols[colIndex].activeFilters = value)
+      "
+      @perPage="(value) => (table.perPage = value)"
+      @search="(value) => (table.search = value)"
+    >
+      <template #arbitrary>Arbitrary slot content</template>
+    </AppTable>
+  </AppSection>
+
+  <!-- input component -->
+  <AppSection>
+    <AppInput icon="search" />
+    <AppInput :multi="true" icon="search" />
+  </AppSection>
+
   <!-- single select component -->
   <AppSection>
     <AppHeading>Single Select</AppHeading>
@@ -50,14 +73,11 @@
 
     <AppFlex v-for="(row, index) of buttons" :key="index">
       <AppButton
-        v-for="([design, color, text, icon], index) of row"
+        v-for="(props, index) of row"
         :key="index"
         to="/"
         @click="alert"
-        :design="design"
-        :color="color"
-        :text="text"
-        :icon="icon"
+        v-bind="props"
       />
     </AppFlex>
   </AppSection>
@@ -103,17 +123,23 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import AppStatus from "@/components/AppStatus.vue";
-import AppTabs from "@/components/AppTabs.vue";
-import AppSelectSingle from "@/components/AppSelectSingle.vue";
+import AppInput from "@/components/AppInput.vue";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
+import AppSelectSingle from "@/components/AppSelectSingle.vue";
+import AppStatus from "@/components/AppStatus.vue";
+import AppTable from "@/components/AppTable.vue";
+import AppTabs from "@/components/AppTabs.vue";
+import { Cols, Rows } from "@/components/AppTable";
+import { omit, pick } from "lodash";
 
 export default defineComponent({
   components: {
-    AppStatus,
-    AppTabs,
-    AppSelectSingle,
+    AppInput,
     AppSelectMulti,
+    AppSelectSingle,
+    AppStatus,
+    AppTable,
+    AppTabs,
   },
   data() {
     const buttons = [];
@@ -125,7 +151,7 @@ export default defineComponent({
           ["Text", "download"],
           ["", "download"],
         ]) {
-          row.push([design, color, text, icon]);
+          row.push({ design, color, text, icon });
         }
         buttons.push(row);
       }
@@ -133,6 +159,47 @@ export default defineComponent({
 
     return {
       buttons,
+      table: {
+        cols: [
+          {
+            key: "name",
+            heading: "Name",
+            align: "left",
+            sortable: true,
+          },
+          {
+            key: "score",
+            heading: "Score",
+            availableFilters: [{ value: "numbers" }, { value: "nulls" }],
+            activeFilters: [{ value: "numbers" }],
+            sortable: true,
+          },
+          {
+            key: "details",
+            heading: "Details",
+            align: "left",
+            sortable: true,
+          },
+          {
+            key: "arbitrary",
+            heading: "Arbitrary",
+            align: "right",
+          },
+        ] as Cols,
+        rows: [
+          { name: "abc", score: 9, details: [1, 2] },
+          { name: "def", score: -1, details: [2, 1, 3] },
+          { name: "def", score: 2, details: [1] },
+          { name: "abc", score: 4, details: [2, 1] },
+          { name: "ghi", score: NaN, details: [1] },
+        ] as Rows,
+        sort: { key: "score", direction: "up" },
+        perPage: 10,
+        start: 1,
+        end: 11,
+        total: 123,
+        search: "",
+      },
       singleSelectOptions: [
         "apple",
         "banana",
@@ -160,6 +227,8 @@ export default defineComponent({
     alert() {
       window.alert("alert");
     },
+    omit,
+    pick,
   },
 });
 </script>

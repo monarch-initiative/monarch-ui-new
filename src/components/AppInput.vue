@@ -4,7 +4,7 @@
       {{ title }}
       <AppIcon v-if="required" icon="asterisk" class="asterisk" />
     </div>
-    <div class="input">
+    <div class="input" :data-icon="!!icon">
       <textarea
         v-if="multi"
         ref="input"
@@ -42,7 +42,7 @@ import { defineComponent, nextTick } from "vue";
 export default defineComponent({
   emits: ["update:modelValue", "focus", "input", "change"],
   props: {
-    //  state
+    // state
     modelValue: String,
     // placeholder string when nothing typed in
     placeholder: String,
@@ -90,6 +90,7 @@ export default defineComponent({
   flex-direction: column;
   gap: 10px;
   width: 100%;
+  --height: 40px;
 }
 
 .title {
@@ -120,8 +121,8 @@ export default defineComponent({
   position: absolute;
   right: 0;
   top: 0;
-  width: 40px;
-  height: 40px;
+  width: var(--height);
+  height: var(--height);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -131,8 +132,6 @@ export default defineComponent({
 input,
 textarea {
   width: 100%;
-  max-width: 100%;
-  min-height: 40px;
   border: solid 2px $off-black;
   border-radius: $rounded;
   outline: none;
@@ -140,12 +139,23 @@ textarea {
 }
 
 input {
-  padding: 0 10px;
+  height: var(--height);
+  padding: 0 calc(var(--height) * 0.25);
 }
 
 textarea {
-  padding: 10px;
-  min-height: 160px;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: calc(var(--height) * 2);
+  height: calc(var(--height) * 4);
+  padding: calc(var(--height) * 0.25);
+}
+
+.input[data-icon="true"] {
+  input,
+  textarea {
+    padding-right: calc(var(--height) * 0.85);
+  }
 }
 
 input:hover,
