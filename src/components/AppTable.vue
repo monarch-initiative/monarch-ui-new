@@ -34,7 +34,6 @@
                 col.availableFilters?.length
               "
               :name="'Filter by ' + col.heading"
-              v-tippy="'Filter by ' + col.heading"
               :options="col.availableFilters"
               :modelValue="col.activeFilters"
               @update:modelValue="(value) => emitFilter(colIndex, value)"
@@ -44,6 +43,7 @@
                 icon="filter"
                 design="small"
                 v-bind="kebabify(props)"
+                v-tippy="'Filter by ' + col.heading"
               />
             </AppSelectMulti>
           </th>

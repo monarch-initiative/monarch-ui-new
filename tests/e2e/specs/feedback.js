@@ -3,7 +3,7 @@ it("Feedback form can open and close", () => {
   cy.visit("/");
 
   // get open feedback form button
-  cy.get("button[aria-label*='feedback']").first().as("open");
+  cy.get(".float > button:last-child").first().as("open");
 
   // open feedback form modal
   cy.get("@open").trigger("click");
