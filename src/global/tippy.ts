@@ -19,7 +19,7 @@ const onShow = (instance: Instance): boolean =>
   !!String(instance.props.content).trim();
 
 // for inspecting popup while debugging
-const onHide = (): boolean => false;
+const onHide = (): boolean => true;
 
 export const options = {
   directive: "tippy",

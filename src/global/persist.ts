@@ -1,5 +1,4 @@
 import { ComponentOptions, defineComponent } from "vue";
-import { debounce } from "lodash";
 
 // persist mixin
 // usage: data() { return { foo } }, persist: ["foo"]
@@ -30,9 +29,9 @@ export default defineComponent({
 
     // setup listeners for writing values to storage on change
     for (const key of keys)
-      this.$watch(key, (value: unknown) =>
-        debouncedWrite(`${prefix}-${key}`, value)
-      );
+      this.$watch(key, (value: unknown) => {
+        write(`${prefix}-${key}`, value);
+      });
   },
 
   // clear keys on command
@@ -81,5 +80,3 @@ const write = (key: string, value: unknown) => {
 };
 
 const clear = (key: string) => storage.removeItem(key);
-
-const debouncedWrite = debounce(write, 1000);

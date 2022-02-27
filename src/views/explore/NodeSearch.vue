@@ -52,6 +52,7 @@
         <AppIcon
           :icon="`category-${kebabCase(result.category)}`"
           fallback="category-unknown"
+          :circle="true"
           class="type"
           v-tippy="`Category: ${capitalize(result.category || 'unknown')}`"
         />
@@ -300,7 +301,7 @@ export default NodeSearch;
 .title {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
   text-align: left;
 }
 

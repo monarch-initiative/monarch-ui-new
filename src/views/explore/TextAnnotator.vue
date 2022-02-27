@@ -17,7 +17,7 @@
   </AppFlex>
 
   <!-- status -->
-  <AppStatus v-if="status && content" ref="status" :status="status" />
+  <AppStatus v-if="content && status" ref="status" :status="status" />
 
   <!-- filename -->
   <strong v-if="filename">{{ filename }}</strong>
@@ -38,6 +38,7 @@
           <template v-for="(token, index) in tokens" :key="index">
             <AppIcon
               :icon="`category-${kebabCase(token.category)}`"
+              :circle="true"
               fallback="category-unknown"
             />
             <AppLink :to="token.id">{{ token.id }}</AppLink>
@@ -129,6 +130,13 @@ export default defineComponent({
     },
     kebabCase,
   },
+  mounted() {
+    this.annotate(this.filename);
+  },
+  persist: {
+    keys: ["content", "filename"],
+    namespace: "text-annotator",
+  },
 });
 </script>
 
@@ -137,9 +145,13 @@ p {
   white-space: pre-line;
 }
 
+span[data-has="false"] {
+  color: $dark-gray;
+}
+
 span[data-has="true"] {
   text-decoration: underline;
-  color: $theme-dark;
+  color: $black;
   cursor: help;
 }
 
