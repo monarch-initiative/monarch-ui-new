@@ -85,7 +85,4 @@ export const flush = async (): Promise<void> => {
 export const emitted = <T = unknown>(
   wrapper: VueWrapper<ComponentPublicInstance>,
   event = "update:modelValue"
-): Array<T> => {
-  console.log(wrapper.emitted());
-  return wrapper.emitted()[event].pop() as Array<T>;
-};
+): Array<T> => wrapper.emitted()[event].pop() as Array<T>;
