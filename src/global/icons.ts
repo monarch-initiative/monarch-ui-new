@@ -49,10 +49,13 @@ library.add(
   fas.faQuestionCircle,
   fas.faSearch,
   fas.faSignature,
+  fas.faSquare,
+  fas.faSquareCheck,
   fas.faSubscript,
   fas.faTimes,
   fas.faTimesCircle,
   fas.faTools,
   fas.faUpload,
-  fas.faUsers
+  fas.faUsers,
+  fas.faXmark
 );

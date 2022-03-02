@@ -19,45 +19,8 @@
 import { defineComponent } from "vue";
 import { kebabCase } from "lodash";
 
-// get heading level/tag, i.e. h1, h2, h3, etc
-function getTag(this: InstanceType<typeof Heading>) {
-  // if level manually specified, just use that
-  if (this.level) return "h" + this.level;
-
-  // otherwise, determine automatically based on heading's position in document
-  // https://dequeuniversity.com/rules/axe/4.1/page-has-heading-one
-
-  // heading element
-  const element = this?.$refs?.heading as HTMLElement;
-  // section element
-  const parent = element.parentElement as HTMLElement;
-
-  // if heading is first in section
-  const firstHeading = element.matches("*:first-child");
-  // if section is first in main
-  const firstSection = parent.matches("*:first-child");
-
-  // determine level
-  if (firstSection) {
-    if (firstHeading) return "h1";
-    else return "h2";
-  } else {
-    if (firstHeading) return "h2";
-    else return "h3";
-  }
-}
-
-// determine hash link
-function getLink(this: InstanceType<typeof Heading>) {
-  // heading element
-  const element = this?.$refs?.heading as HTMLElement;
-
-  // determine link from text content of heading
-  return kebabCase(element.textContent || "");
-}
-
 // heading component with anchor link and (optionally) automatic level
-const Heading = defineComponent({
+export default defineComponent({
   props: {
     // manually specified heading level
     level: Number,
@@ -70,17 +33,52 @@ const Heading = defineComponent({
       link: "",
     };
   },
+  methods: {
+    // get heading level/tag, i.e. h1, h2, h3, etc
+    getTag() {
+      // if level manually specified, just use that
+      if (this.level) return "h" + this.level;
+
+      // otherwise, determine automatically based on heading's position in document
+      // https://dequeuniversity.com/rules/axe/4.1/page-has-heading-one
+
+      // heading element
+      const element = this?.$refs?.heading as HTMLElement;
+      // section element
+      const parent = element.parentElement as HTMLElement;
+
+      // if heading is first in section
+      const firstHeading = element.matches("*:first-child");
+      // if section is first in main
+      const firstSection = parent.matches("*:first-child");
+
+      // determine level
+      if (firstSection) {
+        if (firstHeading) return "h1";
+        else return "h2";
+      } else {
+        if (firstHeading) return "h2";
+        else return "h3";
+      }
+    },
+    // determine hash link
+    getLink() {
+      // heading element
+      const element = this?.$refs?.heading as HTMLElement;
+
+      // determine link from text content of heading
+      return kebabCase(element.textContent || "");
+    },
+  },
   mounted() {
-    this.tag = getTag.call(this);
-    this.link = getLink.call(this);
+    this.tag = this.getTag();
+    this.link = this.getLink();
   },
   updated() {
-    this.tag = getTag.call(this);
-    this.link = getLink.call(this);
+    this.tag = this.getTag();
+    this.link = this.getLink();
   },
 });
-
-export default Heading;
 </script>
 
 <style lang="scss" scoped>

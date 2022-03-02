@@ -122,7 +122,7 @@
         class="search"
         icon="search"
         :modelValue="search"
-        @update:modelValue="(value) => emitSearch(value)"
+        @change="(value) => emitSearch(value)"
       />
       <AppButton
         icon="download"

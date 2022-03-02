@@ -4,7 +4,6 @@
     placeholder="Search for a gene, disease, phenotype, etc."
     icon="search"
     v-model="search"
-    @input="onInput"
     @change="onChange"
     @focus="onFocus"
   />
@@ -107,7 +106,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { debounce, kebabCase, capitalize } from "lodash";
+import { kebabCase, capitalize } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
@@ -115,65 +114,6 @@ import { getNodeSearchResults, Result } from "@/api/node-search";
 import { Status } from "@/components/AppStatus";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import { Options } from "@/components/AppSelectMulti";
-
-// get search results
-const getResults = async function (
-  this: InstanceType<typeof NodeSearch>,
-  // whether to perform "fresh" search, without filters. set to true when
-  // search changing, false when filters or page number changing.
-  fresh: boolean,
-  // whether to push new entry to browser history
-  history: boolean
-) {
-  // cancel any pending debounced calls
-  debouncedGetResults.cancel();
-
-  // push permanent history entry
-  if (history) {
-    const query: Record<string, string> = {};
-    if (this.search) query.search = this.search;
-    await this.$router.push({ ...this.$route, name: "Explore", query });
-  }
-
-  // loading...
-  this.status = { code: "loading", text: "Loading results" };
-  this.results = [];
-
-  try {
-    // get results from api
-    const { count, results, facets } = await getNodeSearchResults(
-      this.search,
-      fresh ? undefined : this.availableFilters,
-      fresh ? undefined : this.activeFilters,
-      fresh ? undefined : this.from
-    );
-    this.results = results;
-    this.originalSearch = this.search;
-    this.count = count;
-
-    if (fresh) {
-      // update filters based on facets from api
-      this.availableFilters = { ...facets };
-      this.activeFilters = { ...facets };
-    }
-
-    // clear status
-    this.status = null;
-  } catch (error) {
-    // error...
-    if (this.search.trim()) this.status = error as ApiError;
-    else this.status = null;
-    // clear results and filters
-    this.results = [];
-    if (fresh) {
-      this.availableFilters = {};
-      this.activeFilters = {};
-    }
-  }
-};
-
-// debounced version of push
-const debouncedGetResults = debounce(getResults, 1000);
 
 // example searches
 const examples = ["Marfan Syndrome", "Multicystic Kidney Dysplasia", "SSH"];
@@ -190,7 +130,7 @@ const examples = ["Marfan Syndrome", "Multicystic Kidney Dysplasia", "SSH"];
 // };
 
 // node search explore mode
-const NodeSearch = defineComponent({
+export default defineComponent({
   components: {
     AppInput,
     AppStatus,
@@ -215,6 +155,7 @@ const NodeSearch = defineComponent({
       // filters (facets) for search
       availableFilters: {} as Record<string, Options>,
       activeFilters: {} as Record<string, Options>,
+      // example searches
       examples,
     };
   },
@@ -225,12 +166,12 @@ const NodeSearch = defineComponent({
       const fromUrl = String(this.$route.query.search || "");
       if (this.search !== fromUrl) {
         this.search = fromUrl;
-        getResults.call(this, true, false);
+        this.getResults(true, false);
       }
     },
     // when start page changes
     from() {
-      getResults.call(this, false, false);
+      this.getResults(false, false);
     },
   },
   methods: {
@@ -241,27 +182,74 @@ const NodeSearch = defineComponent({
       // refocus box
       document.querySelector("input")?.focus();
     },
-    // when user types in text box
-    onInput() {
-      debouncedGetResults.call(this, true, true);
-    },
     // when user "submits" text box
     onChange() {
       this.page = 0;
       // prevent running query if results already match current search text
-      if (this.search !== this.originalSearch)
-        getResults.call(this, true, true);
+      if (this.search !== this.originalSearch) this.getResults(true, true);
     },
     // when user changes active filters
     onFilterChange() {
       this.page = 0;
-      debouncedGetResults.call(this, false, false);
+      this.getResults(false, false);
     },
     // enter in clicked example and search
     doExample(search: string) {
       this.search = search;
-      getResults.call(this, true, true);
+      this.getResults(true, true);
     },
+    // get search results
+    async getResults(
+      // whether to perform "fresh" search, without filters. set to true when
+      // search changing, false when filters or page number changing.
+      fresh: boolean,
+      // whether to push new entry to browser history
+      history: boolean
+    ) {
+      // push permanent history entry
+      if (history) {
+        const query: Record<string, string> = {};
+        if (this.search) query.search = this.search;
+        await this.$router.push({ ...this.$route, name: "Explore", query });
+      }
+
+      // loading...
+      this.status = { code: "loading", text: "Loading results" };
+      this.results = [];
+
+      try {
+        // get results from api
+        const { count, results, facets } = await getNodeSearchResults(
+          this.search,
+          fresh ? undefined : this.availableFilters,
+          fresh ? undefined : this.activeFilters,
+          fresh ? undefined : this.from
+        );
+        this.results = results;
+        this.originalSearch = this.search;
+        this.count = count;
+
+        if (fresh) {
+          // update filters based on facets from api
+          this.availableFilters = { ...facets };
+          this.activeFilters = { ...facets };
+        }
+
+        // clear status
+        this.status = null;
+      } catch (error) {
+        // error...
+        if (this.search.trim()) this.status = error as ApiError;
+        else this.status = null;
+        // clear results and filters
+        this.results = [];
+        if (fresh) {
+          this.availableFilters = {};
+          this.activeFilters = {};
+        }
+      }
+    },
+
     kebabCase,
     capitalize,
   },
@@ -285,12 +273,10 @@ const NodeSearch = defineComponent({
     },
   },
   mounted() {
-    // instantly submit
-    getResults.call(this, true, false);
+    // instantly search on page load
+    this.getResults(true, false);
   },
 });
-
-export default NodeSearch;
 </script>
 
 <style lang="scss" scoped>

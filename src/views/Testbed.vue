@@ -8,6 +8,16 @@
     <AppHeading>Testbed</AppHeading>
   </AppSection>
 
+  <!-- tags select component -->
+  <AppSection>
+    <AppSelectTags
+      name="Dessert"
+      placeholder="Search for a dessert"
+      :options="tagsSelectOptions"
+      v-model="tagsSelectValue"
+    />
+  </AppSection>
+
   <!-- table component -->
   <AppSection>
     <span>{{ omit(table, ["cols", "rows"]) }}</span>
@@ -27,7 +37,7 @@
 
   <!-- input component -->
   <AppSection>
-    <AppInput icon="search" />
+    <AppInput icon="search" @change="log('hi')" />
     <AppInput :multi="true" icon="search" />
   </AppSection>
 
@@ -76,7 +86,7 @@
         v-for="(props, index) of row"
         :key="index"
         to="/"
-        @click="alert"
+        @click="log"
         v-bind="props"
       />
     </AppFlex>
@@ -124,19 +134,22 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import AppInput from "@/components/AppInput.vue";
+import { omit, pick } from "lodash";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
+import AppSelectTags from "@/components/AppSelectTags.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import AppTable from "@/components/AppTable.vue";
 import AppTabs from "@/components/AppTabs.vue";
 import { Cols, Rows } from "@/components/AppTable";
-import { omit, pick } from "lodash";
+import { sleep } from "@/util/debug";
 
 export default defineComponent({
   components: {
     AppInput,
     AppSelectMulti,
     AppSelectSingle,
+    AppSelectTags,
     AppStatus,
     AppTable,
     AppTabs,
@@ -221,12 +234,23 @@ export default defineComponent({
         { value: "appliances" },
       ],
       multiSelectValue: [{ value: "vegetables" }],
+      tagsSelectOptions: async (search = "") => {
+        await sleep(200);
+        return [
+          { value: "ice cream", icon: "home" },
+          { value: "candy", icon: "database", count: "8 phenotypes" },
+          { value: "gummies", icon: "download", count: "4 phenotypes" },
+          { value: "brownies", icon: "puzzle-piece", count: "1 phenotype" },
+          { value: "cookies", icon: "comment" },
+        ].filter(({ value }) => value.includes(search));
+      },
+      tagsSelectValue: [
+        { value: "candy", icon: "database", count: "8 phenotypes" },
+      ],
     };
   },
   methods: {
-    alert() {
-      window.alert("alert");
-    },
+    log: console.log,
     omit,
     pick,
   },

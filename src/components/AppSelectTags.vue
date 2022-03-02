@@ -1,0 +1,334 @@
+<template>
+  <div class="select">
+    <!-- box -->
+    <div
+      class="box"
+      :id="`select-${id}`"
+      role="combobox"
+      :aria-label="name"
+      aria-multiselectable="true"
+      :aria-expanded="!!results.length"
+      :aria-controls="`list-${id}`"
+      aria-haspopup="listbox"
+      :aria-activedescendant="`option-${id}-${highlighted}`"
+      :data-focused="focused"
+    >
+      <!-- deselect button -->
+      <button
+        v-for="(selected, index) in modelValue"
+        :key="index"
+        class="selected"
+        :aria-label="`Deselect ${selected.value}`"
+        @click="toggleSelect(selected)"
+      >
+        {{ selected.value }}
+        <AppIcon icon="xmark" />
+      </button>
+
+      <!-- input box -->
+      <input
+        v-model="search"
+        @focus="onFocus"
+        @blur="onBlur"
+        @keydown="onKeydown"
+        :placeholder="placeholder"
+      />
+    </div>
+
+    <!-- dropdown -->
+    <div
+      v-if="!!results.length || status"
+      :id="`list-${id}`"
+      class="list"
+      role="listbox"
+      tabindex="0"
+    >
+      <!-- status -->
+      <AppStatus v-if="status" ref="status" :status="status" />
+
+      <!-- list of results -->
+      <table>
+        <tr
+          v-for="(option, index) in results"
+          :key="index"
+          :id="`option-${id}-${index}`"
+          class="option"
+          role="option"
+          :aria-selected="
+            !!modelValue.find((model) => model.value === option.value)
+          "
+          :data-highlighted="index === highlighted"
+          @click="toggleSelect(option)"
+          @mouseenter="highlighted = index"
+          @mousedown.prevent=""
+          @focusin="() => null"
+          @keydown="() => null"
+          tabindex="0"
+        >
+          <td class="option-check">
+            <AppIcon
+              :icon="
+                modelValue.find((model) => model.value === option.value)
+                  ? 'square-check'
+                  : 'square'
+              "
+            />
+          </td>
+          <td class="option-icon">
+            <AppIcon :icon="option.icon || ''" />
+          </td>
+          <td class="option-label">{{ startCase(String(option.value)) }}</td>
+          <td class="option-count">{{ option.count }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+// references:
+// https://vuetifyjs.com/en/components/autocompletes
+
+import { defineComponent, PropType } from "vue";
+import { uniqueId, startCase, debounce, DebouncedFunc } from "lodash";
+import { Option, Options, OptionsFunc } from "./AppSelectTags";
+import AppStatus from "@/components/AppStatus.vue";
+import { Status } from "@/components/AppStatus";
+import { ApiError } from "@/api";
+import { wrap } from "@/util/math";
+
+// custom tag select component with type-in async search and chips
+export default defineComponent({
+  components: {
+    AppStatus,
+  },
+  emits: ["update:modelValue", "change"],
+  props: {
+    // name of the field
+    name: {
+      type: String,
+      required: true,
+    },
+    // placeholder string when nothing typed in
+    placeholder: String,
+    // currently selected item
+    modelValue: {
+      type: Array as PropType<Options>,
+      required: true,
+    },
+    // async function that returns list of options to show
+    options: {
+      type: Function as PropType<OptionsFunc>,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      // unique id for instance of component
+      id: uniqueId(),
+      // currently searched text
+      search: "",
+      // results for searched text
+      results: [] as Options,
+      // index of option that is highlighted
+      highlighted: 0,
+      // whether input box focused
+      focused: false,
+      // status of query
+      status: null as Status | null,
+      // debounced get results function
+      getResults: debounce(() => null) as DebouncedFunc<() => Promise<void>>,
+    };
+  },
+  methods: {
+    // close results dropdown
+    close() {
+      this.search = "";
+      this.results = [];
+      this.highlighted = 0;
+      this.getResults.cancel();
+    },
+    // when input focused
+    onFocus() {
+      this.focused = true;
+    },
+    // when input blurred
+    onBlur() {
+      this.focused = false;
+    },
+    // when user presses key in input
+    onKeydown(event: KeyboardEvent) {
+      // arrow/home/end keys
+      if (["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
+        // prevent page scroll
+        event.preventDefault();
+
+        // move value up/down
+        let highlighted = this.highlighted;
+        if (event.key === "ArrowUp") highlighted--;
+        if (event.key === "ArrowDown") highlighted++;
+        if (event.key === "Home") highlighted = 0;
+        if (event.key === "End") highlighted = this.results.length - 1;
+
+        // update highlighted, wrapping beyond 0 or results length
+        this.highlighted = wrap(highlighted, 0, this.results.length);
+      }
+
+      // enter key to de/select highlighted result
+      if (event.key === "Enter") {
+        // prevent browser re-clicking open button
+        event.preventDefault();
+        if (this.results[this.highlighted]) {
+          this.toggleSelect(this.results[this.highlighted]);
+          this.search = "";
+        }
+      }
+
+      // esc key to close dropdown
+      if (event.key === "Escape") this.close();
+    },
+    // select or deselect option(s)
+    toggleSelect(option: Option) {
+      if (this.modelValue.find((model) => model.value === option.value))
+        this.$emit(
+          "update:modelValue",
+          this.modelValue.filter((model) => model.value !== option.value)
+        );
+      else this.$emit("update:modelValue", [...this.modelValue, option]);
+    },
+    startCase,
+  },
+  watch: {
+    // run async get results func when search text changes
+    async search() {
+      this.getResults();
+    },
+    focused() {
+      // get results when first focused
+      if (this.focused) this.getResults();
+      // clear search when input box blurred
+      else this.close();
+    },
+  },
+  created() {
+    // make instance-unique debounced method of getting results (async options)
+    this.getResults = debounce(async () => {
+      // loading...
+      this.status = { code: "loading", text: "Loading results" };
+      this.results = [];
+      this.highlighted = 0;
+
+      try {
+        // get results
+        this.results = await this.options(this.search);
+
+        // empty...
+        if (!this.results.length) throw new ApiError("No results", "warning");
+
+        // clear status
+        this.status = null;
+      } catch (error) {
+        // error...
+        this.status = error as ApiError;
+      }
+    }, 300);
+  },
+  beforeUnmount() {
+    // cancel any in-progress debounce
+    this.getResults.cancel();
+  },
+});
+</script>
+
+<style lang="scss" scoped>
+.select {
+  position: relative;
+  width: 100%;
+}
+
+.box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 5px 10px;
+  background: $white;
+  border: solid 2px $off-black;
+  border-radius: $rounded;
+  outline: none;
+  transition: box-shadow $fast;
+}
+
+.box:hover,
+.box[data-focused="true"] {
+  box-shadow: $outline;
+}
+
+input {
+  flex-grow: 1;
+  appearance: none;
+  border: none;
+  outline: none;
+}
+
+.selected {
+  display: flex;
+  gap: 7.5px;
+  background: $theme-light;
+  padding: 2.5px 10px;
+  border-radius: 999px;
+}
+
+.list {
+  position: absolute;
+  max-height: 200px;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  background: $white;
+  box-shadow: $shadow;
+  z-index: 2;
+}
+
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+td {
+  height: 35px;
+  padding: 0 10px;
+}
+
+.option {
+  cursor: pointer;
+  transition: background $fast;
+}
+
+.option[data-highlighted="true"] {
+  background: $light-gray;
+}
+
+.option-check {
+  width: 35px;
+  color: $theme;
+  font-size: 1.2rem;
+}
+
+.option-icon {
+  width: 35px;
+  color: $gray;
+}
+
+.option-label {
+  text-align: left;
+}
+
+.option-count {
+  color: $gray;
+  text-align: right;
+}
+</style>
