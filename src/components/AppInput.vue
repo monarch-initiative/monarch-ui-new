@@ -24,7 +24,6 @@
         :placeholder="placeholder"
         :type="type"
         :required="required"
-        :role="icon === 'search' ? 'search' : undefined"
       />
       <div class="icon">
         <AppIcon v-if="icon" :icon="icon" />
@@ -35,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick } from "vue";
+import { defineComponent } from "vue";
 import { debounce, DebouncedFunc } from "lodash";
 
 // basic text box input, single line or multi-line

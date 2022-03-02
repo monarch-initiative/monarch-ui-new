@@ -235,7 +235,7 @@ export default defineComponent({
     },
     // when user types in search
     emitSearch(value: string) {
-      console.log("emit search")
+      console.log("emit search");
       this.$emit("search", value);
     },
     // when user clicks download

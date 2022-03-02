@@ -1,4 +1,3 @@
-import { sleep } from "./../../src/util/debug";
 import { mount, emitted } from "../setup";
 import AppTable from "@/components/AppTable.vue";
 

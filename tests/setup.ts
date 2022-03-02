@@ -31,7 +31,10 @@ window.fetch = jest.fn().mockImplementation(fetch);
 // https://gist.github.com/j-v/6222ff5e91c18f506aff86853626c5c0
 jest.mock("lodash", () => {
   const module = jest.requireActual("lodash");
-  module.debounce = jest.fn((fn) => fn);
+  module.debounce = jest.fn((fn) => {
+    fn.cancel = jest.fn();
+    return fn;
+  });
   return module;
 });
 
@@ -45,6 +48,7 @@ beforeEach(async () => {
 // mount wrapper with standard options
 export const mount = <T>(
   component: T,
+  // eslint-disable-next-line
   { props, slots, ...rest }: MountingOptions<any> = {}
 ): VueWrapper<ComponentPublicInstance<T>> =>
   vueMount(component, {
