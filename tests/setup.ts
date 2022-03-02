@@ -8,7 +8,6 @@ import router from "@/router";
 import components from "@/global/components";
 import mixins from "@/global/mixins";
 import plugins from "@/global/plugins";
-import directives from "@/global/directives";
 import { sleep } from "./../src/util/debug";
 import { handlers } from "./fixtures";
 import "@/global/icons";
@@ -33,7 +32,6 @@ export const mountOptions: MountingOptions<ComponentCustomProps> = {
   global: {
     components,
     mixins,
-    directives,
     plugins,
   },
 };

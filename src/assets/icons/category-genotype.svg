@@ -1,44 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <path
-    fill="currentColor"
-    d="M72.87,137.44A65.44,65.44,0,1,1,138.31,72,65.51,65.51,0,0,1,72.87,137.44Zm0-126.39a61,61,0,1,0,60.94,61A61,61,0,0,0,72.87,11.05Z"
+    fill="none"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-width="5"
+    d="M44 15v5m0 6v1m0 6v3m0 11v8m0 6v1m0 6v2m0 6v9M56 15v5m0 6v1m0 6v3m0 11v8m0 6v1m0 6v2m0 6v9"
   />
-  <rect fill="currentColor" x="58.62" y="78.83" width="9.86" height="1.95" />
-  <path
-    fill="currentColor"
-    d="M58.62,56.65c0,1.92,2.21,3.47,4.93,3.47s4.93-1.55,4.93-3.47V52.82H58.62Z"
-  />
-  <rect fill="currentColor" x="77.26" y="78.83" width="9.86" height="1.95" />
-  <path
-    fill="currentColor"
-    d="M82.19,62.46c-2.72,0-4.93,1.55-4.93,3.46V77.09h9.85V65.92C87.11,64,84.91,62.46,82.19,62.46Z"
-  />
-  <path
-    fill="currentColor"
-    d="M63.55,62.46c-2.72,0-4.93,1.55-4.93,3.46V77.09h9.86V65.92C68.48,64,66.27,62.46,63.55,62.46Z"
-  />
-  <rect fill="currentColor" x="77.26" y="48.7" width="9.86" height="2.39" />
-  <path
-    fill="currentColor"
-    d="M77.26,56.65c0,1.92,2.21,3.47,4.93,3.47s4.92-1.55,4.92-3.47V52.82H77.26Z"
-  />
-  <path
-    fill="currentColor"
-    d="M68.48,43.87V35.92c0-1.92-2.21-3.47-4.93-3.47S58.62,34,58.62,35.92v7.95Z"
-  />
-  <path
-    fill="currentColor"
-    d="M58.62,90.09v18c0,1.92,2.21,3.47,4.93,3.47s4.93-1.55,4.93-3.47v-18Z"
-  />
-  <path
-    fill="currentColor"
-    d="M77.26,90.09v18c0,1.92,2.21,3.47,4.93,3.47s4.92-1.55,4.92-3.47v-18Z"
-  />
-  <path
-    fill="currentColor"
-    d="M87.11,43.87V35.92c0-1.92-2.2-3.47-4.92-3.47S77.26,34,77.26,35.92v7.95Z"
-  />
-  <rect fill="currentColor" x="58.62" y="48.7" width="9.86" height="2.39" />
-  <rect fill="currentColor" x="58.62" y="84.24" width="9.86" height="4.12" />
-  <rect fill="currentColor" x="77.26" y="84.24" width="9.86" height="4.12" />
 </svg>

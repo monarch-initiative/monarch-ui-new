@@ -67,7 +67,6 @@ Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-
     Each file that queries an API should define a `Response` type (expected schema to be returned from api) and `Result` type (expected schema to be returned from function and provided to component using it).
   - `/assets` - Static resources like images.
   - `/components` - Reusable building blocks of UI.
-  - `/directives` - See [Vue directives](https://v3.vuejs.org/guide/custom-directive.html#custom-directives).
   - `/global` - Components, directives, styles, and other "global" resources that always -- whether running the app normally or setting up and mounting a test -- need to be included in the Vue application instance.
   - `/router` - See [Vue router](https://router.vuejs.org/).
   - `/store` - See [Vuex](https://vuex.vuejs.org/) (similar to Redux).

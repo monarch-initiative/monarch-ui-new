@@ -10,7 +10,7 @@
         :to="home ? '' : '/'"
         class="logo"
         :data-home="home"
-        v-tooltip="home ? '' : 'Homepage'"
+        v-tippy="home ? '' : 'Homepage'"
       >
         <Logo class="image" />
         <!-- make logo text the h1 on homepage -->
@@ -39,21 +39,21 @@
       <AppLink
         class="link"
         to="/explore"
-        v-tooltip="'Dive right in and use Monarch'"
+        v-tippy="'Dive right in and use Monarch'"
       >
         Explore
       </AppLink>
       <AppLink
         class="link"
         to="/about"
-        v-tooltip="'Citing, licensing, sources, and other info'"
+        v-tippy="'Citing, licensing, sources, and other info'"
       >
         About
       </AppLink>
       <AppLink
         class="link"
         to="/help"
-        v-tooltip="'Feedback, docs, guides, contact, and more'"
+        v-tippy="'Feedback, docs, guides, contact, and more'"
       >
         Help
       </AppLink>

@@ -35,7 +35,7 @@
             icon="home"
             text="Home"
             :to="source.link"
-            v-tooltip="'Homepage or repository for this source'"
+            v-tippy="'Homepage or repository for this source'"
           />
           <AppButton
             v-if="source.license"
@@ -43,7 +43,7 @@
             icon="balance-scale"
             text="License"
             :to="source.license"
-            v-tooltip="'Link to licensing information for this source'"
+            v-tippy="'Link to licensing information for this source'"
           />
           <AppButton
             v-if="source.distribution"
@@ -51,7 +51,7 @@
             icon="download"
             text="RDF"
             :to="source.distribution"
-            v-tooltip="'Download Resource Description Framework file'"
+            v-tippy="'Download Resource Description Framework file'"
           />
           <AppButton
             v-if="source.date"
@@ -59,7 +59,7 @@
             color="secondary"
             icon="calendar-alt"
             :text="source.date"
-            v-tooltip="'Date when this source was ingested into Monarch'"
+            v-tippy="'Date when this source was ingested into Monarch'"
           />
         </AppFlex>
 
@@ -78,15 +78,16 @@
           <strong>Ingested Files:</strong>
         </p>
         <div class="files" v-if="source.files?.length">
-          <AppLink
+          <tippy
             v-for="(file, index) in source.files"
             :key="index"
-            :to="file"
-            class="truncate"
-            v-tooltip.break="file"
+            theme="break"
           >
-            {{ getFilename(file) }}
-          </AppLink>
+            <AppLink :to="file" class="truncate">
+              {{ getFilename(file) }}
+            </AppLink>
+            <template #content>{{ file }}</template>
+          </tippy>
         </div>
       </AppAccordion>
     </AppFlex>

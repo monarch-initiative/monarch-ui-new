@@ -6,7 +6,7 @@
         design="circle"
         class="button"
         icon="angle-up"
-        v-tooltip="'Jump to top of page'"
+        v-tippy="'Jump to top of page'"
         @click="jump()"
       />
     </transition>
@@ -17,7 +17,7 @@
         class="button"
         icon="comment"
         @click="showModal = true"
-        v-tooltip="'Give us feedback on this page!'"
+        v-tippy="'Give us feedback on this page!'"
       />
     </transition>
     <AppModal v-model="showModal" label="Feedback form">

@@ -8,7 +8,7 @@
         icon="history"
         class="icon"
         v-if="alumni"
-        v-tooltip="'Alumni team member'"
+        v-tippy="'Alumni team member'"
       />
     </div>
     <div v-if="role" class="text">

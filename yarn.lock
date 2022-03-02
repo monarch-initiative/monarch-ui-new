@@ -11110,7 +11110,7 @@ timsort@^0.3.0:
   resolved "https://registry.yarnpkg.com/timsort/-/timsort-0.3.0.tgz#405411a8e7e6339fe64db9a234de11dc31e02bd4"
   integrity sha1-QFQRqOfmM5/mTbmiNN4R3DHgK9Q=
 
-tippy.js@^6.3.2:
+tippy.js@^6.3.2, tippy.js@^6.3.7:
   version "6.3.7"
   resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-6.3.7.tgz#8ccfb651d642010ed9a32ff29b0e9e19c5b8c61c"
   integrity sha512-E1d3oP2emgJ9dRQZdf3Kkn0qJgI6ZLpyS5z6ZkY1DF3kaQaBsGZsndEpHwx+eC+tYM41HaSNvNtLx8tU57FzTQ==
@@ -11745,6 +11745,13 @@ vue-template-es2015-compiler@^1.6.0, vue-template-es2015-compiler@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
+
+vue-tippy@^6.0.0-alpha.52:
+  version "6.0.0-alpha.52"
+  resolved "https://registry.yarnpkg.com/vue-tippy/-/vue-tippy-6.0.0-alpha.52.tgz#7fd78d20634903786c3713ee9c5364d8f1fc13d9"
+  integrity sha512-P6BYXqk56diNw/NN5OIXYT31+dmCB0oS0mCvV/waNbQtJDzpWT3qSCo/COi0mrvOdtcqdj++G7VE3jjcGt0mLw==
+  dependencies:
+    tippy.js "^6.3.7"
 
 vue@^3.0.0:
   version "3.2.31"

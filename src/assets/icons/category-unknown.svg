@@ -1,12 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144">
-  <path
-    fill="currentColor"
-    d="M72.87,134.5a65.45,65.45,0,1,1,65.44-65.44A65.52,65.52,0,0,1,72.87,134.5Zm0-126.39a60.95,60.95,0,1,0,60.94,61A61,61,0,0,0,72.87,8.11Z"
-  />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <path
     fill="none"
     stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
     stroke-width="5"
-    d="M57,54A15,15,0,1,1,87,54C87,72,72,72,72,85M72,95L72,100z"
+    d="M32 38a18 18 0 1135.225 5.225C64.52 52.138 50 52.225 50 63v5m0 10v1"
   />
 </svg>

@@ -21,6 +21,7 @@
 
   <AppFlex
     gap="big"
+    direction="col"
     :id="`panel-${id}-${selected}`"
     class="panel"
     :aria-labelledby="`tab-${id}-${selected}`"

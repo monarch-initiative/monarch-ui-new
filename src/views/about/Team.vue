@@ -23,7 +23,7 @@
         class="icon"
         icon="history"
         v-if="group.alumni"
-        v-tooltip="'Alumni group'"
+        v-tippy="'Alumni group'"
       />
     </AppHeading>
     <AppLink v-if="group.link" :to="group.link" :aria-label="group.name">

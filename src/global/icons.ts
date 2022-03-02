@@ -34,6 +34,7 @@ library.add(
   fas.faExclamationCircle,
   fas.faExternalLinkAlt,
   fas.faFeatherAlt,
+  fas.faFileLines,
   fas.faFilter,
   fas.faHandsHelping,
   fas.faHashtag,
@@ -52,5 +53,6 @@ library.add(
   fas.faTimes,
   fas.faTimesCircle,
   fas.faTools,
+  fas.faUpload,
   fas.faUsers
 );

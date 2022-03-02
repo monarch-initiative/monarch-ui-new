@@ -1,6 +1,17 @@
 <template>
-  <InlineSvg v-if="custom" :src="custom" class="icon" aria-hidden="true" />
-  <FontAwesomeIcon v-else-if="fa" :icon="fa" aria-hidden="true" />
+  <InlineSvg
+    v-if="custom"
+    :src="custom"
+    class="icon"
+    aria-hidden="true"
+    :data-circle="circle"
+  />
+  <FontAwesomeIcon
+    v-else-if="fa"
+    :icon="fa"
+    aria-hidden="true"
+    :data-circle="circle"
+  />
 </template>
 
 <script lang="ts">
@@ -24,6 +35,8 @@ export default defineComponent({
     },
     // fallback icon to show if custom icon file cannot be found
     fallback: String,
+    // whether to put circle border around
+    circle: Boolean,
   },
   components: {
     FontAwesomeIcon,
@@ -59,5 +72,11 @@ export default defineComponent({
 <style lang="scss" scoped>
 .icon {
   height: 1em;
+}
+
+.icon[data-circle="true"] {
+  border-radius: 999px;
+  outline: solid 2px currentColor;
+  // background: $theme-light;
 }
 </style>
