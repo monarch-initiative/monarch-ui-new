@@ -122,7 +122,7 @@
         class="search"
         icon="search"
         :modelValue="search"
-        @change="(value) => emitSearch(value)"
+        @change="emitSearch"
       />
       <AppButton
         icon="download"
@@ -235,6 +235,7 @@ export default defineComponent({
     },
     // when user types in search
     emitSearch(value: string) {
+      console.log("emit search")
       this.$emit("search", value);
     },
     // when user clicks download

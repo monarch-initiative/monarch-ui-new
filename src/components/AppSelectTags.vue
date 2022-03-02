@@ -1,18 +1,7 @@
 <template>
   <div class="select">
     <!-- box -->
-    <div
-      class="box"
-      :id="`select-${id}`"
-      role="combobox"
-      :aria-label="name"
-      aria-multiselectable="true"
-      :aria-expanded="!!results.length"
-      :aria-controls="`list-${id}`"
-      aria-haspopup="listbox"
-      :aria-activedescendant="`option-${id}-${highlighted}`"
-      :data-focused="focused"
-    >
+    <div class="box" :data-focused="focused">
       <!-- deselect button -->
       <button
         v-for="(selected, index) in modelValue"
@@ -28,10 +17,18 @@
       <!-- input box -->
       <input
         v-model="search"
+        :placeholder="placeholder"
+        role="combobox"
+        :aria-label="name"
+        aria-multiselectable="true"
+        :aria-expanded="!!results.length"
+        :aria-controls="`list-${id}`"
+        aria-haspopup="listbox"
+        :aria-activedescendant="`option-${id}-${highlighted}`"
+        aria-autocomplete="list"
         @focus="onFocus"
         @blur="onBlur"
         @keydown="onKeydown"
-        :placeholder="placeholder"
       />
     </div>
 
@@ -87,10 +84,11 @@
 
 <script lang="ts">
 // references:
+// https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/combobox/combobox-autocomplete-list.html
 // https://vuetifyjs.com/en/components/autocompletes
 
 import { defineComponent, PropType } from "vue";
-import { uniqueId, startCase, debounce, DebouncedFunc } from "lodash";
+import { uniqueId, isEqual, startCase, debounce, DebouncedFunc } from "lodash";
 import { Option, Options, OptionsFunc } from "./AppSelectTags";
 import AppStatus from "@/components/AppStatus.vue";
 import { Status } from "@/components/AppStatus";
@@ -126,6 +124,8 @@ export default defineComponent({
     return {
       // unique id for instance of component
       id: uniqueId(),
+      // array of selected options
+      selected: [] as Options,
       // currently searched text
       search: "",
       // results for searched text
@@ -189,16 +189,33 @@ export default defineComponent({
     },
     // select or deselect option(s)
     toggleSelect(option: Option) {
-      if (this.modelValue.find((model) => model.value === option.value))
-        this.$emit(
-          "update:modelValue",
-          this.modelValue.filter((model) => model.value !== option.value)
+      if (this.selected.find((model) => model.value === option.value))
+        this.selected = this.selected.filter(
+          (model) => model.value !== option.value
         );
-      else this.$emit("update:modelValue", [...this.modelValue, option]);
+      else this.selected.push(option);
     },
     startCase,
   },
   watch: {
+    // when model changes, update selected value
+    modelValue: {
+      handler() {
+        // avoid infinite rerenders
+        if (!isEqual(this.selected, this.modelValue))
+          this.selected = this.modelValue;
+      },
+      deep: true,
+      immediate: true,
+    },
+    // when selected value changes
+    selected: {
+      handler() {
+        // emit updated model
+        this.$emit("update:modelValue", this.selected);
+      },
+      deep: true,
+    },
     // run async get results func when search text changes
     async search() {
       this.getResults();
@@ -231,7 +248,7 @@ export default defineComponent({
         // error...
         this.status = error as ApiError;
       }
-    }, 300);
+    }, 500);
   },
   beforeUnmount() {
     // cancel any in-progress debounce

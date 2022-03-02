@@ -24,6 +24,7 @@
         :placeholder="placeholder"
         :type="type"
         :required="required"
+        :role="icon === 'search' ? 'search' : undefined"
       />
       <div class="icon">
         <AppIcon v-if="icon" :icon="icon" />
@@ -38,7 +39,6 @@ import { defineComponent, nextTick } from "vue";
 import { debounce, DebouncedFunc } from "lodash";
 
 // basic text box input, single line or multi-line
-// can be used as controlled (you provide v-model/modelValue) or uncontrolled
 export default defineComponent({
   emits: ["update:modelValue", "focus", "input", "change"],
   props: {
@@ -80,18 +80,15 @@ export default defineComponent({
     },
     // when user "commits" change to value, e.g. pressing enter, de-focusing, etc
     onChange(event: Event) {
+      // if you see this event fire unexpectedly, check this:
       // https://bugs.chromium.org/p/chromium/issues/detail?id=1297334
-      nextTick(() => {
-        const value = (event.target as HTMLInputElement).value;
-        if (
-          document?.contains(event.target as Node) &&
-          // debounced on change has not already emitted
-          value !== this.last
-        ) {
-          this.$emit("change", value);
-          this.last = value;
-        }
-      });
+
+      const value = (event.target as HTMLInputElement).value;
+      // debounced on change has not already emitted
+      if (value !== this.last) {
+        this.$emit("change", value);
+        this.last = value;
+      }
     },
   },
   created() {

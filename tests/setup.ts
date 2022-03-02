@@ -1,9 +1,14 @@
 // jest setup
 import { ComponentPublicInstance } from "vue";
-import { MountingOptions, VueWrapper } from "@vue/test-utils";
-import { nextTick, ComponentCustomProps } from "vue";
+import {
+  MountingOptions,
+  VueWrapper,
+  mount as vueMount,
+} from "@vue/test-utils";
+import { nextTick } from "vue";
 import { setupServer } from "msw/node";
 import fetch from "node-fetch";
+import { cloneDeep } from "lodash";
 import router from "@/router";
 import components from "@/global/components";
 import mixins from "@/global/mixins";
@@ -20,6 +25,16 @@ window.ResizeObserver = jest
   .mockImplementation(() => ({ observe: jest.fn() }));
 window.fetch = jest.fn().mockImplementation(fetch);
 
+// "fast-forward" lodash debounce calls
+// https://gist.github.com/apieceofbart/d28690d52c46848c39d904ce8968bb27
+// https://github.com/facebook/jest/issues/3465
+// https://gist.github.com/j-v/6222ff5e91c18f506aff86853626c5c0
+jest.mock("lodash", () => {
+  const module = jest.requireActual("lodash");
+  module.debounce = jest.fn((fn) => fn);
+  return module;
+});
+
 // run before each test
 beforeEach(async () => {
   // set default route and wait until ready
@@ -27,14 +42,22 @@ beforeEach(async () => {
   await router.isReady();
 });
 
-// standard mounting options
-export const mountOptions: MountingOptions<ComponentCustomProps> = {
-  global: {
-    components,
-    mixins,
-    plugins,
-  },
-};
+// mount wrapper with standard options
+export const mount = <T>(
+  component: T,
+  { props, slots, ...rest }: MountingOptions<any> = {}
+): VueWrapper<ComponentPublicInstance<T>> =>
+  vueMount(component, {
+    // deep clone props so nested objects get new instance every mount
+    props: cloneDeep(props),
+    global: {
+      components,
+      mixins,
+      plugins,
+    },
+    slots,
+    ...rest,
+  });
 
 // setup mock-service-worker for node.js (jest)
 const server = setupServer(...handlers);
@@ -52,7 +75,13 @@ export const flush = async (): Promise<void> => {
 
 // util to get last emitted event from mounted wrapper
 // returns array of event props, i.e. $emit("someEvent", prop1, prop2, ...)
+// this only checks emitted model value updates, it doesn't two-way bind like
+// v-model. make sure to only use on components that keep local track of
+// model state and don't rely on parent to do that with v-model.
 export const emitted = <T = unknown>(
   wrapper: VueWrapper<ComponentPublicInstance>,
   event = "update:modelValue"
-): Array<T> => wrapper.emitted()[event].pop() as Array<T>;
+): Array<T> => {
+  console.log(wrapper.emitted());
+  return wrapper.emitted()[event].pop() as Array<T>;
+};

@@ -8,18 +8,9 @@
     <AppHeading>Testbed</AppHeading>
   </AppSection>
 
-  <!-- tags select component -->
-  <AppSection>
-    <AppSelectTags
-      name="Dessert"
-      placeholder="Search for a dessert"
-      :options="tagsSelectOptions"
-      v-model="tagsSelectValue"
-    />
-  </AppSection>
-
   <!-- table component -->
   <AppSection>
+    <AppHeading>Table</AppHeading>
     <span>{{ omit(table, ["cols", "rows"]) }}</span>
     <span>{{ table.cols.map(({ activeFilters }) => activeFilters) }}</span>
     <AppTable
@@ -37,50 +28,56 @@
 
   <!-- input component -->
   <AppSection>
-    <AppInput icon="search" @change="log('hi')" />
-    <AppInput :multi="true" icon="search" />
+    <AppHeading>Input</AppHeading>
+    <AppInput icon="search" placeholder="Single line input" />
+    <AppInput :multi="true" icon="search" placeholder="Multi-line input" />
   </AppSection>
 
   <!-- single select component -->
   <AppSection>
     <AppHeading>Single Select</AppHeading>
-
-    <AppFlex direction="col">
-      <span>{{ singleSelectValue }}</span>
-      <AppSelectSingle
-        name="Fruit"
-        :options="singleSelectOptions"
-        v-model="singleSelectValue"
-      />
-    </AppFlex>
+    <span>{{ singleSelectValue }}</span>
+    <AppSelectSingle
+      name="Fruit"
+      :options="singleSelectOptions"
+      v-model="singleSelectValue"
+    />
   </AppSection>
 
   <!-- multi select component -->
   <AppSection>
     <AppHeading>Multi Select</AppHeading>
+    <span>{{ multiSelectValue }}</span>
+    <AppSelectMulti
+      name="Category"
+      :options="multiSelectOptions"
+      v-model="multiSelectValue"
+    />
+    <AppSelectMulti
+      name="Category"
+      :options="multiSelectOptions"
+      v-model="multiSelectValue"
+      v-slot="props"
+    >
+      <AppButton icon="filter" v-bind="props" design="small" />
+    </AppSelectMulti>
+  </AppSection>
 
-    <AppFlex direction="col">
-      <span>{{ multiSelectValue }}</span>
-      <AppSelectMulti
-        name="Category"
-        :options="multiSelectOptions"
-        v-model="multiSelectValue"
-      />
-      <AppSelectMulti
-        name="Category"
-        :options="multiSelectOptions"
-        v-model="multiSelectValue"
-        v-slot="props"
-      >
-        <AppButton icon="filter" v-bind="props" design="small" />
-      </AppSelectMulti>
-    </AppFlex>
+  <!-- tags select component -->
+  <AppSection>
+    <AppHeading>Tags Select</AppHeading>
+    <span>{{ tagsSelectValue }}</span>
+    <AppSelectTags
+      name="Dessert"
+      placeholder="Search for a dessert"
+      :options="tagsSelectOptions"
+      v-model="tagsSelectValue"
+    />
   </AppSection>
 
   <!-- button component -->
   <AppSection>
     <AppHeading>Button</AppHeading>
-
     <AppFlex v-for="(row, index) of buttons" :key="index">
       <AppButton
         v-for="(props, index) of row"

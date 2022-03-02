@@ -1,10 +1,9 @@
-import { mount } from "@vue/test-utils";
-import { mountOptions, flush } from "../setup";
+import { mount, flush } from "../setup";
 import Help from "@/views/help/Help.vue";
 
 test("Help page renders uptimerobot statuses", async () => {
   // mount and wait until async rendering is done
-  const wrapper = mount(Help, mountOptions);
+  const wrapper = mount(Help);
 
   // wait for async rendering to finish
   await flush();
