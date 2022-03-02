@@ -56,6 +56,10 @@ library.add(
   fas.faTimesCircle,
   fas.faTools,
   fas.faUpload,
+<<<<<<< HEAD
   fas.faUsers,
   fas.faXmark
+=======
+  fas.faUsers
+>>>>>>> main
 );
