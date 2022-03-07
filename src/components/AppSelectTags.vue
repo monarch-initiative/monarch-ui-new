@@ -8,7 +8,7 @@
         :key="index"
         class="selected"
         :aria-label="`Deselect ${selected.value}`"
-        @click="toggleSelect(selected)"
+        @click="deselect(selected)"
       >
         {{ selected.value }}
         <AppIcon icon="xmark" />
@@ -46,31 +46,20 @@
       <!-- list of results -->
       <table>
         <tr
-          v-for="(option, index) in results"
+          v-for="(option, index) in availableResults"
           :key="index"
           :id="`option-${id}-${index}`"
           class="option"
           role="option"
-          :aria-selected="
-            !!modelValue.find((model) => model.value === option.value)
-          "
+          :aria-selected="true"
           :data-highlighted="index === highlighted"
-          @click="toggleSelect(option)"
+          @click="select(option)"
           @mouseenter="highlighted = index"
           @mousedown.prevent=""
           @focusin="() => null"
           @keydown="() => null"
           tabindex="0"
         >
-          <td class="option-check">
-            <AppIcon
-              :icon="
-                modelValue.find((model) => model.value === option.value)
-                  ? 'square-check'
-                  : 'square'
-              "
-            />
-          </td>
           <td class="option-icon">
             <AppIcon :icon="option.icon || ''" />
           </td>
@@ -168,34 +157,56 @@ export default defineComponent({
         if (event.key === "ArrowUp") highlighted--;
         if (event.key === "ArrowDown") highlighted++;
         if (event.key === "Home") highlighted = 0;
-        if (event.key === "End") highlighted = this.results.length - 1;
+        if (event.key === "End") highlighted = this.availableResults.length - 1;
 
         // update highlighted, wrapping beyond 0 or results length
-        this.highlighted = wrap(highlighted, 0, this.results.length);
+        this.highlighted = wrap(highlighted, 0, this.availableResults.length);
+      }
+
+      // backspace key to deselect last-selected option
+      if (event.key === "Backspace") {
+        if (this.search === "") this.deselect();
       }
 
       // enter key to de/select highlighted result
       if (event.key === "Enter") {
         // prevent browser re-clicking open button
         event.preventDefault();
-        if (this.results[this.highlighted]) {
-          this.toggleSelect(this.results[this.highlighted]);
+        if (this.availableResults[this.highlighted]) {
+          this.select(this.availableResults[this.highlighted]);
+          // reset text search
           this.search = "";
+          // if highlighted beyond last option, clamp
+          if (this.highlighted > this.availableResults.length - 1)
+            this.highlighted = this.availableResults.length - 1;
         }
       }
 
       // esc key to close dropdown
       if (event.key === "Escape") this.close();
     },
-    // select or deselect option(s)
-    toggleSelect(option: Option) {
-      if (this.selected.find((model) => model.value === option.value))
+    // select an option
+    select(option: Option) {
+      this.selected.push(option);
+    },
+    // deselect a specific option or last-selected option
+    deselect(option?: Option) {
+      if (option)
         this.selected = this.selected.filter(
           (model) => model.value !== option.value
         );
-      else this.selected.push(option);
+      else this.selected.pop();
     },
     startCase,
+  },
+  computed: {
+    // list of unselected results to show
+    availableResults() {
+      return this.results.filter(
+        (option) =>
+          !this.modelValue.find((model) => model.value === option.value)
+      );
+    },
   },
   watch: {
     // when model changes, update selected value
@@ -327,12 +338,6 @@ td {
 
 .option[data-highlighted="true"] {
   background: $light-gray;
-}
-
-.option-check {
-  width: 35px;
-  color: $theme;
-  font-size: 1.2rem;
 }
 
 .option-icon {
