@@ -26,15 +26,15 @@
         aria-haspopup="listbox"
         :aria-activedescendant="`option-${id}-${highlighted}`"
         aria-autocomplete="list"
-        @focus="onFocus"
-        @blur="onBlur"
+        @focus="focused = true"
+        @blur="focused = false"
         @keydown="onKeydown"
       />
     </div>
 
     <!-- dropdown -->
     <div
-      v-if="!!results.length || status"
+      v-if="focused"
       :id="`list-${id}`"
       class="list"
       role="listbox"
@@ -137,14 +137,6 @@ export default defineComponent({
       this.highlighted = 0;
       this.getResults.cancel();
     },
-    // when input focused
-    onFocus() {
-      this.focused = true;
-    },
-    // when input blurred
-    onBlur() {
-      this.focused = false;
-    },
     // when user presses key in input
     onKeydown(event: KeyboardEvent) {
       // arrow/home/end keys
@@ -174,8 +166,6 @@ export default defineComponent({
         event.preventDefault();
         if (this.availableResults[this.highlighted]) {
           this.select(this.availableResults[this.highlighted]);
-          // reset text search
-          this.search = "";
           // if highlighted beyond last option, clamp
           if (this.highlighted > this.availableResults.length - 1)
             this.highlighted = this.availableResults.length - 1;
@@ -188,6 +178,7 @@ export default defineComponent({
     // select an option
     select(option: Option) {
       this.selected.push(option);
+      this.search = "";
     },
     // deselect a specific option or last-selected option
     deselect(option?: Option) {
