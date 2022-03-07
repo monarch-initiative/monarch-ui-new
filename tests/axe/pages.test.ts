@@ -1,7 +1,6 @@
-import { mount } from "@vue/test-utils";
 import router, { routes } from "@/router";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { mountOptions, flush } from "../setup";
+import { mount, flush } from "../setup";
 import App from "@/App.vue";
 
 // add axe to jest
@@ -15,7 +14,7 @@ test(
   "Page accessibility checks",
   async () => {
     // mount app
-    const wrapper = mount(App, mountOptions);
+    const wrapper = mount(App);
 
     // go through each page/route
     for (const page of pages) {

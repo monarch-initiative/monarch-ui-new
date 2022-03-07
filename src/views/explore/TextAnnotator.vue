@@ -5,7 +5,7 @@
     icon="file-lines"
     placeholder="Paste full text"
     v-model="content"
-    @change="annotate"
+    @change="annotate()"
   />
 
   <!-- other options -->
@@ -131,7 +131,7 @@ export default defineComponent({
     kebabCase,
   },
   mounted() {
-    this.annotate(this.filename);
+    this.annotate(this.filename || "");
   },
   persist: {
     keys: ["content", "filename"],

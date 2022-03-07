@@ -1,6 +1,5 @@
-import { mount } from "@vue/test-utils";
+import { mount, emitted } from "../setup";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
-import { mountOptions, emitted } from "../setup";
 
 // some example props for each test
 const props = {
@@ -15,7 +14,7 @@ const props = {
 };
 
 test("Opens/closes on click", async () => {
-  const wrapper = mount(AppSelectMulti, { ...mountOptions, props });
+  const wrapper = mount(AppSelectMulti, { props });
   const button = wrapper.find("button");
   await button.trigger("click");
   expect(wrapper.find("[role='listbox']").exists()).toBe(true);
@@ -31,7 +30,7 @@ test("Opens/closes on click", async () => {
 type T = Array<unknown>;
 
 test("Selects by click", async () => {
-  const wrapper = mount(AppSelectMulti, { ...mountOptions, props });
+  const wrapper = mount(AppSelectMulti, { props });
   const button = wrapper.find("button");
   await button.trigger("click");
   await wrapper.findAll("[role='option']").at(0)?.trigger("click");
@@ -43,7 +42,7 @@ test("Selects by click", async () => {
 });
 
 test("Selects by keyboard", async () => {
-  const wrapper = mount(AppSelectMulti, { ...mountOptions, props });
+  const wrapper = mount(AppSelectMulti, { props });
   const button = wrapper.find("button");
   await button.trigger("click");
   await button.trigger("keydown", { key: "ArrowUp" });
@@ -59,7 +58,7 @@ test("Selects by keyboard", async () => {
 });
 
 test("Selects all by click", async () => {
-  const wrapper = mount(AppSelectMulti, { ...mountOptions, props });
+  const wrapper = mount(AppSelectMulti, { props });
   const button = wrapper.find("button");
   await button.trigger("click");
   const option = wrapper.find("[role='menuitem']");

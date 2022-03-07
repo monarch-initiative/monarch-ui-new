@@ -5,13 +5,13 @@
     stroke-linecap="round"
     stroke-linejoin="round"
     stroke-width="5"
-    d="M25 70c-4 0-5-3.333-5-5V35h10m-5 35c4 0 5-3.333 5-5V35m-5 35h50c4 0 5-3.333 5-5V25H30v10M40 52h30m-30 9h30"
+    d="M25 72c-4 0-5-3.333-5-5V37h10m-5 35c4 0 5-3.333 5-5V37m-5 35h50c4 0 5-3.333 5-5V27H30v10M40 54h30m-30 9h30"
   />
   <path
     fill="none"
     stroke="currentColor"
     stroke-linejoin="round"
     stroke-width="5"
-    d="M40 34h30v9H40z"
+    d="M40 36h30v9H40z"
   />
 </svg>

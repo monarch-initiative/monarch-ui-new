@@ -1,7 +1,5 @@
-import { flush } from "./../setup";
-import { mount } from "@vue/test-utils";
+import { mount, flush } from "./../setup";
 import AppTabs from "@/components/AppTabs.vue";
-import { mountOptions } from "../setup";
 
 // some example props for each test
 const props = {
@@ -22,7 +20,7 @@ const slots = {
 };
 
 test("Renders default", async () => {
-  const wrapper = mount(AppTabs, { ...mountOptions, props, slots });
+  const wrapper = mount(AppTabs, { props, slots });
   const button = wrapper.find("button[tabindex='0']");
   expect(button.text()).toContain(props.tabs[1].text);
   const content = wrapper.find("[role='tabpanel']");
@@ -31,7 +29,7 @@ test("Renders default", async () => {
 });
 
 test("Switches by mouse", async () => {
-  const wrapper = mount(AppTabs, { ...mountOptions, props, slots });
+  const wrapper = mount(AppTabs, { props, slots });
   const button = wrapper.find("button");
   const content = wrapper.find("[role='tabpanel']");
   await button.trigger("click");
@@ -41,7 +39,6 @@ test("Switches by mouse", async () => {
 
 test("Switches by keyboard", async () => {
   const wrapper = mount(AppTabs, {
-    ...mountOptions,
     props,
     slots,
     attachTo: document.body,

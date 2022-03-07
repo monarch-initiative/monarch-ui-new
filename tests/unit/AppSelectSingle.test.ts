@@ -1,6 +1,5 @@
-import { mount } from "@vue/test-utils";
+import { mount, emitted } from "../setup";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
-import { emitted, mountOptions } from "../setup";
 
 // some example props for each test
 const props = {
@@ -10,7 +9,7 @@ const props = {
 };
 
 test("Opens/closes on click", async () => {
-  const wrapper = mount(AppSelectSingle, { ...mountOptions, props });
+  const wrapper = mount(AppSelectSingle, { props });
   const button = wrapper.find("button");
   await button.trigger("click");
   expect(wrapper.find("[role='listbox']").exists()).toBe(true);
@@ -23,7 +22,7 @@ test("Opens/closes on click", async () => {
 });
 
 test("Selects by click", async () => {
-  const wrapper = mount(AppSelectSingle, { ...mountOptions, props });
+  const wrapper = mount(AppSelectSingle, { props });
   const button = wrapper.find("button");
   await button.trigger("click");
   const option = wrapper.find("[role='option']");
@@ -33,7 +32,7 @@ test("Selects by click", async () => {
 });
 
 test("Selects by keyboard", async () => {
-  const wrapper = mount(AppSelectSingle, { ...mountOptions, props });
+  const wrapper = mount(AppSelectSingle, { props });
   const button = wrapper.find("button");
   await button.trigger("focus");
   await button.trigger("keydown", { key: "ArrowDown" });

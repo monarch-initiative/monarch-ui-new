@@ -10,6 +10,7 @@
 
   <!-- table component -->
   <AppSection>
+    <AppHeading>Table</AppHeading>
     <span>{{ omit(table, ["cols", "rows"]) }}</span>
     <span>{{ table.cols.map(({ activeFilters }) => activeFilters) }}</span>
     <AppTable
@@ -27,56 +28,62 @@
 
   <!-- input component -->
   <AppSection>
-    <AppInput icon="search" />
-    <AppInput :multi="true" icon="search" />
+    <AppHeading>Input</AppHeading>
+    <AppInput icon="search" placeholder="Single line input" />
+    <AppInput :multi="true" icon="search" placeholder="Multi-line input" />
   </AppSection>
 
   <!-- single select component -->
   <AppSection>
     <AppHeading>Single Select</AppHeading>
-
-    <AppFlex direction="col">
-      <span>{{ singleSelectValue }}</span>
-      <AppSelectSingle
-        name="Fruit"
-        :options="singleSelectOptions"
-        v-model="singleSelectValue"
-      />
-    </AppFlex>
+    <span>{{ singleSelectValue }}</span>
+    <AppSelectSingle
+      name="Fruit"
+      :options="singleSelectOptions"
+      v-model="singleSelectValue"
+    />
   </AppSection>
 
   <!-- multi select component -->
   <AppSection>
     <AppHeading>Multi Select</AppHeading>
+    <span>{{ multiSelectValue }}</span>
+    <AppSelectMulti
+      name="Category"
+      :options="multiSelectOptions"
+      v-model="multiSelectValue"
+    />
+    <AppSelectMulti
+      name="Category"
+      :options="multiSelectOptions"
+      v-model="multiSelectValue"
+      v-slot="props"
+    >
+      <AppButton icon="filter" v-bind="props" design="small" />
+    </AppSelectMulti>
+  </AppSection>
 
-    <AppFlex direction="col">
-      <span>{{ multiSelectValue }}</span>
-      <AppSelectMulti
-        name="Category"
-        :options="multiSelectOptions"
-        v-model="multiSelectValue"
-      />
-      <AppSelectMulti
-        name="Category"
-        :options="multiSelectOptions"
-        v-model="multiSelectValue"
-        v-slot="props"
-      >
-        <AppButton icon="filter" v-bind="props" design="small" />
-      </AppSelectMulti>
-    </AppFlex>
+  <!-- tags select component -->
+  <AppSection>
+    <AppHeading>Tags Select</AppHeading>
+    <span>{{ tagsSelectValue }}</span>
+    <AppSelectTags
+      name="Dessert"
+      placeholder="Search for a dessert"
+      :options="tagsSelectOptions"
+      v-model="tagsSelectValue"
+    />
   </AppSection>
 
   <!-- button component -->
   <AppSection>
     <AppHeading>Button</AppHeading>
-
     <AppFlex v-for="(row, index) of buttons" :key="index">
       <AppButton
         v-for="(props, index) of row"
         :key="index"
         to="/"
-        @click="alert"
+        @click="log"
         v-bind="props"
       />
     </AppFlex>
@@ -124,19 +131,22 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import AppInput from "@/components/AppInput.vue";
+import { omit, pick } from "lodash";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
+import AppSelectTags from "@/components/AppSelectTags.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import AppTable from "@/components/AppTable.vue";
 import AppTabs from "@/components/AppTabs.vue";
 import { Cols, Rows } from "@/components/AppTable";
-import { omit, pick } from "lodash";
+import { sleep } from "@/util/debug";
 
 export default defineComponent({
   components: {
     AppInput,
     AppSelectMulti,
     AppSelectSingle,
+    AppSelectTags,
     AppStatus,
     AppTable,
     AppTabs,
@@ -221,12 +231,23 @@ export default defineComponent({
         { value: "appliances" },
       ],
       multiSelectValue: [{ value: "vegetables" }],
+      tagsSelectOptions: async (search = "") => {
+        await sleep(200);
+        return [
+          { value: "ice cream", icon: "home" },
+          { value: "candy", icon: "database", count: "8 phenotypes" },
+          { value: "gummies", icon: "download", count: "4 phenotypes" },
+          { value: "brownies", icon: "puzzle-piece", count: "1 phenotype" },
+          { value: "cookies", icon: "comment" },
+        ].filter(({ value }) => value.includes(search));
+      },
+      tagsSelectValue: [
+        { value: "candy", icon: "database", count: "8 phenotypes" },
+      ],
     };
   },
   methods: {
-    alert() {
-      window.alert("alert");
-    },
+    log: console.log,
     omit,
     pick,
   },

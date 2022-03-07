@@ -1,10 +1,9 @@
 <template>
-  <label class="checkbox">
+  <label class="checkbox" :aria-checked="modelValue">
     <input type="checkbox" :checked="modelValue" @change="onChange" />
-    <span class="text">
-      <span v-if="text">{{ text }}</span>
-      <AppIcon v-if="icon" class="icon" :icon="icon" />
-    </span>
+    <AppIcon class="check" :icon="modelValue ? 'square-check' : 'square'" />
+    <span v-if="text">{{ text }}</span>
+    <AppIcon v-if="icon" class="icon" :icon="icon" />
   </label>
 </template>
 
@@ -35,14 +34,20 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .checkbox {
+  position: relative;
   display: inline-flex;
   align-items: center;
+  gap: 10px;
   padding: 10px;
   cursor: pointer;
   transition: background $fast;
 
+  .check {
+    color: $theme;
+    font-size: 1.2rem;
+  }
+
   .icon {
-    margin-left: 10px;
     color: $gray;
   }
 
@@ -52,24 +57,8 @@ export default defineComponent({
   }
 
   input {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    margin-right: 10px;
+    position: absolute;
     appearance: none;
-    background: none;
-    border-radius: $rounded;
-    border: solid 2px $theme;
-    outline: none;
-    cursor: pointer;
-  }
-
-  input:checked {
-    background: $theme;
-    background-image: url("~@/assets/checkmark.svg");
-    background-size: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
   }
 }
 </style>

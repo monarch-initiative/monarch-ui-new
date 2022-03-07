@@ -7,7 +7,6 @@
     <div class="input" :data-icon="!!icon">
       <textarea
         v-if="multi"
-        ref="input"
         :value="modelValue"
         @focus="onFocus"
         @input="onInput"
@@ -18,7 +17,6 @@
       </textarea>
       <input
         v-else
-        ref="input"
         :value="modelValue"
         @focus="onFocus"
         @input="onInput"
@@ -36,7 +34,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick } from "vue";
+import { defineComponent } from "vue";
+import { debounce, DebouncedFunc } from "lodash";
 
 // basic text box input, single line or multi-line
 export default defineComponent({
@@ -59,27 +58,45 @@ export default defineComponent({
     // optional side icon
     icon: String,
   },
+  data() {
+    return {
+      // debounced on change event
+      debounced: debounce(() => null) as DebouncedFunc<(event: Event) => void>,
+      // last on change value that was emitted
+      last: undefined as string | undefined,
+    };
+  },
   methods: {
-    // method to programmatically focus from outside componend
-    focus() {
-      (this.$refs.input as HTMLInputElement | HTMLTextAreaElement).focus();
-    },
     // when user focuses box
     onFocus() {
       this.$emit("focus");
     },
     // when user types in box
-    onInput({ target }: Event) {
-      this.$emit("update:modelValue", (target as HTMLInputElement).value);
+    onInput(event: Event) {
+      this.$emit("update:modelValue", (event.target as HTMLInputElement).value);
       this.$emit("input");
+      this.debounced(event);
     },
-    // when user "commits" change to value, e.g. pressing enter, defocusing, etc
+    // when user "commits" change to value, e.g. pressing enter, de-focusing, etc
     onChange(event: Event) {
+      // if you see this event fire unexpectedly, check this:
       // https://bugs.chromium.org/p/chromium/issues/detail?id=1297334
-      nextTick(() => {
-        if (document?.contains(event.target as Node)) this.$emit("change");
-      });
+
+      const value = (event.target as HTMLInputElement).value;
+      // debounced on change has not already emitted
+      if (value !== this.last) {
+        this.$emit("change", value);
+        this.last = value;
+      }
     },
+  },
+  created() {
+    // make instance-unique debounced version of on change func
+    this.debounced = debounce(this.onChange, 500);
+  },
+  beforeUnmount() {
+    // cancel any in-progress debounce
+    this.debounced.cancel();
   },
 });
 </script>
@@ -132,6 +149,7 @@ export default defineComponent({
 input,
 textarea {
   width: 100%;
+  background: $white;
   border: solid 2px $off-black;
   border-radius: $rounded;
   outline: none;

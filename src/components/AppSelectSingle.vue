@@ -205,13 +205,11 @@ export default defineComponent({
   text-align: left;
 }
 
-.button-icon {
-}
-
 .list {
   position: absolute;
-  max-height: 200px;
   min-width: 100%;
+  max-width: 90vw;
+  max-height: 200px;
   overflow-x: hidden;
   overflow-y: auto;
   background: $white;

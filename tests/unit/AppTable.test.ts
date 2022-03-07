@@ -1,6 +1,5 @@
-import { mount } from "@vue/test-utils";
+import { mount, emitted } from "../setup";
 import AppTable from "@/components/AppTable.vue";
-import { mountOptions, emitted } from "../setup";
 
 // some example props
 const props = {
@@ -46,7 +45,7 @@ const props = {
 };
 
 test("Changes sort", async () => {
-  const wrapper = mount(AppTable, { ...mountOptions, props });
+  const wrapper = mount(AppTable, { props });
   await wrapper.findAll("thead button").at(0)?.trigger("click");
   expect(emitted(wrapper, "sort")[0]).toEqual({
     key: "name",
@@ -55,7 +54,7 @@ test("Changes sort", async () => {
 });
 
 test("Changes filter", async () => {
-  const wrapper = mount(AppTable, { ...mountOptions, props });
+  const wrapper = mount(AppTable, { props });
   await wrapper.findAll("thead button").at(2)?.trigger("click");
   await wrapper.find("tr[role='option']").trigger("click");
   expect(emitted(wrapper, "filter")).toEqual([1, []]);
@@ -64,14 +63,14 @@ test("Changes filter", async () => {
 });
 
 test("Changes per page", async () => {
-  const wrapper = mount(AppTable, { ...mountOptions, props });
+  const wrapper = mount(AppTable, { props });
   await wrapper.find(".controls div:nth-child(1) button").trigger("click");
   await wrapper.find("div[role='option']").trigger("click");
   expect(emitted(wrapper, "perPage")).toEqual([5]);
 });
 
 test("Changes pages", async () => {
-  const wrapper = mount(AppTable, { ...mountOptions, props });
+  const wrapper = mount(AppTable, { props });
   const nav = wrapper.findAll(".controls div:nth-child(2) button");
   await nav.at(1)?.trigger("click");
   expect(emitted(wrapper, "first")).toEqual([]);
@@ -84,13 +83,13 @@ test("Changes pages", async () => {
 });
 
 test("Changes search", async () => {
-  const wrapper = mount(AppTable, { ...mountOptions, props });
+  const wrapper = mount(AppTable, { props });
   await wrapper.find("input").setValue("test search");
   expect(emitted(wrapper, "search")).toEqual(["test search"]);
 });
 
 test("Downloads", async () => {
-  const wrapper = mount(AppTable, { ...mountOptions, props });
+  const wrapper = mount(AppTable, { props });
   await wrapper.find(".controls div:nth-child(3) button").trigger("click");
   expect(emitted(wrapper, "download")).toEqual([]);
 });

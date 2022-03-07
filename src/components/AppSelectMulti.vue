@@ -57,6 +57,7 @@
       class="list"
       role="listbox"
       tabindex="0"
+      :data-slot="hasSlot"
     >
       <table>
         <!-- select all -->
@@ -74,8 +75,8 @@
           @keydown="() => null"
           tabindex="0"
         >
-          <td class="option-check">
-            <div :data-checked="allSelected" />
+          <td class="option-icon">
+            <AppIcon :icon="allSelected ? 'square-check' : 'square'" />
           </td>
           <td class="option-label">All</td>
           <td class="option-count"></td>
@@ -100,8 +101,10 @@
           @keydown="() => null"
           tabindex="0"
         >
-          <td class="option-check">
-            <div :data-checked="selected.includes(index)" />
+          <td class="option-icon">
+            <AppIcon
+              :icon="selected.includes(index) ? 'square-check' : 'square'"
+            />
           </td>
           <td class="option-label">{{ startCase(String(option.value)) }}</td>
           <td class="option-count">{{ option.count }}</td>
@@ -125,7 +128,7 @@ import { wrap } from "@/util/math";
 
 // custom single select
 export default defineComponent({
-  emits: ["update:modelValue", "change"],
+  emits: ["update:modelValue", "input", "change"],
   props: {
     // name of the field
     name: {
@@ -157,18 +160,24 @@ export default defineComponent({
       selected: [] as Array<number>,
       // index of option that is highlighted
       highlighted: 0,
+      // model value when opened
+      original: [] as Options,
     };
   },
   methods: {
-    // open dropdown
     open() {
+      // open dropdown
       this.expanded = true;
       // auto highlight first selected option
       this.highlighted = this.selected[0] || 0;
+      // remember model value when opened
+      this.original = this.modelValue;
     },
-    // close dropdown
     close() {
+      // close dropdown
       this.expanded = false;
+      // emit event that user has "committed" change
+      if (!isEqual(this.modelValue, this.original)) this.$emit("change");
     },
     // when button clicked
     onClick() {
@@ -252,8 +261,8 @@ export default defineComponent({
       }
       // keep in order for easy comparison
       this.selected.sort();
-      // emit change event for listening for only user-originated changes
-      this.$emit("change");
+      // emit input event for listening for only user-originated inputs
+      this.$emit("input");
     },
     startCase,
   },
@@ -326,12 +335,20 @@ export default defineComponent({
 
 .list {
   position: absolute;
-  max-height: 200px;
   min-width: 100%;
+  max-width: 90vw;
+  max-height: 200px;
+  overflow-x: auto;
   overflow-y: auto;
   background: $white;
   box-shadow: $shadow;
   z-index: 2;
+}
+
+.list[data-slot="true"] {
+  max-width: unset;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 table {
@@ -339,6 +356,11 @@ table {
   min-width: 100%;
   border-collapse: collapse;
   white-space: nowrap;
+}
+
+td {
+  height: 35px;
+  padding: 0 10px;
 }
 
 .option {
@@ -354,34 +376,17 @@ table {
   height: 5px;
 }
 
-.option-check {
-  padding: 10px;
-  width: 40px;
-
-  div {
-    width: 20px;
-    height: 20px;
-    border-radius: $rounded;
-    border: solid 2px $theme;
-  }
-
-  div[data-checked="true"] {
-    background: $theme;
-    background-image: url("~@/assets/checkmark.svg");
-    background-size: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
+.option-icon {
+  width: 35px;
+  color: $theme;
+  font-size: 1.2rem;
 }
 
 .option-label {
-  padding: 5px;
   text-align: left;
 }
 
 .option-count {
-  padding: 10px;
-  padding-left: 20px;
   color: $gray;
   text-align: right;
 }
