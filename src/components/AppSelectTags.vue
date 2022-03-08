@@ -15,34 +15,36 @@
         <AppIcon icon="xmark" />
       </button>
 
-      <!-- input box -->
-      <input
-        v-model="search"
-        :placeholder="placeholder"
-        role="combobox"
-        :aria-label="name"
-        aria-multiselectable="true"
-        :aria-expanded="!!results.length"
-        :aria-controls="`list-${id}`"
-        aria-haspopup="listbox"
-        :aria-activedescendant="`option-${id}-${highlighted}`"
-        aria-autocomplete="list"
-        @focus="focused = true"
-        @blur="focused = false"
-        @keydown="onKeydown"
-        v-tippy="{ content: tooltip, offset: [20, 20] }"
-      />
+      <AppFlex>
+        <!-- input box -->
+        <input
+          v-model="search"
+          :placeholder="placeholder"
+          role="combobox"
+          :aria-label="name"
+          aria-multiselectable="true"
+          :aria-expanded="!!results.length"
+          :aria-controls="`list-${id}`"
+          aria-haspopup="listbox"
+          :aria-activedescendant="`option-${id}-${highlighted}`"
+          aria-autocomplete="list"
+          @focus="focused = true"
+          @blur="focused = false"
+          @keydown="onKeydown"
+          v-tippy="{ content: tooltip, offset: [20, 20] }"
+        />
 
-      <!-- info -->
-      <span class="info">{{ selected.length }} selected</span>
+        <!-- info -->
+        <span class="info">{{ selected.length }} selected</span>
 
-      <!-- clear box -->
-      <AppButton
-        design="small"
-        icon="times"
-        @click="clear"
-        v-tippy="'Clear all selected'"
-      />
+        <!-- clear box -->
+        <AppButton
+          design="small"
+          icon="times"
+          @click="clear"
+          v-tippy="'Clear all selected'"
+        />
+      </AppFlex>
     </div>
 
     <!-- dropdown -->
@@ -326,7 +328,6 @@ export default defineComponent({
 
 .box {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;

@@ -1,6 +1,4 @@
-import { ApiError } from ".";
-// https://api-gcp.monarchinitiative.org/api/bioentity/gene/HGNC:30579/phenotypes?direct=true&unselect_evidence=true
-import { biolink, request, cleanError } from ".";
+import { biolink, request, cleanError, ApiError } from ".";
 import { getNodeSearchResults } from "./node-search";
 import { Options, OptionsFunc } from "@/components/AppSelectTags.d";
 
@@ -57,7 +55,7 @@ const getPhenotypeAssociations = async (
     if (!id || !category || !(category === "gene" || category === "disease"))
       throw new ApiError(`Invalid gene/disease id or category`);
 
-    // endpoint params
+    // endpoint settings
     const params = {
       direct: true,
       unselect_evidence: true,
@@ -76,3 +74,65 @@ const getPhenotypeAssociations = async (
     throw cleanError(error);
   }
 };
+
+// compare a set of phenotypes to another set of phenotypes
+export const compareSetToSet = async (
+  aPhenotypes: Array<string>,
+  bPhenotypes: Array<string>
+): Promise<void> => {
+  try {
+    // use POST version of endpoint because GET is bugged:
+    // https://github.com/biolink/biolink-api/issues/389
+
+    // make request options
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("Accept", "application/json");
+    const body = {
+      reference_ids: aPhenotypes,
+      query_ids: bPhenotypes.map((id) => [id]),
+      is_feature_set: aPhenotypes.every((id) => id.startsWith("HP:")),
+    };
+    const options = {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    };
+
+    // make query
+    const url = `${biolink}/sim/compare`;
+    const response = await request(url, {}, options);
+    console.log(response);
+  } catch (error) {
+    throw cleanError(error);
+  }
+};
+
+// compare a set of phenotypes to a gene or disease
+export const compareSetToGene = async (
+  phenotypes: Array<string>,
+  taxon: string
+): Promise<void> => {
+  // endpoint settings
+  const params = {
+    id: phenotypes.join(","),
+    taxon: taxonIdMap[taxon] || "",
+  };
+
+  // make query
+  const url = `${biolink}/sim/search`;
+  const response = await request(url, params);
+
+  console.log(response);
+};
+
+const taxonIdMap: Record<string, string> = {
+  human: "9606",
+  mouse: "10090",
+  zebrafish: "7955",
+  fruitfly: "7227",
+  worm: "6239",
+  frog: "8353",
+};
+
+// HP:0000322, HP:0001166, HP:0001238

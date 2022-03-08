@@ -1,5 +1,5 @@
 export type Option = {
-  // unique id
+  // unique id used in state of select
   value: number | string;
   // function to execute to get values when selecting this option
   valueFunc?: () => Promise<Array<Option>>;

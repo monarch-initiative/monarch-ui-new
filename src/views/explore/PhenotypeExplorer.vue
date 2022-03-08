@@ -35,6 +35,8 @@
     :tooltip="multiTooltip"
   />
 
+  <hr />
+
   <!-- run analysis -->
   <AppButton text="Analyze!" icon="bars-progress" @click="runAnalysis" />
 
@@ -46,10 +48,14 @@
 import { defineComponent } from "vue";
 import AppSelectTags from "@/components/AppSelectTags.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
-import { getPhenotypes } from "@/api/phenotype-explorer";
+import {
+  compareSetToGene,
+  compareSetToSet,
+  getPhenotypes,
+} from "@/api/phenotype-explorer";
 
 // tooltip explaining how to use multi-select component
-const multiTooltip = `You can select phenotypes in 3 ways:<br>
+const multiTooltip = `In this box, you can select phenotypes in 3 ways:<br>
   <ol>
     <li>Search for individual phenotypes</li>
     <li>Search for genes/diseases and get their associated phenotypes</li>
@@ -83,7 +89,16 @@ export default defineComponent({
     getPhenotypes,
     // run comparison analysis
     runAnalysis() {
-      console.log("hi");
+      if (this.bMode.includes("phenotypes from"))
+        compareSetToGene(
+          this.aPhenotypes.map(({ value }) => value),
+          this.bMode.includes("diseases") ? "human" : this.bTaxon
+        );
+      else
+        compareSetToSet(
+          this.aPhenotypes.map(({ value }) => value),
+          this.bPhenotypes.map(({ value }) => value)
+        );
     },
   },
 });
