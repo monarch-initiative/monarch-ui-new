@@ -1,5 +1,4 @@
 import { biolink, request, cleanError, ApiError } from ".";
-import { Options } from "./../components/AppSelectMulti.d";
 import { labelToId } from "./taxons";
 
 interface Response {
@@ -67,10 +66,8 @@ export const getNodeSearchResults = async (
     };
 
     // make query
-    const response = await request<Response>(
-      `${biolink}/search/entity/${search}`,
-      params
-    );
+    const url = `${biolink}/search/entity/${search}`;
+    const response = await request<Response>(url, params);
     const {
       numFound: count = 0,
       docs = [],
@@ -85,6 +82,7 @@ export const getNodeSearchResults = async (
       name: (doc.label || [])[0] || "",
       altNames: (doc.label || []).slice(1),
       category: (doc.category || [])[0] || "",
+      label: (doc.label || [])[0] || "",
       description: (doc.definition || [])[0] || "",
       score: doc.score || 0,
       prefix: doc.prefix || "",
@@ -123,6 +121,7 @@ export interface Result {
     name?: string;
     altNames?: Array<string>;
     category?: string;
+    label?: string;
     description?: string;
     score?: number;
     prefix?: string;

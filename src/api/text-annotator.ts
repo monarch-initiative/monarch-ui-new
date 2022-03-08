@@ -30,11 +30,8 @@ export const annotateText = async (content = ""): Promise<Result> => {
     const options = { method: "POST", headers, body };
 
     // make query
-    const response = await request<Response>(
-      `${biolink}/nlp/annotate/entities`,
-      {},
-      options
-    );
+    const url = `${biolink}/nlp/annotate/entities`;
+    const response = await request<Response>(url, {}, options);
     const { spans } = response;
 
     // empty error status

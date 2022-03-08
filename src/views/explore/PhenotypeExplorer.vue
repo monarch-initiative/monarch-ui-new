@@ -4,9 +4,9 @@
   <!-- set A -->
   <AppSelectTags
     name="First set of phenotypes"
-    :options="phenotypeOptions"
+    :options="getPhenotypes"
     v-model="aPhenotypes"
-    placeholder="Search for phenotypes"
+    placeholder="Select phenotypes"
     :tooltip="multiTooltip"
   />
 
@@ -29,41 +29,31 @@
   <AppSelectTags
     v-if="bMode.includes('these phenotypes')"
     name="Second set of phenotypes"
-    :options="phenotypeOptions"
+    :options="getPhenotypes"
     v-model="bPhenotypes"
-    placeholder="Search for phenotypes"
+    placeholder="Select phenotypes"
     :tooltip="multiTooltip"
   />
 
   <!-- run analysis -->
   <AppButton text="Analyze!" icon="bars-progress" @click="runAnalysis" />
 
-  <!-- spacer -->
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
+  <!-- permanent placeholder when no results -->
+  <AppPlaceholder v-tippy="'Click analyze to see results!'" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import AppSelectTags from "@/components/AppSelectTags.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
-import { getNodeSearchResults } from "@/api/node-search";
-import { OptionsFunc } from "@/components/AppSelectTags";
+import { getPhenotypes } from "@/api/phenotype-explorer";
 
 // tooltip explaining how to use multi-select component
 const multiTooltip = `You can select phenotypes in 3 ways:<br>
   <ol>
     <li>Search for individual phenotypes</li>
     <li>Search for genes/diseases and get their associated phenotypes</li>
-    <li>Paste comma-separated HPO phenotype ids</li>
+    <li>Paste comma-separated phenotype id's</li>
   </ol>`;
 
 const bModeOptions = [
@@ -90,29 +80,7 @@ export default defineComponent({
     };
   },
   methods: {
-    // get list of phenotype options
-    async phenotypeOptions(search: string): ReturnType<OptionsFunc> {
-      // detect pasted list of HPO phenotype ids
-      const ids = search.split(/\s*,\s*/);
-      if (ids.length && ids.every((id) => id.startsWith("HP:")))
-        return { autoAccept: true, options: ids.map((id) => ({ value: id })) };
-      // otherwise perform string search for phenotypes/genes/diseases
-      else {
-        const { results } = await getNodeSearchResults(
-          search,
-          {},
-          { category: ["phenotype", "gene", "disease"] }
-        );
-        console.log(results);
-
-        return results.map((result) => ({
-          value: result.id,
-          label: result.highlight,
-          icon: "category-" + result.category,
-          count: "1 pheno.",
-        }));
-      }
-    },
+    getPhenotypes,
     // run comparison analysis
     runAnalysis() {
       console.log("hi");

@@ -8,10 +8,10 @@
         :key="index"
         class="selected"
         :aria-label="`Deselect ${selected.value}`"
-        v-tippy="{ content: `Deselect ${selected.value}`, offset: [20, 20] }"
+        v-tippy="`Deselect ${selected.value}`"
         @click="deselect(selected)"
       >
-        {{ selected.value }}
+        <span>{{ selected.label || selected.value }}</span>
         <AppIcon icon="xmark" />
       </button>
 
@@ -31,6 +31,17 @@
         @blur="focused = false"
         @keydown="onKeydown"
         v-tippy="{ content: tooltip, offset: [20, 20] }"
+      />
+
+      <!-- info -->
+      <span class="info">{{ selected.length }} selected</span>
+
+      <!-- clear box -->
+      <AppButton
+        design="small"
+        icon="times"
+        @click="clear"
+        v-tippy="'Clear all selected'"
       />
     </div>
 
@@ -66,9 +77,12 @@
             <AppIcon :icon="option.icon || ''" />
           </span>
           <span class="option-label"
-            ><span class="truncate" v-html="option.label || option.value"></span
+            ><span
+              class="truncate"
+              v-html="option.highlight || option.label || option.value"
+            ></span
           ></span>
-          <span class="option-count truncate">{{ option.count }}</span>
+          <span class="option-info truncate">{{ option.info }}</span>
         </div>
       </div>
     </div>
@@ -183,11 +197,27 @@ export default defineComponent({
       // esc key to close dropdown
       if (event.key === "Escape") this.close();
     },
-    // select an option
-    select(option: Option) {
-      if (!this.selected.find(({ value }) => value === option.value))
-        this.selected.push(option);
-      this.search = "";
+    // check if option isnt already selected
+    isntSelected(option: Option) {
+      return !this.selected.find((selected) => option.value === selected.value);
+    },
+    // select an option or array of options
+    async select(options: Option | Options) {
+      // make array if single option
+      if (!Array.isArray(options)) options = [options];
+
+      // array of options to select
+      const toSelect: Options = [];
+
+      for (const option of options) {
+        // run func to get options to select
+        if (option.valueFunc) toSelect.push(...(await option.valueFunc()));
+        // otherwise just select option
+        else toSelect.push(option);
+      }
+
+      // select options (if not already selected)
+      this.selected.push(...toSelect.filter(this.isntSelected));
     },
     // deselect a specific option or last-selected option
     deselect(option?: Option) {
@@ -196,6 +226,10 @@ export default defineComponent({
           (model) => model.value !== option.value
         );
       else this.selected.pop();
+    },
+    // clear all selected
+    clear() {
+      this.selected = [];
     },
   },
   computed: {
@@ -259,7 +293,7 @@ export default defineComponent({
 
         // if auto accept flag set, immediately accept/select passed options
         if ("autoAccept" in response && "options" in response) {
-          response.options.forEach(this.select);
+          this.select(response.options);
           this.search = "";
         }
         // otherwise, show list of results for user to select
@@ -292,6 +326,8 @@ export default defineComponent({
 
 .box {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
   gap: 10px;
   width: 100%;
@@ -321,12 +357,18 @@ input {
   gap: 7.5px;
   background: $theme-light;
   padding: 2.5px 10px;
+  font-size: 0.9rem;
   border-radius: 999px;
   transition: background $fast;
 }
 
 .selected:hover {
   background: $gray;
+}
+
+.info {
+  color: $gray;
+  font-size: 0.9rem;
 }
 
 .list {
@@ -382,7 +424,7 @@ input {
   justify-content: flex-start;
 }
 
-.option-count {
+.option-info {
   justify-content: flex-end;
   color: $gray;
 }
