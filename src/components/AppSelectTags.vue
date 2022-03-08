@@ -8,6 +8,7 @@
         :key="index"
         class="selected"
         :aria-label="`Deselect ${selected.value}`"
+        v-tippy="{ content: `Deselect ${selected.value}`, offset: [20, 20] }"
         @click="deselect(selected)"
       >
         {{ selected.value }}
@@ -29,6 +30,7 @@
         @focus="focused = true"
         @blur="focused = false"
         @keydown="onKeydown"
+        v-tippy="{ content: tooltip, offset: [20, 20] }"
       />
     </div>
 
@@ -107,6 +109,10 @@ export default defineComponent({
     options: {
       type: Function as PropType<OptionsFunc>,
       required: true,
+    },
+    // tooltip when hovering input
+    tooltip: {
+      type: String,
     },
   },
   data() {
@@ -297,6 +303,11 @@ input {
   background: $theme-light;
   padding: 2.5px 10px;
   border-radius: 999px;
+  transition: background $fast;
+}
+
+.selected:hover {
+  background: $gray;
 }
 
 .list {
@@ -333,7 +344,7 @@ td {
 
 .option-icon {
   width: 35px;
-  color: $gray;
+  color: $off-black;
 }
 
 .option-label {

@@ -13,7 +13,7 @@
       :tabindex="selected === tab.id ? 0 : -1"
       :aria-controls="`panel-${id}-${tab.id}`"
       role="tab"
-      :tooltip="tab.tooltip"
+      v-tippy="tab.tooltip"
       :aria-label="name"
       @keydown="onKeydown"
     />
@@ -27,6 +27,10 @@
     :aria-labelledby="`tab-${id}-${selected}`"
     role="tabpanel"
   >
+    <template v-if="description && showDescription">
+      <p>{{ description }}</p>
+      <hr />
+    </template>
     <slot :name="selected"></slot>
   </AppFlex>
 </template>
@@ -45,6 +49,7 @@ interface Tab {
   // tab button props
   text?: string;
   icon?: string;
+  description?: string;
   tooltip?: string;
 }
 type Tabs = Array<Tab>;
@@ -65,6 +70,11 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    // whether to show description paragraph
+    showDescription: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -76,6 +86,12 @@ export default defineComponent({
         this.$props.tabs[0].id ||
         "") as string,
     };
+  },
+  computed: {
+    // description of selected tab
+    description() {
+      return this.tabs.find((tab) => tab.id === this.selected)?.description;
+    },
   },
   methods: {
     // when user presses key on button

@@ -1,4 +1,5 @@
 <template>
+  <!-- search box -->
   <AppInput
     ref="searchBox"
     placeholder="Search for a gene, disease, phenotype, etc."
