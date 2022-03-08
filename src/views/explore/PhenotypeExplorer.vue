@@ -6,7 +6,7 @@
     name="First set of phenotypes"
     :options="phenotypeOptions"
     v-model="aPhenotypes"
-    placeholder="Search for phenotypes or genes/diseases"
+    placeholder="Search for phenotypes"
     :tooltip="multiTooltip"
   />
 
@@ -31,12 +31,12 @@
     name="Second set of phenotypes"
     :options="phenotypeOptions"
     v-model="bPhenotypes"
-    placeholder="Search for phenotypes or genes/diseases"
+    placeholder="Search for phenotypes"
     :tooltip="multiTooltip"
   />
 
   <!-- run analysis -->
-  <AppButton text="Analyze" icon="bars-progress" @click="runAnalysis" />
+  <AppButton text="Analyze!" icon="bars-progress" @click="runAnalysis" />
 
   <!-- spacer -->
   <br />
@@ -55,6 +55,8 @@
 import { defineComponent } from "vue";
 import AppSelectTags from "@/components/AppSelectTags.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
+import { getNodeSearchResults } from "@/api/node-search";
+import { OptionsFunc } from "@/components/AppSelectTags";
 
 // tooltip explaining how to use multi-select component
 const multiTooltip = `You can select phenotypes in 3 ways:<br>
@@ -89,12 +91,27 @@ export default defineComponent({
   },
   methods: {
     // get list of phenotype options
-    async phenotypeOptions() {
-      return [
-        { value: "HP:0000322", icon: "category-phenotype" },
-        { value: "HP:0001166", icon: "category-phenotype" },
-        { value: "HP:0001238", icon: "category-phenotype" },
-      ];
+    async phenotypeOptions(search: string): ReturnType<OptionsFunc> {
+      // detect pasted list of HPO phenotype ids
+      const ids = search.split(/\s*,\s*/);
+      if (ids.length && ids.every((id) => id.startsWith("HP:")))
+        return { autoAccept: true, options: ids.map((id) => ({ value: id })) };
+      // otherwise perform string search for phenotypes/genes/diseases
+      else {
+        const { results } = await getNodeSearchResults(
+          search,
+          {},
+          { category: ["phenotype", "gene", "disease"] }
+        );
+        console.log(results);
+
+        return results.map((result) => ({
+          value: result.id,
+          label: result.highlight,
+          icon: "category-" + result.category,
+          count: "1 pheno.",
+        }));
+      }
     },
     // run comparison analysis
     runAnalysis() {

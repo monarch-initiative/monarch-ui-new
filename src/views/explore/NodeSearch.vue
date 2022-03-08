@@ -107,7 +107,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { kebabCase, capitalize } from "lodash";
+import { kebabCase, capitalize, mapValues } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
@@ -222,8 +222,8 @@ export default defineComponent({
         // get results from api
         const { count, results, facets } = await getNodeSearchResults(
           this.search,
-          fresh ? undefined : this.availableFilters,
-          fresh ? undefined : this.activeFilters,
+          fresh ? undefined : mapValues(this.availableFilters, "value"),
+          fresh ? undefined : mapValues(this.activeFilters, "value"),
           fresh ? undefined : this.from
         );
         this.results = results;

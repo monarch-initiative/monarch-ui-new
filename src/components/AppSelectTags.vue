@@ -46,8 +46,8 @@
       <AppStatus v-if="status" ref="status" :status="status" />
 
       <!-- list of results -->
-      <table>
-        <tr
+      <div class="grid" v-if="results.length">
+        <div
           v-for="(option, index) in availableResults"
           :key="index"
           :id="`option-${id}-${index}`"
@@ -62,13 +62,15 @@
           @keydown="() => null"
           tabindex="0"
         >
-          <td class="option-icon">
+          <span class="option-icon">
             <AppIcon :icon="option.icon || ''" />
-          </td>
-          <td class="option-label">{{ startCase(String(option.value)) }}</td>
-          <td class="option-count">{{ option.count }}</td>
-        </tr>
-      </table>
+          </span>
+          <span class="option-label"
+            ><span class="truncate" v-html="option.label || option.value"></span
+          ></span>
+          <span class="option-count truncate">{{ option.count }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -79,7 +81,7 @@
 // https://vuetifyjs.com/en/components/autocompletes
 
 import { defineComponent, PropType } from "vue";
-import { uniqueId, isEqual, startCase, debounce, DebouncedFunc } from "lodash";
+import { uniqueId, isEqual, debounce, DebouncedFunc } from "lodash";
 import { Option, Options, OptionsFunc } from "./AppSelectTags";
 import AppStatus from "@/components/AppStatus.vue";
 import { Status } from "@/components/AppStatus";
@@ -183,7 +185,8 @@ export default defineComponent({
     },
     // select an option
     select(option: Option) {
-      this.selected.push(option);
+      if (!this.selected.find(({ value }) => value === option.value))
+        this.selected.push(option);
       this.search = "";
     },
     // deselect a specific option or last-selected option
@@ -194,7 +197,6 @@ export default defineComponent({
         );
       else this.selected.pop();
     },
-    startCase,
   },
   computed: {
     // list of unselected results to show
@@ -228,11 +230,19 @@ export default defineComponent({
     async search() {
       this.getResults();
     },
+    // when focused state changes
     focused() {
       // get results when first focused
       if (this.focused) this.getResults();
       // clear search when input box blurred
       else this.close();
+    },
+    // when highlighted index changes
+    highlighted() {
+      // scroll to highlighted in dropdown
+      document
+        .querySelector(`#option-${this.id}-${this.highlighted} > *`)
+        ?.scrollIntoView({ block: "nearest" });
     },
   },
   created() {
@@ -245,10 +255,19 @@ export default defineComponent({
 
       try {
         // get results
-        this.results = await this.options(this.search);
+        const response = await this.options(this.search);
 
-        // empty...
-        if (!this.results.length) throw new ApiError("No results", "warning");
+        // if auto accept flag set, immediately accept/select passed options
+        if ("autoAccept" in response && "options" in response) {
+          response.options.forEach(this.select);
+          this.search = "";
+        }
+        // otherwise, show list of results for user to select
+        else {
+          this.results = response;
+          // empty...
+          if (!this.results.length) throw new ApiError("No results", "warning");
+        }
 
         // clear status
         this.status = null;
@@ -321,38 +340,50 @@ input {
   z-index: 2;
 }
 
-table {
-  table-layout: fixed;
-  width: 100%;
-  border-collapse: collapse;
-  white-space: nowrap;
-}
-
-td {
-  height: 35px;
-  padding: 0 10px;
+.grid {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-auto-rows: 30px;
+  justify-content: stretch;
+  align-items: stretch;
 }
 
 .option {
+  display: contents;
   cursor: pointer;
   transition: background $fast;
 }
 
-.option[data-highlighted="true"] {
+.option > * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  overflow: hidden;
+
+  &:first-child {
+    padding-left: 10px;
+  }
+
+  &:last-child {
+    padding-right: 10px;
+  }
+}
+
+.option[data-highlighted="true"] > * {
   background: $light-gray;
 }
 
 .option-icon {
-  width: 35px;
   color: $off-black;
 }
 
 .option-label {
-  text-align: left;
+  justify-content: flex-start;
 }
 
 .option-count {
+  justify-content: flex-end;
   color: $gray;
-  text-align: right;
 }
 </style>

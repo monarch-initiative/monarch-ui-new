@@ -22,11 +22,15 @@ interface Response {
   >;
 }
 
+interface Filters {
+  [key: string]: Array<string>;
+}
+
 // get results from node search text and filters
 export const getNodeSearchResults = async (
   search = "",
-  availableFilters: Record<string, Options> = {},
-  activeFilters: Record<string, Options> = {},
+  availableFilters: Filters = {},
+  activeFilters: Filters = {},
   start = 0
 ): Promise<Result> => {
   try {
@@ -36,25 +40,19 @@ export const getNodeSearchResults = async (
     // get facet params
     let params: Record<string, string | number> = {};
     for (const [key, value] of Object.entries(activeFilters)) {
-      // transform filter
-      let filter = (value || [])
-        // turn array of option objects into plain array of values
-        .map(({ value }) => String(value))
-        // remove empty
-        .filter((value) => value.trim());
-
       // do special mapping for certain keys
-      if (key === "taxon") filter = filter.map(labelToId);
+      let mapped = value;
+      if (key === "taxon") mapped = mapped.map(labelToId);
 
       // join into comma-separated string list for request
-      const filterString = filter.join(",");
+      const string = mapped.join(",");
 
       // if all available filters are active
       const allActive =
-        activeFilters[key].length === availableFilters[key].length;
+        activeFilters[key]?.length === availableFilters[key]?.length;
 
       // ignore filter if value "empty" (none active) or "full" (all active)
-      if (filterString && !allActive) params[key] = filterString;
+      if (string && !allActive) params[key] = string;
     }
 
     // other params
