@@ -27,10 +27,13 @@ export default defineComponent({
 <style lang="scss" scoped>
 .flex {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   width: 100%;
+
+  &[data-direction="row"] {
+    flex-wrap: wrap;
+  }
 
   &[data-direction="col"] {
     flex-direction: column;

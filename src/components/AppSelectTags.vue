@@ -3,17 +3,17 @@
     <!-- box -->
     <div class="box" :data-focused="focused">
       <!-- deselect button -->
-      <button
+      <AppButton
         v-for="(selected, index) in modelValue"
         :key="index"
+        design="circle"
+        :text="String(selected.label || selected.value)"
+        icon="xmark"
         class="selected"
         :aria-label="`Deselect ${selected.value}`"
         v-tippy="`Deselect ${selected.value}`"
         @click="deselect(selected)"
-      >
-        <span>{{ selected.label || selected.value }}</span>
-        <AppIcon icon="xmark" />
-      </button>
+      />
 
       <AppFlex>
         <!-- input box -->
@@ -34,16 +34,23 @@
           v-tippy="{ content: tooltip, offset: [20, 20] }"
         />
 
-        <!-- info -->
-        <span class="info">{{ selected.length }} selected</span>
-
-        <!-- clear box -->
-        <AppButton
-          design="small"
-          icon="times"
-          @click="clear"
-          v-tippy="'Clear all selected'"
-        />
+        <span class="meta">
+          <!-- copy ids -->
+          <AppButton
+            design="small"
+            icon="copy"
+            @click="copy"
+            v-tippy="`Copy ${selected.length} selected`"
+          />
+          {{ " " }}
+          <!-- clear box -->
+          <AppButton
+            design="small"
+            icon="times"
+            @click="clear"
+            v-tippy="`Clear ${selected.length} selected`"
+          />
+        </span>
       </AppFlex>
     </div>
 
@@ -233,6 +240,12 @@ export default defineComponent({
     clear() {
       this.selected = [];
     },
+    // copy selected ids to clipboard
+    copy() {
+      window.navigator.clipboard.writeText(
+        this.selected.map(({ value }) => value).join(",")
+      );
+    },
   },
   computed: {
     // list of unselected results to show
@@ -301,7 +314,6 @@ export default defineComponent({
         // otherwise, show list of results for user to select
         else {
           this.results = response;
-          // empty...
           if (!this.results.length) throw new ApiError("No results", "warning");
         }
 
@@ -354,22 +366,15 @@ input {
 }
 
 .selected {
+  min-height: unset !important;
+  font-size: 0.9rem;
+}
+
+.meta {
   display: flex;
-  gap: 7.5px;
-  background: $theme-light;
-  padding: 2.5px 10px;
-  font-size: 0.9rem;
-  border-radius: 999px;
-  transition: background $fast;
-}
-
-.selected:hover {
-  background: $gray;
-}
-
-.info {
-  color: $gray;
-  font-size: 0.9rem;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
 }
 
 .list {

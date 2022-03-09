@@ -83,6 +83,5 @@ export default defineComponent({
 <style lang="scss" scoped>
 .icon {
   height: 1em;
-  overflow: visible;
 }
 </style>

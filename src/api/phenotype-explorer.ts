@@ -75,11 +75,26 @@ const getPhenotypeAssociations = async (
   }
 };
 
+interface Response {
+  matches: Array<{
+    id: string;
+    label: string;
+    type: string;
+    taxon: {
+      id: string;
+      label: string;
+    };
+    rank: string;
+    score: number;
+    significance: string;
+  }>;
+}
+
 // compare a set of phenotypes to another set of phenotypes
 export const compareSetToSet = async (
   aPhenotypes: Array<string>,
   bPhenotypes: Array<string>
-): Promise<void> => {
+): Promise<Results> => {
   try {
     // use POST version of endpoint because GET is bugged:
     // https://github.com/biolink/biolink-api/issues/389
@@ -101,8 +116,9 @@ export const compareSetToSet = async (
 
     // make query
     const url = `${biolink}/sim/compare`;
-    const response = await request(url, {}, options);
-    console.log(response);
+    const response = await request<Response>(url, {}, options);
+
+    return mapMatches(response);
   } catch (error) {
     throw cleanError(error);
   }
@@ -112,7 +128,7 @@ export const compareSetToSet = async (
 export const compareSetToGene = async (
   phenotypes: Array<string>,
   taxon: string
-): Promise<void> => {
+): Promise<Results> => {
   // endpoint settings
   const params = {
     id: phenotypes.join(","),
@@ -121,9 +137,34 @@ export const compareSetToGene = async (
 
   // make query
   const url = `${biolink}/sim/search`;
-  const response = await request(url, params);
+  const response = await request<Response>(url, params);
 
-  console.log(response);
+  return mapMatches(response);
+};
+
+// convert into desired result format
+const mapMatches = (response: Response) => {
+  const matches = response.matches.map((match) => ({
+    id: match.id,
+    label: match.label,
+    score: match.score,
+    category: match.type,
+  }));
+  const minScore = Math.min(...matches.map(({ score }) => score));
+  const maxScore = Math.max(...matches.map(({ score }) => score));
+
+  return { matches, minScore, maxScore };
+};
+
+export type Results = {
+  matches: Array<{
+    id: string;
+    label: string;
+    score: number;
+    category: string;
+  }>;
+  minScore?: number;
+  maxScore?: number;
 };
 
 const taxonIdMap: Record<string, string> = {
@@ -134,5 +175,3 @@ const taxonIdMap: Record<string, string> = {
   worm: "6239",
   frog: "8353",
 };
-
-// HP:0000322, HP:0001166, HP:0001238

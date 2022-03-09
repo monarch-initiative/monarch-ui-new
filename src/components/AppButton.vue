@@ -120,7 +120,7 @@ export default defineComponent({
     &[data-text="true"] {
       min-width: 2em;
       min-height: 2em;
-      padding: 0.5em 0.75em;
+      padding: 0.25em 0.75em;
     }
 
     &:not([data-text="true"]) {

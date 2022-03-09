@@ -64,6 +64,10 @@ h3 {
 
 // elements
 
+svg {
+  overflow: visible;
+}
+
 p,
 blockquote {
   margin: 0;
@@ -136,7 +140,7 @@ code {
 }
 
 strong {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 // tooltips

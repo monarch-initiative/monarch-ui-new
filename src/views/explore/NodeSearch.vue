@@ -37,6 +37,8 @@
       </template>
     </AppFlex>
 
+    <hr />
+
     <!-- status -->
     <AppStatus v-if="status && search" ref="status" :status="status" />
 
@@ -86,8 +88,8 @@
     <!-- results nav -->
     <AppFlex v-if="results.length" direction="col">
       <div>
-        <b>{{ from + 1 }}</b> to <b>{{ to + 1 }}</b> of
-        <b>{{ count }}</b> results
+        <strong>{{ from + 1 }}</strong> to <strong>{{ to + 1 }}</strong> of
+        <strong>{{ count }}</strong> results
       </div>
       <AppFlex gap="small">
         <button

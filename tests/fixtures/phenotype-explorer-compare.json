@@ -2,36 +2,16 @@
   "query": {
     "ids": [
       {
-        "id": "HP:0004970",
-        "label": "Ascending tubular aorta aneurysm"
+        "id": "HP:0001166",
+        "label": "Arachnodactyly"
       },
       {
-        "id": "HP:0004927",
-        "label": "Pulmonary artery dilatation"
+        "id": "HP:0001238",
+        "label": "Slender finger"
       },
       {
-        "id": "HP:0012499",
-        "label": "Descending aortic dissection"
-      },
-      {
-        "id": "HP:0000768",
-        "label": "Pectus carinatum"
-      },
-      {
-        "id": "HP:0002108",
-        "label": "Spontaneous pneumothorax"
-      },
-      {
-        "id": "HP:0002650",
-        "label": "Scoliosis"
-      },
-      {
-        "id": "HP:0004872",
-        "label": "Incisional hernia"
-      },
-      {
-        "id": "HP:0004933",
-        "label": "Ascending aortic dissection"
+        "id": "HP:0000322",
+        "label": "Short philtrum"
       }
     ],
     "negated_ids": [],
@@ -39,32 +19,20 @@
     "target_ids": [
       [
         {
-          "id": "WBPhenotype:0001005",
-          "label": "backward locomotion variant"
-        },
+          "id": "HP:0000322",
+          "label": "Short philtrum"
+        }
+      ],
+      [
         {
-          "id": "WBPhenotype:0004023",
-          "label": "frequency of body bend variant"
-        },
+          "id": "HP:0001166",
+          "label": "Arachnodactyly"
+        }
+      ],
+      [
         {
-          "id": "WBPhenotype:0001183",
-          "label": "fat content reduced"
-        },
-        {
-          "id": "WBPhenotype:0001412",
-          "label": "alae morphology variant"
-        },
-        {
-          "id": "WBPhenotype:0001517",
-          "label": "annulae morphology variant"
-        },
-        {
-          "id": "WBPhenotype:0004022",
-          "label": "amplitude of sinusoidal movement variant"
-        },
-        {
-          "id": "WBPhenotype:0002289",
-          "label": "tail bend angle increased"
+          "id": "HP:0001238",
+          "label": "Slender finger"
         }
       ]
     ],
@@ -74,23 +42,103 @@
         "id": null,
         "label": null
       },
-      "id": "HP:0000768 + HP:0004970 + HP:0004933 + HP:0004927 + HP:0002108 + HP:0004872 + HP:0012499 + HP:0002650",
-      "label": "HP:0000768 + HP:0004970 + HP:0004933 + HP:0004927 + HP:0002108 + HP:0004872 + HP:0012499 + HP:0002650"
+      "id": "HP:0000322 + HP:0001166 + HP:0001238",
+      "label": "HP:0000322 + HP:0001166 + HP:0001238"
     }
   },
   "matches": [
     {
       "rank": "NaN",
-      "score": 0,
+      "score": 84,
       "significance": "NaN",
-      "pairwise_match": [],
-      "type": null,
+      "pairwise_match": [
+        {
+          "reference": {
+            "IC": 7.764605157463794,
+            "id": "HP:0000322",
+            "label": "Short philtrum"
+          },
+          "match": {
+            "IC": 7.764605157463794,
+            "id": "HP:0000322",
+            "label": "Short philtrum"
+          },
+          "lcs": {
+            "IC": 7.764605157463794,
+            "id": "MP:0030193",
+            "label": "short philtrum"
+          }
+        }
+      ],
+      "type": "phenotype",
       "taxon": {
         "id": null,
         "label": null
       },
-      "id": "WBPhenotype:0002289 + WBPhenotype:0001183 + WBPhenotype:0001005 + WBPhenotype:0001517 + WBPhenotype:0001412 + WBPhenotype:0004023 + WBPhenotype:0004022",
-      "label": "WBPhenotype:0002289 + WBPhenotype:0001183 + WBPhenotype:0001005 + WBPhenotype:0001517 + WBPhenotype:0001412 + WBPhenotype:0004023 + WBPhenotype:0004022"
+      "id": "HP:0000322",
+      "label": "Short philtrum"
+    },
+    {
+      "rank": "NaN",
+      "score": 78,
+      "significance": "NaN",
+      "pairwise_match": [
+        {
+          "reference": {
+            "IC": 7.217375742667661,
+            "id": "HP:0001166",
+            "label": "Arachnodactyly"
+          },
+          "match": {
+            "IC": 7.217375742667661,
+            "id": "HP:0001166",
+            "label": "Arachnodactyly"
+          },
+          "lcs": {
+            "IC": 7.217375742667661,
+            "id": "MP:0006296",
+            "label": "arachnodactyly"
+          }
+        }
+      ],
+      "type": "phenotype",
+      "taxon": {
+        "id": null,
+        "label": null
+      },
+      "id": "HP:0001166",
+      "label": "Arachnodactyly"
+    },
+    {
+      "rank": "NaN",
+      "score": 77,
+      "significance": "NaN",
+      "pairwise_match": [
+        {
+          "reference": {
+            "IC": 7.217375742667661,
+            "id": "HP:0001166",
+            "label": "Arachnodactyly"
+          },
+          "match": {
+            "IC": 7.151580619870594,
+            "id": "HP:0001238",
+            "label": "Slender finger"
+          },
+          "lcs": {
+            "IC": 7.151580619870594,
+            "id": "HP:0001238",
+            "label": "Slender finger"
+          }
+        }
+      ],
+      "type": "phenotype",
+      "taxon": {
+        "id": null,
+        "label": null
+      },
+      "id": "HP:0001238",
+      "label": "Slender finger"
     }
   ],
   "metadata": {

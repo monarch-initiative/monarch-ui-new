@@ -1,5 +1,5 @@
 <template>
-  <AppFlex role="tablist">
+  <AppFlex role="tablist" :aria-label="name">
     <AppButton
       v-for="(tab, index) in tabs"
       :key="index"
@@ -9,30 +9,35 @@
       @click="selected = tab.id"
       design="circle"
       :color="selected === tab.id ? 'primary' : 'none'"
+      :aria-label="tab.text"
       :aria-selected="selected === tab.id"
-      :tabindex="selected === tab.id ? 0 : -1"
       :aria-controls="`panel-${id}-${tab.id}`"
+      :tabindex="selected === tab.id ? undefined : -1"
       role="tab"
       v-tippy="tab.tooltip"
-      :aria-label="name"
       @keydown="onKeydown"
     />
   </AppFlex>
 
-  <AppFlex
-    gap="big"
-    direction="col"
+  <!-- hidden element to serve as aria panel -->
+  <div
     :id="`panel-${id}-${selected}`"
-    class="panel"
     :aria-labelledby="`tab-${id}-${selected}`"
     role="tabpanel"
-  >
-    <template v-if="description && showDescription">
-      <p>{{ description }}</p>
-      <hr />
-    </template>
-    <slot :name="selected"></slot>
-  </AppFlex>
+    :aria-label="'Tab content below'"
+    :style="{ display: 'contents' }"
+  ></div>
+
+  <!-- description of tab -->
+  <template v-if="description && showDescription">
+    <p>
+      {{ description }}
+    </p>
+    <hr />
+  </template>
+
+  <!-- tab panel content -->
+  <slot :name="selected"></slot>
 </template>
 
 <script lang="ts">
@@ -141,9 +146,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.panel {
-  width: 100%;
-}
-</style>

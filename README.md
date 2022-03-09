@@ -97,3 +97,7 @@ Tip: use VS Code extension "Sort Lines".
 
 Use `// TODO` as a consistent in-code flag for pieces of code that should eventually be replaced with something better.
 Also link to a GitHub issue that tracks the issue.
+
+Use `console.log` for temporary debugging during local development (all of these should be removed before merging PR's).
+Use `console.info` for logging we want to keep in production.
+Do not use `console.error`, to distinguish between uncaught/unhandled errors.
