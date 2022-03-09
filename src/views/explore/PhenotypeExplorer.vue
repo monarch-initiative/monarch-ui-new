@@ -34,6 +34,7 @@
     v-model="bPhenotypes"
     placeholder="Select phenotypes"
     :tooltip="multiTooltip"
+    @valueFunc="valueFunc"
   />
 
   <!-- example button -->
@@ -62,13 +63,13 @@
         v-tippy="'Similarity score'"
       />
       <div class="match-details">
-        <AppLink :to="match.id">
-          {{ match.label }}
-        </AppLink>
         <AppIcon
           :icon="`category-${match.category}`"
           v-tippy="startCase(match.category)"
         />
+        <AppLink :to="match.id">
+          {{ match.label }}
+        </AppLink>
       </div>
       <AppButton
         text="See details"
@@ -242,17 +243,28 @@ export default defineComponent({
 <style lang="scss" scoped>
 .match {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   width: 100%;
   gap: 40px;
 }
 
 .match-details {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
+  flex-grow: 1;
   gap: 10px;
+  text-align: left;
+
+  svg {
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+}
+
+@media (max-width: 600px) {
+  .match {
+    flex-direction: column;
+    gap: 20px;
+    margin: 10px 0;
+  }
 }
 </style>
