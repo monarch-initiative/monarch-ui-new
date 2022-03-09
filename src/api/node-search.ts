@@ -1,5 +1,7 @@
+import { mapValues } from "lodash";
 import { biolink, request, cleanError, ApiError } from ".";
 import { labelToId } from "./taxons";
+import { Options } from "./../components/AppSelectMulti.d";
 
 interface Response {
   numFound: number;
@@ -21,9 +23,13 @@ interface Response {
   >;
 }
 
-interface Filters {
+export interface Filters {
   [key: string]: Array<string>;
 }
+
+// util func to convert multi-select options type into filters type
+export const mapFilters = (filters: Record<string, Options>): Filters =>
+  mapValues(filters, (array) => array.map((entry) => entry.value)) as Filters;
 
 // get results from node search text and filters
 export const getNodeSearchResults = async (

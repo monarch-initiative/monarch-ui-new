@@ -23,7 +23,7 @@ test("Renders default", async () => {
   const wrapper = mount(AppTabs, { props, slots });
   const button = wrapper.find("button[tabindex='0']");
   expect(button.text()).toContain(props.tabs[1].text);
-  const content = wrapper.find("[role='tabpanel']");
+  const content = wrapper;
   expect(content.text()).not.toContain(slots.apple);
   expect(content.text()).toContain(slots.banana);
 });
@@ -31,7 +31,7 @@ test("Renders default", async () => {
 test("Switches by mouse", async () => {
   const wrapper = mount(AppTabs, { props, slots });
   const button = wrapper.find("button");
-  const content = wrapper.find("[role='tabpanel']");
+  const content = wrapper;
   await button.trigger("click");
   await flush();
   expect(content.text()).toContain(slots.apple);
@@ -44,7 +44,7 @@ test("Switches by keyboard", async () => {
     attachTo: document.body,
   });
   const button = wrapper.find("button");
-  const content = wrapper.find("[role='tabpanel']");
+  const content = wrapper;
   await button.trigger("click");
   await flush();
   expect(content.text()).toContain(slots.apple);

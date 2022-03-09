@@ -12,7 +12,7 @@
       :aria-label="tab.text"
       :aria-selected="selected === tab.id"
       :aria-controls="`panel-${id}-${tab.id}`"
-      :tabindex="selected === tab.id ? undefined : -1"
+      :tabindex="selected === tab.id ? 0 : undefined"
       role="tab"
       v-tippy="tab.tooltip"
       @keydown="onKeydown"
