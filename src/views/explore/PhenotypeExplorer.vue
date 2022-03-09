@@ -40,7 +40,7 @@
   <AppButton text="try an example" design="small" @click="doExample()" />
 
   <!-- run analysis -->
-  <AppButton text="Analyze!" icon="bars-progress" @click="runAnalysis" />
+  <AppButton text="Analyze" icon="bars-progress" @click="runAnalysis" />
 
   <hr />
 
@@ -118,7 +118,7 @@ const multiTooltip = `In this box, you can select phenotypes in 3 ways:<br>
   <ol>
     <li>Search for individual phenotypes</li>
     <li>Search for genes/diseases and get their associated phenotypes</li>
-    <li>Paste comma-separated phenotype id's</li>
+    <li>Paste comma-separated phenotype IDs</li>
   </ol>`;
 
 const bModeOptions = [

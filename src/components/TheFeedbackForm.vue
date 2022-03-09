@@ -177,7 +177,7 @@ export default defineComponent({
         // success...
         this.status = {
           code: "success",
-          text: "Feedback submitted successfully!",
+          text: "Feedback submitted successfully",
         };
 
         // clear form data from storage after successful submit

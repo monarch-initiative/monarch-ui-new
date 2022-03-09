@@ -31,6 +31,7 @@
           @focus="focused = true"
           @blur="focused = false"
           @keydown="onKeydown"
+          @paste="onPaste"
           v-tippy="{ content: tooltip, offset: [20, 20] }"
         />
 
@@ -111,6 +112,7 @@ import { Status } from "@/components/AppStatus";
 import { ApiError } from "@/api";
 import { wrap } from "@/util/math";
 import { push } from "./TheSnackbar.vue";
+import { sleep } from "@/util/debug";
 
 // custom tag select component with type-in async search and chips
 export default defineComponent({
@@ -158,7 +160,9 @@ export default defineComponent({
       // status of query
       status: null as Status | null,
       // debounced get results function
-      getResults: debounce(() => null) as DebouncedFunc<() => Promise<void>>,
+      debouncedGetResults: debounce(() => null) as DebouncedFunc<
+        () => Promise<void>
+      >,
     };
   },
   methods: {
@@ -167,7 +171,7 @@ export default defineComponent({
       this.search = "";
       this.results = [];
       this.highlighted = 0;
-      this.getResults.cancel();
+      this.debouncedGetResults.cancel();
     },
     // when user presses key in input
     onKeydown(event: KeyboardEvent) {
@@ -206,6 +210,14 @@ export default defineComponent({
 
       // esc key to close dropdown
       if (event.key === "Escape") this.close();
+    },
+    // when user pastes text
+    async onPaste() {
+      // wait for pasted value to take effect
+      // but don't use nextTick because by then this.search will be reset
+      await sleep();
+      // immediately auto-accept results
+      this.getResults();
     },
     // check if option isnt already selected
     isntSelected(option: Option) {
@@ -251,7 +263,40 @@ export default defineComponent({
       await window.navigator.clipboard.writeText(
         this.selected.map(({ value }) => value).join(",")
       );
-      push(`Copied ${this.selected.length} phenotype id's!`);
+      push(`Copied ${this.selected.length} phenotype IDs`);
+    },
+    // get list of results
+    async getResults() {
+      // cancel any pending calls
+      this.debouncedGetResults.cancel();
+
+      // loading...
+      this.status = { code: "loading", text: "Loading results" };
+      this.results = [];
+      this.highlighted = 0;
+
+      try {
+        // get results
+        const response = await this.options(this.search);
+
+        // if auto accept flag set, immediately accept/select passed options
+        if ("autoAccept" in response && "options" in response) {
+          this.select(response.options);
+          this.search = "";
+          this.$emit("autoAccept");
+        }
+        // otherwise, show list of results for user to select
+        else {
+          this.results = response;
+          if (!this.results.length) throw new ApiError("No results", "warning");
+        }
+
+        // clear status
+        this.status = null;
+      } catch (error) {
+        // error...
+        this.status = error as ApiError;
+      }
     },
   },
   computed: {
@@ -284,7 +329,7 @@ export default defineComponent({
     },
     // run async get results func when search text changes
     async search() {
-      this.getResults();
+      this.debouncedGetResults();
     },
     // when focused state changes
     focused() {
@@ -303,39 +348,11 @@ export default defineComponent({
   },
   created() {
     // make instance-unique debounced method of getting results (async options)
-    this.getResults = debounce(async () => {
-      // loading...
-      this.status = { code: "loading", text: "Loading results" };
-      this.results = [];
-      this.highlighted = 0;
-
-      try {
-        // get results
-        const response = await this.options(this.search);
-
-        // if auto accept flag set, immediately accept/select passed options
-        if ("autoAccept" in response && "options" in response) {
-          this.select(response.options);
-          this.search = "";
-          this.$emit("autoAccept");
-        }
-        // otherwise, show list of results for user to select
-        else {
-          this.results = response;
-          if (!this.results.length) throw new ApiError("No results", "warning");
-        }
-
-        // clear status
-        this.status = null;
-      } catch (error) {
-        // error...
-        this.status = error as ApiError;
-      }
-    }, 500);
+    this.debouncedGetResults = debounce(this.getResults, 500);
   },
   beforeUnmount() {
     // cancel any in-progress debounce
-    this.getResults.cancel();
+    this.debouncedGetResults.cancel();
   },
 });
 </script>

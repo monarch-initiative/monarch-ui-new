@@ -66,7 +66,7 @@ export default defineComponent({
   methods: {
     async copyToClipboard() {
       await window.navigator.clipboard.writeText(this.text || "");
-      push("Text copied!");
+      push("Text copied");
     },
   },
 });
