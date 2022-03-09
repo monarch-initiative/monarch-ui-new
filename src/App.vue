@@ -3,6 +3,7 @@
   <main>
     <router-view />
     <TheFloatButtons />
+    <TheSnackbar />
   </main>
   <TheFooter />
 </template>
@@ -15,6 +16,7 @@ import "@/global/styles.scss";
 import TheHeader from "@/components/TheHeader.vue";
 import TheFooter from "@/components/TheFooter.vue";
 import TheFloatButtons from "@/components/TheFloatButtons.vue";
+import TheSnackbar from "./components/TheSnackbar.vue";
 
 export default defineComponent({
   props: {
@@ -24,6 +26,7 @@ export default defineComponent({
     TheHeader,
     TheFooter,
     TheFloatButtons,
+    TheSnackbar,
   },
 });
 </script>

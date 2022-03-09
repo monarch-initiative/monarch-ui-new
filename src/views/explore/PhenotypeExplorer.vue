@@ -8,6 +8,7 @@
     v-model="aPhenotypes"
     placeholder="Select phenotypes"
     :tooltip="multiTooltip"
+    @valueFunc="valueFunc"
   />
 
   <!-- set B -->
@@ -34,6 +35,9 @@
     placeholder="Select phenotypes"
     :tooltip="multiTooltip"
   />
+
+  <!-- example button -->
+  <AppButton text="try an example" design="small" @click="doExample()" />
 
   <!-- run analysis -->
   <AppButton text="Analyze!" icon="bars-progress" @click="runAnalysis" />
@@ -106,6 +110,8 @@ import {
 import { Status } from "@/components/AppStatus";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
+import { Options } from "@/components/AppSelectTags";
+import { push } from "@/components/TheSnackbar.vue";
 
 // tooltip explaining how to use multi-select component
 const multiTooltip = `In this box, you can select phenotypes in 3 ways:<br>
@@ -122,7 +128,7 @@ const bModeOptions = [
 ];
 const bTaxonOptions = ["mouse", "zebrafish", "fruitfly", "nematode", "frog"];
 
-const exammpleAPhenotypes = [
+const exampleAPhenotypes = [
   { value: "HP:0004970" },
   { value: "HP:0004933" },
   { value: "HP:0004927" },
@@ -132,7 +138,7 @@ const exammpleAPhenotypes = [
   { value: "HP:0002650" },
 ];
 
-const exammpleBPhenotypes = [
+const exampleBPhenotypes = [
   { value: "FBcv:0000366" },
   { value: "FBcv:0000439" },
   { value: "FBcv:0002041" },
@@ -150,7 +156,7 @@ export default defineComponent({
   data() {
     return {
       // first set of phenotypes
-      aPhenotypes: exammpleAPhenotypes,
+      aPhenotypes: [] as Options,
       // options for mode of second set
       bModeOptions,
       // selected mode of second set
@@ -160,7 +166,7 @@ export default defineComponent({
       // selected taxon for second set
       bTaxon: bTaxonOptions[0],
       // second set of phenotypes
-      bPhenotypes: exammpleBPhenotypes,
+      bPhenotypes: [] as Options,
       // common tooltip for multi-select component
       multiTooltip,
       // status of analysis
@@ -170,7 +176,12 @@ export default defineComponent({
     };
   },
   methods: {
-    getPhenotypes,
+    // example phenotype set comparison
+    doExample() {
+      this.aPhenotypes = exampleAPhenotypes;
+      this.bPhenotypes = exampleBPhenotypes;
+      this.bMode = bModeOptions[2];
+    },
     // run comparison analysis
     async runAnalysis() {
       // loading...
@@ -181,13 +192,13 @@ export default defineComponent({
         // run appropriate analysis based on selected mode
         if (this.bMode.includes("phenotypes from"))
           this.results = await compareSetToGene(
-            this.aPhenotypes.map(({ value }) => value),
+            this.aPhenotypes.map(({ value }) => String(value)),
             this.bMode.includes("diseases") ? "human" : this.bTaxon
           );
         else
           this.results = await compareSetToSet(
-            this.aPhenotypes.map(({ value }) => value),
-            this.bPhenotypes.map(({ value }) => value)
+            this.aPhenotypes.map(({ value }) => String(value)),
+            this.bPhenotypes.map(({ value }) => String(value))
           );
 
         // clear status
@@ -198,11 +209,32 @@ export default defineComponent({
         this.results = { matches: [] };
       }
     },
+    // when multi select component runs value function
+    valueFunc(length: number) {
+      if (length === 0) push("No associated phenotypes found");
+      else push(`Selected ${length} phenotypes`);
+    },
     // show results in phenogrid
     phenogrid(id: string) {
       console.info(id);
     },
+    getPhenotypes,
     startCase,
+  },
+  watch: {
+    // clear results when inputs are changed to avoid de-sync
+    aPhenotypes() {
+      this.results = { matches: [] };
+    },
+    bMode() {
+      this.results = { matches: [] };
+    },
+    bTaxon() {
+      this.results = { matches: [] };
+    },
+    bPhenotypes() {
+      this.results = { matches: [] };
+    },
   },
 });
 </script>

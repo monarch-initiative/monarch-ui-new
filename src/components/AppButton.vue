@@ -9,13 +9,14 @@
     :data-text="!!text"
     :data-notification="notification"
   >
-    <span v-if="text">{{ copied ? "Copied!" : text }}</span>
+    <span v-if="text">{{ text }}</span>
     <AppIcon v-if="icon" :icon="icon" />
   </component>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
+import { push } from "./TheSnackbar.vue";
 
 // component that looks like a button that either does something or goes somewhere
 export default defineComponent({
@@ -49,12 +50,6 @@ export default defineComponent({
       type: Boolean,
     },
   },
-  data() {
-    return {
-      // flag for clipboard copy notification
-      copied: false,
-    };
-  },
   computed: {
     // type of component to render
     component() {
@@ -71,8 +66,7 @@ export default defineComponent({
   methods: {
     async copyToClipboard() {
       await window.navigator.clipboard.writeText(this.text || "");
-      this.copied = true;
-      window.setTimeout(() => (this.copied = false), 1000);
+      push("Text copied!");
     },
   },
 });

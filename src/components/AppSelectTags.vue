@@ -110,13 +110,14 @@ import AppStatus from "@/components/AppStatus.vue";
 import { Status } from "@/components/AppStatus";
 import { ApiError } from "@/api";
 import { wrap } from "@/util/math";
+import { push } from "./TheSnackbar.vue";
 
 // custom tag select component with type-in async search and chips
 export default defineComponent({
   components: {
     AppStatus,
   },
-  emits: ["update:modelValue", "change"],
+  emits: ["update:modelValue", "change", "autoAccept", "valueFunc"],
   props: {
     // name of the field
     name: {
@@ -220,7 +221,12 @@ export default defineComponent({
 
       for (const option of options) {
         // run func to get options to select
-        if (option.valueFunc) toSelect.push(...(await option.valueFunc()));
+        if (option.valueFunc) {
+          const values = await option.valueFunc();
+          toSelect.push(...values);
+          // notify parent that dynamic values were added
+          this.$emit("valueFunc", values.length);
+        }
         // otherwise just select option
         else toSelect.push(option);
       }
@@ -241,10 +247,11 @@ export default defineComponent({
       this.selected = [];
     },
     // copy selected ids to clipboard
-    copy() {
-      window.navigator.clipboard.writeText(
+    async copy() {
+      await window.navigator.clipboard.writeText(
         this.selected.map(({ value }) => value).join(",")
       );
+      push(`Copied ${this.selected.length} phenotype id's!`);
     },
   },
   computed: {
@@ -310,6 +317,7 @@ export default defineComponent({
         if ("autoAccept" in response && "options" in response) {
           this.select(response.options);
           this.search = "";
+          this.$emit("autoAccept");
         }
         // otherwise, show list of results for user to select
         else {
