@@ -2,16 +2,32 @@
   "query": {
     "ids": [
       {
-        "id": "HP:0001166",
-        "label": "Arachnodactyly"
+        "id": "HP:0004970",
+        "label": "Ascending tubular aorta aneurysm"
       },
       {
-        "id": "HP:0001238",
-        "label": "Slender finger"
+        "id": "HP:0004927",
+        "label": "Pulmonary artery dilatation"
       },
       {
-        "id": "HP:0000322",
-        "label": "Short philtrum"
+        "id": "HP:0012499",
+        "label": "Descending aortic dissection"
+      },
+      {
+        "id": "HP:0002108",
+        "label": "Spontaneous pneumothorax"
+      },
+      {
+        "id": "HP:0002650",
+        "label": "Scoliosis"
+      },
+      {
+        "id": "HP:0004872",
+        "label": "Incisional hernia"
+      },
+      {
+        "id": "HP:0004933",
+        "label": "Ascending aortic dissection"
       }
     ],
     "negated_ids": [],
@@ -19,20 +35,26 @@
     "target_ids": [
       [
         {
-          "id": "HP:0000322",
-          "label": "Short philtrum"
+          "id": "FBcv:0000366",
+          "label": "female sterile"
         }
       ],
       [
         {
-          "id": "HP:0001166",
-          "label": "Arachnodactyly"
+          "id": "FBcv:0000439",
+          "label": "chemical resistant"
         }
       ],
       [
         {
-          "id": "HP:0001238",
-          "label": "Slender finger"
+          "id": "FBcv:0002041",
+          "label": "some die during embryonic stage"
+        }
+      ],
+      [
+        {
+          "id": "FBcv:0002039",
+          "label": "some die during pupal stage"
         }
       ]
     ],
@@ -42,103 +64,62 @@
         "id": null,
         "label": null
       },
-      "id": "HP:0000322 + HP:0001166 + HP:0001238",
-      "label": "HP:0000322 + HP:0001166 + HP:0001238"
+      "id": "HP:0004970 + HP:0004933 + HP:0004927 + HP:0002108 + HP:0004872 + HP:0012499 + HP:0002650",
+      "label": "HP:0004970 + HP:0004933 + HP:0004927 + HP:0002108 + HP:0004872 + HP:0012499 + HP:0002650"
     }
   },
   "matches": [
     {
       "rank": "NaN",
-      "score": 84,
+      "score": 0,
       "significance": "NaN",
-      "pairwise_match": [
-        {
-          "reference": {
-            "IC": 7.764605157463794,
-            "id": "HP:0000322",
-            "label": "Short philtrum"
-          },
-          "match": {
-            "IC": 7.764605157463794,
-            "id": "HP:0000322",
-            "label": "Short philtrum"
-          },
-          "lcs": {
-            "IC": 7.764605157463794,
-            "id": "MP:0030193",
-            "label": "short philtrum"
-          }
-        }
-      ],
+      "pairwise_match": [],
       "type": "phenotype",
       "taxon": {
         "id": null,
         "label": null
       },
-      "id": "HP:0000322",
-      "label": "Short philtrum"
+      "id": "FBcv:0000366",
+      "label": "female sterile"
     },
     {
       "rank": "NaN",
-      "score": 78,
+      "score": 0,
       "significance": "NaN",
-      "pairwise_match": [
-        {
-          "reference": {
-            "IC": 7.217375742667661,
-            "id": "HP:0001166",
-            "label": "Arachnodactyly"
-          },
-          "match": {
-            "IC": 7.217375742667661,
-            "id": "HP:0001166",
-            "label": "Arachnodactyly"
-          },
-          "lcs": {
-            "IC": 7.217375742667661,
-            "id": "MP:0006296",
-            "label": "arachnodactyly"
-          }
-        }
-      ],
+      "pairwise_match": [],
       "type": "phenotype",
       "taxon": {
         "id": null,
         "label": null
       },
-      "id": "HP:0001166",
-      "label": "Arachnodactyly"
+      "id": "FBcv:0000439",
+      "label": "chemical resistant"
     },
     {
       "rank": "NaN",
-      "score": 77,
+      "score": 0,
       "significance": "NaN",
-      "pairwise_match": [
-        {
-          "reference": {
-            "IC": 7.217375742667661,
-            "id": "HP:0001166",
-            "label": "Arachnodactyly"
-          },
-          "match": {
-            "IC": 7.151580619870594,
-            "id": "HP:0001238",
-            "label": "Slender finger"
-          },
-          "lcs": {
-            "IC": 7.151580619870594,
-            "id": "HP:0001238",
-            "label": "Slender finger"
-          }
-        }
-      ],
+      "pairwise_match": [],
       "type": "phenotype",
       "taxon": {
         "id": null,
         "label": null
       },
-      "id": "HP:0001238",
-      "label": "Slender finger"
+      "id": "FBcv:0002041",
+      "label": "some die during embryonic stage"
+    },
+    {
+      "rank": "NaN",
+      "score": 0,
+      "significance": "NaN",
+      "pairwise_match": [],
+      "type": "phenotype",
+      "taxon": {
+        "id": null,
+        "label": null
+      },
+      "id": "FBcv:0002039",
+      "label": "some die during pupal stage"
     }
   ],
   "metadata": {

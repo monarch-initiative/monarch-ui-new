@@ -224,17 +224,29 @@ export default defineComponent({
   },
   watch: {
     // clear results when inputs are changed to avoid de-sync
-    aPhenotypes() {
-      this.results = { matches: [] };
+    aPhenotypes: {
+      handler() {
+        this.results = { matches: [] };
+      },
+      deep: true,
     },
-    bMode() {
-      this.results = { matches: [] };
+    bMode: {
+      handler() {
+        this.results = { matches: [] };
+      },
+      deep: true,
     },
-    bTaxon() {
-      this.results = { matches: [] };
+    bTaxon: {
+      handler() {
+        this.results = { matches: [] };
+      },
+      deep: true,
     },
-    bPhenotypes() {
-      this.results = { matches: [] };
+    bPhenotypes: {
+      handler() {
+        this.results = { matches: [] };
+      },
+      deep: true,
     },
   },
 });

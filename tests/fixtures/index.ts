@@ -6,6 +6,8 @@ import uptime from "./uptime.json";
 import feedback from "./feedback.json";
 import nodeSearch from "./node-search.json";
 import textAnnotator from "./text-annotator.json";
+import phenotypeExplorerSearch from "./phenotype-explorer-search.json";
+import phenotypeExplorerCompare from "./phenotype-explorer-compare.json";
 
 // api calls to be mocked/stubbed with fixture data
 export const handlers = [
@@ -26,5 +28,11 @@ export const handlers = [
   }),
   rest.post(/nlp\/annotate/i, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(textAnnotator));
+  }),
+  rest.get(/sim\/search/i, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(phenotypeExplorerSearch));
+  }),
+  rest.post(/sim\/compare/i, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(phenotypeExplorerCompare));
   }),
 ];

@@ -1,4 +1,4 @@
-import { mount, flush } from "../setup";
+import { mount } from "../setup";
 import AppHeadings from "./AppHeadings.vue";
 
 const tags = "h1, h2, h3";
@@ -6,9 +6,6 @@ const tags = "h1, h2, h3";
 test("Chooses heading levels correctly", async () => {
   // mount hoc
   const wrapper = mount(AppHeadings);
-
-  // wait for async rendering to finish
-  await flush();
 
   // find all heading components
   const headings = wrapper.findAll(tags);
@@ -25,9 +22,6 @@ test("Chooses heading levels correctly", async () => {
 test("Creates heading links correctly", async () => {
   // mount hoc
   const wrapper = mount(AppHeadings);
-
-  // wait for async rendering to finish
-  await flush();
 
   // find all heading components
   const headings = wrapper.findAll(tags);

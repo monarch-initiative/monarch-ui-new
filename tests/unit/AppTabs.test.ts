@@ -1,4 +1,4 @@
-import { mount, flush } from "./../setup";
+import { mount } from "./../setup";
 import AppTabs from "@/components/AppTabs.vue";
 
 // some example props for each test
@@ -33,7 +33,6 @@ test("Switches by mouse", async () => {
   const button = wrapper.find("button");
   const content = wrapper;
   await button.trigger("click");
-  await flush();
   expect(content.text()).toContain(slots.apple);
 });
 
@@ -46,15 +45,11 @@ test("Switches by keyboard", async () => {
   const button = wrapper.find("button");
   const content = wrapper;
   await button.trigger("click");
-  await flush();
   expect(content.text()).toContain(slots.apple);
   await button.trigger("keydown", { key: "ArrowLeft" });
-  await flush();
   expect(content.text()).toContain(slots.cherry);
   await button.trigger("keydown", { key: "ArrowLeft" });
-  await flush();
   expect(content.text()).toContain(slots.banana);
   await button.trigger("keydown", { key: "ArrowRight" });
-  await flush();
   expect(content.text()).toContain(slots.cherry);
 });

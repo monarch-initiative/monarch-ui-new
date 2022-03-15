@@ -1,5 +1,5 @@
 <template>
-  <div class="select">
+  <div class="select-single">
     <!-- select button -->
     <button
       :id="`select-${id}`"
@@ -184,7 +184,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.select {
+.select-single {
   position: relative;
   max-width: 100%;
 }

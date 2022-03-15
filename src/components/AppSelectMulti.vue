@@ -1,5 +1,5 @@
 <template>
-  <div class="select" :style="{ width: hasSlot ? '' : width }">
+  <div class="select-multi" :style="{ width: hasSlot ? '' : width }">
     <!-- select button -->
     <slot
       v-if="hasSlot"
@@ -309,7 +309,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.select {
+.select-multi {
   position: relative;
   max-width: 100%;
 }

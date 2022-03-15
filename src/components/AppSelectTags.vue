@@ -1,5 +1,5 @@
 <template>
-  <div class="select">
+  <div class="select-tags">
     <!-- box -->
     <div class="box" :data-focused="focused">
       <!-- deselect button -->
@@ -358,7 +358,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.select {
+.select-tags {
   position: relative;
   width: 100%;
 }

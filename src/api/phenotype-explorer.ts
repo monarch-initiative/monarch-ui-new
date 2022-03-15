@@ -6,6 +6,7 @@ import { Options, OptionsFunc } from "@/components/AppSelectTags.d";
 export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
   try {
     // detect pasted list of phenotype ids
+    // deliberately don't detect single id. handle that with regular search.
     const ids = search.split(/\s*,\s*/);
     if (ids.length >= 2)
       return { autoAccept: true, options: ids.map((id) => ({ value: id })) };
@@ -105,7 +106,7 @@ export const compareSetToSet = async (
     headers.append("Accept", "application/json");
     const body = {
       reference_ids: aPhenotypes,
-      query_ids: bPhenotypes.map((id) => [id]),
+      query_ids: [bPhenotypes],
       is_feature_set: aPhenotypes.every((id) => id.startsWith("HP:")),
     };
     const options = {
