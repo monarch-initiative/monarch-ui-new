@@ -17,6 +17,7 @@ it("Mode switching works", () => {
 
 it("Phenotype set vs gene/disease works", () => {
   cy.visit("/explore#phenotype-explorer");
+  // https://github.com/cypress-io/cypress/issues/1123
   cy.get("input")
     .invoke("val", "HP:0004970,HP:0004933,HP:0004927")
     .trigger("input");
