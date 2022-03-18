@@ -1,4 +1,4 @@
-import { mount, flush } from "../setup";
+import { mount, apiCall } from "../setup";
 import TheFeedbackForm from "@/components/TheFeedbackForm.vue";
 
 test("Submits correctly when filled out", async () => {
@@ -15,8 +15,8 @@ test("Submits correctly when filled out", async () => {
   await wrapper.find("form").trigger("submit.prevent");
   expect(wrapper.emitted()).toHaveProperty("submit");
 
-  // wait for async rendering to finish
-  await flush();
+  // wait for api calls to mock
+  await apiCall();
 
   // test status message and expect to be success
   const link = wrapper.find(".status a");

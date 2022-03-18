@@ -1,4 +1,5 @@
 <template>
+  <!-- search box -->
   <AppInput
     ref="searchBox"
     placeholder="Search for a gene, disease, phenotype, etc."
@@ -35,6 +36,8 @@
         />
       </template>
     </AppFlex>
+
+    <hr />
 
     <!-- status -->
     <AppStatus v-if="status && search" ref="status" :status="status" />
@@ -85,8 +88,8 @@
     <!-- results nav -->
     <AppFlex v-if="results.length" direction="col">
       <div>
-        <b>{{ from + 1 }}</b> to <b>{{ to + 1 }}</b> of
-        <b>{{ count }}</b> results
+        <strong>{{ from + 1 }}</strong> to <strong>{{ to + 1 }}</strong> of
+        <strong>{{ count }}</strong> results
       </div>
       <AppFlex gap="small">
         <button
@@ -110,7 +113,7 @@ import { kebabCase, capitalize } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
-import { getNodeSearchResults, Result } from "@/api/node-search";
+import { getNodeSearchResults, mapFilters, Result } from "@/api/node-search";
 import { Status } from "@/components/AppStatus";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import { Options } from "@/components/AppSelectMulti";
@@ -221,8 +224,8 @@ export default defineComponent({
         // get results from api
         const { count, results, facets } = await getNodeSearchResults(
           this.search,
-          fresh ? undefined : this.availableFilters,
-          fresh ? undefined : this.activeFilters,
+          fresh ? undefined : mapFilters(this.availableFilters),
+          fresh ? undefined : mapFilters(this.activeFilters),
           fresh ? undefined : this.from
         );
         this.results = results;

@@ -56,7 +56,7 @@ const read = (key: string) => {
   try {
     return JSON.parse(string);
   } catch (error) {
-    console.error(`Error parsing key "${key}" from storage`);
+    console.info(`Error parsing key "${key}" from storage`);
     return null;
   }
 };
@@ -68,13 +68,13 @@ const write = (key: string, value: unknown) => {
   try {
     string = JSON.stringify(value);
   } catch (error) {
-    console.error(`Error stringifying key "${key}" for storage"`);
+    console.info(`Error stringifying key "${key}" for storage"`);
     return;
   }
   try {
     storage.setItem(key, string);
   } catch (error) {
-    console.error(`Error setting key "${key}" to storage`);
+    console.info(`Error setting key "${key}" to storage`);
     return;
   }
 };

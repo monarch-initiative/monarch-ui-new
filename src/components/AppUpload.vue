@@ -1,9 +1,9 @@
 <template>
   <AppButton
     class="button"
-    :data-drag="drag"
     text="Upload"
     icon="upload"
+    :data-drag="drag"
     v-tippy="'Choose or drag & drop a file'"
     @click="onClick"
     @dragenter="drag = true"

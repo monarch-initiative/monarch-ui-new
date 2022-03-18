@@ -1,6 +1,7 @@
+import { mapValues } from "lodash";
 import { biolink, request, cleanError, ApiError } from ".";
-import { Options } from "./../components/AppSelectMulti.d";
 import { labelToId } from "./taxons";
+import { Options } from "./../components/AppSelectMulti.d";
 
 interface Response {
   numFound: number;
@@ -22,11 +23,19 @@ interface Response {
   >;
 }
 
+export interface Filters {
+  [key: string]: Array<string>;
+}
+
+// util func to convert multi-select options type into filters type
+export const mapFilters = (filters: Record<string, Options>): Filters =>
+  mapValues(filters, (array) => array.map((entry) => entry.value)) as Filters;
+
 // get results from node search text and filters
 export const getNodeSearchResults = async (
   search = "",
-  availableFilters: Record<string, Options> = {},
-  activeFilters: Record<string, Options> = {},
+  availableFilters: Filters = {},
+  activeFilters: Filters = {},
   start = 0
 ): Promise<Result> => {
   try {
@@ -36,25 +45,19 @@ export const getNodeSearchResults = async (
     // get facet params
     let params: Record<string, string | number> = {};
     for (const [key, value] of Object.entries(activeFilters)) {
-      // transform filter
-      let filter = (value || [])
-        // turn array of option objects into plain array of values
-        .map(({ value }) => String(value))
-        // remove empty
-        .filter((value) => value.trim());
-
       // do special mapping for certain keys
-      if (key === "taxon") filter = filter.map(labelToId);
+      let mapped = value;
+      if (key === "taxon") mapped = mapped.map(labelToId);
 
       // join into comma-separated string list for request
-      const filterString = filter.join(",");
+      const string = mapped.join(",");
 
       // if all available filters are active
       const allActive =
-        activeFilters[key].length === availableFilters[key].length;
+        activeFilters[key]?.length === availableFilters[key]?.length;
 
       // ignore filter if value "empty" (none active) or "full" (all active)
-      if (filterString && !allActive) params[key] = filterString;
+      if (string && !allActive) params[key] = string;
     }
 
     // other params
@@ -69,10 +72,8 @@ export const getNodeSearchResults = async (
     };
 
     // make query
-    const response = await request<Response>(
-      `${biolink}/search/entity/${search}`,
-      params
-    );
+    const url = `${biolink}/search/entity/${search}`;
+    const response = await request<Response>(url, params);
     const {
       numFound: count = 0,
       docs = [],
@@ -87,6 +88,7 @@ export const getNodeSearchResults = async (
       name: (doc.label || [])[0] || "",
       altNames: (doc.label || []).slice(1),
       category: (doc.category || [])[0] || "",
+      label: (doc.label || [])[0] || "",
       description: (doc.definition || [])[0] || "",
       score: doc.score || 0,
       prefix: doc.prefix || "",
@@ -125,6 +127,7 @@ export interface Result {
     name?: string;
     altNames?: Array<string>;
     category?: string;
+    label?: string;
     description?: string;
     score?: number;
     prefix?: string;

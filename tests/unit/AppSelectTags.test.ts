@@ -4,13 +4,18 @@ import AppSelectTags from "@/components/AppSelectTags.vue";
 // some example props for each test
 const props = {
   name: "Tags select",
-  options: (search: string) =>
-    [
-      { value: "fruits" },
-      { value: "vegetables", count: 7 },
-      { value: "colors", count: 42 },
-      { value: "animals" },
-    ].filter((entry) => entry.value.includes(search)),
+  options: (search: string) => {
+    const ids = search.split(/\s*,\s*/);
+    if (ids.length >= 2)
+      return { autoAccept: true, options: ids.map((id) => ({ value: id })) };
+    else
+      return [
+        { value: "fruits" },
+        { value: "vegetables", count: 7 },
+        { value: "colors", count: 42 },
+        { value: "animals" },
+      ].filter((entry) => entry.value.includes(search));
+  },
   modelValue: [{ value: "animals" }],
 };
 
@@ -23,12 +28,27 @@ test("Buttons click to deselect", async () => {
   expect(emitted<T>(wrapper)[0].length).toEqual(0);
 });
 
+test("Click button click to deselect", async () => {
+  const wrapper = mount(AppSelectTags, { props });
+  await wrapper.findAll("button")[2].trigger("click");
+  expect(emitted<T>(wrapper)[0].length).toEqual(0);
+});
+
 test("Types to search", async () => {
   const wrapper = mount(AppSelectTags, { props });
   await wrapper.find("input").trigger("focus");
   expect(wrapper.findAll("[role='option']").length).toBe(3);
   await wrapper.find("input").setValue("veg");
   expect(wrapper.findAll("[role='option']").length).toBe(1);
+});
+
+test("Pastes to autoSelect", async () => {
+  const wrapper = mount(AppSelectTags, { props });
+  await wrapper.find("input").setValue("HP:0000322,HP:0001166,HP:0001238");
+  const buttons = wrapper.findAll("button");
+  expect(buttons.at(1)?.text()).toEqual("HP:0000322");
+  expect(buttons.at(2)?.text()).toEqual("HP:0001166");
+  expect(buttons.at(3)?.text()).toEqual("HP:0001238");
 });
 
 test("Clicks to select", async () => {

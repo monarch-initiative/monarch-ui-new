@@ -1,6 +1,7 @@
+import { nextTick } from "vue";
 import router, { routes } from "@/router";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { mount, flush } from "../setup";
+import { mount, apiCall } from "../setup";
 import App from "@/App.vue";
 
 // add axe to jest
@@ -26,7 +27,9 @@ test(
       await router.isReady();
 
       // wait until async rendering is done
-      await flush();
+      await nextTick();
+      // wait for api calls to mock
+      await apiCall();
 
       // analyze rendered html with axe
       const results = await axe(wrapper.element);

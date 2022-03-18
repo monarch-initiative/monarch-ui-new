@@ -1,12 +1,12 @@
-import { mount, flush } from "../setup";
+import { mount, apiCall } from "../setup";
 import Help from "@/views/help/Help.vue";
 
 test("Help page renders uptimerobot statuses", async () => {
   // mount and wait until async rendering is done
   const wrapper = mount(Help);
 
-  // wait for async rendering to finish
-  await flush();
+  // wait for api calls to mock
+  await apiCall();
 
   // check that various statuses exist. fixture data contains all possible
   // status types from uptimerobot. check that all of them get converted to and

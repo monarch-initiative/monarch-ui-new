@@ -16,11 +16,15 @@
     <AppButton text="try an example" design="small" @click="doExample()" />
   </AppFlex>
 
+  <hr />
+
   <!-- status -->
   <AppStatus v-if="content && status" ref="status" :status="status" />
 
   <!-- filename -->
-  <strong v-if="filename">{{ filename }}</strong>
+  <strong v-if="annotations.length"
+    >Annotations for {{ filename || "pasted text" }}</strong
+  >
 
   <!-- results -->
   <p v-if="annotations.length">

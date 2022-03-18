@@ -7,7 +7,7 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   min-height: 100px;
-  background: $gray;
+  background: $light-gray;
   box-shadow: $shadow;
 }
 </style>

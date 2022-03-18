@@ -1,35 +1,58 @@
 <template>
-  <div class="select">
+  <div class="select-tags">
     <!-- box -->
     <div class="box" :data-focused="focused">
       <!-- deselect button -->
-      <button
+      <AppButton
         v-for="(selected, index) in modelValue"
         :key="index"
+        design="circle"
+        :text="String(selected.label || selected.value)"
+        icon="xmark"
         class="selected"
         :aria-label="`Deselect ${selected.value}`"
+        v-tippy="`Deselect ${selected.value}`"
         @click="deselect(selected)"
-      >
-        {{ selected.value }}
-        <AppIcon icon="xmark" />
-      </button>
-
-      <!-- input box -->
-      <input
-        v-model="search"
-        :placeholder="placeholder"
-        role="combobox"
-        :aria-label="name"
-        aria-multiselectable="true"
-        :aria-expanded="!!results.length"
-        :aria-controls="`list-${id}`"
-        aria-haspopup="listbox"
-        :aria-activedescendant="`option-${id}-${highlighted}`"
-        aria-autocomplete="list"
-        @focus="focused = true"
-        @blur="focused = false"
-        @keydown="onKeydown"
       />
+
+      <AppFlex>
+        <!-- input box -->
+        <input
+          v-model="search"
+          :placeholder="placeholder"
+          role="combobox"
+          :aria-label="name"
+          aria-multiselectable="true"
+          :aria-expanded="!!results.length"
+          :aria-controls="`list-${id}`"
+          aria-haspopup="listbox"
+          :aria-activedescendant="`option-${id}-${highlighted}`"
+          aria-autocomplete="list"
+          @focus="focused = true"
+          @blur="focused = false"
+          @keydown="onKeydown"
+          @paste="onPaste"
+          v-tippy="{ content: tooltip, offset: [20, 20] }"
+        />
+
+        <span class="meta">
+          <!-- copy ids -->
+          <AppButton
+            design="small"
+            icon="copy"
+            @click="copy"
+            v-tippy="`Copy ${selected.length} selected`"
+          />
+          {{ " " }}
+          <!-- clear box -->
+          <AppButton
+            design="small"
+            icon="times"
+            @click="clear"
+            v-tippy="`Clear ${selected.length} selected`"
+          />
+        </span>
+      </AppFlex>
     </div>
 
     <!-- dropdown -->
@@ -44,8 +67,8 @@
       <AppStatus v-if="status" ref="status" :status="status" />
 
       <!-- list of results -->
-      <table>
-        <tr
+      <div class="grid" v-if="results.length">
+        <div
           v-for="(option, index) in availableResults"
           :key="index"
           :id="`option-${id}-${index}`"
@@ -60,13 +83,18 @@
           @keydown="() => null"
           tabindex="0"
         >
-          <td class="option-icon">
+          <span class="option-icon">
             <AppIcon :icon="option.icon || ''" />
-          </td>
-          <td class="option-label">{{ startCase(String(option.value)) }}</td>
-          <td class="option-count">{{ option.count }}</td>
-        </tr>
-      </table>
+          </span>
+          <span class="option-label"
+            ><span
+              class="truncate"
+              v-html="option.highlight || option.label || option.value"
+            ></span
+          ></span>
+          <span class="option-info truncate">{{ option.info }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -77,19 +105,21 @@
 // https://vuetifyjs.com/en/components/autocompletes
 
 import { defineComponent, PropType } from "vue";
-import { uniqueId, isEqual, startCase, debounce, DebouncedFunc } from "lodash";
+import { uniqueId, isEqual, debounce, DebouncedFunc } from "lodash";
 import { Option, Options, OptionsFunc } from "./AppSelectTags";
 import AppStatus from "@/components/AppStatus.vue";
 import { Status } from "@/components/AppStatus";
 import { ApiError } from "@/api";
 import { wrap } from "@/util/math";
+import { push } from "./TheSnackbar.vue";
+import { sleep } from "@/util/debug";
 
 // custom tag select component with type-in async search and chips
 export default defineComponent({
   components: {
     AppStatus,
   },
-  emits: ["update:modelValue", "change"],
+  emits: ["update:modelValue", "change", "autoAccept", "valueFunc"],
   props: {
     // name of the field
     name: {
@@ -107,6 +137,10 @@ export default defineComponent({
     options: {
       type: Function as PropType<OptionsFunc>,
       required: true,
+    },
+    // tooltip when hovering input
+    tooltip: {
+      type: String,
     },
   },
   data() {
@@ -126,7 +160,9 @@ export default defineComponent({
       // status of query
       status: null as Status | null,
       // debounced get results function
-      getResults: debounce(() => null) as DebouncedFunc<() => Promise<void>>,
+      debouncedGetResults: debounce(() => null) as DebouncedFunc<
+        () => Promise<void>
+      >,
     };
   },
   methods: {
@@ -135,7 +171,7 @@ export default defineComponent({
       this.search = "";
       this.results = [];
       this.highlighted = 0;
-      this.getResults.cancel();
+      this.debouncedGetResults.cancel();
     },
     // when user presses key in input
     onKeydown(event: KeyboardEvent) {
@@ -175,10 +211,40 @@ export default defineComponent({
       // esc key to close dropdown
       if (event.key === "Escape") this.close();
     },
-    // select an option
-    select(option: Option) {
-      this.selected.push(option);
-      this.search = "";
+    // when user pastes text
+    async onPaste() {
+      // wait for pasted value to take effect
+      // but don't use nextTick because by then this.search will be reset
+      await sleep();
+      // immediately auto-accept results
+      this.getResults();
+    },
+    // check if option isnt already selected
+    isntSelected(option: Option) {
+      return !this.selected.find((selected) => option.value === selected.value);
+    },
+    // select an option or array of options
+    async select(options: Option | Options) {
+      // make array if single option
+      if (!Array.isArray(options)) options = [options];
+
+      // array of options to select
+      const toSelect: Options = [];
+
+      for (const option of options) {
+        // run func to get options to select
+        if (option.valueFunc) {
+          const values = await option.valueFunc();
+          toSelect.push(...values);
+          // notify parent that dynamic values were added
+          this.$emit("valueFunc", values.length);
+        }
+        // otherwise just select option
+        else toSelect.push(option);
+      }
+
+      // select options (if not already selected)
+      this.selected.push(...toSelect.filter(this.isntSelected));
     },
     // deselect a specific option or last-selected option
     deselect(option?: Option) {
@@ -188,7 +254,50 @@ export default defineComponent({
         );
       else this.selected.pop();
     },
-    startCase,
+    // clear all selected
+    clear() {
+      this.selected = [];
+    },
+    // copy selected ids to clipboard
+    async copy() {
+      await window.navigator.clipboard.writeText(
+        this.selected.map(({ value }) => value).join(",")
+      );
+      push(`Copied ${this.selected.length} phenotype IDs`);
+    },
+    // get list of results
+    async getResults() {
+      // cancel any pending calls
+      this.debouncedGetResults.cancel();
+
+      // loading...
+      this.status = { code: "loading", text: "Loading results" };
+      this.results = [];
+      this.highlighted = 0;
+
+      try {
+        // get results
+        const response = await this.options(this.search);
+
+        // if auto accept flag set, immediately accept/select passed options
+        if ("autoAccept" in response && "options" in response) {
+          this.select(response.options);
+          this.search = "";
+          this.$emit("autoAccept");
+        }
+        // otherwise, show list of results for user to select
+        else {
+          this.results = response;
+          if (!this.results.length) throw new ApiError("No results", "warning");
+        }
+
+        // clear status
+        this.status = null;
+      } catch (error) {
+        // error...
+        this.status = error as ApiError;
+      }
+    },
   },
   computed: {
     // list of unselected results to show
@@ -220,53 +329,43 @@ export default defineComponent({
     },
     // run async get results func when search text changes
     async search() {
-      this.getResults();
+      this.debouncedGetResults();
     },
+    // when focused state changes
     focused() {
       // get results when first focused
       if (this.focused) this.getResults();
       // clear search when input box blurred
       else this.close();
     },
+    // when highlighted index changes
+    highlighted() {
+      // scroll to highlighted in dropdown
+      document
+        .querySelector(`#option-${this.id}-${this.highlighted} > *`)
+        ?.scrollIntoView({ block: "nearest" });
+    },
   },
   created() {
     // make instance-unique debounced method of getting results (async options)
-    this.getResults = debounce(async () => {
-      // loading...
-      this.status = { code: "loading", text: "Loading results" };
-      this.results = [];
-      this.highlighted = 0;
-
-      try {
-        // get results
-        this.results = await this.options(this.search);
-
-        // empty...
-        if (!this.results.length) throw new ApiError("No results", "warning");
-
-        // clear status
-        this.status = null;
-      } catch (error) {
-        // error...
-        this.status = error as ApiError;
-      }
-    }, 500);
+    this.debouncedGetResults = debounce(this.getResults, 500);
   },
   beforeUnmount() {
     // cancel any in-progress debounce
-    this.getResults.cancel();
+    this.debouncedGetResults.cancel();
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.select {
+.select-tags {
   position: relative;
   width: 100%;
 }
 
 .box {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 10px;
   width: 100%;
@@ -292,11 +391,15 @@ input {
 }
 
 .selected {
+  min-height: unset !important;
+  font-size: 0.9rem;
+}
+
+.meta {
   display: flex;
-  gap: 7.5px;
-  background: $theme-light;
-  padding: 2.5px 10px;
-  border-radius: 999px;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
 }
 
 .list {
@@ -310,38 +413,50 @@ input {
   z-index: 2;
 }
 
-table {
-  table-layout: fixed;
-  width: 100%;
-  border-collapse: collapse;
-  white-space: nowrap;
-}
-
-td {
-  height: 35px;
-  padding: 0 10px;
+.grid {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-auto-rows: 30px;
+  justify-content: stretch;
+  align-items: stretch;
 }
 
 .option {
+  display: contents;
   cursor: pointer;
   transition: background $fast;
 }
 
-.option[data-highlighted="true"] {
+.option > * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  overflow: hidden;
+
+  &:first-child {
+    padding-left: 10px;
+  }
+
+  &:last-child {
+    padding-right: 10px;
+  }
+}
+
+.option[data-highlighted="true"] > * {
   background: $light-gray;
 }
 
 .option-icon {
-  width: 35px;
-  color: $gray;
+  color: $off-black;
 }
 
 .option-label {
-  text-align: left;
+  justify-content: flex-start;
 }
 
-.option-count {
+.option-info {
+  justify-content: flex-end;
   color: $gray;
-  text-align: right;
 }
 </style>

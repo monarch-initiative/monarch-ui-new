@@ -27,8 +27,7 @@ export const request = async <T = unknown>(
   // make request
   console.info("Making request", url.replaceAll(" ", "%20"));
   const response = await fetch(url, options);
-  if (!response.ok)
-    throw new ApiError(`Response not OK - ${response.statusText}`);
+  if (!response.ok) throw new ApiError(`Response not OK`);
   const json = await response.json();
 
   return json;
@@ -41,11 +40,14 @@ export const cleanError = (error: unknown): ApiError => {
     // turn it into one with user-readable error message
     error = new ApiError("Error: " + (error as Error).message);
 
-  // log error to console like normal for advanced debugging
-  // (log as info instead of error to distinguish between uncaught errors)
-  console.groupCollapsed((error as ApiError).text);
-  console.info(error);
-  console.groupEnd();
+  // if this error hasn't already been logged
+  if (!(error as ApiError).logged) {
+    // log error to console like normal for advanced debugging
+    console.groupCollapsed((error as ApiError).text);
+    console.info(error);
+    console.groupEnd();
+    (error as ApiError).logged = true;
+  }
 
   return error as ApiError;
 };
@@ -54,10 +56,14 @@ export const cleanError = (error: unknown): ApiError => {
 export class ApiError extends Error {
   code: typeof Codes[number];
   text: string;
+  // flag to track if error already logged
+  // prevents duplicate logs when kicking errors up multiple try/catch levels
+  logged: boolean;
   constructor(text = "", code: typeof Codes[number] = "error") {
     super();
     this.name = "ApiError";
     this.text = String(text);
     this.code = code;
+    this.logged = false;
   }
 }

@@ -8,6 +8,11 @@
     <AppHeading>Testbed</AppHeading>
   </AppSection>
 
+  <!-- ring component -->
+  <AppSection>
+    <AppRing />
+  </AppSection>
+
   <!-- table component -->
   <AppSection>
     <AppHeading>Table</AppHeading>
@@ -130,8 +135,9 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import AppInput from "@/components/AppInput.vue";
 import { omit, pick } from "lodash";
+import AppInput from "@/components/AppInput.vue";
+import AppRing from "@/components/AppRing.vue";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
 import AppSelectTags from "@/components/AppSelectTags.vue";
@@ -144,6 +150,7 @@ import { sleep } from "@/util/debug";
 export default defineComponent({
   components: {
     AppInput,
+    AppRing,
     AppSelectMulti,
     AppSelectSingle,
     AppSelectTags,
@@ -247,7 +254,7 @@ export default defineComponent({
     };
   },
   methods: {
-    log: console.log,
+    log: console.info,
     omit,
     pick,
   },

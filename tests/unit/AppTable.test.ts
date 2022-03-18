@@ -56,16 +56,16 @@ test("Changes sort", async () => {
 test("Changes filter", async () => {
   const wrapper = mount(AppTable, { props });
   await wrapper.findAll("thead button").at(2)?.trigger("click");
-  await wrapper.find("tr[role='option']").trigger("click");
+  await wrapper.find("[role='option']").trigger("click");
   expect(emitted(wrapper, "filter")).toEqual([1, []]);
-  await wrapper.findAll("tr[role='option']").at(1)?.trigger("click");
+  await wrapper.findAll("[role='option']").at(1)?.trigger("click");
   expect(emitted(wrapper, "filter")).toEqual([1, [{ value: "nulls" }]]);
 });
 
 test("Changes per page", async () => {
   const wrapper = mount(AppTable, { props });
   await wrapper.find(".controls div:nth-child(1) button").trigger("click");
-  await wrapper.find("div[role='option']").trigger("click");
+  await wrapper.find("[role='option']").trigger("click");
   expect(emitted(wrapper, "perPage")).toEqual([5]);
 });
 

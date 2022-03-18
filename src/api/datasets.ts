@@ -33,9 +33,9 @@ const expand = (string = "") =>
 // get metadata of all datasets used in monarch from biolink, in format of source
 export const getDatasets = async (): Promise<Result> => {
   try {
-    const { nodes, edges } = await request<Response>(
-      `${biolink}/metadata/datasets`
-    );
+    // make query
+    const url = `${biolink}/metadata/datasets`;
+    const { nodes, edges } = await request<Response>(url);
 
     const filteredNodes = edges
       // only get edges whose type is a dataset

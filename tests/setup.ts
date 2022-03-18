@@ -1,11 +1,11 @@
-// jest setup
+// jest setup and util funcsÏ
+
 import { ComponentPublicInstance } from "vue";
 import {
   MountingOptions,
   VueWrapper,
   mount as vueMount,
 } from "@vue/test-utils";
-import { nextTick } from "vue";
 import { setupServer } from "msw/node";
 import fetch from "node-fetch";
 import { cloneDeep } from "lodash";
@@ -41,8 +41,13 @@ jest.mock("lodash", () => {
 // run before each test
 beforeEach(async () => {
   // set default route and wait until ready
-  router.push("/");
+  await router.push("/");
   await router.isReady();
+});
+
+// https://github.com/vuejs/router/issues/615
+afterAll(async () => {
+  await sleep();
 });
 
 // mount wrapper with standard options
@@ -69,12 +74,13 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-// util function to wait for promises, async rendering, dom updates, etc
-export const flush = async (): Promise<void> => {
-  await sleep(); // equivalent to flushPromises() https://github.com/vuejs/vue-test-utils-next/blob/master/src/utils/flushPromises.ts
-  await sleep(); // see https://github.com/mswjs/msw/discussions/988
-  await nextTick(); // for good measure, see https://github.com/vuejs/vue-test-utils-next/issues/137
-  await sleep(100); // add wiggle room
+// util function to wait for api calls to mock
+export const apiCall = async (): Promise<void> => {
+  // why two "flushPromises" calls? see:
+  // https://github.com/mswjs/msw/issues/1163
+  // https://github.com/vuejs/test-utils/issues/137
+  await sleep();
+  await sleep();
 };
 
 // util to get last emitted event from mounted wrapper

@@ -4,14 +4,9 @@
     :src="custom"
     class="icon"
     aria-hidden="true"
-    :data-circle="circle"
+    @loaded="loadedInline"
   />
-  <FontAwesomeIcon
-    v-else-if="fa"
-    :icon="fa"
-    aria-hidden="true"
-    :data-circle="circle"
-  />
+  <FontAwesomeIcon v-else-if="fa" :icon="fa" aria-hidden="true" />
 </template>
 
 <script lang="ts">
@@ -35,8 +30,6 @@ export default defineComponent({
     },
     // fallback icon to show if custom icon file cannot be found
     fallback: String,
-    // whether to put circle border around
-    circle: Boolean,
   },
   components: {
     FontAwesomeIcon,
@@ -66,17 +59,29 @@ export default defineComponent({
       return null;
     },
   },
+  methods: {
+    // when custom svg icon inlined/loaded
+    loadedInline(element: HTMLElement) {
+      if (!element?.style) return;
+
+      // get absolute display size of icon in px
+      const size = Number.parseFloat(window.getComputedStyle(element).fontSize);
+
+      // stroke inversely with size
+      let stroke;
+      if (size >= 32) stroke = 4;
+      else if (size >= 24) stroke = 5;
+      else stroke = 6;
+
+      // set stroke width css variable
+      element?.style?.setProperty("--stroke", stroke + "px");
+    },
+  },
 });
 </script>
 
 <style lang="scss" scoped>
 .icon {
   height: 1em;
-}
-
-.icon[data-circle="true"] {
-  border-radius: 999px;
-  outline: solid 2px currentColor;
-  // background: $theme-light;
 }
 </style>

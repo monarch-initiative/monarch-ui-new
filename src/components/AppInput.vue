@@ -79,6 +79,9 @@ export default defineComponent({
     },
     // when user "commits" change to value, e.g. pressing enter, de-focusing, etc
     onChange(event: Event) {
+      // cancel any pending calls
+      this.debounced.cancel();
+
       // if you see this event fire unexpectedly, check this:
       // https://bugs.chromium.org/p/chromium/issues/detail?id=1297334
 

@@ -1,5 +1,5 @@
 <template>
-  <AppFlex role="tablist">
+  <AppFlex role="tablist" :aria-label="name">
     <AppButton
       v-for="(tab, index) in tabs"
       :key="index"
@@ -9,26 +9,35 @@
       @click="selected = tab.id"
       design="circle"
       :color="selected === tab.id ? 'primary' : 'none'"
+      :aria-label="tab.text"
       :aria-selected="selected === tab.id"
-      :tabindex="selected === tab.id ? 0 : -1"
       :aria-controls="`panel-${id}-${tab.id}`"
+      :tabindex="selected === tab.id ? 0 : undefined"
       role="tab"
-      :tooltip="tab.tooltip"
-      :aria-label="name"
+      v-tippy="tab.tooltip"
       @keydown="onKeydown"
     />
   </AppFlex>
 
-  <AppFlex
-    gap="big"
-    direction="col"
+  <!-- hidden element to serve as aria panel -->
+  <div
     :id="`panel-${id}-${selected}`"
-    class="panel"
     :aria-labelledby="`tab-${id}-${selected}`"
     role="tabpanel"
-  >
-    <slot :name="selected"></slot>
-  </AppFlex>
+    :aria-label="'Tab content below'"
+    :style="{ display: 'contents' }"
+  ></div>
+
+  <!-- description of tab -->
+  <template v-if="description && showDescription">
+    <p>
+      {{ description }}
+    </p>
+    <hr />
+  </template>
+
+  <!-- tab panel content -->
+  <slot :name="selected"></slot>
 </template>
 
 <script lang="ts">
@@ -45,6 +54,7 @@ interface Tab {
   // tab button props
   text?: string;
   icon?: string;
+  description?: string;
   tooltip?: string;
 }
 type Tabs = Array<Tab>;
@@ -65,6 +75,11 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    // whether to show description paragraph
+    showDescription: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -76,6 +91,12 @@ export default defineComponent({
         this.$props.tabs[0].id ||
         "") as string,
     };
+  },
+  computed: {
+    // description of selected tab
+    description() {
+      return this.tabs.find((tab) => tab.id === this.selected)?.description;
+    },
   },
   methods: {
     // when user presses key on button
@@ -125,9 +146,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.panel {
-  width: 100%;
-}
-</style>

@@ -7,6 +7,7 @@ const result = {
   name: "Marfan and Marfan-related disorder",
   altNames: [],
   category: "disease",
+  label: "Marfan and Marfan-related disorder",
   description: "",
   score: 108.652695,
   prefix: "MONDO",

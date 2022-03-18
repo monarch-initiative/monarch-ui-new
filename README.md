@@ -83,7 +83,7 @@ Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-
 - `.env` - Environment variable file.
   A convenient place to set static string values that need to be repeated throughout the app.
 
-### Guidelines
+### Guidelines and notes
 
 Where possible and appropriate, use custom components like `AppHeading` and `AppLink` instead of native elements like `h1` and `a`.
 
@@ -97,3 +97,9 @@ Tip: use VS Code extension "Sort Lines".
 
 Use `// TODO` as a consistent in-code flag for pieces of code that should eventually be replaced with something better.
 Also link to a GitHub issue that tracks the issue.
+
+Use `console.log` for temporary debugging during local development (all of these should be removed before merging PR's).
+Use `console.info` for logging we want to keep in production.
+Do not use `console.error`, to distinguish between uncaught/unhandled errors.
+
+To analyze the size of the compiled bundle, uncomment the `stats-webpack-plugin` line in the `vue.config.js`, build the app, then try running `npx webpack-bundle-analyzer dist/stats.json` or `npx source-map-explorer dist/js/*`.

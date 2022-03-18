@@ -27,6 +27,7 @@ export const options = {
   defaultProps: {
     delay: 100,
     duration: 200,
+    offset: [13, 13],
     allowHTML: true,
     onCreate,
     onShow,

@@ -1,5 +1,5 @@
 <template>
-  <div class="select" :style="{ width: hasSlot ? '' : width }">
+  <div class="select-multi" :style="{ width: hasSlot ? '' : width }">
     <!-- select button -->
     <slot
       v-if="hasSlot"
@@ -59,9 +59,9 @@
       tabindex="0"
       :data-slot="hasSlot"
     >
-      <table>
+      <div class="grid">
         <!-- select all -->
-        <tr
+        <div
           :id="`option-${id}--1`"
           class="option"
           role="menuitem"
@@ -75,17 +75,17 @@
           @keydown="() => null"
           tabindex="0"
         >
-          <td class="option-icon">
+          <span class="option-icon">
             <AppIcon :icon="allSelected ? 'square-check' : 'square'" />
-          </td>
-          <td class="option-label">All</td>
-          <td class="option-count"></td>
-        </tr>
-        <tr>
-          <td class="option-spacer" colspan="3"></td>
-        </tr>
+          </span>
+          <span class="option-label">All</span>
+          <span class="option-count"></span>
+        </div>
+
+        <div class="option-spacer"></div>
+
         <!-- options -->
-        <tr
+        <div
           v-for="(option, index) in options"
           :key="index"
           :id="`option-${id}-${index}`"
@@ -101,15 +101,17 @@
           @keydown="() => null"
           tabindex="0"
         >
-          <td class="option-icon">
+          <span class="option-icon">
             <AppIcon
               :icon="selected.includes(index) ? 'square-check' : 'square'"
             />
-          </td>
-          <td class="option-label">{{ startCase(String(option.value)) }}</td>
-          <td class="option-count">{{ option.count }}</td>
-        </tr>
-      </table>
+          </span>
+          <span class="option-label">{{
+            startCase(String(option.value))
+          }}</span>
+          <span class="option-count">{{ option.count }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -289,7 +291,7 @@ export default defineComponent({
     highlighted() {
       // scroll to highlighted in dropdown
       document
-        .querySelector(`#option-${this.id}-${this.highlighted}`)
+        .querySelector(`#option-${this.id}-${this.highlighted} > *`)
         ?.scrollIntoView({ block: "nearest" });
     },
   },
@@ -307,7 +309,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.select {
+.select-multi {
   position: relative;
   max-width: 100%;
 }
@@ -351,43 +353,58 @@ export default defineComponent({
   transform: translateX(-50%);
 }
 
-table {
-  table-layout: fixed;
-  min-width: 100%;
-  border-collapse: collapse;
-  white-space: nowrap;
-}
-
-td {
-  height: 35px;
-  padding: 0 10px;
+.grid {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: 30px 10px;
+  grid-auto-rows: 30px;
+  justify-content: stretch;
+  align-items: stretch;
+  min-width: max-content;
 }
 
 .option {
+  display: contents;
   cursor: pointer;
   transition: background $fast;
 }
 
-.option[data-highlighted="true"] {
+.option > * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  overflow: hidden;
+
+  &:first-child {
+    padding-left: 10px;
+  }
+
+  &:last-child {
+    padding-right: 10px;
+  }
+}
+
+.option[data-highlighted="true"] > * {
   background: $light-gray;
 }
 
 .option-spacer {
-  height: 5px;
+  grid-column: 1 / 4;
+  height: 10px;
 }
 
 .option-icon {
-  width: 35px;
   color: $theme;
   font-size: 1.2rem;
 }
 
 .option-label {
-  text-align: left;
+  justify-content: flex-start;
 }
 
 .option-count {
+  justify-content: flex-end;
   color: $gray;
-  text-align: right;
 }
 </style>
