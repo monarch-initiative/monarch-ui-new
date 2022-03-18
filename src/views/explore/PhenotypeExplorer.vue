@@ -132,8 +132,8 @@ const multiTooltip = `In this box, you can select phenotypes in 3 ways:<br>
   </ol>`;
 
 const bModeOptions = [
-  "phenotypes from all human diseases",
   "phenotypes from all genes of ...",
+  "phenotypes from all human diseases",
   "these phenotypes ...",
 ];
 const bTaxonOptions = ["mouse", "zebrafish", "fruitfly", "nematode", "frog"];

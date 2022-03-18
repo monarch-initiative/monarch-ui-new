@@ -6,7 +6,6 @@ it("Populating example works", () => {
 
 it("Mode switching works", () => {
   cy.visit("/explore#phenotype-explorer");
-  cy.contains("mouse").should("exist");
   cy.contains("button", "all genes").trigger("click");
   cy.contains("[role='option']", "all human diseases").trigger("click");
   cy.contains("mouse").should("not.exist");
@@ -24,6 +23,7 @@ it("Phenotype set vs gene/disease works", () => {
   cy.contains("Analyze").trigger("click");
   cy.contains("55");
   cy.contains("1600029I14Rik");
+  cy.contains("Mus musculus");
 });
 
 it("Phenotype set vs phenotype set works", () => {

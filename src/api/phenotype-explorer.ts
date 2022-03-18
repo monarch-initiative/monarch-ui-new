@@ -146,8 +146,6 @@ export const compareSetToTaxon = async (
   const url = `${biolink}/sim/search`;
   const response = await request<Response>(url, params);
 
-  console.log(response);
-
   return mapMatches(response);
 };
 
