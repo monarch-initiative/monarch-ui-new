@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle class="category" cx="50" cy="50" r="55" />
+  <path class="category" d="M45 45v-9h10v9h9v10h-9v9H45v-9h-9V45h9z" />
+  <path class="category" d="M23 23l-3 5v45h60V28H40l-2.5-5H23z" />
+</svg>
