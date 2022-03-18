@@ -48,7 +48,7 @@ export default defineComponent({
       timeout = window.setTimeout(
         () => (this.notification = ""),
         // make delay longer for longer messages
-        this.notification.length * 50
+        this.notification.length * 100
       );
     },
     // when user clicks notification

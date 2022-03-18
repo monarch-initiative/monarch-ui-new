@@ -50,23 +50,22 @@
   <!-- analysis status -->
   <AppStatus v-if="status" :status="status" />
 
-  <!-- analysis results -->
-  <template v-else-if="results.matches.length">
-    <!-- top results -->
-    <AppFlex>
-      <strong>Top 10 matches</strong>
-      <div
-        v-for="(match, index) in results.matches.slice(0, 10)"
-        :key="index"
-        class="match"
-      >
-        <AppRing
-          :score="match.score"
-          :min="results.minScore"
-          :max="results.maxScore"
-          v-tippy="'Similarity score'"
-        />
-        <div class="match-details">
+  <!-- analysis top results -->
+  <AppFlex v-else-if="results.matches.length">
+    <strong>Top 10 matches</strong>
+    <div
+      v-for="(match, index) in results.matches.slice(0, 10)"
+      :key="index"
+      class="match"
+    >
+      <AppRing
+        :score="match.score"
+        :min="results.minScore"
+        :max="results.maxScore"
+        v-tippy="'Similarity score'"
+      />
+      <div direction="col" class="match-details">
+        <div class="match-primary-details">
           <AppIcon
             :icon="`category-${match.category}`"
             v-tippy="startCase(match.category)"
@@ -75,12 +74,12 @@
             {{ match.label }}
           </AppLink>
         </div>
+        <div class="match-secondary-details">
+          <span v-if="match.taxon">{{ match.taxon }}</span>
+        </div>
       </div>
-    </AppFlex>
-
-    <!-- phenogrid results -->
-    <div id="phenogrid"></div>
-  </template>
+    </div>
+  </AppFlex>
 
   <!-- spacing for dropdown when no results -->
   <template v-else>
@@ -95,6 +94,12 @@
     <br />
     <br />
   </template>
+
+  <!-- phenogrid results -->
+  <template v-if="results.matches.length">
+    <strong>Phenotype Similarity Comparison</strong>
+    <div id="phenogrid"></div>
+  </template>
 </template>
 
 <script lang="ts">
@@ -104,11 +109,12 @@ import AppSelectTags from "@/components/AppSelectTags.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
 import AppRing from "@/components/AppRing.vue";
 import {
-  compareSetToGene,
+  compareSetToTaxon,
   compareSetToSet,
   getPhenotypes,
   Results,
-  getTaxonId,
+  getTaxonIdFromName,
+  getTaxonScientificFromName,
 } from "@/api/phenotype-explorer";
 import { Status } from "@/components/AppStatus";
 import AppStatus from "@/components/AppStatus.vue";
@@ -198,17 +204,18 @@ export default defineComponent({
 
       try {
         // run appropriate analysis based on selected mode
-        if (this.bMode.includes("phenotypes from"))
-          this.results = await compareSetToGene(
-            this.aPhenotypes.map(({ value }) => String(value)),
-            this.bMode.includes("diseases") ? "human" : this.bTaxon
-          );
-        else
+        if (this.bMode.includes("these phenotypes"))
           this.results = await compareSetToSet(
             this.aPhenotypes.map(({ value }) => String(value)),
             this.bPhenotypes.map(({ value }) => String(value))
           );
+        else
+          this.results = await compareSetToTaxon(
+            this.aPhenotypes.map(({ value }) => String(value)),
+            this.bMode.includes("diseases") ? "human" : this.bTaxon
+          );
 
+        // run phenogrid, attach to div container
         this.runPhenogrid();
 
         // clear status
@@ -232,7 +239,7 @@ export default defineComponent({
     // show phenogrid results
     runPhenogrid() {
       // which biolink /sim endpoint to use
-      const mode = this.bMode.includes("phenotypes from")
+      const mode = this.bMode.includes("these phenotypes")
         ? "compare"
         : "search";
 
@@ -251,11 +258,15 @@ export default defineComponent({
         }));
       else {
         const taxon = this.bMode.includes("diseases") ? "human" : this.bTaxon;
-        xAxis = [{ groupId: getTaxonId(taxon), groupName: taxon }];
+        xAxis = [
+          {
+            groupId: getTaxonIdFromName(taxon),
+            groupName: getTaxonScientificFromName(taxon),
+          },
+        ];
       }
-
       // call phenogrid
-      mountPhenogrid("#phenogrid", "Phenogrid Results", xAxis, yAxis, mode);
+      mountPhenogrid("#phenogrid", xAxis, yAxis, mode);
     },
     // clear/reset results
     clearResults() {
@@ -318,6 +329,9 @@ export default defineComponent({
 
 .match-details {
   flex-grow: 1;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
   gap: 10px;
   text-align: left;
 
@@ -327,11 +341,19 @@ export default defineComponent({
   }
 }
 
+.match-secondary-details {
+  color: $gray;
+}
+
 @media (max-width: 600px) {
   .match {
     flex-direction: column;
     gap: 20px;
     margin: 10px 0;
   }
+}
+
+#phenogrid {
+  width: 100%;
 }
 </style>

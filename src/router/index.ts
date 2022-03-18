@@ -161,24 +161,24 @@ const router = createRouter({
 });
 
 // set document title after route
-router.afterEach(({ name, query, hash }) => {
+router.afterEach(async ({ name, query, hash }) => {
   // https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
-  nextTick(() => {
-    // get name of page
-    const page = typeof name === "string" ? name : "";
+  await nextTick();
 
-    // get "sub page"
-    const subpage = lowerCase(hash.slice(1));
+  // get name of page
+  const page = typeof name === "string" ? name : "";
 
-    // get extra details from url params
-    let details = "";
-    if (query.search) details = `"${query.search}"`;
+  // get "sub page"
+  const subpage = lowerCase(hash.slice(1));
 
-    // combine into document title
-    document.title = [process.env.VUE_APP_TITLE_SHORT, page, subpage, details]
-      .filter((part) => part)
-      .join(" - ");
-  });
+  // get extra details from url params
+  let details = "";
+  if (query.search) details = `"${query.search}"`;
+
+  // combine into document title
+  document.title = [process.env.VUE_APP_TITLE_SHORT, page, subpage, details]
+    .filter((part) => part)
+    .join(" - ");
 });
 
 // close any open tooltips on route change

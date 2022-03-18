@@ -1,24 +1,26 @@
+import { waitFor } from "./../util/dom";
 import { cleanError } from "./index";
 import { biolink } from ".";
 // import "phenogrid/dist/phenogrid-bundle.css";
+import "./phenogrid.css";
 import Phenogrid from "phenogrid";
 
 // mount phenogrid to dom element with options
-export const mountPhenogrid = (
+export const mountPhenogrid = async (
   selector: string,
-  title = "",
   xAxis: PhenogridOptions["gridSkeletonData"]["xAxis"],
   yAxis: PhenogridOptions["gridSkeletonData"]["yAxis"],
   mode = "compare"
-): void => {
-  console.log("hi");
+): Promise<void> => {
   try {
+    await waitFor("#phenogrid");
+
     Phenogrid.createPhenogridForElement(document.querySelector(selector), {
-      serverURL: biolink,
+      serverURL: biolink + "/",
       forceBiolink: true,
       appURL: window.location.origin,
       gridSkeletonData: {
-        title,
+        title: " ",
         xAxis,
         yAxis,
       },
@@ -27,7 +29,10 @@ export const mountPhenogrid = (
       geneList: xAxis,
       owlSimFunction: mode,
     });
+
+    patchSvg(await waitFor("#phenogrid_svg"));
   } catch (error) {
+    console.error(error);
     throw cleanError(error);
   }
 };
@@ -55,3 +60,21 @@ export interface PhenogridDefinition {
     options: PhenogridOptions
   ) => void;
 }
+
+// fix incorrect phenogrid svg sizing
+const patchSvg = (svg: Element, padding = 20) => {
+  const { x, y, width, height } = (svg as SVGSVGElement).getBBox();
+  // set view box to bbox, essentially fitting view to content
+  const viewBox = [
+    x - padding,
+    y - padding,
+    width + padding * 2,
+    height + padding * 2,
+  ]
+    .map((v) => Math.round(v))
+    .join(" ");
+
+  svg.setAttribute("viewBox", viewBox);
+  svg.removeAttribute("width");
+  svg.removeAttribute("height");
+};

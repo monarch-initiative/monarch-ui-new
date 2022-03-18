@@ -88,7 +88,7 @@ export default defineComponent({
       focusable?.focus();
     }
   },
-  beforeUpdate() {
+  async beforeUpdate() {
     // modal element
     const modal = this.$refs.modal as HTMLElement;
     // rest of app besides modal
@@ -107,7 +107,8 @@ export default defineComponent({
       // enable body scroll
       enableBodyScroll(modal);
       // restore focus to what had focus before modal opened
-      nextTick(() => this.originalFocus?.focus());
+      await nextTick();
+      this.originalFocus?.focus();
     }
   },
   beforeUnmount() {
