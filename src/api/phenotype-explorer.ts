@@ -9,7 +9,13 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
     // deliberately don't detect single id. handle that with regular search.
     const ids = search.split(/\s*,\s*/);
     if (ids.length >= 2)
-      return { autoAccept: true, options: ids.map((id) => ({ value: id })) };
+      return {
+        autoAccept: true,
+        options: ids.map((id) => ({ value: id })),
+        message: ids.every((id) => id.startsWith("HPO:"))
+          ? ""
+          : 'One or more pasted ids were not valid HPO phenotype ids (start with "HPO:")',
+      };
 
     // otherwise perform string search for phenotypes/genes/diseases
     const { results } = await getNodeSearchResults(
@@ -21,7 +27,7 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
     // convert into desired result format
     return results.map((result) => ({
       value: result.id,
-      valueFunc:
+      getOptions:
         // if gene/disease, provide function to get associated phenotypes upon select
         result.category === "phenotype" || !result.category
           ? undefined
@@ -97,7 +103,7 @@ export const compareSetToSet = async (
   bPhenotypes: Array<string>
 ): Promise<Results> => {
   try {
-    // use POST version of endpoint because GET is bugged:
+    // use POST version of endpoint because GET is questionable?:
     // https://github.com/biolink/biolink-api/issues/389
 
     // make request options
@@ -118,6 +124,8 @@ export const compareSetToSet = async (
     // make query
     const url = `${biolink}/sim/compare`;
     const response = await request<Response>(url, {}, options);
+
+    console.log(response);
 
     return mapMatches(response);
   } catch (error) {
@@ -176,3 +184,6 @@ const taxonIdMap: Record<string, string> = {
   worm: "6239",
   frog: "8353",
 };
+
+export const getTaxonId = (taxonName = ""): string =>
+  taxonIdMap[taxonName] || "";

@@ -6,3 +6,9 @@ declare module "*.vue" {
   const component: DefineComponent<{}, {}, any>;
   export default component;
 }
+
+declare module "phenogrid" {
+  import type { PhenogridDefinition } from "@/api/phenogrid";
+  const phenogrid: PhenogridDefinition;
+  export default phenogrid;
+}

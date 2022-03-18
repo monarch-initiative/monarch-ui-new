@@ -54,12 +54,14 @@
   </p>
 
   <!-- actions -->
-  <AppButton
-    v-if="annotations.length"
-    text="Download"
-    icon="download"
-    @click="download"
-  />
+  <AppFlex v-if="annotations.length">
+    <AppButton text="Download" icon="download" @click="download" />
+    <AppButton
+      text="Analyze Phenotypes"
+      icon="bars-progress"
+      @click="analyze"
+    />
+  </AppFlex>
 </template>
 
 <script lang="ts">
@@ -131,6 +133,20 @@ export default defineComponent({
         this.annotations.filter(({ tokens }) => tokens.length),
         "annotations"
       );
+    },
+    // send phenotype annotations to phenotype explorer to analyze
+    analyze() {
+      // gather annotations that are phenotypes
+      const phenotypes = [];
+      for (const { tokens } of this.annotations)
+        for (const { id } of tokens)
+          if (id.startsWith("HP:")) phenotypes.push(id);
+
+      // send them to the phenotype explorer component via router
+      this.$router.push({
+        hash: "#phenotype-explorer",
+        params: { phenotypes },
+      });
     },
     kebabCase,
   },
