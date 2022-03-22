@@ -26,7 +26,7 @@ export const mountPhenogrid = async (
       },
       selectedCalculation: 0,
       selectedSort: "Frequency",
-      geneList: xAxis,
+      geneList: xAxis.map((x) => [x.groupId]),
       owlSimFunction: mode,
     });
 
@@ -51,7 +51,7 @@ interface PhenogridOptions {
   };
   selectedCalculation: number;
   selectedSort: string;
-  geneList: Array<{ groupId: string; groupName: string }>;
+  geneList: Array<Array<string>>;
   owlSimFunction: string;
 }
 export interface PhenogridDefinition {
