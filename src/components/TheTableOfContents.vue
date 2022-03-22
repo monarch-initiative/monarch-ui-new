@@ -8,7 +8,6 @@
     :data-expanded="expanded"
     role="doc-toc"
     aria-label="Page table of contents"
-    :aria-expanded="expanded"
     @click.stop
   >
     <!-- toggle button -->
@@ -16,6 +15,7 @@
       <button
         class="button"
         @click="expanded = !expanded"
+        :aria-expanded="expanded"
         v-tippy="
           expanded ? 'Close table of contents' : 'Expand table of contents'
         "
@@ -36,7 +36,7 @@
         class="entry"
         :data-active="active === index"
         @click="active = index"
-        :aria-selected="active === index"
+        :aria-current="active === index"
       >
         <AppIcon :icon="entry.icon" class="entry-icon" />
         <span class="entry-text truncate">{{ entry.text }}</span>
@@ -71,9 +71,8 @@ type Entries = Array<{
 const width = 250;
 
 // screen width at which certain behaviors and styles change
-const compact = () => {
-  return window.innerWidth < width * 2 + parseInt(variables.section);
-};
+const compact = () =>
+  window.innerWidth < width * 2 + parseInt(variables.section) || 1000;
 
 let mutationObserver: MutationObserver;
 
@@ -118,14 +117,20 @@ export default defineComponent({
     // update toc entries
     updateEntries() {
       this.entries = Array.from(
-        document.querySelectorAll("h2[id], h3[id]")
-      ).map((element) => ({
-        section: (element.closest("section") as HTMLElement) || null,
-        id: element.getAttribute("id") || "",
-        icon:
-          element.querySelector("[data-icon]")?.getAttribute("data-icon") || "",
-        text: (element as HTMLElement).innerText || "",
-      }));
+        // get all headings except top level one
+        document?.querySelectorAll("h2[id], h3[id]") || []
+      ).map((element) =>
+        // get relevant props from heading
+        ({
+          section: (element.closest("section") as HTMLElement) || null,
+          id: element.getAttribute("id") || "",
+          icon:
+            element.querySelector("[data-icon]")?.getAttribute("data-icon") ||
+            "",
+          text: (element as HTMLElement).innerText || "",
+        })
+      );
+      console.log("THAISDFALSDJHFLAJSHD", this.entries)
     },
     // hide/show sections based on active
     hideShow() {
@@ -134,7 +139,7 @@ export default defineComponent({
           section.style.display =
             this.active === Number(index) || !this.oneAtATime ? "" : "none";
     },
-    // when user clicks anywhere in window
+    // when user clicks "off" of toc panel
     onWindowClick() {
       if (compact()) this.expanded = false;
     },

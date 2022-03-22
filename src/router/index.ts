@@ -140,7 +140,7 @@ const scrollBehavior: RouterScrollBehavior = async (
         target = parent;
 
       // get offset to account for header
-      const offset = document.querySelector("header")?.clientHeight || 0;
+      const offset = document?.querySelector("header")?.clientHeight || 0;
 
       return { el: target, top: offset };
     }
@@ -170,9 +170,10 @@ router.afterEach(async ({ name, query, hash }) => {
   if (query.search) details = `"${query.search}"`;
 
   // combine into document title
-  document.title = [process.env.VUE_APP_TITLE_SHORT, page, subpage, details]
-    .filter((part) => part)
-    .join(" - ");
+  if (document)
+    document.title = [process.env.VUE_APP_TITLE_SHORT, page, subpage, details]
+      .filter((part) => part)
+      .join(" - ");
 });
 
 // close any open tooltips on route change

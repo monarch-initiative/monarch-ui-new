@@ -23,7 +23,7 @@ export const mountPhenogrid = async (
       mode === "compare" ? [id] : { groupId: id, groupName: name }
     );
 
-    Phenogrid.createPhenogridForElement(document.querySelector(selector), {
+    Phenogrid.createPhenogridForElement(document?.querySelector(selector), {
       serverURL: biolink + "/",
       forceBiolink: true,
       appURL: window.location.origin,

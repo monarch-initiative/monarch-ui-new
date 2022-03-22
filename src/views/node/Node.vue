@@ -1,8 +1,10 @@
 <template>
   <!-- status -->
   <template v-if="status">
-    <AppHeading>Node</AppHeading>
-    <AppStatus :status="status" />
+    <AppSection>
+      <AppHeading>Node</AppHeading>
+      <AppStatus :status="status" />
+    </AppSection>
   </template>
 
   <!-- results -->

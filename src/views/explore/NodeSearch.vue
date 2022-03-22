@@ -182,7 +182,7 @@ export default defineComponent({
       // navigate to explore page
       await this.$router.push({ ...this.$route, name: "Explore" });
       // refocus box
-      document.querySelector("input")?.focus();
+      document?.querySelector("input")?.focus();
     },
     // when user "submits" text box
     onChange() {

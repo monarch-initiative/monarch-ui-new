@@ -11,7 +11,7 @@ export const restartAnimations = (element: Element): void => {
 export const waitFor = async (selector = ""): Promise<Element> =>
   new Promise((resolve) => {
     const check = () => {
-      const match = document.querySelector(selector);
+      const match = document?.querySelector(selector);
       if (match) resolve(match);
       else window.setTimeout(check, 50);
     };

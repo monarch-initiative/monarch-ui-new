@@ -1,0 +1,20 @@
+{
+  "inheritance": [],
+  "clinical_modifiers": [],
+  "taxon": {
+    "id": null,
+    "label": null
+  },
+  "association_counts": null,
+  "xrefs": ["UMLS:CN227112", "Orphanet:284993"],
+  "description": null,
+  "types": [],
+  "synonyms": [],
+  "deprecated": null,
+  "replaced_by": [],
+  "consider": [],
+  "id": "MONDO:0017310",
+  "label": "Marfan and Marfan-related disorder",
+  "iri": "http://purl.obolibrary.org/obo/MONDO_0017310",
+  "category": ["disease"]
+}
