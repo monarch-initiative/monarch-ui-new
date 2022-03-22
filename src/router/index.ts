@@ -6,7 +6,7 @@ import {
   RouterScrollBehavior,
   NavigationGuard,
 } from "vue-router";
-import { lowerCase, startCase } from "lodash";
+import { lowerCase } from "lodash";
 import { hideAll } from "tippy.js";
 import Home from "@/views/Home.vue";
 import Explore from "@/views/explore/Explore.vue";
@@ -22,25 +22,22 @@ import Feedback from "@/views/help/Feedback.vue";
 import Node from "@/views/node/Node.vue";
 import Testbed from "@/views/Testbed.vue";
 import { sleep } from "@/util/debug";
-import { categories } from "@/api/categories";
+import { lookupNode } from "@/api/node-lookup";
 
 // handle redirects on 404
-const redirect404 = (): string | void => {
+const redirect404: NavigationGuard = async (to): Promise<string | void> => {
   // look for redirect in session storage (saved from 404 page)
   const redirect = window.sessionStorage.redirect;
   if (redirect) {
     delete window.sessionStorage.redirect;
     return redirect;
   }
-};
 
-// handle redirects on node page
-const redirectNode: NavigationGuard = (to) => {
-  // legacy reroute for referral traffic from GARD
-  // https://github.com/monarch-initiative/monarch-ui/issues/325
-  if (to.fullPath.startsWith("/disease/Orphanet:")) {
-    const id = Array.isArray(to.params.id) ? to.params.id[0] : to.params.id;
-    return { path: `/disease/${id.replace("Orphanet", "ORPHA")}` };
+  // otherwise, try to lookup node id and infer category
+  const id = to.params.id as string;
+  if (id) {
+    const node = await lookupNode(id);
+    return `/${node.category}/${id}`;
   }
 };
 
@@ -112,14 +109,11 @@ export const routes: Array<RouteRecordRaw> = [
     name: "Feedback",
     component: Feedback,
   },
-
-  // node pages
-  ...categories.map((category) => ({
-    path: `/${category}/:id`,
-    name: `Node ${startCase(category)}`,
+  {
+    path: "/:category/:id",
+    name: "Node",
     component: Node,
-    beforeEnter: redirectNode,
-  })),
+  },
 
   ...testRoutes,
 ];

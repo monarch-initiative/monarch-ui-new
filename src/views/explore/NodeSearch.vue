@@ -54,9 +54,8 @@
         <AppIcon
           :icon="`category-${kebabCase(result.category)}`"
           fallback="category-unknown"
-          :circle="true"
           class="type"
-          v-tippy="`Category: ${capitalize(result.category || 'unknown')}`"
+          v-tippy="startCase(result.category || 'unknown')"
         />
         <AppLink
           :to="`/${kebabCase(result.category || 'unknown')}/${result.id}`"
@@ -109,7 +108,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { kebabCase, capitalize } from "lodash";
+import { kebabCase, startCase } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
@@ -254,7 +253,7 @@ export default defineComponent({
     },
 
     kebabCase,
-    capitalize,
+    startCase,
   },
   computed: {
     // is home page

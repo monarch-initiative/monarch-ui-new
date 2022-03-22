@@ -70,7 +70,9 @@
             :icon="`category-${match.category}`"
             v-tippy="startCase(match.category)"
           />
-          <AppLink :to="match.id">
+          <AppLink
+            :to="`/${kebabCase(match.category || 'unknown')}/${match.id}`"
+          >
             {{ match.label }}
           </AppLink>
         </div>
@@ -104,7 +106,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { startCase, isEqual } from "lodash";
+import { startCase, kebabCase, isEqual } from "lodash";
 import AppSelectTags from "@/components/AppSelectTags.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
 import AppRing from "@/components/AppRing.vue";
@@ -287,6 +289,7 @@ export default defineComponent({
     },
     getPhenotypes,
     startCase,
+    kebabCase,
     isEqual,
   },
   computed: {},

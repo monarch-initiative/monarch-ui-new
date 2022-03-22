@@ -147,7 +147,7 @@ export default defineComponent({
     }
 
     &[data-color="secondary"] {
-      color: $gray;
+      color: $dark-gray;
     }
 
     &:hover,
