@@ -8,15 +8,20 @@ import Phenogrid from "phenogrid";
 // mount phenogrid to dom element with options
 export const mountPhenogrid = async (
   selector: string,
-  xAxis: XAxis,
-  yAxis: YAxis,
+  xAxis: Array<{ id: string; name: string }>,
+  yAxis: Array<{ id: string; name: string }>,
   mode = "compare"
 ): Promise<void> => {
   try {
-    await waitFor("#phenogrid");
+    // wait for phenogrid container to render on mount, and clear any previous
+    // phenogrid instances from showing
+    (await waitFor("#phenogrid")).innerHTML = "";
 
-    let xAxisModified: XAxisModified = xAxis;
-    if (mode === "compare") xAxisModified = xAxis.map((x) => [x.groupId]);
+    // map in particular way based on mode, per ui 2.0
+    // TODO: fix whatever phenogrid quirks make this necessary
+    const modifiedXAxis = xAxis.map(({ id, name }) =>
+      mode === "compare" ? [id] : { groupId: id, groupName: name }
+    );
 
     Phenogrid.createPhenogridForElement(document.querySelector(selector), {
       serverURL: biolink + "/",
@@ -24,12 +29,12 @@ export const mountPhenogrid = async (
       appURL: window.location.origin,
       gridSkeletonData: {
         title: " ",
-        xAxis: xAxisModified,
-        yAxis,
+        xAxis: modifiedXAxis,
+        yAxis: yAxis.map(({ id, name }) => ({ id, term: name })),
       },
       selectedCalculation: 0,
       selectedSort: "Frequency",
-      geneList: xAxisModified,
+      geneList: modifiedXAxis,
       owlSimFunction: mode,
     });
 
@@ -43,29 +48,23 @@ export const mountPhenogrid = async (
 // TYPESCRIPT SHIM FOR PHENOGRID
 // when (if) we rewrite phenogrid from scratch, do it in typescript and this
 // will no longer be needed
-type XAxis = Array<{ groupId: string; groupName: string }>;
-type XAxisModified = Array<
-  { groupId: string; groupName: string } | Array<string>
->;
-type YAxis = Array<{ id: string; term: string }>;
-interface PhenogridOptions {
-  serverURL: string;
-  forceBiolink: boolean;
-  appURL: string;
-  gridSkeletonData: {
-    title: string;
-    xAxis: XAxisModified;
-    yAxis: YAxis;
-  };
-  selectedCalculation: number;
-  selectedSort: string;
-  geneList: XAxisModified;
-  owlSimFunction: string;
-}
 export interface PhenogridDefinition {
   createPhenogridForElement: (
     element: HTMLElement | null,
-    options: PhenogridOptions
+    options: {
+      serverURL: string;
+      forceBiolink: boolean;
+      appURL: string;
+      gridSkeletonData: {
+        title: string;
+        xAxis: Array<{ groupId: string; groupName: string } | Array<string>>;
+        yAxis: Array<{ id: string; term: string }>;
+      };
+      selectedCalculation: number;
+      selectedSort: string;
+      geneList: Array<{ groupId: string; groupName: string } | Array<string>>;
+      owlSimFunction: string;
+    }
   ) => void;
 }
 

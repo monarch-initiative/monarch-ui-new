@@ -246,22 +246,22 @@ export default defineComponent({
       // use first group of phenotypes for y axis
       const yAxis = this.aPhenotypes.map(({ value, label }) => ({
         id: String(value),
-        term: label || "",
+        name: label || "",
       }));
 
       // use second taxon id or group of phenotypes as x axis
       let xAxis = [];
       if (mode === "compare")
         xAxis = this.bPhenotypes.map(({ value, label }) => ({
-          groupId: String(value),
-          groupName: label || "",
+          id: String(value),
+          name: label || "",
         }));
       else {
         const taxon = this.bMode.includes("diseases") ? "human" : this.bTaxon;
         xAxis = [
           {
-            groupId: getTaxonIdFromName(taxon),
-            groupName: getTaxonScientificFromName(taxon),
+            id: getTaxonIdFromName(taxon),
+            name: getTaxonScientificFromName(taxon),
           },
         ];
       }
