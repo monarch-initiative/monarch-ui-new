@@ -8,12 +8,15 @@ import Phenogrid from "phenogrid";
 // mount phenogrid to dom element with options
 export const mountPhenogrid = async (
   selector: string,
-  xAxis: PhenogridOptions["gridSkeletonData"]["xAxis"],
-  yAxis: PhenogridOptions["gridSkeletonData"]["yAxis"],
+  xAxis: XAxis,
+  yAxis: YAxis,
   mode = "compare"
 ): Promise<void> => {
   try {
     await waitFor("#phenogrid");
+
+    let xAxisModified: XAxisModified = xAxis;
+    if (mode === "compare") xAxisModified = xAxis.map((x) => [x.groupId]);
 
     Phenogrid.createPhenogridForElement(document.querySelector(selector), {
       serverURL: biolink + "/",
@@ -21,12 +24,12 @@ export const mountPhenogrid = async (
       appURL: window.location.origin,
       gridSkeletonData: {
         title: " ",
-        xAxis,
+        xAxis: xAxisModified,
         yAxis,
       },
       selectedCalculation: 0,
       selectedSort: "Frequency",
-      geneList: xAxis.map((x) => [x.groupId]),
+      geneList: xAxisModified,
       owlSimFunction: mode,
     });
 
@@ -40,18 +43,23 @@ export const mountPhenogrid = async (
 // TYPESCRIPT SHIM FOR PHENOGRID
 // when (if) we rewrite phenogrid from scratch, do it in typescript and this
 // will no longer be needed
+type XAxis = Array<{ groupId: string; groupName: string }>;
+type XAxisModified = Array<
+  { groupId: string; groupName: string } | Array<string>
+>;
+type YAxis = Array<{ id: string; term: string }>;
 interface PhenogridOptions {
   serverURL: string;
   forceBiolink: boolean;
   appURL: string;
   gridSkeletonData: {
     title: string;
-    xAxis: Array<{ groupId: string; groupName: string }>;
-    yAxis: Array<{ id: string; term: string }>;
+    xAxis: XAxisModified;
+    yAxis: YAxis;
   };
   selectedCalculation: number;
   selectedSort: string;
-  geneList: Array<Array<string>>;
+  geneList: XAxisModified;
   owlSimFunction: string;
 }
 export interface PhenogridDefinition {
