@@ -20,6 +20,11 @@ export const annotateText = async (content = ""): Promise<Result> => {
     // if nothing searched, return empty
     if (!content.trim()) throw new ApiError("No results", "warning");
 
+    // request params
+    const params = {
+      longest_only: true,
+    };
+
     // make request options
     const headers = new Headers();
     headers.append(
@@ -31,7 +36,7 @@ export const annotateText = async (content = ""): Promise<Result> => {
 
     // make query
     const url = `${biolink}/nlp/annotate/entities`;
-    const response = await request<Response>(url, {}, options);
+    const response = await request<Response>(url, params, options);
     const { spans } = response;
 
     // empty error status

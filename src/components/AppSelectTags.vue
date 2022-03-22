@@ -41,7 +41,7 @@
             design="small"
             icon="copy"
             @click="copy"
-            v-tippy="`Copy ${selected.length} selected`"
+            v-tippy="`Copy selected values`"
           />
           {{ " " }}
           <!-- clear box -->
@@ -49,7 +49,7 @@
             design="small"
             icon="times"
             @click="clear"
-            v-tippy="`Clear ${selected.length} selected`"
+            v-tippy="`Clear selected values`"
           />
         </span>
       </AppFlex>
@@ -96,6 +96,9 @@
         </div>
       </div>
     </div>
+
+    <!-- description -->
+    <div v-if="description" class="description">{{ description }}</div>
   </div>
 </template>
 
@@ -119,7 +122,7 @@ export default defineComponent({
   components: {
     AppStatus,
   },
-  emits: ["update:modelValue", "change", "autoAccept", "valueFunc"],
+  emits: ["update:modelValue", "change", "autoAccept", "getOptions"],
   props: {
     // name of the field
     name: {
@@ -142,6 +145,8 @@ export default defineComponent({
     tooltip: {
       type: String,
     },
+    // description to show below box
+    description: String,
   },
   data() {
     return {
@@ -233,11 +238,12 @@ export default defineComponent({
 
       for (const option of options) {
         // run func to get options to select
-        if (option.valueFunc) {
-          const values = await option.valueFunc();
-          toSelect.push(...values);
-          // notify parent that dynamic values were added
-          this.$emit("valueFunc", values.length);
+        if (option.getOptions) {
+          const options = await option.getOptions();
+          toSelect.push(...options);
+          // notify parent that dynamic options were added
+          // provide option selected and options added
+          this.$emit("getOptions", option, options);
         }
         // otherwise just select option
         else toSelect.push(option);
@@ -245,6 +251,9 @@ export default defineComponent({
 
       // select options (if not already selected)
       this.selected.push(...toSelect.filter(this.isntSelected));
+
+      // notify parent that user made change to selection
+      this.$emit("change");
     },
     // deselect a specific option or last-selected option
     deselect(option?: Option) {
@@ -253,6 +262,9 @@ export default defineComponent({
           (model) => model.value !== option.value
         );
       else this.selected.pop();
+
+      // notify parent that user made change to selection
+      this.$emit("change");
     },
     // clear all selected
     clear() {
@@ -263,7 +275,7 @@ export default defineComponent({
       await window.navigator.clipboard.writeText(
         this.selected.map(({ value }) => value).join(",")
       );
-      push(`Copied ${this.selected.length} phenotype IDs`);
+      push(`Copied ${this.selected.length} values`);
     },
     // get list of results
     async getResults() {
@@ -284,6 +296,7 @@ export default defineComponent({
           this.select(response.options);
           this.search = "";
           this.$emit("autoAccept");
+          push(response.message);
         }
         // otherwise, show list of results for user to select
         else {
@@ -458,5 +471,11 @@ input {
 .option-info {
   justify-content: flex-end;
   color: $gray;
+}
+
+.description {
+  margin-top: 10px;
+  color: $dark-gray;
+  font-size: 0.9rem;
 }
 </style>

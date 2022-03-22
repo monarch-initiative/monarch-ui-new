@@ -9,7 +9,13 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
     // deliberately don't detect single id. handle that with regular search.
     const ids = search.split(/\s*,\s*/);
     if (ids.length >= 2)
-      return { autoAccept: true, options: ids.map((id) => ({ value: id })) };
+      return {
+        autoAccept: true,
+        options: ids.map((id) => ({ value: id })),
+        message: ids.every((id) => id.startsWith("HPO:"))
+          ? ""
+          : 'One or more pasted ids were not valid HPO phenotype ids (start with "HPO:")',
+      };
 
     // otherwise perform string search for phenotypes/genes/diseases
     const { results } = await getNodeSearchResults(
@@ -21,7 +27,7 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
     // convert into desired result format
     return results.map((result) => ({
       value: result.id,
-      valueFunc:
+      getOptions:
         // if gene/disease, provide function to get associated phenotypes upon select
         result.category === "phenotype" || !result.category
           ? undefined
@@ -81,9 +87,9 @@ interface Response {
     id: string;
     label: string;
     type: string;
-    taxon: {
-      id: string;
-      label: string;
+    taxon?: {
+      id?: string;
+      label?: string;
     };
     rank: string;
     score: number;
@@ -97,7 +103,7 @@ export const compareSetToSet = async (
   bPhenotypes: Array<string>
 ): Promise<Results> => {
   try {
-    // use POST version of endpoint because GET is bugged:
+    // use POST version of endpoint because GET is questionable?:
     // https://github.com/biolink/biolink-api/issues/389
 
     // make request options
@@ -126,14 +132,14 @@ export const compareSetToSet = async (
 };
 
 // compare a set of phenotypes to a gene or disease
-export const compareSetToGene = async (
+export const compareSetToTaxon = async (
   phenotypes: Array<string>,
   taxon: string
 ): Promise<Results> => {
   // endpoint settings
   const params = {
     id: phenotypes.join(","),
-    taxon: taxonIdMap[taxon] || "",
+    taxon: getTaxonIdFromName(taxon),
   };
 
   // make query
@@ -150,6 +156,7 @@ const mapMatches = (response: Response) => {
     label: match.label,
     score: match.score,
     category: match.type,
+    taxon: match.taxon?.label || "",
   }));
   const minScore = Math.min(...matches.map(({ score }) => score));
   const maxScore = Math.max(...matches.map(({ score }) => score));
@@ -163,16 +170,26 @@ export type Results = {
     label: string;
     score: number;
     category: string;
+    taxon: string;
   }>;
   minScore?: number;
   maxScore?: number;
 };
 
-const taxonIdMap: Record<string, string> = {
-  human: "9606",
-  mouse: "10090",
-  zebrafish: "7955",
-  fruitfly: "7227",
-  worm: "6239",
-  frog: "8353",
-};
+// small hard-coded map of taxon id (NCBITaxon), "name" (human readable), and
+// scientific name, just for phenotype explorer so no querying needed for
+// conversion
+const taxonMap: Array<{ id: string; name: string; scientific: string }> = [
+  { id: "9606", name: "human", scientific: "Homo sapiens" },
+  { id: "10090", name: "mouse", scientific: "Mus musculus" },
+  { id: "7955", name: "zebrafish", scientific: "Danio rerio" },
+  { id: "7227", name: "fruitfly", scientific: "Drosophila melanogaster" },
+  { id: "6239", name: "worm", scientific: "Caenorhabditis elegans" },
+  { id: "8353", name: "frog", scientific: "Xenopus" },
+];
+
+export const getTaxonIdFromName = (name = ""): string =>
+  taxonMap.find((t) => t.name === name)?.id || "";
+
+export const getTaxonScientificFromName = (name = ""): string =>
+  taxonMap.find((t) => t.name === name)?.scientific || "";

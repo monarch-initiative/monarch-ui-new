@@ -1,8 +1,9 @@
 export type Option = {
   // unique id used in state of select
   value: number | string;
-  // if defined, gets called to get values when selecting this option
-  valueFunc?: () => Promise<Array<Option>>;
+  // allows returning multiple options instead when selecting this option
+  // e.g. clicking a gene result and getting/selecting its 8 associated phenotypes instead
+  getOptions?: () => Promise<Array<Option>>;
   // highlighting html
   highlight?: string;
   // display name
@@ -17,4 +18,6 @@ export type Options = Array<Option>;
 
 export type OptionsFunc = (
   value: string
-) => Promise<Options | { autoAccept: boolean; options: Options }>;
+) => Promise<
+  Options | { autoAccept: boolean; options: Options; message: string }
+>;

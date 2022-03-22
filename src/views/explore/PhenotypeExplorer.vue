@@ -8,7 +8,8 @@
     v-model="aPhenotypes"
     placeholder="Select phenotypes"
     :tooltip="multiTooltip"
-    @valueFunc="valueFunc"
+    @getOptions="(option, length) => getOptions(option, length, 'a')"
+    :description="description(aPhenotypes, aGeneratedFrom)"
   />
 
   <!-- set B -->
@@ -34,7 +35,8 @@
     v-model="bPhenotypes"
     placeholder="Select phenotypes"
     :tooltip="multiTooltip"
-    @valueFunc="valueFunc"
+    @getOptions="(option, options) => getOptions(option, options, 'b')"
+    :description="description(bPhenotypes, bGeneratedFrom)"
   />
 
   <!-- example button -->
@@ -48,7 +50,7 @@
   <!-- analysis status -->
   <AppStatus v-if="status" :status="status" />
 
-  <!-- analysis results -->
+  <!-- analysis top results -->
   <AppFlex v-else-if="results.matches.length">
     <strong>Top 10 matches</strong>
     <div
@@ -62,22 +64,20 @@
         :max="results.maxScore"
         v-tippy="'Similarity score'"
       />
-      <div class="match-details">
-        <AppIcon
-          :icon="`category-${match.category}`"
-          v-tippy="startCase(match.category)"
-        />
-        <AppLink :to="match.id">
-          {{ match.label }}
-        </AppLink>
+      <div direction="col" class="match-details">
+        <div class="match-primary-details">
+          <AppIcon
+            :icon="`category-${match.category}`"
+            v-tippy="startCase(match.category)"
+          />
+          <AppLink :to="match.id">
+            {{ match.label }}
+          </AppLink>
+        </div>
+        <div class="match-secondary-details">
+          <span v-if="match.taxon">{{ match.taxon }}</span>
+        </div>
       </div>
-      <AppButton
-        text="See details"
-        icon="eye"
-        design="circle"
-        color="secondary"
-        @click="phenogrid(match.id)"
-      />
     </div>
   </AppFlex>
 
@@ -94,25 +94,34 @@
     <br />
     <br />
   </template>
+
+  <!-- phenogrid results -->
+  <template v-if="results.matches.length">
+    <strong>Phenotype Similarity Comparison</strong>
+    <div id="phenogrid"></div>
+  </template>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { startCase } from "lodash";
+import { startCase, isEqual } from "lodash";
 import AppSelectTags from "@/components/AppSelectTags.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
 import AppRing from "@/components/AppRing.vue";
 import {
-  compareSetToGene,
+  compareSetToTaxon,
   compareSetToSet,
   getPhenotypes,
   Results,
+  getTaxonIdFromName,
+  getTaxonScientificFromName,
 } from "@/api/phenotype-explorer";
 import { Status } from "@/components/AppStatus";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
-import { Options } from "@/components/AppSelectTags";
+import { Option, Options } from "@/components/AppSelectTags";
 import { push } from "@/components/TheSnackbar.vue";
+import { mountPhenogrid } from "@/api/phenogrid";
 
 // tooltip explaining how to use multi-select component
 const multiTooltip = `In this box, you can select phenotypes in 3 ways:<br>
@@ -133,18 +142,18 @@ const exampleAPhenotypes = [
   { value: "HP:0004970" },
   { value: "HP:0004933" },
   { value: "HP:0004927" },
-  { value: "HP:0002108" },
+];
+
+const exampleBPhenotypes = [
   { value: "HP:0004872" },
   { value: "HP:0012499" },
   { value: "HP:0002650" },
 ];
 
-const exampleBPhenotypes = [
-  { value: "FBcv:0000366" },
-  { value: "FBcv:0000439" },
-  { value: "FBcv:0002041" },
-  { value: "FBcv:0002039" },
-];
+interface GeneratedFrom {
+  option?: Option;
+  options?: Options;
+}
 
 // phenotype explore mode that compares two sets of phenotypes
 export default defineComponent({
@@ -158,6 +167,8 @@ export default defineComponent({
     return {
       // first set of phenotypes
       aPhenotypes: [] as Options,
+      // "generated from" helpers after selecting gene or disease
+      aGeneratedFrom: {} as GeneratedFrom,
       // options for mode of second set
       bModeOptions,
       // selected mode of second set
@@ -168,6 +179,8 @@ export default defineComponent({
       bTaxon: bTaxonOptions[0],
       // second set of phenotypes
       bPhenotypes: [] as Options,
+      // "generated from" helpers after selecting gene or disease
+      bGeneratedFrom: {} as GeneratedFrom,
       // common tooltip for multi-select component
       multiTooltip,
       // status of analysis
@@ -191,16 +204,19 @@ export default defineComponent({
 
       try {
         // run appropriate analysis based on selected mode
-        if (this.bMode.includes("phenotypes from"))
-          this.results = await compareSetToGene(
-            this.aPhenotypes.map(({ value }) => String(value)),
-            this.bMode.includes("diseases") ? "human" : this.bTaxon
-          );
-        else
+        if (this.bMode.includes("these phenotypes"))
           this.results = await compareSetToSet(
             this.aPhenotypes.map(({ value }) => String(value)),
             this.bPhenotypes.map(({ value }) => String(value))
           );
+        else
+          this.results = await compareSetToTaxon(
+            this.aPhenotypes.map(({ value }) => String(value)),
+            this.bMode.includes("diseases") ? "human" : this.bTaxon
+          );
+
+        // run phenogrid, attach to div container
+        this.runPhenogrid();
 
         // clear status
         this.status = null;
@@ -210,49 +226,99 @@ export default defineComponent({
         this.results = { matches: [] };
       }
     },
-    // when multi select component runs value function
-    valueFunc(length: number) {
-      if (length === 0) push("No associated phenotypes found");
-      else push(`Selected ${length} phenotypes`);
+    // when multi select component runs get options function
+    getOptions(option: Option, options: Options, set: string) {
+      // notify
+      if (options.length === 0) push("No associated phenotypes found");
+      else push(`Selected ${options.length} phenotypes`);
+
+      // set "generated from" helpers
+      if (set === "a") this.aGeneratedFrom = { option, options };
+      else if (set === "b") this.bGeneratedFrom = { option, options };
     },
-    // show results in phenogrid
-    phenogrid(id: string) {
-      console.info(id);
+    // show phenogrid results
+    runPhenogrid() {
+      // which biolink /sim endpoint to use
+      const mode = this.bMode.includes("these phenotypes")
+        ? "compare"
+        : "search";
+
+      // use first group of phenotypes for y axis
+      const yAxis = this.aPhenotypes.map(({ value, label }) => ({
+        id: String(value),
+        name: label || "",
+      }));
+
+      // use second taxon id or group of phenotypes as x axis
+      let xAxis = [];
+      if (mode === "compare")
+        xAxis = this.bPhenotypes.map(({ value, label }) => ({
+          id: String(value),
+          name: label || "",
+        }));
+      else {
+        const taxon = this.bMode.includes("diseases") ? "human" : this.bTaxon;
+        xAxis = [
+          {
+            id: getTaxonIdFromName(taxon),
+            name: getTaxonScientificFromName(taxon),
+          },
+        ];
+      }
+      // call phenogrid
+      mountPhenogrid("#phenogrid", xAxis, yAxis, mode);
+    },
+    // clear/reset results
+    clearResults() {
+      this.results = { matches: [] };
+    },
+    // get description to show below phenotypes select box
+    description(phenotypes: Options, generatedFrom: GeneratedFrom): string {
+      const description = [];
+      description.push(`${phenotypes.length} selected`);
+      if (isEqual(generatedFrom.options, phenotypes)) {
+        if (generatedFrom.option?.label)
+          description.push(`generated from "${generatedFrom.option?.label}"`);
+        // don't quote raw ids (just for aesthetics)
+        else if (generatedFrom.option?.value)
+          description.push(`generated from ${generatedFrom.option?.value}`);
+      }
+      return `(${description.join(", ")})`;
     },
     getPhenotypes,
     startCase,
+    isEqual,
   },
+  computed: {},
   watch: {
     // clear results when inputs are changed to avoid de-sync
-    aPhenotypes: {
-      handler() {
-        this.results = { matches: [] };
-      },
-      deep: true,
-    },
-    bMode: {
-      handler() {
-        this.results = { matches: [] };
-      },
-      deep: true,
-    },
-    bTaxon: {
-      handler() {
-        this.results = { matches: [] };
-      },
-      deep: true,
-    },
-    bPhenotypes: {
-      handler() {
-        this.results = { matches: [] };
-      },
-      deep: true,
-    },
+    aPhenotypes: { handler: "clearResults", deep: true },
+    bMode: { handler: "clearResults" },
+    bTaxon: { handler: "clearResults" },
+    bPhenotypes: { handler: "clearResults", deep: true },
+  },
+  mounted() {
+    // fill in phenotype ids from text annotator
+    if (this.$route.params.phenotypes) {
+      const phenotypes = (this.$route.params.phenotypes as Array<string>).map(
+        (phenotype) => ({ value: phenotype })
+      );
+      this.aPhenotypes = phenotypes;
+      this.aGeneratedFrom = {
+        option: { value: "text annotator" },
+        options: phenotypes,
+      };
+    }
   },
 });
 </script>
 
 <style lang="scss" scoped>
+.weak {
+  color: $gray;
+  text-align: center;
+}
+
 .match {
   display: flex;
   justify-content: center;
@@ -263,6 +329,9 @@ export default defineComponent({
 
 .match-details {
   flex-grow: 1;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
   gap: 10px;
   text-align: left;
 
@@ -272,11 +341,19 @@ export default defineComponent({
   }
 }
 
+.match-secondary-details {
+  color: $gray;
+}
+
 @media (max-width: 600px) {
   .match {
     flex-direction: column;
     gap: 20px;
     margin: 10px 0;
   }
+}
+
+#phenogrid {
+  width: 100%;
 }
 </style>

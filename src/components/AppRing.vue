@@ -34,7 +34,9 @@ export default defineComponent({
   computed: {
     // normalized score value
     normalized() {
-      const value = (this.score - this.min) / (this.max - this.min) || 0;
+      let value = (this.score - this.min) / (this.max - this.min);
+      // if max === min (essentially, if only one ring result to show in list)
+      if (Number.isNaN(value)) value = 0.5;
       return clamp(value, 0.05, 0.95);
     },
     // arc path
