@@ -1,5 +1,8 @@
 <template>
   <component :is="tag || 'div'" ref="heading" :id="link">
+    <!-- heading icon -->
+    <AppIcon v-if="icon" :icon="icon" class="icon" />
+
     <!-- heading content -->
     <slot />
 
@@ -24,6 +27,8 @@ export default defineComponent({
   props: {
     // manually specified heading level
     level: Number,
+    // icon to show next to text
+    icon: String,
   },
   data() {
     return {
@@ -85,7 +90,7 @@ export default defineComponent({
 .anchor {
   display: inline-block;
   width: 0;
-  margin-left: 10px;
+  margin-left: 1em;
   opacity: 0;
   text-decoration: none;
   font-size: 0.8em;
@@ -94,6 +99,11 @@ export default defineComponent({
 
 .anchor:focus {
   opacity: 1;
+}
+
+.icon {
+  margin-right: 1em;
+  color: $gray;
 }
 
 h1,

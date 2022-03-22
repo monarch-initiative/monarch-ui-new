@@ -12,3 +12,9 @@ declare module "phenogrid" {
   const phenogrid: PhenogridDefinition;
   export default phenogrid;
 }
+
+// https://stackoverflow.com/questions/64206562/import-scss-variables-into-typescript-in-vue
+declare module "*.scss" {
+  const content: { [className: string]: string };
+  export default content;
+}

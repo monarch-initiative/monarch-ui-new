@@ -4,9 +4,15 @@
     :src="custom"
     class="icon"
     aria-hidden="true"
+    :data-icon="icon"
     @loaded="loadedInline"
   />
-  <FontAwesomeIcon v-else-if="fa" :icon="fa" aria-hidden="true" />
+  <FontAwesomeIcon
+    v-else-if="fa"
+    :icon="fa"
+    :data-icon="icon"
+    aria-hidden="true"
+  />
 </template>
 
 <script lang="ts">
