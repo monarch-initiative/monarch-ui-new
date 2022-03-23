@@ -36,6 +36,7 @@
         class="entry"
         :data-active="active === index"
         @click="active = index"
+        @keydown="active = index"
         :aria-current="active === index"
       >
         <AppIcon :icon="entry.icon" class="entry-icon" />
@@ -47,7 +48,7 @@
       <!-- options -->
       <AppCheckbox
         v-model="oneAtATime"
-        text="Solo section"
+        text="Show single section"
         v-tippy="'Only show one section at a time'"
       />
     </template>
