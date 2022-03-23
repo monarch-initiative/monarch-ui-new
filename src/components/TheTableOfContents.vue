@@ -72,7 +72,7 @@ const width = 250;
 
 // screen width at which certain behaviors and styles change
 const compact = () =>
-  window.innerWidth < width * 2 + parseInt(variables.section) || 1000;
+  window.innerWidth < width * 2 + (parseInt(variables.section) || 1000);
 
 let mutationObserver: MutationObserver;
 

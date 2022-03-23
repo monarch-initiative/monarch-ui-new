@@ -1,16 +1,11 @@
 <template>
   <AppSection design="fill" class="section">
     <AppFlex dir="column" gap="small">
-      <AppHeading>
-        <AppIcon
-          :icon="`category-${kebabCase(node.category || '')}`"
-          fallback="category-unknown"
-          class="type"
-          v-tippy="startCase(node.category || 'unknown')"
-        />
-        <span>
-          {{ node.name }}
-        </span>
+      <AppHeading
+        :icon="`category-${kebabCase(node.category || '')}`"
+        fallbackIcon="category-unknown"
+      >
+        {{ node.name }}
       </AppHeading>
       <AppFlex>
         <AppButton
@@ -62,13 +57,5 @@ export default defineComponent({
 
 h1 {
   font-size: 1.2rem;
-
-  svg {
-    position: relative;
-    top: -2px;
-    margin-right: 20px;
-    color: $theme-dark;
-    vertical-align: middle;
-  }
 }
 </style>

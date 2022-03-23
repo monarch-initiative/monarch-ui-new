@@ -48,7 +48,7 @@
       :key="index"
       direction="col"
       gap="small"
-      class="result"
+      hAlign="stretch"
     >
       <div class="title">
         <AppIcon
@@ -282,10 +282,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.result {
-  align-items: stretch;
-}
-
 .title {
   display: flex;
   align-items: center;
