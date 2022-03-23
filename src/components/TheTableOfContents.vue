@@ -130,7 +130,6 @@ export default defineComponent({
           text: (element as HTMLElement).innerText || "",
         })
       );
-      console.log("THAISDFALSDJHFLAJSHD", this.entries)
     },
     // hide/show sections based on active
     hideShow() {
