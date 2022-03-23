@@ -8,12 +8,13 @@
   </template>
 
   <!-- results -->
-  <template v-else>
+  <template v-else-if="Object.keys(node).length">
     <Title :node="node" />
     <Overview :node="node" />
+    <Details :node="node" />
     <Hierarchy :node="node" />
-    <Associations :node="node" />
     <Visualization :node="node" />
+    <Associations :node="node" />
     <Breadcrumbs :node="node" />
 
     <Teleport to="body">
@@ -31,9 +32,10 @@ import AppStatus from "@/components/AppStatus.vue";
 import TheTableOfContents from "@/components/TheTableOfContents.vue";
 import Title from "./Title.vue";
 import Overview from "./Overview.vue";
+import Details from "./Details.vue";
 import Hierarchy from "./Hierarchy.vue";
-import Associations from "./Associations.vue";
 import Visualization from "./Visualization.vue";
+import Associations from "./Associations.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 
 export default defineComponent({
@@ -41,9 +43,10 @@ export default defineComponent({
     AppStatus,
     Title,
     Overview,
+    Details,
     Hierarchy,
-    Associations,
     Visualization,
+    Associations,
     Breadcrumbs,
     TheTableOfContents,
   },

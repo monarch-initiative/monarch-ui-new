@@ -12,6 +12,7 @@
           design="small"
           color="secondary"
           :text="startCase(node.category || 'unknown')"
+          v-tippy="'The category/type of this node'"
         />
         <AppButton
           design="small"
@@ -19,7 +20,7 @@
           icon="hashtag"
           :text="node.id"
           :copy="true"
-          v-tippy="'Node ID. Click to copy.'"
+          v-tippy="'The ID of this node. Click to copy.'"
         />
       </AppFlex>
     </AppFlex>
@@ -31,6 +32,7 @@ import { defineComponent, PropType } from "vue";
 import { kebabCase, startCase } from "lodash";
 import { Result } from "@/api/node-lookup";
 
+// most important props (name, type, and id) of node, right below page header
 export default defineComponent({
   props: {
     // current node

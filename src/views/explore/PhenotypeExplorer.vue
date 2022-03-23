@@ -39,11 +39,13 @@
     :description="description(bPhenotypes, bGeneratedFrom)"
   />
 
-  <!-- example button -->
-  <AppButton text="try an example" design="small" @click="doExample()" />
+  <AppFlex>
+    <!-- example button -->
+    <AppButton text="try an example" design="small" @click="doExample()" />
 
-  <!-- run analysis -->
-  <AppButton text="Analyze" icon="bars-progress" @click="runAnalysis" />
+    <!-- run analysis -->
+    <AppButton text="Analyze" icon="bars-progress" @click="runAnalysis" />
+  </AppFlex>
 
   <hr />
 
@@ -73,7 +75,7 @@
           <AppLink
             :to="`/${kebabCase(match.category || 'unknown')}/${match.id}`"
           >
-            {{ match.label }}
+            {{ match.name }}
           </AppLink>
         </div>
         <div class="match-secondary-details">
@@ -107,6 +109,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { startCase, kebabCase, isEqual } from "lodash";
+import { getData } from "@/router";
 import AppSelectTags from "@/components/AppSelectTags.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
 import AppRing from "@/components/AppRing.vue";
@@ -114,7 +117,7 @@ import {
   compareSetToTaxon,
   compareSetToSet,
   getPhenotypes,
-  Results,
+  CompareResult,
   getTaxonIdFromName,
   getTaxonScientificFromName,
 } from "@/api/phenotype-explorer";
@@ -141,15 +144,15 @@ const bModeOptions = [
 const bTaxonOptions = ["mouse", "zebrafish", "fruitfly", "nematode", "frog"];
 
 const exampleAPhenotypes = [
-  { value: "HP:0004970" },
-  { value: "HP:0004933" },
-  { value: "HP:0004927" },
+  { id: "HP:0004970" },
+  { id: "HP:0004933" },
+  { id: "HP:0004927" },
 ];
 
 const exampleBPhenotypes = [
-  { value: "HP:0004872" },
-  { value: "HP:0012499" },
-  { value: "HP:0002650" },
+  { id: "HP:0004872" },
+  { id: "HP:0012499" },
+  { id: "HP:0002650" },
 ];
 
 interface GeneratedFrom {
@@ -188,7 +191,7 @@ export default defineComponent({
       // status of analysis
       status: null as Status | null,
       // analysis results
-      results: { matches: [] } as Results,
+      results: { matches: [] } as CompareResult,
     };
   },
   methods: {
@@ -208,12 +211,12 @@ export default defineComponent({
         // run appropriate analysis based on selected mode
         if (this.bMode.includes("these phenotypes"))
           this.results = await compareSetToSet(
-            this.aPhenotypes.map(({ value }) => String(value)),
-            this.bPhenotypes.map(({ value }) => String(value))
+            this.aPhenotypes.map(({ id }) => id),
+            this.bPhenotypes.map(({ id }) => id)
           );
         else
           this.results = await compareSetToTaxon(
-            this.aPhenotypes.map(({ value }) => String(value)),
+            this.aPhenotypes.map(({ id }) => id),
             this.bMode.includes("diseases") ? "human" : this.bTaxon
           );
 
@@ -246,18 +249,11 @@ export default defineComponent({
         : "search";
 
       // use first group of phenotypes for y axis
-      const yAxis = this.aPhenotypes.map(({ value, label }) => ({
-        id: String(value),
-        name: label || "",
-      }));
+      const yAxis = this.aPhenotypes;
 
       // use second taxon id or group of phenotypes as x axis
       let xAxis = [];
-      if (mode === "compare")
-        xAxis = this.bPhenotypes.map(({ value, label }) => ({
-          id: String(value),
-          name: label || "",
-        }));
+      if (mode === "compare") xAxis = this.bPhenotypes;
       else {
         const taxon = this.bMode.includes("diseases") ? "human" : this.bTaxon;
         xAxis = [
@@ -279,11 +275,11 @@ export default defineComponent({
       const description = [];
       description.push(`${phenotypes.length} selected`);
       if (isEqual(generatedFrom.options, phenotypes)) {
-        if (generatedFrom.option?.label)
-          description.push(`generated from "${generatedFrom.option?.label}"`);
+        if (generatedFrom.option?.name)
+          description.push(`generated from "${generatedFrom.option?.name}"`);
         // don't quote raw ids (just for aesthetics)
-        else if (generatedFrom.option?.value)
-          description.push(`generated from ${generatedFrom.option?.value}`);
+        else if (generatedFrom.option?.id)
+          description.push(`generated from ${generatedFrom.option?.id}`);
       }
       return `(${description.join(", ")})`;
     },
@@ -302,16 +298,15 @@ export default defineComponent({
   },
   mounted() {
     // fill in phenotype ids from text annotator
-    if (this.$route.params.phenotypes) {
-      const phenotypes = (this.$route.params.phenotypes as Array<string>).map(
-        (phenotype) => ({ value: phenotype })
-      );
+    const phenotypes = getData() as Options;
+    if (phenotypes) {
       this.aPhenotypes = phenotypes;
       this.aGeneratedFrom = {
-        option: { value: "text annotator" },
+        option: { id: "text annotator" },
         options: phenotypes,
       };
     }
+    delete history.state.phenotypes;
   },
 });
 </script>

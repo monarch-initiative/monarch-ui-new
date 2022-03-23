@@ -39,7 +39,7 @@
             all selected
           </template>
           <template v-else-if="selected.length === 1">
-            {{ options[selected[0]]?.value }}
+            {{ options[selected[0]]?.id }}
           </template>
           <template v-else>{{ selected.length }} selected</template>
         </span>
@@ -106,9 +106,7 @@
               :icon="selected.includes(index) ? 'square-check' : 'square'"
             />
           </span>
-          <span class="option-label">{{
-            startCase(String(option.value))
-          }}</span>
+          <span class="option-label">{{ startCase(option.id) }}</span>
           <span class="option-count">{{ option.count }}</span>
         </div>
       </div>
@@ -231,9 +229,7 @@ export default defineComponent({
     getSelected(): Array<number> {
       return this.options
         .map((option, index) =>
-          this.modelValue.find((model) => option.value === model.value)
-            ? index
-            : -1
+          this.modelValue.find((model) => option.id === model.id) ? index : -1
         )
         .filter((index) => index !== -1);
     },

@@ -42,9 +42,10 @@ export const cleanError = (error: unknown): ApiError => {
 
   // if this error hasn't already been logged
   if (!(error as ApiError).logged) {
-    // log error to console like normal for advanced debugging
+    // log error to console like normal for advanced debugging and stack trace
+    // but wrap in group to distinguish between unhandled errors
     console.groupCollapsed((error as ApiError).text);
-    console.info(error);
+    console.error(error);
     console.groupEnd();
     (error as ApiError).logged = true;
   }

@@ -6,7 +6,7 @@ import {
   RouterScrollBehavior,
   NavigationGuard,
 } from "vue-router";
-import { lowerCase } from "lodash";
+import { lowerCase, clone } from "lodash";
 import { hideAll } from "tippy.js";
 import Home from "@/views/Home.vue";
 import Explore from "@/views/explore/Explore.vue";
@@ -34,7 +34,7 @@ const redirect404: NavigationGuard = async (to): Promise<string | void> => {
   }
 
   // otherwise, try to lookup node id and infer category
-  const id = to.params.id as string;
+  const id = to.path.slice(1) as string;
   if (id) {
     const node = await lookupNode(id);
     return `/${node.category}/${id}`;
@@ -50,10 +50,15 @@ if (process.env.NODE_ENV === "development")
 // CHECK PUBLIC/SITEMAP.XML AND KEEP IN SYNC
 export const routes: Array<RouteRecordRaw> = [
   {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: Home,
+    beforeEnter: redirect404,
+  },
+  {
     path: "/",
     name: "Home",
     component: Home,
-    beforeEnter: redirect404,
   },
   {
     path: "/home",
@@ -147,27 +152,31 @@ const scrollBehavior: RouterScrollBehavior = async (
   }
 };
 
+// navigation history object
+const history = createWebHistory(process.env.BASE_URL);
+
 // router object
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history,
   routes,
   scrollBehavior,
 });
 
 // set document title after route
-router.afterEach(async ({ name, query, hash }) => {
+router.afterEach(async ({ name, query, params, hash }) => {
   // https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
   await nextTick();
 
-  // get name of page
+  // get name of page (route name prop)
   const page = typeof name === "string" ? name : "";
 
-  // get "sub page"
+  // get "sub page" (e.g. explore mode hash)
   const subpage = lowerCase(hash.slice(1));
 
   // get extra details from url params
   let details = "";
   if (query.search) details = `"${query.search}"`;
+  if (params.id) details = `${params.id}`;
 
   // combine into document title
   if (document)
@@ -182,3 +191,16 @@ router.beforeEach(() => {
 });
 
 export default router;
+
+// dirty way to allow passing arbitrary data with router.push
+// will no longer be needed once this vue-router RFC is implemented:
+// https://github.com/vuejs/rfcs/discussions/400
+let routeData: unknown = null;
+export const setData = (data: unknown): void => {
+  routeData = data;
+};
+export const getData = (): unknown => {
+  const copy = clone(routeData);
+  routeData = null; // reset after data consumed once
+  return copy;
+};

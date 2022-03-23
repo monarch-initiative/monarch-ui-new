@@ -8,8 +8,8 @@ import Phenogrid from "phenogrid";
 // mount phenogrid to dom element with options
 export const mountPhenogrid = async (
   selector: string,
-  xAxis: Array<{ id: string; name: string }>,
-  yAxis: Array<{ id: string; name: string }>,
+  xAxis: Array<{ id?: string; name?: string }>,
+  yAxis: Array<{ id?: string; name?: string }>,
   mode = "compare"
 ): Promise<void> => {
   try {
@@ -19,7 +19,7 @@ export const mountPhenogrid = async (
 
     // map in particular way based on mode, per ui 2.0
     // TODO: fix whatever phenogrid quirks make this necessary
-    const modifiedXAxis = xAxis.map(({ id, name }) =>
+    const modifiedXAxis = xAxis.map(({ id = "", name = "" }) =>
       mode === "compare" ? [id] : { groupId: id, groupName: name }
     );
 
@@ -30,7 +30,7 @@ export const mountPhenogrid = async (
       gridSkeletonData: {
         title: " ",
         xAxis: modifiedXAxis,
-        yAxis: yAxis.map(({ id, name }) => ({ id, term: name })),
+        yAxis: yAxis.map(({ id = "", name = "" }) => ({ id, term: name })),
       },
       selectedCalculation: 0,
       selectedSort: "Frequency",
@@ -45,9 +45,10 @@ export const mountPhenogrid = async (
   }
 };
 
-// TYPESCRIPT SHIM FOR PHENOGRID
-// when (if) we rewrite phenogrid from scratch, do it in typescript and this
-// will no longer be needed
+// BELOW ARE SHIMS FOR PHENOGRID
+// when (if) we rewrite phenogrid from scratch, these should no longer be needed
+
+// typescript definition
 export interface PhenogridDefinition {
   createPhenogridForElement: (
     element: HTMLElement | null,
@@ -68,7 +69,7 @@ export interface PhenogridDefinition {
   ) => void;
 }
 
-// fix incorrect phenogrid svg sizing
+// fix incorrect svg sizing
 const patchSvg = (svg: Element, padding = 20) => {
   const { x, y, width, height } = (svg as SVGSVGElement).getBBox();
   // set view box to bbox, essentially fitting view to content

@@ -48,7 +48,7 @@
               :to="`/${kebabCase(token.category || 'unknown')}/${token.id}`"
               >{{ token.id }}</AppLink
             >
-            <div class="truncate">{{ token.terms }}</div>
+            <div class="truncate">{{ token.name }}</div>
           </template>
         </div>
       </template>
@@ -78,6 +78,7 @@ import { Status } from "@/components/AppStatus";
 import { Result } from "@/api/text-annotator";
 import { ApiError } from "@/api";
 import { downloadJson } from "@/util/download";
+import { setData } from "@/router";
 
 export default defineComponent({
   components: {
@@ -141,14 +142,12 @@ export default defineComponent({
       // gather annotations that are phenotypes
       const phenotypes = [];
       for (const { tokens } of this.annotations)
-        for (const { id } of tokens)
-          if (id.startsWith("HP:")) phenotypes.push(id);
+        for (const { id, name } of tokens)
+          if (id.startsWith("HP:")) phenotypes.push({ id, name });
 
       // send them to the phenotype explorer component via router
-      this.$router.push({
-        hash: "#phenotype-explorer",
-        params: { phenotypes },
-      });
+      setData(phenotypes);
+      this.$router.push({ hash: "#phenotype-explorer" });
     },
     kebabCase,
   },

@@ -68,5 +68,27 @@
       supported browser such as Chrome, Firefox, Safari, or Edge.
     <![endif]-->
     <div id="app"></div>
+
+    <!-- json linked data spec -->
+    <script type="application/ld+json" v-html="jsonld">
+      [
+        {
+          "@context": "http://schema.org",
+          "@type": "Organization",
+          "url": "https://monarchinitiative.org",
+          "email": "info@monarchinitiative.org"
+        },
+        {
+          "@context": "http://schema.org",
+          "@type": "WebSite",
+          "url": "https://monarchinitiative.org",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://monarchiniative.org/explore/?search={term}",
+            "query-input": "required name=term"
+          }
+        }
+      ]
+    </script>
   </body>
 </html>

@@ -1,4 +1,4 @@
 export type Options = Array<{
-  value: number | string;
-  count?: number | string;
+  id: string;
+  count?: number;
 }>;

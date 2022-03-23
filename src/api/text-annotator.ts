@@ -62,8 +62,8 @@ export const annotateText = async (content = ""): Promise<Result> => {
           .filter((token) => token)
           .map((token) => ({
             id: token.id,
+            name: token.terms.join(", "),
             category: token.category[0],
-            terms: token.terms.join(", "),
           })),
       });
     }
@@ -78,7 +78,7 @@ export type Result = Array<{
   text: string;
   tokens: Array<{
     id: string;
+    name: string;
     category: string;
-    terms: string;
   }>;
 }>;

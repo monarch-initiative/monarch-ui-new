@@ -88,7 +88,15 @@ export const apiCall = async (): Promise<void> => {
 // this only checks emitted model value updates, it doesn't two-way bind like
 // v-model. make sure to only use on components that keep local track of
 // model state and don't rely on parent to do that with v-model.
+// switch to one of these methods eventually:
+// https://github.com/vuejs/test-utils/discussions/279
 export const emitted = <T = unknown>(
   wrapper: VueWrapper<ComponentPublicInstance>,
   event = "update:modelValue"
-): Array<T> => wrapper.emitted()[event].pop() as Array<T>;
+): Array<T> => {
+  try {
+    return wrapper.emitted()[event].pop() as Array<T>;
+  } catch (error) {
+    throw new Error(`No "${event}" event emitted`);
+  }
+};

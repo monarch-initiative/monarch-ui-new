@@ -13,8 +13,8 @@ const props = {
     {
       key: "score",
       heading: "Score",
-      availableFilters: [{ value: "numbers" }, { value: "nulls" }],
-      activeFilters: [{ value: "numbers" }],
+      availableFilters: [{ id: "numbers" }, { id: "nulls" }],
+      activeFilters: [{ id: "numbers" }],
       sortable: true,
     },
     {
@@ -59,7 +59,7 @@ test("Changes filter", async () => {
   await wrapper.find("[role='option']").trigger("click");
   expect(emitted(wrapper, "filter")).toEqual([1, []]);
   await wrapper.findAll("[role='option']").at(1)?.trigger("click");
-  expect(emitted(wrapper, "filter")).toEqual([1, [{ value: "nulls" }]]);
+  expect(emitted(wrapper, "filter")).toEqual([1, [{ id: "nulls" }]]);
 });
 
 test("Changes per page", async () => {

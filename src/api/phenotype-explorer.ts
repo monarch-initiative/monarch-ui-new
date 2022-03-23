@@ -11,10 +11,10 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
     if (ids.length >= 2)
       return {
         autoAccept: true,
-        options: ids.map((id) => ({ value: id })),
-        message: ids.every((id) => id.startsWith("HPO:"))
+        options: ids.map((id) => ({ id })),
+        message: ids.every((id) => id.startsWith("HP:"))
           ? ""
-          : 'One or more pasted ids were not valid HPO phenotype ids (start with "HPO:")',
+          : 'One or more pasted ids were not valid HPO phenotype ids (start with "HP:")',
       };
 
     // otherwise perform string search for phenotypes/genes/diseases
@@ -26,7 +26,8 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
 
     // convert into desired result format
     return results.map((result) => ({
-      value: result.id,
+      id: result.id,
+      name: result.name,
       getOptions:
         // if gene/disease, provide function to get associated phenotypes upon select
         result.category === "phenotype" || !result.category
@@ -34,7 +35,6 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
           : async () =>
               await getPhenotypeAssociations(result.id, result.category),
       highlight: result.highlight,
-      label: result.label,
       icon: "category-" + (result.category || "unknown"),
       info: result.id,
     }));
@@ -43,20 +43,20 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
   }
 };
 
-// get phenotypes associated with gene or disease
+interface PhenotypesResponse {
+  associations: Array<{
+    object: {
+      id: string;
+      label: string;
+    };
+  }>;
+}
+
+// get phenotypes associated with gene/disease
 const getPhenotypeAssociations = async (
   id = "",
   category = ""
 ): Promise<Options> => {
-  interface Response {
-    associations: Array<{
-      object: {
-        id: string;
-        label: string;
-      };
-    }>;
-  }
-
   try {
     // short circuit if no id or valid category
     if (!id || !category || !(category === "gene" || category === "disease"))
@@ -70,19 +70,19 @@ const getPhenotypeAssociations = async (
 
     // make query
     const url = `${biolink}/bioentity/${category}/${id}/phenotypes`;
-    const { associations } = await request<Response>(url, params);
+    const { associations } = await request<PhenotypesResponse>(url, params);
 
     // convert into desired result format
     return associations.map(({ object }) => ({
-      value: object.id,
-      label: object.label,
+      id: object.id,
+      name: object.label,
     }));
   } catch (error) {
     throw cleanError(error);
   }
 };
 
-interface Response {
+interface CompareResponse {
   matches: Array<{
     id: string;
     label: string;
@@ -101,7 +101,22 @@ interface Response {
 export const compareSetToSet = async (
   aPhenotypes: Array<string>,
   bPhenotypes: Array<string>
-): Promise<Results> => {
+): Promise<CompareResult> => {
+  interface CompareResponse {
+    matches: Array<{
+      id: string;
+      label: string;
+      type: string;
+      taxon?: {
+        id?: string;
+        label?: string;
+      };
+      rank: string;
+      score: number;
+      significance: string;
+    }>;
+  }
+
   try {
     // use POST version of endpoint because GET is questionable?:
     // https://github.com/biolink/biolink-api/issues/389
@@ -123,7 +138,7 @@ export const compareSetToSet = async (
 
     // make query
     const url = `${biolink}/sim/compare`;
-    const response = await request<Response>(url, {}, options);
+    const response = await request<CompareResponse>(url, {}, options);
 
     return mapMatches(response);
   } catch (error) {
@@ -135,7 +150,7 @@ export const compareSetToSet = async (
 export const compareSetToTaxon = async (
   phenotypes: Array<string>,
   taxon: string
-): Promise<Results> => {
+): Promise<CompareResult> => {
   // endpoint settings
   const params = {
     id: phenotypes.join(","),
@@ -144,16 +159,16 @@ export const compareSetToTaxon = async (
 
   // make query
   const url = `${biolink}/sim/search`;
-  const response = await request<Response>(url, params);
+  const response = await request<CompareResponse>(url, params);
 
   return mapMatches(response);
 };
 
 // convert into desired result format
-const mapMatches = (response: Response) => {
+const mapMatches = (response: CompareResponse) => {
   const matches = response.matches.map((match) => ({
     id: match.id,
-    label: match.label,
+    name: match.label,
     score: match.score,
     category: match.type,
     taxon: match.taxon?.label || "",
@@ -164,10 +179,10 @@ const mapMatches = (response: Response) => {
   return { matches, minScore, maxScore };
 };
 
-export type Results = {
+export type CompareResult = {
   matches: Array<{
     id: string;
-    label: string;
+    name: string;
     score: number;
     category: string;
     taxon: string;

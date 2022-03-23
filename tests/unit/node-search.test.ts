@@ -1,13 +1,12 @@
 import { getNodeSearchResults } from "./../../src/api/node-search";
 
-// expected results format
+// expected results
 const result = {
   id: "MONDO:0017310",
   altIds: ["ORPHA:284993", "ORDO:284993", "Orphanet:284993", "UMLS:CN227112"],
   name: "Marfan and Marfan-related disorder",
   altNames: [],
   category: "disease",
-  label: "Marfan and Marfan-related disorder",
   description: "",
   score: 108.652695,
   prefix: "MONDO",
@@ -16,22 +15,22 @@ const result = {
 };
 const category = [
   {
-    value: "disease",
+    id: "disease",
     count: 25,
   },
   {
-    value: "publication",
+    id: "publication",
     count: 9,
   },
 ];
 
 const taxon = [
   {
-    value: "Gallus gallus",
+    id: "Gallus gallus",
     count: 1,
   },
   {
-    value: "Homo sapiens",
+    id: "Homo sapiens",
     count: 1,
   },
 ];

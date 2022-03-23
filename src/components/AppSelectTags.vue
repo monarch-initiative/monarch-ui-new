@@ -4,15 +4,15 @@
     <div class="box" :data-focused="focused">
       <!-- deselect button -->
       <AppButton
-        v-for="(selected, index) in modelValue"
+        v-for="(option, index) in selected"
         :key="index"
         design="circle"
-        :text="String(selected.label || selected.value)"
+        :text="option.name || option.id"
         icon="xmark"
-        class="selected"
-        :aria-label="`Deselect ${selected.value}`"
-        v-tippy="`Deselect ${selected.value}`"
-        @click="deselect(selected)"
+        class="option"
+        :aria-label="`Deselect ${option.id}`"
+        v-tippy="`Deselect ${option.id}`"
+        @click="deselect(option)"
       />
 
       <AppFlex>
@@ -89,7 +89,7 @@
           <span class="option-label"
             ><span
               class="truncate"
-              v-html="option.highlight || option.label || option.value"
+              v-html="option.highlight || option.name || option.id"
             ></span
           ></span>
           <span class="option-info truncate">{{ option.info }}</span>
@@ -108,7 +108,7 @@
 // https://vuetifyjs.com/en/components/autocompletes
 
 import { defineComponent, PropType } from "vue";
-import { uniqueId, isEqual, debounce, DebouncedFunc } from "lodash";
+import { uniqueId, isEqual, debounce, DebouncedFunc, uniqBy } from "lodash";
 import { Option, Options, OptionsFunc } from "./AppSelectTags";
 import AppStatus from "@/components/AppStatus.vue";
 import { Status } from "@/components/AppStatus";
@@ -224,10 +224,6 @@ export default defineComponent({
       // immediately auto-accept results
       this.getResults();
     },
-    // check if option isnt already selected
-    isntSelected(option: Option) {
-      return !this.selected.find((selected) => option.value === selected.value);
-    },
     // select an option or array of options
     async select(options: Option | Options) {
       // make array if single option
@@ -249,8 +245,8 @@ export default defineComponent({
         else toSelect.push(option);
       }
 
-      // select options (if not already selected)
-      this.selected.push(...toSelect.filter(this.isntSelected));
+      // select options
+      this.selected.push(...toSelect);
 
       // notify parent that user made change to selection
       this.$emit("change");
@@ -258,9 +254,7 @@ export default defineComponent({
     // deselect a specific option or last-selected option
     deselect(option?: Option) {
       if (option)
-        this.selected = this.selected.filter(
-          (model) => model.value !== option.value
-        );
+        this.selected = this.selected.filter((model) => model.id !== option.id);
       else this.selected.pop();
 
       // notify parent that user made change to selection
@@ -273,7 +267,7 @@ export default defineComponent({
     // copy selected ids to clipboard
     async copy() {
       await window.navigator.clipboard.writeText(
-        this.selected.map(({ value }) => value).join(",")
+        this.selected.map(({ id }) => id).join(",")
       );
       push(`Copied ${this.selected.length} values`);
     },
@@ -301,7 +295,7 @@ export default defineComponent({
         // otherwise, show list of results for user to select
         else {
           this.results = response;
-          if (!this.results.length) throw new ApiError("No results", "warning");
+          // if (!this.results.length) throw new ApiError("No results", "warning");
         }
 
         // clear status
@@ -316,18 +310,18 @@ export default defineComponent({
     // list of unselected results to show
     availableResults() {
       return this.results.filter(
-        (option) =>
-          !this.modelValue.find((model) => model.value === option.value)
+        (option) => !this.selected.find((model) => model.id === option.id)
       );
     },
   },
   watch: {
-    // when model changes, update selected value
+    // when model changes
     modelValue: {
       handler() {
         // avoid infinite rerenders
         if (!isEqual(this.selected, this.modelValue))
-          this.selected = this.modelValue;
+          // update (deduplicated) selected value
+          this.selected = uniqBy(this.modelValue, "id");
       },
       deep: true,
       immediate: true,
@@ -335,8 +329,8 @@ export default defineComponent({
     // when selected value changes
     selected: {
       handler() {
-        // emit updated model
-        this.$emit("update:modelValue", this.selected);
+        // emit (deduplicated) updated model
+        this.$emit("update:modelValue", uniqBy(this.selected, "id"));
       },
       deep: true,
     },

@@ -26,6 +26,7 @@ library.add(
   fas.faChartBar,
   fas.faCheck,
   fas.faCheckCircle,
+  fas.faClipboardList,
   fas.faCode,
   fas.faCogs,
   fas.faComment,

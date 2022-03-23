@@ -123,11 +123,11 @@ const examples = ["Marfan Syndrome", "Multicystic Kidney Dysplasia", "SSH"];
 // default filters to show before anything typed in
 // const defaultFilters = {
 //   category: [
-//     { value: "gene" },
-//     { value: "disease" },
-//     { value: "phenotype" },
-//     { value: "genotype" },
-//     { value: "variant" },
+//     { id: "gene" },
+//     { id: "disease" },
+//     { id: "phenotype" },
+//     { id: "genotype" },
+//     { id: "variant" },
 //   ],
 // };
 
