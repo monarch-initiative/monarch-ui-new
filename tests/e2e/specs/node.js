@@ -1,12 +1,12 @@
 it("Shows sub-header", () => {
-  cy.visit("/disease/MONDO:0017310");
-  cy.contains("Marfan and Marfan-related disorder");
+  cy.visit("/disease/MONDO:0007947");
+  cy.contains("Marfan syndrome");
   cy.contains("Disease");
-  cy.contains("MONDO:0017310");
+  cy.contains("MONDO:0007947");
 });
 
 it("Table of contents works", () => {
-  cy.visit("/disease/MONDO:0017310");
+  cy.visit("/disease/MONDO:0007947");
 
   // toggle button exists
   cy.get(".toc")

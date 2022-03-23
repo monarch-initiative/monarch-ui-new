@@ -1,20 +1,74 @@
 {
-  "inheritance": [],
+  "inheritance": [
+    {
+      "id": "HP:0000006",
+      "label": "Autosomal dominant inheritance",
+      "iri": "http://purl.obolibrary.org/obo/HP_0000006",
+      "category": ["inheritance"]
+    }
+  ],
   "clinical_modifiers": [],
   "taxon": {
     "id": null,
     "label": null
   },
   "association_counts": null,
-  "xrefs": ["UMLS:CN227112", "Orphanet:284993"],
-  "description": null,
+  "xrefs": [
+    "NCIT:C34807",
+    "UMLS:C0024796",
+    "ICD10:Q87.40",
+    "UMLS:CN202883",
+    "OMIM:154700",
+    "ICD10:Q87.4",
+    "MedDRA:10026829",
+    "ICD9:759.82",
+    "Orphanet:284963",
+    "SCTID:19346006",
+    "MESH:D008382",
+    "COHD:258540",
+    "Orphanet:558",
+    "DOID:14323",
+    "GARD:0006975"
+  ],
+  "description": "Marfan syndrome is a disorder of the connective tissue. Connective tissue provides strength and flexibility to structures throughout the body such as bones, ligaments, muscles, walls of blood vessels, and heart valves. Marfan syndrome affects most organs and tissues, especially the skeleton, lungs, eyes, heart, and the large blood vessel that distributes blood from the heart to the rest of the body (the aorta). It is caused by mutations in the FBN1 gene, which provides instructions for making a protein called fibrillin-1. Marfan syndrome is inherited in an autosomal dominant pattern. At least 25% of cases are due to a new (de novo) mutation. Treatment is based on the signs and symptoms in each person.",
   "types": [],
-  "synonyms": [],
+  "synonyms": [
+    {
+      "val": "Marfan's syndrome",
+      "pred": "synonym",
+      "xrefs": []
+    },
+    {
+      "val": "MFS1",
+      "pred": "synonym",
+      "xrefs": []
+    },
+    {
+      "val": "Marfan syndrome type 1",
+      "pred": "synonym",
+      "xrefs": []
+    },
+    {
+      "val": "MFS",
+      "pred": "synonym",
+      "xrefs": []
+    },
+    {
+      "val": "Marfan syndrome",
+      "pred": "synonym",
+      "xrefs": []
+    },
+    {
+      "val": "Marfan syndrome, type 1",
+      "pred": "synonym",
+      "xrefs": []
+    }
+  ],
   "deprecated": null,
   "replaced_by": [],
   "consider": [],
-  "id": "MONDO:0017310",
-  "label": "Marfan and Marfan-related disorder",
-  "iri": "http://purl.obolibrary.org/obo/MONDO_0017310",
+  "id": "MONDO:0007947",
+  "label": "Marfan syndrome",
+  "iri": "http://purl.obolibrary.org/obo/MONDO_0007947",
   "category": ["disease"]
 }
