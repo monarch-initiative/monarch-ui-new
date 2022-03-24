@@ -12,7 +12,7 @@
       <!-- inheritance -->
       <template v-if="node.inheritance.length">
         <div class="detail">Heritability</div>
-        <AppFlex hAlign="left">
+        <AppFlex hAlign="left" gap="small">
           <AppLink
             v-for="(inheritance, index) of node.inheritance"
             :key="index"
@@ -35,6 +35,19 @@
         <AppLink :to="node.taxon.link" v-tippy="node.taxon.id">{{
           node.taxon.name
         }}</AppLink>
+      </template>
+
+      <!-- external references -->
+      <template v-if="node.xrefs.length">
+        <div class="detail">External References</div>
+        <AppFlex hAlign="left" gap="small">
+          <AppLink
+            v-for="(xref, index) of node.xrefs"
+            :key="index"
+            :to="xref.link"
+            >{{ xref.id }}</AppLink
+          >
+        </AppFlex>
       </template>
     </AppFlex>
   </AppSection>

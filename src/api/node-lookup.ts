@@ -1,3 +1,4 @@
+import { getXrefLink } from "./xrefs";
 import { biolink, request, cleanError } from ".";
 import { getHierarchy, Result as HierarchyResult } from "./node-hierachy";
 
@@ -64,6 +65,7 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
             )}`
           : "",
       },
+      xrefs: response.xrefs.map((id) => ({ id, link: getXrefLink(id) })),
       hierarchy: await getHierarchy(id, category),
     };
 
@@ -92,5 +94,9 @@ export interface Result {
     name?: string;
     link?: string;
   };
+  xrefs: Array<{
+    id: string;
+    link: string;
+  }>;
   hierarchy: HierarchyResult;
 }
