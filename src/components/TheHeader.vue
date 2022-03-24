@@ -11,6 +11,7 @@
         class="logo"
         :data-home="home"
         v-tippy="home ? '' : 'Homepage'"
+        :title="version"
       >
         <Logo class="image" />
         <!-- make logo text the h1 on homepage -->
@@ -65,6 +66,7 @@
 import { defineComponent } from "vue";
 import TheNexus from "./TheNexus.vue";
 import Logo from "@/assets/Logo.vue";
+import packageJson from "../../package.json";
 
 export default defineComponent({
   components: {
@@ -73,6 +75,8 @@ export default defineComponent({
   },
   data() {
     return {
+      // version of app
+      version: packageJson.version,
       // is nav menu expanded
       expanded: false,
     };

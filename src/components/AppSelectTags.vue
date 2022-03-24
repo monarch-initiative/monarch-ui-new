@@ -9,7 +9,7 @@
         design="circle"
         :text="option.name || option.id"
         icon="xmark"
-        class="option"
+        class="selected"
         :aria-label="`Deselect ${option.id}`"
         v-tippy="`Deselect ${option.id}`"
         @click="deselect(option)"
