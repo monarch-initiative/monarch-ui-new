@@ -9,7 +9,7 @@
     </p>
     <p>
       <template v-for="(group, index) in team" :key="index">
-        <a :href="'#' + kebabCase(group.name)">{{ group.name }}</a>
+        <AppLink :to="'#' + kebabCase(group.name)">{{ group.name }}</AppLink>
         <span v-if="index !== team.length - 1"> · </span>
       </template>
     </p>

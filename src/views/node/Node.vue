@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, nextTick } from "vue";
 import { lookupNode, Result } from "@/api/node-lookup";
 import { Status } from "@/components/AppStatus";
 import { ApiError } from "@/api";
@@ -37,6 +37,7 @@ import Hierarchy from "./Hierarchy.vue";
 import Visualization from "./Visualization.vue";
 import Associations from "./Associations.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
+import { scrollToHash } from "@/router";
 
 export default defineComponent({
   components: {
@@ -71,6 +72,10 @@ export default defineComponent({
 
       // clear status
       this.status = null;
+
+      // scroll to hash once data loaded
+      await nextTick();
+      scrollToHash();
     } catch (error) {
       // error...
       this.status = error as ApiError;
