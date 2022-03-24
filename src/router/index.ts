@@ -5,6 +5,7 @@ import {
   RouteRecordRaw,
   RouterScrollBehavior,
   NavigationGuard,
+  RouteLocation,
 } from "vue-router";
 import { lowerCase } from "lodash";
 import { hideAll } from "tippy.js";
@@ -118,6 +119,7 @@ export const routes: Array<RouteRecordRaw> = [
   ...testRoutes,
 ];
 
+// vue-router's scroll behavior handler
 const scrollBehavior: RouterScrollBehavior = async (
   to,
   from,
@@ -129,22 +131,40 @@ const scrollBehavior: RouterScrollBehavior = async (
   // scroll to previous position if exists
   if (savedPosition) return savedPosition;
 
-  if (to.hash) {
-    // get target element of hash
-    let target = document?.getElementById(to.hash.slice(1));
+  // scroll to hash
+  return getHashScroll(to);
+};
 
-    if (target) {
-      // move target to parent section element if first child
-      const parent = target.parentElement;
-      if (parent?.tagName === "SECTION" && target.matches(":first-child"))
-        target = parent;
+// get target element of url hash and scroll offset
+const getHashScroll = (
+  to: RouteLocation | Location
+): { el: Element; top: number } | undefined => {
+  // get hash
+  const hash = to.hash;
+  if (!hash) return;
 
-      // get offset to account for header
-      const offset = document?.querySelector("header")?.clientHeight || 0;
+  // get target element of hash
+  let target = document?.getElementById(to.hash.slice(1));
+  if (!target) return;
 
-      return { el: target, top: offset };
-    }
-  }
+  // move target to parent section element if first child
+  const parent = target.parentElement;
+  if (parent?.tagName === "SECTION" && target.matches(":first-child"))
+    target = parent;
+
+  // get offset to account for header
+  const offset = document?.querySelector("header")?.clientHeight || 0;
+
+  return { el: target, top: offset };
+};
+
+// scroll to hash
+export const scrollToHash = (): void => {
+  const scroll = getHashScroll(window.location);
+  if (!scroll) return;
+  const { el, top } = scroll;
+  el.scrollIntoView(true);
+  window.scrollBy(0, -top);
 };
 
 // router object
