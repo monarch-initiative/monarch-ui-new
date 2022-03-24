@@ -35,6 +35,7 @@ library.add(
   fas.faDatabase,
   fas.faDownload,
   fas.faEnvelopeOpenText,
+  fas.faEquals,
   fas.faExclamationCircle,
   fas.faExternalLinkAlt,
   fas.faEye,

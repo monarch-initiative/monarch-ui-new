@@ -1,4 +1,5 @@
 import { biolink, request, cleanError } from ".";
+import { getHierarchy, Result as HierarchyResult } from "./node-hierachy";
 
 interface Response {
   id: string;
@@ -41,6 +42,7 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
     // convert into desired result format
     const metadata = {
       id: response.id,
+      originalId: id,
       name: response.label,
       category: (response.category || [])[0],
       description: response.description || "",
@@ -62,6 +64,7 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
             )}`
           : "",
       },
+      hierarchy: await getHierarchy(id, category),
     };
 
     return metadata;
@@ -72,6 +75,7 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
 
 export interface Result {
   id: string;
+  originalId: string;
   name: string;
   category: string;
   description: string;
@@ -88,4 +92,5 @@ export interface Result {
     name?: string;
     link?: string;
   };
+  hierarchy: HierarchyResult;
 }

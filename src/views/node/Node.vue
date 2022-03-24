@@ -59,27 +59,40 @@ export default defineComponent({
       status: null as Status | null,
     };
   },
+  methods: {
+    // get new node data
+    async getData() {
+      // get node from route params
+      const { id = "", category = "" } = this.$route.params;
+
+      try {
+        // loading...
+        this.status = { code: "loading", text: `Loading node info for ${id}` };
+
+        // get node information
+        this.node = await lookupNode(id as string, category as string);
+
+        // clear status
+        this.status = null;
+
+        // scroll to hash once data loaded
+        await nextTick();
+        scrollToHash();
+      } catch (error) {
+        // error...
+        this.status = error as ApiError;
+      }
+    },
+  },
   async mounted() {
-    try {
-      // loading...
-      this.status = { code: "loading", text: "Loading results" };
-
-      // get results
-      this.node = await lookupNode(
-        this.$route.params.id as string,
-        this.$route.params.category as string
-      );
-
-      // clear status
-      this.status = null;
-
-      // scroll to hash once data loaded
-      await nextTick();
-      scrollToHash();
-    } catch (error) {
-      // error...
-      this.status = error as ApiError;
-    }
+    // get new node data on page load
+    this.getData();
+  },
+  watch: {
+    $route() {
+      // get new node data when route changes (e.g going from node page to node page)
+      this.getData();
+    },
   },
 });
 </script>

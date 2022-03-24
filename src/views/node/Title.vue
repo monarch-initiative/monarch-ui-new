@@ -22,6 +22,15 @@
           :copy="true"
           v-tippy="'The ID of this node. Click to copy.'"
         />
+        <span
+          v-if="node.id !== node.originalId"
+          class="original-id"
+          v-tippy="
+            'The original ID you visited, which resolved to a different ID.'
+          "
+        >
+          {{ node.originalId }}
+        </span>
       </AppFlex>
     </AppFlex>
   </AppSection>
@@ -59,5 +68,11 @@ export default defineComponent({
 
 h1 {
   font-size: 1.2rem;
+}
+
+.original-id {
+  color: $dark-gray;
+  font-style: italic;
+  font-size: 0.9rem;
 }
 </style>
