@@ -58,7 +58,6 @@
 <script lang="ts">
 import { defineComponent, nextTick } from "vue";
 import AppCheckbox from "./AppCheckbox.vue";
-import variables from "../global/variables.scss";
 import { firstInView } from "@/util/dom";
 
 type Entries = Array<{
@@ -67,13 +66,6 @@ type Entries = Array<{
   icon: string;
   text: string;
 }>;
-
-// desired width of toc
-const width = 250;
-
-// screen width at which certain behaviors and styles change
-const compact = () =>
-  window.innerWidth < width * 2 + (parseInt(variables.section) || 1000);
 
 let mutationObserver: MutationObserver;
 
@@ -86,7 +78,7 @@ export default defineComponent({
       // toc entries
       entries: [] as Entries,
       // whether toc is open or not
-      expanded: !compact(),
+      expanded: window.innerWidth > 1400,
       // how much to push downward to make room for header if in view
       nudge: 0,
       // whether to only show one section at a time
@@ -141,7 +133,7 @@ export default defineComponent({
     },
     // when user clicks "off" of toc panel
     onWindowClick() {
-      if (compact()) this.expanded = false;
+      if (this.expanded && window.innerWidth < 1240) this.expanded = false;
     },
   },
   watch: {
@@ -199,7 +191,8 @@ export default defineComponent({
 }
 
 .toc[data-expanded="true"] {
-  max-width: min(var(--width), calc(100vw - 40px));
+  width: 210px;
+  max-width: calc(100vw - 40px);
 }
 
 .button {
