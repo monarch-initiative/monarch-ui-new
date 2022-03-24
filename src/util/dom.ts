@@ -11,9 +11,19 @@ export const restartAnimations = (element: Element): void => {
 export const waitFor = async (selector = ""): Promise<Element> =>
   new Promise((resolve) => {
     const check = () => {
-      const match = document.querySelector(selector);
+      const match = document?.querySelector(selector);
       if (match) resolve(match);
       else window.setTimeout(check, 50);
     };
     check();
   });
+
+// find index of first element "in view" (intuitively)
+export const firstInView = (elements: Array<HTMLElement>): number => {
+  // go up from bottom until we find element that starts in top majority of screen
+  for (const [index, element] of Object.entries(elements).reverse())
+    if (element.getBoundingClientRect().top < window.innerHeight * 0.75)
+      return Number(index);
+
+  return -1;
+};

@@ -147,7 +147,7 @@ export default defineComponent({
     }
 
     &[data-color="secondary"] {
-      color: $gray;
+      color: $dark-gray;
     }
 
     &:hover,
@@ -170,7 +170,9 @@ export default defineComponent({
 </style>
 
 <style lang="scss">
-[data-design="fill"] .button[data-design="circle"][data-color="primary"] {
-  background: $theme-mid;
+[data-design="fill"] {
+  .button[data-design="circle"][data-color="primary"] {
+    background: $theme-mid;
+  }
 }
 </style>

@@ -1,5 +1,8 @@
 <template>
   <component :is="tag || 'div'" ref="heading" :id="link">
+    <!-- heading icon -->
+    <AppIcon v-if="icon" :icon="icon" :fallback="fallbackIcon" class="icon" />
+
     <!-- heading content -->
     <slot />
 
@@ -24,6 +27,10 @@ export default defineComponent({
   props: {
     // manually specified heading level
     level: Number,
+    // icon to show next to text
+    icon: String,
+    // fall back icon
+    fallbackIcon: String,
   },
   data() {
     return {
@@ -85,7 +92,7 @@ export default defineComponent({
 .anchor {
   display: inline-block;
   width: 0;
-  margin-left: 10px;
+  margin-left: 0.75em;
   opacity: 0;
   text-decoration: none;
   font-size: 0.8em;
@@ -96,11 +103,31 @@ export default defineComponent({
   opacity: 1;
 }
 
+.icon {
+  position: relative;
+  top: -1px;
+  margin-right: 0.75em;
+  color: $gray;
+  vertical-align: middle;
+}
+
 h1,
 h2,
 h3 {
   &:hover .anchor {
     opacity: 1;
+  }
+}
+</style>
+
+<style lang="scss">
+[data-design="fill"] {
+  h1,
+  h2,
+  h3 {
+    .icon {
+      color: $theme-dark;
+    }
   }
 }
 </style>

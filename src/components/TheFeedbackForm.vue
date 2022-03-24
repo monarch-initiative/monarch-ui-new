@@ -46,7 +46,7 @@
     <div class="details">
       <template v-for="(value, key) in details" :key="key">
         <span>{{ key }}</span>
-        <span>{{ value }}</span>
+        <span v-html="value.replaceAll(/([^A-Za-z0-9])/g, '<wbr />$1')"></span>
       </template>
     </div>
 

@@ -3,7 +3,7 @@ export const downloadJson = (data = {}, filename = "data"): void => {
     type: "application/json",
   });
   const url = window.URL.createObjectURL(blob);
-  const link = document.createElement("a");
+  const link = document?.createElement("a");
   link.href = url;
   link.download = filename + ".json";
   link.click();

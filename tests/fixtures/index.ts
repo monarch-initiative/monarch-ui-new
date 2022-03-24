@@ -8,6 +8,7 @@ import nodeSearch from "./node-search.json";
 import textAnnotator from "./text-annotator.json";
 import phenotypeExplorerSearch from "./phenotype-explorer-search.json";
 import phenotypeExplorerCompare from "./phenotype-explorer-compare.json";
+import nodeLookup from "./node-lookup.json";
 
 // api calls to be mocked/stubbed with fixture data
 export const handlers = [
@@ -34,5 +35,8 @@ export const handlers = [
   }),
   rest.post(/sim\/compare/i, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(phenotypeExplorerCompare));
+  }),
+  rest.get(/\/bioentity\//i, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(nodeLookup));
   }),
 ];

@@ -42,10 +42,12 @@
           <template v-for="(token, index) in tokens" :key="index">
             <AppIcon
               :icon="`category-${kebabCase(token.category)}`"
-              :circle="true"
               fallback="category-unknown"
             />
-            <AppLink :to="token.id">{{ token.id }}</AppLink>
+            <AppLink
+              :to="`/${kebabCase(token.category || 'unknown')}/${token.id}`"
+              >{{ token.id }}</AppLink
+            >
             <div class="truncate">{{ token.terms }}</div>
           </template>
         </div>

@@ -48,15 +48,14 @@
       :key="index"
       direction="col"
       gap="small"
-      class="result"
+      hAlign="stretch"
     >
       <div class="title">
         <AppIcon
           :icon="`category-${kebabCase(result.category)}`"
           fallback="category-unknown"
-          :circle="true"
           class="type"
-          v-tippy="`Category: ${capitalize(result.category || 'unknown')}`"
+          v-tippy="startCase(result.category || 'unknown')"
         />
         <AppLink
           :to="`/${kebabCase(result.category || 'unknown')}/${result.id}`"
@@ -109,7 +108,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { kebabCase, capitalize } from "lodash";
+import { kebabCase, startCase } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
@@ -183,7 +182,7 @@ export default defineComponent({
       // navigate to explore page
       await this.$router.push({ ...this.$route, name: "Explore" });
       // refocus box
-      document.querySelector("input")?.focus();
+      document?.querySelector("input")?.focus();
     },
     // when user "submits" text box
     onChange() {
@@ -254,7 +253,7 @@ export default defineComponent({
     },
 
     kebabCase,
-    capitalize,
+    startCase,
   },
   computed: {
     // is home page
@@ -283,10 +282,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.result {
-  align-items: stretch;
-}
-
 .title {
   display: flex;
   align-items: center;
