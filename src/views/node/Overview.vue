@@ -2,49 +2,55 @@
   <AppSection>
     <AppHeading icon="lightbulb">Overview</AppHeading>
 
-    <AppFlex hAlign="left" direction="col">
+    <AppDetails>
       <!-- synonyms -->
-      <template v-if="node.synonyms.length">
-        <div class="detail">Also Known As</div>
-        <AppFlex hAlign="left" gap="small">
-          <span v-for="(synonym, index) in node.synonyms" :key="index">{{
-            synonym
-          }}</span>
-        </AppFlex>
-      </template>
+      <AppDetail :blank="!node.synonyms.length" title="Also Known As">
+        <p>{{ node.synonyms.join(" | ") }}</p>
+      </AppDetail>
 
       <!-- symbol (gene specific) -->
-      <template v-if="node.symbol">
-        <div class="detail">Symbol</div>
+      <AppDetail
+        v-if="node.category === 'gene'"
+        :blank="!node.symbol"
+        title="Symbol"
+      >
         <p>{{ node.symbol }}</p>
-      </template>
+      </AppDetail>
 
       <!-- authors (publication specific) -->
-      <template v-if="node.authors?.length">
-        <div class="detail">Authors</div>
-        <p>{{ node.authors.join(", ") }}</p>
-      </template>
+      <AppDetail
+        v-if="node.category === 'publication'"
+        :blank="!node.authors?.length"
+        title="Authors"
+      >
+        <p>{{ node.authors?.join(", ") }}</p>
+      </AppDetail>
 
       <!-- paragraph description -->
-      <template v-if="node.description">
-        <div class="detail">Description</div>
+      <AppDetail :blank="!node.description" title="Description" :big="true">
         <p
           class="description truncate-10"
           tabindex="0"
           v-html="node.description.trim()"
           v-tippy="'Click to expand'"
         ></p>
-      </template>
-    </AppFlex>
+      </AppDetail>
+    </AppDetails>
   </AppSection>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { Result } from "@/api/node-lookup";
+import AppDetails from "@/components/AppDetails.vue";
+import AppDetail from "@/components/AppDetail.vue";
 
 // basic, high level information about node
 export default defineComponent({
+  components: {
+    AppDetails,
+    AppDetail,
+  },
   props: {
     // current node
     node: {
@@ -56,14 +62,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.detail {
-  width: 100%;
-  margin-top: 5px;
-  margin-bottom: -5px;
-  text-align: left;
-  font-weight: 600;
-}
-
 .description {
   width: 100%;
   overflow-x: auto;

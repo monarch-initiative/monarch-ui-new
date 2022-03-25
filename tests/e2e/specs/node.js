@@ -1,10 +1,3 @@
-it("Shows sub-header", () => {
-  cy.visit("/disease/MONDO:0007947");
-  cy.contains("Marfan syndrome");
-  cy.contains("Disease");
-  cy.contains("MONDO:0007947");
-});
-
 it("Table of contents works", () => {
   cy.visit("/disease/MONDO:0007947");
 
@@ -42,4 +35,58 @@ it("Table of contents works", () => {
   cy.get(".toc .checkbox").click();
   cy.get("main").contains("Hierarchy").should("be.visible");
   cy.get("main").contains("Associations").should("be.visible");
+});
+
+it("Title info shows", () => {
+  cy.visit("/disease/MONDO:0007947");
+
+  cy.contains("Marfan syndrome");
+  cy.contains("Disease");
+  cy.contains("MONDO:0007947");
+});
+
+it("Overview items show", () => {
+  cy.visit("/disease/MONDO:0007947");
+
+  cy.contains("MFS1");
+  cy.contains("Marfan syndrome type 1");
+  cy.contains("Marfan syndrome is a disorder of the connective tissue");
+});
+
+it("Details items show", () => {
+  cy.visit("/disease/MONDO:0007947");
+
+  cy.contains("Autosomal dominant inheritance");
+  cy.contains("NCIT:C34807");
+  cy.contains("UMLS:C0024796");
+});
+
+it("Hierarchy items show", () => {
+  cy.visit("/disease/MONDO:0007947");
+
+  cy.contains("syndromic myopia");
+  cy.contains("connective tissue disease with eye involvement");
+  cy.contains("lens position anomaly");
+  cy.contains("SCTID:19346006");
+  cy.contains("NCIT:C34807");
+});
+
+it("Gene specific info shows", () => {
+  cy.visit("/gene/MONDO:0007947");
+
+  cy.contains("Gene");
+  cy.contains("Symbol");
+  cy.contains("CDK2");
+});
+
+it("Publication specific info shows", () => {
+  cy.visit("/publication/MONDO:0007947");
+
+  cy.contains("Publication");
+  cy.contains(
+    "Dimorphic effects of transforming growth factor-β signaling during aortic aneurysm progression in mice suggest a combinatorial therapy for Marfan syndrome."
+  );
+  cy.contains("Cook JR");
+  cy.contains("Ramirez F");
+  cy.contains("1. Arterioscler Thromb Vasc Biol. 2015 Apr;35(4):911-7.");
 });

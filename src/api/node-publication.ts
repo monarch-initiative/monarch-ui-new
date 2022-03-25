@@ -51,8 +51,6 @@ export const getSummary = async (id = ""): Promise<SummaryResult> => {
     const { result } = await request<SummaryResponse>(url, params);
     const publication = Object.values(result)[0];
 
-    console.log(result);
-
     // convert into desired result format
     return {
       id: publication.uid,

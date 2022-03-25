@@ -2,16 +2,14 @@
   <AppSection>
     <AppHeading icon="clipboard-list">Details</AppHeading>
 
-    <AppFlex hAlign="left" direction="col">
+    <AppDetails>
       <!-- main identifier -->
-      <template v-if="node.iri">
-        <div class="detail">IRI</div>
+      <AppDetail :blank="!node.iri" title="IRI">
         <AppLink :to="node.iri">Link</AppLink>
-      </template>
+      </AppDetail>
 
       <!-- inheritance -->
-      <template v-if="node.inheritance.length">
-        <div class="detail">Heritability</div>
+      <AppDetail :blank="!node.inheritance.length" title="Heritability">
         <AppFlex hAlign="left" gap="small">
           <AppLink
             v-for="(inheritance, index) of node.inheritance"
@@ -21,25 +19,30 @@
             >{{ inheritance.name }}</AppLink
           >
         </AppFlex>
-      </template>
+      </AppDetail>
 
       <!-- modifiers -->
-      <template v-if="node.modifiers.length">
-        <div class="detail">Clinical Modifiers</div>
+      <AppDetail :blank="!node.modifiers.length" title="Clinical Modifiers">
         <p>{{ node.modifiers.join("&nbsp; · &nbsp;") }}</p>
-      </template>
+      </AppDetail>
 
-      <!-- taxon -->
-      <template v-if="node.taxon.id">
-        <div class="detail">Taxon</div>
-        <AppLink :to="node.taxon.link" v-tippy="node.taxon.id">{{
-          node.taxon.name
+      <!-- taxon (gene specific)-->
+      <AppDetail
+        v-if="node.category === 'gene'"
+        :blank="!node.taxon?.id"
+        title="Taxon"
+      >
+        <AppLink :to="node.taxon?.link" v-tippy="node?.taxon?.id">{{
+          node.taxon?.name
         }}</AppLink>
-      </template>
+      </AppDetail>
 
       <!-- external references -->
-      <template v-if="node.xrefs.length">
-        <div class="detail">External References</div>
+      <AppDetail
+        :blank="!node.xrefs.length"
+        title="External References"
+        :big="true"
+      >
         <AppFlex hAlign="left" gap="small">
           <AppLink
             v-for="(xref, index) of node.xrefs"
@@ -48,17 +51,23 @@
             >{{ xref.id }}</AppLink
           >
         </AppFlex>
-      </template>
-    </AppFlex>
+      </AppDetail>
+    </AppDetails>
   </AppSection>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { Result } from "@/api/node-lookup";
+import AppDetail from "@/components/AppDetail.vue";
+import AppDetails from "@/components/AppDetails.vue";
 
 // more detailed metadata/information about node
 export default defineComponent({
+  components: {
+    AppDetails,
+    AppDetail,
+  },
   props: {
     // current node
     node: {
@@ -68,13 +77,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.detail {
-  width: 100%;
-  margin-top: 5px;
-  margin-bottom: -5px;
-  text-align: left;
-  font-weight: 600;
-}
-</style>
