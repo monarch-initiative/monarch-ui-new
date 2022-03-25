@@ -2,9 +2,13 @@
   <body>
     <script type="text/javascript">
       // 404 redirect page
+
       // only needed when navigating directly (from a fresh tab) to a sub-page
-      // when hosted on GitHub Pages, Netlify, etc. when navigating within the
-      // app, or on local dev server, vue-router handles everything.
+      // when hosted on GitHub Pages, Netlify, etc
+
+      // when navigating within the app, or on local dev server, vue-router
+      // handles everything
+
       const { origin, pathname, search, hash } = location;
       console.info(`Redirecting from ${location}`);
       window.sessionStorage.redirect = pathname + search + hash;
