@@ -9,8 +9,10 @@
       // when navigating within the app, or on local dev server, vue-router
       // handles everything
 
-      const { origin, pathname, search, hash } = location;
+      // turn on "preserve log" in chrome dev tools to still see this after nav
       console.info(`Redirecting from ${location}`);
+
+      const { origin, pathname, search, hash } = location;
       window.sessionStorage.redirect = pathname + search + hash;
       location.replace("/");
     </script>
