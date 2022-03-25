@@ -102,21 +102,6 @@ export const compareSetToSet = async (
   aPhenotypes: Array<string>,
   bPhenotypes: Array<string>
 ): Promise<CompareResult> => {
-  interface CompareResponse {
-    matches: Array<{
-      id: string;
-      label: string;
-      type: string;
-      taxon?: {
-        id?: string;
-        label?: string;
-      };
-      rank: string;
-      score: number;
-      significance: string;
-    }>;
-  }
-
   try {
     // use POST version of endpoint because GET is questionable?:
     // https://github.com/biolink/biolink-api/issues/389
@@ -170,9 +155,10 @@ const mapMatches = (response: CompareResponse) => {
     id: match.id,
     name: match.label,
     score: match.score,
-    category: match.type,
+    category: match.type || "phenotype",
     taxon: match.taxon?.label || "",
   }));
+  console.log(matches);
   const minScore = Math.min(...matches.map(({ score }) => score));
   const maxScore = Math.max(...matches.map(({ score }) => score));
 

@@ -54,7 +54,13 @@
 
   <!-- analysis top results -->
   <AppFlex v-else-if="results.matches.length">
-    <strong>Top 10 matches</strong>
+    <!-- heading -->
+    <strong v-if="results.matches.length === 1">Top match</strong>
+    <strong v-else
+      >Top {{ Math.min(results.matches.length, 10) }} matches</strong
+    >
+
+    <!-- list of results -->
     <div
       v-for="(match, index) in results.matches.slice(0, 10)"
       :key="index"
@@ -72,9 +78,28 @@
             :icon="`category-${match.category}`"
             v-tippy="startCase(match.category)"
           />
-          <AppLink :to="`/${kebabCase(match.category)}/${match.id}`">
-            {{ match.name }}
-          </AppLink>
+
+          <!-- if name of match is + separated list of phenotype ids, link to each one separately -->
+          <template v-if="match.name.includes(' + ')">
+            <template
+              v-for="(id, index) of match.name.split(' + ')"
+              :key="index"
+            >
+              <AppLink :to="`/${kebabCase(match.category)}/${id}`">
+                {{ id }}
+              </AppLink>
+              <span v-if="index !== match.name.split(' + ').length - 1">
+                +
+              </span>
+            </template>
+          </template>
+
+          <!-- otherwise, just show details as normal -->
+          <template v-else>
+            <AppLink :to="`/${kebabCase(match.category)}/${match.id}`">
+              {{ match.name }}
+            </AppLink>
+          </template>
         </div>
         <div class="match-secondary-details">
           <span v-if="match.taxon">{{ match.taxon }}</span>
