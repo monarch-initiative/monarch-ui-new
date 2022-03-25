@@ -295,7 +295,6 @@ export default defineComponent({
         // otherwise, show list of results for user to select
         else {
           this.results = response;
-          // if (!this.results.length) throw new ApiError("No results", "warning");
         }
 
         // clear status

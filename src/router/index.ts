@@ -25,40 +25,23 @@ import Testbed from "@/views/Testbed.vue";
 import { sleep } from "@/util/debug";
 import { lookupNode } from "@/api/node-lookup";
 
-// handle redirects on 404
-const redirect404: NavigationGuard = async (to): Promise<string | void> => {
-  // look for redirect in session storage (saved from 404 page)
-  const redirect = window.sessionStorage.redirect;
-  if (redirect) {
-    console.info(`Redirecting to ${redirect}`);
-    delete window.sessionStorage.redirect;
-    return redirect;
-  }
-
-  // otherwise, try to lookup node id and infer category
-  const id = to.path.slice(1) as string;
-  if (id) {
-    const node = await lookupNode(id);
-    return `/${node.category}/${id}`;
-  }
-};
-
 // list of routes and corresponding components
 // CHECK PUBLIC/SITEMAP.XML AND KEEP IN SYNC
 export const routes: Array<RouteRecordRaw> = [
-  // 404
-  {
-    path: "/:pathMatch(.*)*",
-    name: "NotFound",
-    component: Home,
-    beforeEnter: redirect404,
-  },
-
   // home page
   {
     path: "/",
     name: "Home",
     component: Home,
+    beforeEnter: (async () => {
+      // look for redirect in session storage (saved from public/404.html page)
+      const redirect = window.sessionStorage.redirect;
+      if (redirect) {
+        console.info(`Redirecting to ${redirect}`);
+        delete window.sessionStorage.redirect;
+        return redirect;
+      }
+    }) as NavigationGuard,
   },
   {
     path: "/home",
@@ -127,12 +110,32 @@ export const routes: Array<RouteRecordRaw> = [
     name: "Node",
     component: Node,
   },
+  {
+    path: "/:id",
+    name: "NodeRaw",
+    component: Home,
+    beforeEnter: (async (to) => {
+      // try to lookup node id and infer category
+      const id = to.path.slice(1) as string;
+      if (id) {
+        const node = await lookupNode(id);
+        return `/${node.category}/${id}`;
+      }
+    }) as NavigationGuard,
+  },
 
   // test pages (comment this out when we release app)
   {
     path: "/testbed",
     name: "Testbed",
     component: Testbed,
+  },
+
+  // if no other route match found (404)
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: Home,
   },
 ];
 
