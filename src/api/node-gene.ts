@@ -34,7 +34,6 @@ export const getGene = async (id = ""): Promise<Result> => {
   try {
     // format id for mygene
     const prefix = (id.split(":")[0] || "") + ":";
-    console.log(id, prefix);
     const { replace = prefix, species = "all" } = map[prefix] || {};
     id = id.replace(prefix, replace);
 

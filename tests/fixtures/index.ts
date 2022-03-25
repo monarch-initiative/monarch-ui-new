@@ -12,6 +12,7 @@ import nodeLookup from "./node-lookup.json";
 import nodeGene from "./node-gene.json";
 import nodePublicationSummary from "./node-publication-summary.json";
 import { text as nodePublicationAbstract } from "./node-publication-abstract.json";
+import nodeHierarchy from "./node-hierarchy.json";
 
 // api calls to be mocked/stubbed with fixture data
 export const handlers = [
@@ -58,5 +59,8 @@ export const handlers = [
   }),
   rest.get(/efetch\.fcgi/, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(nodePublicationAbstract));
+  }),
+  rest.get(/graph\/edges\/from/, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(nodeHierarchy));
   }),
 ];

@@ -43,7 +43,8 @@ export const getHierarchy = async (id = "", category = ""): Promise<Result> => {
 
     // make query
     const url = `${biolink}/graph/edges/from/${id}`;
-    const { nodes, edges } = await request<Response>(url, params);
+    const response = await request<Response>(url, params);
+    const { nodes, edges } = response;
 
     // take id of subject or object and find associated node label
     const idToClass = (id = ""): Class => ({

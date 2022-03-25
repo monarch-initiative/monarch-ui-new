@@ -8,8 +8,10 @@ import App from "@/App.vue";
 expect.extend(toHaveNoViolations);
 
 // get list of page paths to check
-const pages = routes.map((route) => route.path);
-// const pages = ["/feedback"];
+const exclude = ["NotFound", "Testbed"];
+const pages = routes
+  .filter((route) => !exclude.includes(String(route.name || "")))
+  .map((route) => route.path);
 
 test(
   "Page accessibility checks",
