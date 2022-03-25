@@ -40,14 +40,10 @@
       <template v-if="tokens.length" #content>
         <div class="table">
           <template v-for="(token, index) in tokens" :key="index">
-            <AppIcon
-              :icon="`category-${kebabCase(token.category)}`"
-              fallback="category-unknown"
-            />
-            <AppLink
-              :to="`/${kebabCase(token.category || 'unknown')}/${token.id}`"
-              >{{ token.id }}</AppLink
-            >
+            <AppIcon :icon="`category-${kebabCase(token.category)}`" />
+            <AppLink :to="`/${kebabCase(token.category)}/${token.id}`">{{
+              token.id
+            }}</AppLink>
             <div class="truncate">{{ token.name }}</div>
           </template>
         </div>

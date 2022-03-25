@@ -1,3 +1,4 @@
+import { mapCategory } from "./categories";
 import { biolink, request, cleanError } from ".";
 import { getXrefLink } from "./xrefs";
 import { getGene, Result as GeneResult } from "./node-gene";
@@ -48,7 +49,7 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
       id: response.id,
       originalId: id,
       name: response.label,
-      category: (response.category || [])[0],
+      category: mapCategory(response.category),
 
       // ...
       synonyms: (response.synonyms || []).map(({ val }) => val),

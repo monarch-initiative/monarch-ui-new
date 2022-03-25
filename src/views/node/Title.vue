@@ -1,17 +1,14 @@
 <template>
   <AppSection design="fill" class="section">
     <AppFlex dir="column" gap="small">
-      <AppHeading
-        :icon="`category-${kebabCase(node.category || '')}`"
-        fallbackIcon="category-unknown"
-      >
+      <AppHeading :icon="`category-${kebabCase(node.category)}`">
         {{ node.name }}
       </AppHeading>
       <AppFlex>
         <AppButton
           design="small"
           color="secondary"
-          :text="startCase(node.category || 'unknown')"
+          :text="startCase(node.category)"
           v-tippy="'The category/type of this node'"
         />
         <AppButton

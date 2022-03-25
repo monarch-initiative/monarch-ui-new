@@ -39,6 +39,10 @@ type Category = typeof categories[number];
 
 */
 
+// temporary simplified version of function in comments above
+export const mapCategory = (category: Array<string> = []): string =>
+  category[0] || "unknown";
+
 // categories that app supports
 export const categories = [
   "anatomy",

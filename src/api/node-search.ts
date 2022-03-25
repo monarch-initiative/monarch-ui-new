@@ -87,7 +87,7 @@ export const getNodeSearchResults = async (
       name: (doc.label || [])[0] || "",
       altIds: doc.equivalent_curie || [],
       altNames: (doc.label || []).slice(1),
-      category: (doc.category || [])[0] || "",
+      category: (doc.category || [])[0] || "unknown",
       description: (doc.definition || [])[0] || "",
       score: doc.score || 0,
       prefix: doc.prefix || "",

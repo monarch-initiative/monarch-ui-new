@@ -53,12 +53,11 @@
       <div class="title">
         <AppIcon
           :icon="`category-${kebabCase(result.category)}`"
-          fallback="category-unknown"
           class="type"
-          v-tippy="startCase(result.category || 'unknown')"
+          v-tippy="startCase(result.category)"
         />
         <AppLink
-          :to="`/${kebabCase(result.category || 'unknown')}/${result.id}`"
+          :to="`/${kebabCase(result.category)}/${result.id}`"
           class="name"
         >
           <span v-html="result.highlight"></span>

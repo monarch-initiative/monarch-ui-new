@@ -35,7 +35,7 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
           : async () =>
               await getPhenotypeAssociations(result.id, result.category),
       highlight: result.highlight,
-      icon: "category-" + (result.category || "unknown"),
+      icon: "category-" + result.category,
       info: result.id,
     }));
   } catch (error) {

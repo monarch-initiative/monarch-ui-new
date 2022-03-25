@@ -72,9 +72,7 @@
             :icon="`category-${match.category}`"
             v-tippy="startCase(match.category)"
           />
-          <AppLink
-            :to="`/${kebabCase(match.category || 'unknown')}/${match.id}`"
-          >
+          <AppLink :to="`/${kebabCase(match.category)}/${match.id}`">
             {{ match.name }}
           </AppLink>
         </div>
