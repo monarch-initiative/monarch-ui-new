@@ -5,7 +5,7 @@
     <AppDetails>
       <!-- main identifier -->
       <AppDetail :blank="!node.iri" title="IRI">
-        <AppLink :to="node.iri">Link</AppLink>
+        <AppLink :to="node.iri">{{ node.iri.split("/").pop() }}</AppLink>
       </AppDetail>
 
       <!-- inheritance -->
@@ -23,7 +23,7 @@
 
       <!-- modifiers -->
       <AppDetail :blank="!node.modifiers.length" title="Clinical Modifiers">
-        <p>{{ node.modifiers.join("&nbsp; · &nbsp;") }}</p>
+        <p>{{ node.modifiers.join("&nbsp; | &nbsp;") }}</p>
       </AppDetail>
 
       <!-- taxon (gene specific)-->

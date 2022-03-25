@@ -30,6 +30,7 @@ const redirect404: NavigationGuard = async (to): Promise<string | void> => {
   // look for redirect in session storage (saved from 404 page)
   const redirect = window.sessionStorage.redirect;
   if (redirect) {
+    console.info(`Redirecting to ${redirect}`);
     delete window.sessionStorage.redirect;
     return redirect;
   }

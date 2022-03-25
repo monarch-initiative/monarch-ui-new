@@ -102,7 +102,8 @@
           </template>
         </div>
         <div class="match-secondary-details">
-          <span v-if="match.taxon">{{ match.taxon }}</span>
+          <span>{{ match.id }}</span>
+          <span v-if="match.taxon">&nbsp; | &nbsp;{{ match.taxon }}</span>
         </div>
       </div>
     </div>

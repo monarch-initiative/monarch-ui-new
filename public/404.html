@@ -2,6 +2,7 @@
   <body>
     <script type="text/javascript">
       const { origin, pathname, search, hash } = location;
+      console.info(`Redirecting from ${location}`);
       window.sessionStorage.redirect = pathname + search + hash;
       location.replace("/");
     </script>
