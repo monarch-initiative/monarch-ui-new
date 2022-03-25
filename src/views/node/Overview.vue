@@ -6,12 +6,23 @@
       <!-- synonyms -->
       <template v-if="node.synonyms.length">
         <div class="detail">Also Known As</div>
-        <p>{{ node.synonyms.join("&nbsp; · &nbsp;") }}</p>
+        <AppFlex hAlign="left" gap="small">
+          <span v-for="(synonym, index) in node.synonyms" :key="index">{{
+            synonym
+          }}</span>
+        </AppFlex>
       </template>
 
+      <!-- symbol (gene specific) -->
+      <template v-if="node.symbol">
+        <div class="detail">Symbol</div>
+        <p>{{ node.symbol }}</p>
+      </template>
+
+      <!-- authors (publication specific) -->
       <template v-if="node.authors?.length">
-        <div class="detail">Description</div>
-        <p>{{ node.authors.join(" ") }}</p>
+        <div class="detail">Authors</div>
+        <p>{{ node.authors.join(", ") }}</p>
       </template>
 
       <!-- paragraph description -->

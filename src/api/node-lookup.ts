@@ -1,5 +1,6 @@
 import { biolink, request, cleanError } from ".";
 import { getXrefLink } from "./xrefs";
+import { getGene, Result as GeneResult } from "./node-gene";
 import { getPublication } from "./node-publication";
 import { getHierarchy, Result as HierarchyResult } from "./node-hierachy";
 
@@ -65,8 +66,8 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
 
       // ...
       taxon: {
-        id: response.taxon?.id,
-        name: response.taxon?.label,
+        id: response.taxon?.id || "",
+        name: response.taxon?.label || "",
         link: response.taxon?.id?.startsWith("NCBITaxon:")
           ? `https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=info&id=${response.taxon?.id.replace(
               "NCBITaxon:",
@@ -78,6 +79,14 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
       // ...
       hierarchy: await getHierarchy(id, category),
     };
+
+    // supplement gene with metadata from mygene
+    if (category === "gene" || category === "variant") {
+      const gene = await getGene(id);
+      metadata.description = gene.description;
+      metadata.symbol = gene.symbol;
+      metadata.genome = gene.genome;
+    }
 
     // supplement publication with metadata from entrez
     if (category === "publication") {
@@ -122,11 +131,13 @@ export interface Result {
   }>;
 
   // details section (gene specific)
-  taxon: {
+  taxon?: {
     id?: string;
     name?: string;
     link?: string;
   };
+  symbol?: string;
+  genome?: GeneResult["genome"];
 
   // details section (publication specific)
   authors?: Array<string>;

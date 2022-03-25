@@ -2,7 +2,7 @@ import { request, cleanError } from ".";
 // entrez endpoint for getting publication metadata
 const entrez = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
 
-// get metadata of publication
+// get metadata of publication from entrez
 export const getPublication = async (id = ""): Promise<Result> => {
   try {
     id = id.replace("PMID:", "");
