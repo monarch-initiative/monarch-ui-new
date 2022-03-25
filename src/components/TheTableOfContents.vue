@@ -11,9 +11,9 @@
     @click.stop
   >
     <!-- toggle button -->
-    <AppFlex gap="none" hAlign="left" class="title">
+    <div class="title">
       <button
-        class="button"
+        class="title-button"
         @click="expanded = !expanded"
         :aria-expanded="expanded"
         v-tippy="
@@ -22,8 +22,8 @@
       >
         <AppIcon :icon="expanded ? 'times' : 'bars'" />
       </button>
-      <span v-if="expanded" class="title-text">Table of Contents</span>
-    </AppFlex>
+      <span v-if="expanded" class="title-text truncate">Table of Contents</span>
+    </div>
 
     <template v-if="expanded">
       <div class="spacer"></div>
@@ -36,7 +36,6 @@
         class="entry"
         :data-active="active === index"
         @click="active = index"
-        @keydown="active = index"
         :aria-current="active === index"
       >
         <AppIcon :icon="entry.icon" class="entry-icon" />
@@ -195,9 +194,15 @@ export default defineComponent({
   max-width: calc(100vw - 40px);
 }
 
-.button {
+.title {
+  display: flex;
+  align-items: center;
+}
+
+.title-button {
   width: 40px;
   height: 40px;
+  flex-shrink: 0;
 }
 
 .title-text {

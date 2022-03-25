@@ -5,18 +5,18 @@ import AppSelectTags from "@/components/AppSelectTags.vue";
 const props = {
   name: "Tags select",
   options: (search: string) => {
-    const ids = search.split(/\s*,\s*/);
+    const ids = search.split(",");
     if (ids.length >= 2)
-      return { autoAccept: true, options: ids.map((id) => ({ value: id })) };
+      return { autoAccept: true, options: ids.map((id) => ({ id })) };
     else
       return [
-        { value: "fruits" },
-        { value: "vegetables", count: 7 },
-        { value: "colors", count: 42 },
-        { value: "animals" },
-      ].filter((entry) => entry.value.includes(search));
+        { id: "fruits" },
+        { id: "vegetables", count: 7 },
+        { id: "colors", count: 42 },
+        { id: "animals" },
+      ].filter((entry) => entry.id.includes(search));
   },
-  modelValue: [{ value: "animals" }],
+  modelValue: [{ id: "animals" }],
 };
 
 // expected type of emitted update:modelValue events
@@ -49,6 +49,7 @@ test("Pastes to autoSelect", async () => {
   expect(buttons.at(1)?.text()).toEqual("HP:0000322");
   expect(buttons.at(2)?.text()).toEqual("HP:0001166");
   expect(buttons.at(3)?.text()).toEqual("HP:0001238");
+  expect(emitted<T>(wrapper, "autoAccept"));
 });
 
 test("Clicks to select", async () => {

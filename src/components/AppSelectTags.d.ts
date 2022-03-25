@@ -1,23 +1,26 @@
 export type Option = {
   // unique id used in state of select
-  value: number | string;
+  id: string;
+  // icon name
+  icon?: string;
+  // display name
+  name?: string;
+  // highlighting html
+  highlight?: string;
+  // info col
+  info?: string;
   // allows returning multiple options instead when selecting this option
   // e.g. clicking a gene result and getting/selecting its 8 associated phenotypes instead
   getOptions?: () => Promise<Array<Option>>;
-  // highlighting html
-  highlight?: string;
-  // display name
-  label?: string;
-  // icon name
-  icon?: string;
-  // info col
-  info?: number | string;
 };
 
 export type Options = Array<Option>;
 
+// instead of providing a static list of options, you can provide this function
+// that receives the user-typed search string and dynamically returns a list
+// of options
 export type OptionsFunc = (
-  value: string
+  search: string
 ) => Promise<
   Options | { autoAccept: boolean; options: Options; message: string }
 >;

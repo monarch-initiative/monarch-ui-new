@@ -204,7 +204,7 @@ strong {
   white-space: nowrap;
 }
 
-@for $i from 1 through 5 {
+@for $i from 1 through 10 {
   .truncate-#{$i}:focus {
     outline: solid 2px $black;
   }

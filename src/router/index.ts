@@ -7,7 +7,7 @@ import {
   NavigationGuard,
   RouteLocation,
 } from "vue-router";
-import { lowerCase } from "lodash";
+import { lowerCase, clone } from "lodash";
 import { hideAll } from "tippy.js";
 import Home from "@/views/Home.vue";
 import Explore from "@/views/explore/Explore.vue";
@@ -25,41 +25,30 @@ import Testbed from "@/views/Testbed.vue";
 import { sleep } from "@/util/debug";
 import { lookupNode } from "@/api/node-lookup";
 
-// handle redirects on 404
-const redirect404: NavigationGuard = async (to): Promise<string | void> => {
-  // look for redirect in session storage (saved from 404 page)
-  const redirect = window.sessionStorage.redirect;
-  if (redirect) {
-    delete window.sessionStorage.redirect;
-    return redirect;
-  }
-
-  // otherwise, try to lookup node id and infer category
-  const id = to.params.id as string;
-  if (id) {
-    const node = await lookupNode(id);
-    return `/${node.category}/${id}`;
-  }
-};
-
-// test pages to only include during development
-let testRoutes: Array<RouteRecordRaw> = [];
-if (process.env.NODE_ENV === "development")
-  testRoutes = [{ path: "/testbed", name: "Testbed", component: Testbed }];
-
 // list of routes and corresponding components
 // CHECK PUBLIC/SITEMAP.XML AND KEEP IN SYNC
 export const routes: Array<RouteRecordRaw> = [
+  // home page
   {
     path: "/",
     name: "Home",
     component: Home,
-    beforeEnter: redirect404,
+    beforeEnter: (async () => {
+      // look for redirect in session storage (saved from public/404.html page)
+      const redirect = window.sessionStorage.redirect;
+      if (redirect) {
+        console.info(`Redirecting to ${redirect}`);
+        delete window.sessionStorage.redirect;
+        return redirect;
+      }
+    }) as NavigationGuard,
   },
   {
     path: "/home",
     redirect: "/",
   },
+
+  // top level pages
   {
     path: "/explore",
     name: "Explore",
@@ -70,6 +59,13 @@ export const routes: Array<RouteRecordRaw> = [
     name: "About",
     component: About,
   },
+  {
+    path: "/help",
+    name: "Help",
+    component: Help,
+  },
+
+  // about pages
   {
     path: "/overview",
     name: "Overview",
@@ -100,23 +96,47 @@ export const routes: Array<RouteRecordRaw> = [
     name: "Terms",
     component: Terms,
   },
-  {
-    path: "/help",
-    name: "Help",
-    component: Help,
-  },
+
+  // help pages
   {
     path: "/feedback",
     name: "Feedback",
     component: Feedback,
   },
+
+  // node pages
   {
     path: "/:category/:id",
     name: "Node",
     component: Node,
   },
+  {
+    path: "/:id",
+    name: "NodeRaw",
+    component: Home,
+    beforeEnter: (async (to) => {
+      // try to lookup node id and infer category
+      const id = to.path.slice(1) as string;
+      if (id) {
+        const node = await lookupNode(id);
+        return `/${node.category}/${id}`;
+      }
+    }) as NavigationGuard,
+  },
 
-  ...testRoutes,
+  // test pages (comment this out when we release app)
+  {
+    path: "/testbed",
+    name: "Testbed",
+    component: Testbed,
+  },
+
+  // if no other route match found (404)
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: Home,
+  },
 ];
 
 // vue-router's scroll behavior handler
@@ -167,27 +187,31 @@ export const scrollToHash = (): void => {
   window.scrollBy(0, -top);
 };
 
+// navigation history object
+const history = createWebHistory(process.env.BASE_URL);
+
 // router object
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history,
   routes,
   scrollBehavior,
 });
 
 // set document title after route
-router.afterEach(async ({ name, query, hash }) => {
+router.afterEach(async ({ name, query, params, hash }) => {
   // https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
   await nextTick();
 
-  // get name of page
+  // get name of page (route name prop)
   const page = typeof name === "string" ? name : "";
 
-  // get "sub page"
+  // get "sub page" (e.g. explore mode hash)
   const subpage = lowerCase(hash.slice(1));
 
   // get extra details from url params
   let details = "";
   if (query.search) details = `"${query.search}"`;
+  if (params.id) details = `${params.id}`;
 
   // combine into document title
   if (document)
@@ -202,3 +226,16 @@ router.beforeEach(() => {
 });
 
 export default router;
+
+// dirty way to allow passing arbitrary data with router.push
+// will no longer be needed once this vue-router RFC is implemented:
+// https://github.com/vuejs/rfcs/discussions/400
+let routeData: unknown = null;
+export const setData = (data: unknown): void => {
+  routeData = data;
+};
+export const getData = (): unknown => {
+  const copy = clone(routeData);
+  routeData = null; // reset after data consumed once
+  return copy;
+};

@@ -5,12 +5,12 @@ import AppSelectMulti from "@/components/AppSelectMulti.vue";
 const props = {
   name: "Multi select",
   options: [
-    { value: "fruits", count: 0 },
-    { value: "vegetables", count: 7 },
-    { value: "colors", count: 42 },
-    { value: "animals", count: 999 },
+    { id: "fruits", count: 0 },
+    { id: "vegetables", count: 7 },
+    { id: "colors", count: 42 },
+    { id: "animals", count: 999 },
   ],
-  modelValue: [{ value: "vegetables" }],
+  modelValue: [{ id: "vegetables" }],
 };
 
 test("Opens/closes on click", async () => {

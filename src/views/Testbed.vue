@@ -187,8 +187,8 @@ export default defineComponent({
           {
             key: "score",
             heading: "Score",
-            availableFilters: [{ value: "numbers" }, { value: "nulls" }],
-            activeFilters: [{ value: "numbers" }],
+            availableFilters: [{ id: "numbers" }, { id: "nulls" }],
+            activeFilters: [{ id: "numbers" }],
             sortable: true,
           },
           {
@@ -229,27 +229,27 @@ export default defineComponent({
       ],
       singleSelectValue: "durian",
       multiSelectOptions: [
-        { value: "fruits", count: 0 },
-        { value: "vegetables", count: 7 },
-        { value: "colors", count: 42 },
-        { value: "animals", count: 999 },
-        { value: "cars" },
-        { value: "schools" },
-        { value: "appliances" },
+        { id: "fruits", count: 0 },
+        { id: "vegetables", count: 7 },
+        { id: "colors", count: 42 },
+        { id: "animals", count: 999 },
+        { id: "cars" },
+        { id: "schools" },
+        { id: "appliances" },
       ],
-      multiSelectValue: [{ value: "vegetables" }],
+      multiSelectValue: [{ id: "vegetables" }],
       tagsSelectOptions: async (search = "") => {
         await sleep(200);
         return [
-          { value: "ice cream", icon: "home" },
-          { value: "candy", icon: "database", count: "8 phenotypes" },
-          { value: "gummies", icon: "download", count: "4 phenotypes" },
-          { value: "brownies", icon: "puzzle-piece", count: "1 phenotype" },
-          { value: "cookies", icon: "comment" },
-        ].filter(({ value }) => value.includes(search));
+          { id: "ice cream", icon: "home" },
+          { id: "candy", icon: "database", count: "8 phenotypes" },
+          { id: "gummies", icon: "download", count: "4 phenotypes" },
+          { id: "brownies", icon: "puzzle-piece", count: "1 phenotype" },
+          { id: "cookies", icon: "comment" },
+        ].filter(({ id }) => id.includes(search));
       },
       tagsSelectValue: [
-        { value: "candy", icon: "database", count: "8 phenotypes" },
+        { id: "candy", icon: "database", count: "8 phenotypes" },
       ],
     };
   },

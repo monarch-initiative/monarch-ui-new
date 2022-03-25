@@ -53,12 +53,11 @@
       <div class="title">
         <AppIcon
           :icon="`category-${kebabCase(result.category)}`"
-          fallback="category-unknown"
           class="type"
-          v-tippy="startCase(result.category || 'unknown')"
+          v-tippy="startCase(result.category)"
         />
         <AppLink
-          :to="`/${kebabCase(result.category || 'unknown')}/${result.id}`"
+          :to="`/${kebabCase(result.category)}/${result.id}`"
           class="name"
         >
           <span v-html="result.highlight"></span>
@@ -73,7 +72,7 @@
           v-tippy="'Node ID (click to copy)'"
         />
       </div>
-      <p class="truncate-3" tabindex="0">
+      <p class="truncate-3" tabindex="0" v-tippy="'Click to expand'">
         {{ result.description || "No description available" }}
       </p>
       <p v-if="result.altNames?.length" class="names truncate-1" tabindex="0">
@@ -91,16 +90,19 @@
         <strong>{{ count }}</strong> results
       </div>
       <AppFlex gap="small">
-        <button
-          v-for="index of pages"
-          :key="index"
-          @click="page = index"
-          class="nav-button"
-          :disabled="index === page"
-          v-tippy="`Go to page ${index + 1} of results`"
-        >
-          {{ index + 1 }}
-        </button>
+        <template v-for="(list, index) of pages" :key="index">
+          <button
+            v-for="pageNumber of list"
+            :key="pageNumber"
+            @click="page = pageNumber"
+            class="page-button"
+            :disabled="pageNumber === page"
+            v-tippy="`Go to page ${pageNumber + 1} of results`"
+          >
+            {{ pageNumber + 1 }}
+          </button>
+          <span v-if="index !== pages.length - 1">...</span>
+        </template>
       </AppFlex>
     </AppFlex>
   </template>
@@ -108,7 +110,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { kebabCase, startCase } from "lodash";
+import { kebabCase, startCase, uniq } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
@@ -123,11 +125,11 @@ const examples = ["Marfan Syndrome", "Multicystic Kidney Dysplasia", "SSH"];
 // default filters to show before anything typed in
 // const defaultFilters = {
 //   category: [
-//     { value: "gene" },
-//     { value: "disease" },
-//     { value: "phenotype" },
-//     { value: "genotype" },
-//     { value: "variant" },
+//     { id: "gene" },
+//     { id: "disease" },
+//     { id: "phenotype" },
+//     { id: "genotype" },
+//     { id: "variant" },
 //   ],
 // };
 
@@ -268,10 +270,41 @@ export default defineComponent({
       return this.from + this.results.length - 1;
     },
     // pages of results
-    pages(): Array<number> {
-      return Array(Math.ceil(this.count / 10))
+    pages(): Array<Array<number>> {
+      // get full list of pages
+      const pages = Array(Math.ceil(this.count / this.perPage))
         .fill(0)
         .map((_, i) => i);
+
+      // make shorter pages list
+      let list = [
+        // first few pages
+        0,
+        1,
+        2,
+        // current few pages
+        this.page - 1,
+        this.page,
+        this.page + 1,
+        // last few pages
+        pages.length - 3,
+        pages.length - 2,
+        pages.length - 1,
+      ];
+
+      // sort, deduplicate, and clamp list
+      list.sort((a, b) => a - b);
+      list = uniq(list).filter((page) => page >= 0 && page <= pages.length - 1);
+
+      // split into sub lists where page numbers are not sequential
+      const splitList: Array<Array<number>> = [[]];
+      for (let index = 0; index < list.length; index++) {
+        if (list[index - 1] && list[index] - list[index - 1] > 1)
+          splitList.push([]);
+        splitList[splitList.length - 1].push(list[index]);
+      }
+
+      return splitList;
     },
   },
   mounted() {
@@ -323,9 +356,9 @@ b {
   font-weight: 600;
 }
 
-.nav-button {
-  width: 20px;
+.page-button {
   height: 30px;
+  padding: 0 3px;
   color: $theme-dark;
   border-radius: $rounded;
   transition: box-shadow $fast;

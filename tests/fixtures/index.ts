@@ -9,6 +9,10 @@ import textAnnotator from "./text-annotator.json";
 import phenotypeExplorerSearch from "./phenotype-explorer-search.json";
 import phenotypeExplorerCompare from "./phenotype-explorer-compare.json";
 import nodeLookup from "./node-lookup.json";
+import nodeGene from "./node-gene.json";
+import nodePublicationSummary from "./node-publication-summary.json";
+import { text as nodePublicationAbstract } from "./node-publication-abstract.json";
+import nodeHierarchy from "./node-hierarchy.json";
 
 // api calls to be mocked/stubbed with fixture data
 export const handlers = [
@@ -37,6 +41,26 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(phenotypeExplorerCompare));
   }),
   rest.get(/\/bioentity\//i, (req, res, ctx) => {
+    // change category of fixture data based on request so we can see UI that
+    // is conditional on category
+    const category =
+      (req.url.pathname.match(/\/api\/bioentity\/(.*)\//) || [])[1] || "";
+    nodeLookup.category = [category];
+    // note that this will show (in yarn test:gui) silly things like
+    // "Marfan syndrome: gene", because only the category field is changed
+
     return res(ctx.status(200), ctx.json(nodeLookup));
+  }),
+  rest.get(/mygene\.info/, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(nodeGene));
+  }),
+  rest.get(/esummary\.fcgi/, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(nodePublicationSummary));
+  }),
+  rest.get(/efetch\.fcgi/, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(nodePublicationAbstract));
+  }),
+  rest.get(/graph\/edges\/from/, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(nodeHierarchy));
   }),
 ];

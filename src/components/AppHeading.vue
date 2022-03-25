@@ -127,6 +127,7 @@ h3 {
   h3 {
     .icon {
       color: $theme-dark;
+      height: 1.2em;
     }
   }
 }

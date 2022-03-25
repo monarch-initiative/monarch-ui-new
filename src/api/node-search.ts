@@ -29,7 +29,7 @@ export interface Filters {
 
 // util func to convert multi-select options type into filters type
 export const mapFilters = (filters: Record<string, Options>): Filters =>
-  mapValues(filters, (array) => array.map((entry) => entry.value)) as Filters;
+  mapValues(filters, (array) => array.map(({ id }) => id)) as Filters;
 
 // get results from node search text and filters
 export const getNodeSearchResults = async (
@@ -84,11 +84,10 @@ export const getNodeSearchResults = async (
     // convert into desired result format
     const results = docs.map((doc) => ({
       id: doc.id || "",
-      altIds: doc.equivalent_curie || [],
       name: (doc.label || [])[0] || "",
+      altIds: doc.equivalent_curie || [],
       altNames: (doc.label || []).slice(1),
-      category: (doc.category || [])[0] || "",
-      label: (doc.label || [])[0] || "",
+      category: (doc.category || [])[0] || "unknown",
       description: (doc.definition || [])[0] || "",
       score: doc.score || 0,
       prefix: doc.prefix || "",
@@ -102,8 +101,8 @@ export const getNodeSearchResults = async (
     const facets: Result["facets"] = {};
     for (const [name, facet] of Object.entries(facet_counts)) {
       facets[name] = [];
-      for (const [value, count] of Object.entries(facet)) {
-        facets[name].push({ value, count });
+      for (const [id, count] of Object.entries(facet)) {
+        facets[name].push({ id, count });
       }
     }
 
@@ -123,11 +122,10 @@ export interface Result {
   count: number;
   results: Array<{
     id: string;
-    altIds?: Array<string>;
     name?: string;
+    altIds?: Array<string>;
     altNames?: Array<string>;
     category?: string;
-    label?: string;
     description?: string;
     score?: number;
     prefix?: string;
@@ -136,10 +134,8 @@ export interface Result {
   facets: Record<
     string,
     Array<{
-      value: number | string;
-      icon?: string;
-      label?: string;
-      count?: number | string;
+      id: string;
+      count?: number;
     }>
   >;
 }

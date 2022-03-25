@@ -2,7 +2,7 @@ import { request, cleanError } from ".";
 import { Status } from "@/components/AppStatus";
 
 // uptimerobot api endpoint
-const api = "https://api.uptimerobot.com/v2/getMonitors";
+const uptimeRobot = "https://api.uptimerobot.com/v2/getMonitors";
 // read-only api key, safe to be distributed
 const key = "ur1488940-1c05ba09e0aef926989d6593";
 // uptimerobot.org page for statuses
@@ -31,7 +31,7 @@ export const getUptimes = async (): Promise<Result> => {
     // get data from endpoint
     const params = { api_key: key };
     const options = { method: "POST" };
-    const response = await request<Response>(api, params, options);
+    const response = await request<Response>(uptimeRobot, params, options);
     const { monitors = [] } = response;
 
     // map uptimerobot status codes to our simplified status codes in status component

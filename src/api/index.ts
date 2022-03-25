@@ -4,13 +4,15 @@ import { Codes } from "@/components/AppStatus";
 export const biolink = "https://api.monarchinitiative.org/api";
 
 // generic fetch request wrapper
-export const request = async <T = unknown>(
+export const request = async <T>(
   // request url
   path = "",
   // url params. comma-separated values expand to repeated keys.
   params = {},
   // fetch options
-  options = {}
+  options = {},
+  // parse response mode
+  parse = "json"
 ): Promise<T> => {
   // get string of url parameters/options
   const paramsObject = new URLSearchParams();
@@ -28,9 +30,10 @@ export const request = async <T = unknown>(
   console.info("Making request", url.replaceAll(" ", "%20"));
   const response = await fetch(url, options);
   if (!response.ok) throw new ApiError(`Response not OK`);
-  const json = await response.json();
 
-  return json;
+  // parse response
+  if (parse === "text") return (await response.text()) as unknown as T;
+  else return await response.json();
 };
 
 // takes generic error and turns it into consistent api error
@@ -42,9 +45,10 @@ export const cleanError = (error: unknown): ApiError => {
 
   // if this error hasn't already been logged
   if (!(error as ApiError).logged) {
-    // log error to console like normal for advanced debugging
+    // log error to console like normal for advanced debugging and stack trace
+    // but wrap in group to distinguish between unhandled errors
     console.groupCollapsed((error as ApiError).text);
-    console.info(error);
+    console.error(error);
     console.groupEnd();
     (error as ApiError).logged = true;
   }

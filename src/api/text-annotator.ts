@@ -1,3 +1,4 @@
+import { mapCategory } from "./categories";
 import { biolink, ApiError, request, cleanError } from "./index";
 
 interface Response {
@@ -62,8 +63,8 @@ export const annotateText = async (content = ""): Promise<Result> => {
           .filter((token) => token)
           .map((token) => ({
             id: token.id,
-            category: token.category[0],
-            terms: token.terms.join(", "),
+            name: token.terms.join(", "),
+            category: mapCategory(token.category),
           })),
       });
     }
@@ -78,7 +79,7 @@ export type Result = Array<{
   text: string;
   tokens: Array<{
     id: string;
+    name: string;
     category: string;
-    terms: string;
   }>;
 }>;

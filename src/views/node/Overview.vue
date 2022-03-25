@@ -1,25 +1,70 @@
 <template>
   <AppSection>
     <AppHeading icon="lightbulb">Overview</AppHeading>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-      cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-      est laborum.
-    </p>
-    <p>
-      Elementum eu facilisis sed odio morbi quis commodo. Ut eu sem integer
-      vitae justo eget magna fermentum iaculis. Ultrices vitae auctor eu augue
-      ut lectus arcu. Eget nulla facilisi etiam dignissim diam. In arcu cursus
-      euismod quis viverra nibh cras pulvinar. Lacus sed viverra tellus in hac
-      habitasse platea. Augue mauris augue neque gravida. Dolor sit amet
-      consectetur adipiscing elit pellentesque habitant morbi tristique.
-      Accumsan in nisl nisi scelerisque. Felis bibendum ut tristique et egestas
-      quis ipsum suspendisse. Et netus et malesuada fames ac turpis egestas
-      maecenas. Tellus rutrum tellus pellentesque eu tincidunt tortor.
-    </p>
+
+    <AppDetails>
+      <!-- synonyms -->
+      <AppDetail :blank="!node.synonyms.length" title="Also Known As">
+        <p>{{ node.synonyms.join(" | ") }}</p>
+      </AppDetail>
+
+      <!-- symbol (gene specific) -->
+      <AppDetail
+        v-if="node.category === 'gene'"
+        :blank="!node.symbol"
+        title="Symbol"
+      >
+        <p>{{ node.symbol }}</p>
+      </AppDetail>
+
+      <!-- authors (publication specific) -->
+      <AppDetail
+        v-if="node.category === 'publication'"
+        :blank="!node.authors?.length"
+        title="Authors"
+      >
+        <p>{{ node.authors?.join(", ") }}</p>
+      </AppDetail>
+
+      <!-- paragraph description -->
+      <AppDetail :blank="!node.description" title="Description" :big="true">
+        <p
+          class="description truncate-10"
+          tabindex="0"
+          v-html="node.description.trim()"
+          v-tippy="'Click to expand'"
+        ></p>
+      </AppDetail>
+    </AppDetails>
   </AppSection>
 </template>
+
+<script lang="ts">
+import { defineComponent, PropType } from "vue";
+import { Result } from "@/api/node-lookup";
+import AppDetails from "@/components/AppDetails.vue";
+import AppDetail from "@/components/AppDetail.vue";
+
+// basic, high level information about node
+export default defineComponent({
+  components: {
+    AppDetails,
+    AppDetail,
+  },
+  props: {
+    // current node
+    node: {
+      type: Object as PropType<Result>,
+      required: true,
+    },
+  },
+});
+</script>
+
+<style lang="scss" scoped>
+.description {
+  width: 100%;
+  overflow-x: auto;
+  white-space: pre-line;
+}
+</style>
