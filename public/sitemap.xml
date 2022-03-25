@@ -11,11 +11,12 @@
     <loc>https://monarchinitiative.org/</loc>
     <loc>https://monarchinitiative.org/home</loc>
 
-    <!-- explore -->
+    <!-- top level pages -->
     <loc>https://monarchinitiative.org/explore</loc>
-
-    <!-- about -->
     <loc>https://monarchinitiative.org/about</loc>
+    <loc>https://monarchinitiative.org/help</loc>
+
+    <!-- about pages -->
     <loc>https://monarchinitiative.org/overview</loc>
     <loc>https://monarchinitiative.org/api</loc>
     <loc>https://monarchinitiative.org/sources</loc>
@@ -24,8 +25,7 @@
     <loc>https://monarchinitiative.org/publications</loc>
     <loc>https://monarchinitiative.org/terms</loc>
 
-    <!-- help -->
-    <loc>https://monarchinitiative.org/help</loc>
+    <!-- help pages -->
     <loc>https://monarchinitiative.org/feedback</loc>
   </url>
 </urlset>

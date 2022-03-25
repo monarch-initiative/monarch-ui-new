@@ -42,20 +42,18 @@ const redirect404: NavigationGuard = async (to): Promise<string | void> => {
   }
 };
 
-// test pages to only include during development
-let testRoutes: Array<RouteRecordRaw> = [];
-if (process.env.NODE_ENV === "development")
-  testRoutes = [{ path: "/testbed", name: "Testbed", component: Testbed }];
-
 // list of routes and corresponding components
 // CHECK PUBLIC/SITEMAP.XML AND KEEP IN SYNC
 export const routes: Array<RouteRecordRaw> = [
+  // 404
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
     component: Home,
     beforeEnter: redirect404,
   },
+
+  // home page
   {
     path: "/",
     name: "Home",
@@ -65,6 +63,8 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/home",
     redirect: "/",
   },
+
+  // top level pages
   {
     path: "/explore",
     name: "Explore",
@@ -75,6 +75,13 @@ export const routes: Array<RouteRecordRaw> = [
     name: "About",
     component: About,
   },
+  {
+    path: "/help",
+    name: "Help",
+    component: Help,
+  },
+
+  // about pages
   {
     path: "/overview",
     name: "Overview",
@@ -105,23 +112,27 @@ export const routes: Array<RouteRecordRaw> = [
     name: "Terms",
     component: Terms,
   },
-  {
-    path: "/help",
-    name: "Help",
-    component: Help,
-  },
+
+  // help pages
   {
     path: "/feedback",
     name: "Feedback",
     component: Feedback,
   },
+
+  // node pages
   {
     path: "/:category/:id",
     name: "Node",
     component: Node,
   },
 
-  ...testRoutes,
+  // test pages (comment this out when we release app)
+  {
+    path: "/testbed",
+    name: "Testbed",
+    component: Testbed,
+  },
 ];
 
 // vue-router's scroll behavior handler

@@ -73,7 +73,7 @@
           v-tippy="'Node ID (click to copy)'"
         />
       </div>
-      <p class="truncate-3" tabindex="0">
+      <p class="truncate-3" tabindex="0" v-tippy="'Click to expand'">
         {{ result.description || "No description available" }}
       </p>
       <p v-if="result.altNames?.length" class="names truncate-1" tabindex="0">

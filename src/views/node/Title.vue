@@ -59,7 +59,8 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .section {
-  padding: 30px !important;
+  padding-top: 30px !important;
+  padding-bottom: 30px !important;
 }
 
 .button {

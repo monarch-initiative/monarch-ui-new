@@ -4,7 +4,7 @@ import { mergeArrays } from "@/util/object";
 import { Source } from "./source";
 
 // source for ontology metadata
-const api = "https://obofoundry.org/registry/ontologies.jsonld";
+const obo = "https://obofoundry.org/registry/ontologies.jsonld";
 
 interface Response {
   ontologies: Array<{
@@ -20,7 +20,7 @@ interface Response {
 // get metadata of all ontologies listed on obo
 export const getOntologies = async (): Promise<Result> => {
   try {
-    const response = await request<Response>(api);
+    const response = await request<Response>(obo);
 
     // convert results to desired format
     let ontologies = response.ontologies.map(

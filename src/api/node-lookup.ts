@@ -1,5 +1,6 @@
-import { getXrefLink } from "./xrefs";
 import { biolink, request, cleanError } from ".";
+import { getXrefLink } from "./xrefs";
+import { getPublication } from "./node-publication";
 import { getHierarchy, Result as HierarchyResult } from "./node-hierachy";
 
 interface Response {
@@ -41,13 +42,18 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
     const response = await request<Response>(url);
 
     // convert into desired result format
-    const metadata = {
+    const metadata: Result = {
+      // see result interface below...
       id: response.id,
       originalId: id,
       name: response.label,
       category: (response.category || [])[0],
-      description: response.description || "",
+
+      // ...
       synonyms: (response.synonyms || []).map(({ val }) => val),
+      description: response.description || "",
+
+      // ...
       iri: response.iri,
       inheritance: (response.inheritance || []).map(({ id, label, iri }) => ({
         id,
@@ -55,6 +61,9 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
         link: iri,
       })),
       modifiers: (response.clinical_modifiers || []).map(({ label }) => label),
+      xrefs: response.xrefs.map((id) => ({ id, link: getXrefLink(id) })),
+
+      // ...
       taxon: {
         id: response.taxon?.id,
         name: response.taxon?.label,
@@ -65,9 +74,21 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
             )}`
           : "",
       },
-      xrefs: response.xrefs.map((id) => ({ id, link: getXrefLink(id) })),
+
+      // ...
       hierarchy: await getHierarchy(id, category),
     };
+
+    // supplement publication with metadata from entrez
+    if (category === "publication") {
+      const publication = await getPublication(id);
+      metadata.name = publication.title;
+      metadata.description = publication.abstract;
+      metadata.authors = publication.authors;
+      metadata.date = publication.date;
+      metadata.doi = publication.doi;
+      metadata.journal = publication.journal;
+    }
 
     return metadata;
   } catch (error) {
@@ -75,13 +96,19 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
   }
 };
 
+// structure mirrors sections on node page
 export interface Result {
+  // title section
   id: string;
   originalId: string;
   name: string;
   category: string;
-  description: string;
+
+  // overview section
   synonyms: Array<string>;
+  description: string;
+
+  // details section
   iri: string;
   inheritance: Array<{
     id: string;
@@ -89,14 +116,24 @@ export interface Result {
     link: string;
   }>;
   modifiers: Array<string>;
+  xrefs: Array<{
+    id: string;
+    link: string;
+  }>;
+
+  // details section (gene specific)
   taxon: {
     id?: string;
     name?: string;
     link?: string;
   };
-  xrefs: Array<{
-    id: string;
-    link: string;
-  }>;
+
+  // details section (publication specific)
+  authors?: Array<string>;
+  date?: Date;
+  doi?: string;
+  journal?: string;
+
+  // hierarchy section
   hierarchy: HierarchyResult;
 }

@@ -9,10 +9,20 @@
         <p>{{ node.synonyms.join("&nbsp; · &nbsp;") }}</p>
       </template>
 
+      <template v-if="node.authors?.length">
+        <div class="detail">Description</div>
+        <p>{{ node.authors.join(" ") }}</p>
+      </template>
+
       <!-- paragraph description -->
       <template v-if="node.description">
         <div class="detail">Description</div>
-        <p v-html="node.description"></p>
+        <p
+          class="description truncate-10"
+          tabindex="0"
+          v-html="node.description.trim()"
+          v-tippy="'Click to expand'"
+        ></p>
       </template>
     </AppFlex>
   </AppSection>
@@ -41,5 +51,11 @@ export default defineComponent({
   margin-bottom: -5px;
   text-align: left;
   font-weight: 600;
+}
+
+.description {
+  width: 100%;
+  overflow-x: auto;
+  white-space: pre-line;
 }
 </style>

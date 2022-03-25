@@ -1,7 +1,16 @@
 <template>
   <AppSection>
     <AppHeading icon="sitemap">Hierarchy</AppHeading>
-    <div class="hierarchy">
+
+    <!-- results -->
+    <div
+      v-if="
+        node.hierarchy.superClasses.length ||
+        node.hierarchy.equivalentClasses.length ||
+        node.hierarchy.subClasses.length
+      "
+      class="hierarchy"
+    >
       <!-- nodes that are "parents" of node -->
       <template v-if="node.hierarchy.superClasses.length">
         <AppFlex
@@ -59,12 +68,19 @@
         </AppFlex>
       </template>
     </div>
+
+    <!-- empty status -->
+    <AppStatus
+      v-else
+      :status="{ code: 'warning', text: 'No hierarchy info available' }"
+    />
   </AppSection>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { Result } from "@/api/node-lookup";
+import AppStatus from "@/components/AppStatus.vue";
 
 // hierarchy info about node
 export default defineComponent({
@@ -75,6 +91,7 @@ export default defineComponent({
       required: true,
     },
   },
+  components: { AppStatus },
 });
 </script>
 
