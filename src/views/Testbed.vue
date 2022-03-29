@@ -204,12 +204,14 @@ export default defineComponent({
       table: {
         cols: [
           {
+            id: "name",
             key: "name",
             heading: "Name",
             align: "left",
             sortable: true,
           },
           {
+            id: "score",
             key: "score",
             heading: "Score",
             availableFilters: [{ id: "numbers" }, { id: "nulls" }],
@@ -217,12 +219,14 @@ export default defineComponent({
             sortable: true,
           },
           {
+            id: "details",
             key: "details",
             heading: "Details",
             align: "left",
             sortable: true,
           },
           {
+            id: "arbitrary",
             key: "arbitrary",
             heading: "Arbitrary",
             align: "right",

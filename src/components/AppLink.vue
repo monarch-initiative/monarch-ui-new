@@ -6,7 +6,7 @@
 
   <a v-else-if="isAbsolute" :href="to" target="_blank">
     <!-- use regular html link for absolute urls -->
-    <template v-if="isExternal && isPlainText">
+    <template v-if="isExternal && isPlainText && !noIcon">
       <span>
         <slot />
       </span>
@@ -31,6 +31,11 @@ export default defineComponent({
   props: {
     // location to link to
     to: String,
+    // whether to forcibly forgo external icon when link is external
+    noIcon: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     // is "to" prop an external url

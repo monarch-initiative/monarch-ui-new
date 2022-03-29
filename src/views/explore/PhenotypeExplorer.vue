@@ -66,14 +66,17 @@
       :key="index"
       class="match"
     >
+      <!-- ring score -->
       <AppRing
         :score="match.score"
         :min="results.minScore"
         :max="results.maxScore"
         v-tippy="'Similarity score'"
       />
-      <div direction="col" class="match-details">
-        <div class="match-primary-details">
+
+      <AppFlex direction="col" hAlign="left" gap="small" class="details">
+        <!-- primary match info -->
+        <div class="primary">
           <AppIcon
             :icon="`category-${match.category}`"
             v-tippy="startCase(match.category)"
@@ -101,11 +104,13 @@
             </AppLink>
           </template>
         </div>
-        <div class="match-secondary-details">
+
+        <!-- secondary match info -->
+        <div class="secondary">
           <span>{{ match.id }}</span>
           <span v-if="match.taxon">&nbsp; | &nbsp;{{ match.taxon }}</span>
         </div>
-      </div>
+      </AppFlex>
     </div>
   </AppFlex>
 
@@ -353,19 +358,13 @@ export default defineComponent({
 
 .match {
   display: flex;
-  justify-content: center;
   align-items: center;
   width: 100%;
   gap: 40px;
 }
 
-.match-details {
+.details {
   flex-grow: 1;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  gap: 10px;
-  text-align: left;
 
   svg {
     margin-right: 10px;
@@ -373,7 +372,7 @@ export default defineComponent({
   }
 }
 
-.match-secondary-details {
+.secondary {
   color: $gray;
 }
 

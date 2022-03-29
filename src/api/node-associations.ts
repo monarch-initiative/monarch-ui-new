@@ -11,7 +11,7 @@ interface Response {
       id: string;
       label: string;
       iri: string;
-      category?: Array<string>;
+      category?: Array<string> | null;
       taxon: {
         id: null;
         label: null;
@@ -21,7 +21,7 @@ interface Response {
       id: string;
       label: string;
       iri: string;
-      category?: Array<string>;
+      category?: Array<string> | null;
       taxon?: {
         id: null;
         label: null;
@@ -31,7 +31,7 @@ interface Response {
       id: string;
       label: string;
       iri: string;
-      category?: Array<string>;
+      category?: Array<string> | null;
       inverse: boolean;
     };
     evidence_graph: {
@@ -104,7 +104,7 @@ export const getAssociations = async (
         id: association.object.id,
         name: association.object.label,
         iri: association.object.iri,
-        category: mapCategory(association.object.category),
+        category: mapCategory(association.object.category || []),
         taxon: {
           id: association.object.taxon?.id || "",
           name: association.object.taxon?.label || "",
@@ -114,7 +114,7 @@ export const getAssociations = async (
         id: association.subject.id,
         name: association.subject.label,
         iri: association.subject.iri,
-        category: mapCategory(association.subject.category),
+        category: mapCategory(association.subject.category || []),
         taxon: {
           id: association.subject.taxon?.id || "",
           name: association.subject.taxon?.label || "",
@@ -124,7 +124,7 @@ export const getAssociations = async (
         id: association.relation.id,
         name: startCase(association.relation.label),
         iri: association.relation.iri,
-        category: (association.relation.category || [])[0] || "",
+        category: (association.relation?.category || [])[0] || "",
         inverse: association.relation.inverse,
       },
       evidence: [],

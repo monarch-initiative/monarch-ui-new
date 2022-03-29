@@ -2,8 +2,10 @@ import { Options } from "./AppSelectMulti";
 
 // table column
 export interface Col {
+  // unique id, used to match with named slots
+  id: string;
   // what item in row object to access as raw cell value
-  key: string;
+  key?: string;
   // header display text
   heading?: string;
   // how to align column contents (both header and body) horizontally

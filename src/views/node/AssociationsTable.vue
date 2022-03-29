@@ -18,12 +18,23 @@
       :disabled="!!status"
     >
       <!-- "object" (current node) -->
-      <!-- <template #subject="{ cell }">{{ cell.name }}</template> -->
+      <template #subject="{ cell }">
+        {{ cell.name }}
+      </template>
 
       <!-- type of association/relation -->
       <template #relation="{ cell }">
-        <AppLink :to="cell.iri">{{ cell.name }}</AppLink>
-        <AppIcon class="arrow" icon="arrow-right-long" />
+        <AppIcon
+          class="arrow"
+          :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
+        />
+        <AppLink class="truncate" :to="cell.iri" :noIcon="true">{{
+          cell.name
+        }}</AppLink>
+        <AppIcon
+          class="arrow"
+          :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
+        />
       </template>
 
       <!-- "subject" (what current node has an association with) -->
@@ -99,22 +110,25 @@ export default defineComponent({
     // table columns
     cols(): Cols {
       return [
-        // {
-        //   key: "subject",
-        //   heading: startCase(this.node.category),
-        //   width: "minmax(auto, 400px)",
-        // },
         {
+          id: "subject",
+          key: "subject",
+          heading: startCase(this.node.category),
+        },
+        {
+          id: "relation",
           key: "relation",
           heading: "Association",
-          width: "minmax(auto, 400px)",
+          width: "min-content",
         },
         {
+          id: "object",
           key: "object",
           heading: startCase(this.category.id),
-          width: "minmax(auto, 400px)",
+          width: "minmax(150px, 1fr)",
         },
         {
+          id: "evidence",
           key: "evidence",
           heading: "Evidence",
           width: "min-content",
@@ -129,6 +143,10 @@ export default defineComponent({
       try {
         // loading...
         this.status = { code: "loading", text: "Loading association data" };
+
+        // catch case where no association categories available
+        if (!this.node.associationCounts.length)
+          throw new ApiError("No association info available", "warning");
 
         // get association data
         const { count, associations } = await getAssociations(
@@ -153,10 +171,13 @@ export default defineComponent({
     },
     // download table data
     async download() {
+      // max rows to try to query
+      const max = 100000;
+
       // warn user
       push(
-        `Downloading data for all ${this.count} table entries.` +
-          (this.count >= 100 ? "This may take a minute." : "")
+        `Downloading data for ${Math.min(this.count, max)} table entries.` +
+          (this.count >= 100 ? " This may take a minute." : "")
       );
 
       // attempt to request all rows
@@ -164,7 +185,7 @@ export default defineComponent({
         this.node.id,
         this.node.category,
         this.category.id,
-        1000000,
+        max,
         0
       );
       downloadJson(response);

@@ -190,7 +190,7 @@ export default defineComponent({
     options: {
       handler() {
         // if can't find selected value, select first option
-        if (this.selected === -1) this.selected = 0;
+        if (this.selected === -1 && this.options.length) this.selected = 0;
       },
       immediate: true,
     },

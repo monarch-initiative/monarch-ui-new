@@ -15,6 +15,7 @@
     </AppFlex>
 
     <AppTabs
+      v-if="category"
       name="Association viewing mode"
       :tabs="[
         {

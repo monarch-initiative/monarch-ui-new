@@ -15,6 +15,7 @@ library.add(
   fas.faAngleUp,
   fas.faArrowDown,
   fas.faArrowLeftLong,
+  fas.faArrowLeftLong,
   fas.faArrowRight,
   fas.faArrowRightLong,
   fas.faArrowsLeftRight,

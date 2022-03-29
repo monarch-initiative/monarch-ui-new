@@ -28,14 +28,6 @@
     :style="{ display: 'contents' }"
   ></div>
 
-  <!-- description of tab -->
-  <template v-if="description && showDescription">
-    <p>
-      {{ description }}
-    </p>
-    <hr />
-  </template>
-
   <!-- tab panel content -->
   <slot :name="selected"></slot>
 </template>

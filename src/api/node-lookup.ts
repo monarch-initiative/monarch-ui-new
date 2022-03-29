@@ -10,7 +10,7 @@ interface Response {
   id: string;
   label: string;
   iri: string;
-  category?: Array<string>;
+  category?: Array<string> | null;
   description: string | null;
   types: Array<string>;
   inheritance?: Array<{
@@ -66,7 +66,7 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
       id: response.id,
       originalId: id,
       name: response.label,
-      category: mapCategory(response.category),
+      category: mapCategory(response.category || []),
 
       // ...
       synonyms: (response.synonyms || []).map(({ val }) => val),

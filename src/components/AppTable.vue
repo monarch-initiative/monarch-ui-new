@@ -60,16 +60,16 @@
               :aria-rowindex="rowIndex"
               :data-align="col.align || 'left'"
             >
-              <!-- if slot w/ name == col key, use to custom format/template cell -->
+              <!-- if slot w/ name == col id, use to custom format/template cell -->
               <slot
-                v-if="$slots[col.key]"
-                :name="col.key"
+                v-if="$slots[col.id]"
+                :name="col.id"
                 :row="row"
                 :col="col"
-                :cell="row[col.key]"
+                :cell="col.key ? row[col.key] : {}"
               />
               <!-- otherwise, just display raw cell value -->
-              <template v-else>
+              <template v-else-if="col.key">
                 {{ row[col.key] }}
               </template>
             </td>
@@ -271,9 +271,7 @@ export default defineComponent({
     },
     // grid column template widths
     widths(): string {
-      return this.cols
-        .map((col) => col.width?.replace("%", "fr") || "auto")
-        .join(" ");
+      return this.cols.map((col) => col.width || "auto").join(" ");
     },
     // aria sort direction attribute
     ariaSort() {
