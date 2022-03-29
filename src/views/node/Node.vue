@@ -8,13 +8,13 @@
   </template>
 
   <!-- results -->
-  <template v-else-if="Object.keys(node).length">
+  <template v-else-if="node">
     <Title :node="node" />
     <Overview :node="node" />
     <Details :node="node" />
     <Hierarchy :node="node" />
-    <Visualization :node="node" />
     <Associations :node="node" />
+    <Visualization :node="node" />
     <Breadcrumbs :node="node" />
 
     <Teleport to="body">
@@ -38,6 +38,7 @@ import Visualization from "./Visualization.vue";
 import Associations from "./Associations.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import { scrollToHash } from "@/router";
+import { RouteRecord } from "vue-router";
 
 export default defineComponent({
   components: {
@@ -54,7 +55,7 @@ export default defineComponent({
   data() {
     return {
       // info/metadata about node
-      node: {} as Result,
+      node: null as Result | null,
       // status of query
       status: null as Status | null,
     };
@@ -68,6 +69,7 @@ export default defineComponent({
       try {
         // loading...
         this.status = { code: "loading", text: `Loading node info for ${id}` };
+        this.node = null;
 
         // get node information
         this.node = await lookupNode(id as string, category as string);
@@ -81,6 +83,7 @@ export default defineComponent({
       } catch (error) {
         // error...
         this.status = error as ApiError;
+        this.node = null;
       }
     },
   },
@@ -89,9 +92,13 @@ export default defineComponent({
     this.getData();
   },
   watch: {
-    $route() {
-      // get new node data when route changes (e.g going from node page to node page)
-      this.getData();
+    // when route/page changes
+    $route(val: RouteRecord, prev: RouteRecord) {
+      // only if path (not hash or query) changed
+      // (e.g going from node page to node page)
+      if (val.path !== prev.path)
+        // get new node data
+        this.getData();
     },
   },
 });

@@ -32,7 +32,7 @@ export const mapFilters = (filters: Record<string, Options>): Filters =>
   mapValues(filters, (array) => array.map(({ id }) => id)) as Filters;
 
 // get results from node search text and filters
-export const getNodeSearchResults = async (
+export const getSearchResults = async (
   search = "",
   availableFilters: Filters = {},
   activeFilters: Filters = {},

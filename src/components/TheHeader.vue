@@ -4,14 +4,13 @@
     <TheNexus v-if="home" />
 
     <!-- title bar -->
-    <div class="title">
+    <div class="title" :title="version">
       <!-- logo image and text -->
       <AppLink
         :to="home ? '' : '/'"
         class="logo"
         :data-home="home"
         v-tippy="home ? '' : 'Homepage'"
-        :title="version"
       >
         <Logo class="image" />
         <!-- make logo text the h1 on homepage -->
@@ -106,11 +105,9 @@ header {
   align-items: center;
   position: sticky;
   top: 0;
-  min-height: 0;
   background: $theme-dark;
   color: $white;
   z-index: 10;
-  transition: min-height $fast;
 }
 
 @media (max-width: $wrap) {
@@ -121,15 +118,14 @@ header {
 
 header[data-home="true"] {
   justify-content: center;
-  min-height: 300px;
 
   @media (min-width: $wrap) {
     position: relative;
+    min-height: 300px;
   }
 
   @media (max-width: $wrap) {
     justify-content: space-between;
-    min-height: 0;
   }
 }
 
@@ -164,7 +160,7 @@ header[data-home="true"] {
 .logo {
   display: flex;
   align-items: center;
-  padding: 20px;
+  padding: 0 15px;
   color: $white;
   text-decoration: none;
 }
@@ -184,23 +180,19 @@ header[data-home="true"] {
   text-transform: uppercase;
 }
 
-@media (max-width: $wrap) {
-  .logo {
-    padding: 10px;
-  }
-}
+.logo[data-home="true"] {
+  @media (min-width: $wrap) {
+    & {
+      flex-direction: column;
+    }
 
-@media (min-width: $wrap) {
-  .logo[data-home="true"] {
-    flex-direction: column;
-  }
+    .image {
+      height: 70px;
+    }
 
-  .logo[data-home="true"] .image {
-    height: 70px;
-  }
-
-  .logo[data-home="true"] .text {
-    font-size: 1.1rem;
+    .text {
+      font-size: 1.1rem;
+    }
   }
 }
 
@@ -208,9 +200,8 @@ header[data-home="true"] {
 
 nav {
   display: flex;
-  padding: 20px;
+  padding: 15px;
   gap: 10px;
-  // background: radial-gradient($theme-dark 40%, transparent 70%);
 }
 
 .link {

@@ -8,8 +8,33 @@
     <AppHeading>Testbed</AppHeading>
   </AppSection>
 
+  <!-- category icons -->
+  <AppSection>
+    <AppHeading>Category Icons</AppHeading>
+    <AppFlex>
+      <AppIcon icon="category-anatomy" />
+      <AppIcon icon="category-case" />
+      <AppIcon icon="category-cell-line" />
+      <AppIcon icon="category-disease" />
+      <AppIcon icon="category-fallback" />
+      <AppIcon icon="category-function" />
+      <AppIcon icon="category-gene" />
+      <AppIcon icon="category-genotype" />
+      <AppIcon icon="category-homolog" />
+      <AppIcon icon="category-interaction" />
+      <AppIcon icon="category-model" />
+      <AppIcon icon="category-ortholog-disease" />
+      <AppIcon icon="category-ortholog-phenotype" />
+      <AppIcon icon="category-pathway" />
+      <AppIcon icon="category-phenotype" />
+      <AppIcon icon="category-unknown" />
+      <AppIcon icon="category-variant" />
+    </AppFlex>
+  </AppSection>
+
   <!-- ring component -->
   <AppSection>
+    <AppHeading>Ring</AppHeading>
     <AppRing />
   </AppSection>
 
@@ -218,16 +243,16 @@ export default defineComponent({
         search: "",
       },
       singleSelectOptions: [
-        "apple",
-        "banana",
-        "cherry",
-        "durian",
-        "elderberry",
-        "fig",
-        "grape",
-        "honeydew",
+        { id: "apple" },
+        { id: "banana" },
+        { id: "cherry" },
+        { id: "durian" },
+        { id: "elderberry" },
+        { id: "fig" },
+        { id: "grape" },
+        { id: "honeydew" },
       ],
-      singleSelectValue: "durian",
+      singleSelectValue: { id: "durian" },
       multiSelectOptions: [
         { id: "fruits", count: 0 },
         { id: "vegetables", count: 7 },

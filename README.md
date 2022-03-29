@@ -65,6 +65,7 @@ Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-
   - `/api` - Code that acts as an interface between external resources and components.
     Code here should do as much work as possible to transform data into the format that `.vue` files need so that they can remain mostly presentational.
     Each file that queries an API should define a `Response` type (expected schema to be returned from api) and `Result` type (expected schema to be returned from function and provided to component using it).
+    Put another way, `Response` is what we get (from the API), and `Result` is what we need (for the frontend).
   - `/assets` - Static resources like images.
   - `/components` - Reusable building blocks of UI.
   - `/global` - Components, directives, styles, and other "global" resources that always -- whether running the app normally or setting up and mounting a test -- need to be included in the Vue application instance.

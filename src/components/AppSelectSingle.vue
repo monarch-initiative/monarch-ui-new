@@ -14,7 +14,8 @@
       @keydown="onKeydown"
       @blur="onBlur"
     >
-      <span class="button-label">{{ modelValue }}</span>
+      <AppIcon v-if="modelValue.icon" :icon="modelValue.icon" />
+      <span class="button-label">{{ modelValue.name || modelValue.id }}</span>
       <AppIcon
         class="button-icon"
         :icon="expanded ? 'angle-up' : 'angle-down'"
@@ -29,40 +30,44 @@
       role="listbox"
       tabindex="0"
     >
-      <div
-        v-for="(option, index) in options"
-        :key="index"
-        :id="`option-${id}-${index}`"
-        class="option"
-        role="option"
-        :aria-selected="option === modelValue"
-        :data-selected="option === modelValue"
-        :data-highlighted="index === highlighted"
-        @click="selected = index"
-        @mouseenter="highlighted = index"
-        @mousedown.prevent=""
-        @focusin="() => null"
-        @keydown="() => null"
-        tabindex="0"
-      >
-        {{ option }}
+      <div class="grid">
+        <div
+          v-for="(option, index) in options"
+          :key="index"
+          :id="`option-${id}-${index}`"
+          class="option"
+          role="option"
+          :aria-selected="selected === index"
+          :data-selected="selected === index"
+          :data-highlighted="index === highlighted"
+          @click="selected = index"
+          @mouseenter="highlighted = index"
+          @mousedown.prevent=""
+          @focusin="() => null"
+          @keydown="() => null"
+          tabindex="0"
+        >
+          <span class="option-icon">
+            <AppIcon v-if="option.icon" :icon="option.icon" />
+          </span>
+          <span class="option-label">{{ option.name || option.id }}</span>
+          <span class="option-count">{{ option.count }}</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { wrap } from "@/util/math";
 import { defineComponent, PropType } from "vue";
 import { uniqueId } from "lodash";
+import { Option, Options } from "./AppSelectSingle";
+import { wrap } from "@/util/math";
 
 // references:
 // https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/combobox/combobox-select-only.html
 // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/listbox_role
 // https://vuetifyjs.com/en/components/selects/
-
-type Option = string;
-type Options = Array<Option>;
 
 // custom single select
 export default defineComponent({
@@ -74,7 +79,7 @@ export default defineComponent({
     },
     // currently selected item
     modelValue: {
-      type: String as PropType<Option>,
+      type: Object as PropType<Option>,
       required: true,
     },
     // list of options to show
@@ -157,7 +162,9 @@ export default defineComponent({
     },
     // get selected option index from model
     getSelected() {
-      return this.options.findIndex((option) => option === this.modelValue);
+      return this.options.findIndex(
+        (option) => option?.id === this.modelValue?.id
+      );
     },
   },
   watch: {
@@ -178,6 +185,14 @@ export default defineComponent({
       document
         .querySelector(`#option-${this.id}-${this.highlighted}`)
         ?.scrollIntoView({ block: "nearest" });
+    },
+    // when available options change
+    options: {
+      handler() {
+        // if can't find selected value, select first option
+        if (this.selected === -1) this.selected = 0;
+      },
+      immediate: true,
     },
   },
 });
@@ -207,6 +222,8 @@ export default defineComponent({
 
 .list {
   position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   min-width: 100%;
   max-width: 90vw;
   max-height: 200px;
@@ -217,7 +234,17 @@ export default defineComponent({
   z-index: 2;
 }
 
+.grid {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-auto-rows: 30px;
+  justify-content: stretch;
+  align-items: stretch;
+  min-width: max-content;
+}
+
 .option {
+  display: contents;
   padding: 5px 10px;
   text-align: left;
   white-space: nowrap;
@@ -225,11 +252,41 @@ export default defineComponent({
   transition: background $fast;
 }
 
-.option[data-selected="true"] {
+.option > * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  overflow: hidden;
+
+  &:first-child {
+    padding-left: 10px;
+  }
+
+  &:last-child {
+    padding-right: 10px;
+  }
+}
+
+.option[data-selected="true"] > * {
   background: $theme-light;
 }
 
-.option[data-highlighted="true"] {
+.option[data-highlighted="true"] > * {
   background: $light-gray;
+}
+
+.option-icon {
+  color: $off-black;
+  font-size: 1.2rem;
+}
+
+.option-label {
+  justify-content: flex-start;
+}
+
+.option-count {
+  justify-content: flex-end;
+  color: $gray;
 }
 </style>

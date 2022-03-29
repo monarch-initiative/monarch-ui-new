@@ -1,25 +1,99 @@
 <template>
   <AppSection>
     <AppHeading icon="arrows-left-right">Associations</AppHeading>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-      cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-      est laborum.
-    </p>
-    <p>
-      Elementum eu facilisis sed odio morbi quis commodo. Ut eu sem integer
-      vitae justo eget magna fermentum iaculis. Ultrices vitae auctor eu augue
-      ut lectus arcu. Eget nulla facilisi etiam dignissim diam. In arcu cursus
-      euismod quis viverra nibh cras pulvinar. Lacus sed viverra tellus in hac
-      habitasse platea. Augue mauris augue neque gravida. Dolor sit amet
-      consectetur adipiscing elit pellentesque habitant morbi tristique.
-      Accumsan in nisl nisi scelerisque. Felis bibendum ut tristique et egestas
-      quis ipsum suspendisse. Et netus et malesuada fames ac turpis egestas
-      maecenas. Tellus rutrum tellus pellentesque eu tincidunt tortor.
-    </p>
+
+    <!-- select -->
+    <AppFlex gap="small">
+      <span
+        >Associations between <strong>{{ node.name }}</strong> and</span
+      >
+      <AppSelectSingle
+        name="category"
+        :options="categoryOptions"
+        v-model="category"
+      />
+    </AppFlex>
+
+    <AppTabs
+      name="Association viewing mode"
+      :tabs="[
+        {
+          id: 'summary',
+          text: 'Summary',
+          icon: 'clipboard',
+          tooltip: 'Top few associations and high level details',
+        },
+        {
+          id: 'table',
+          text: 'Table',
+          icon: 'table',
+          tooltip: 'All association data, in tabular form',
+        },
+      ]"
+    >
+      <!-- summary view of associations -->
+      <template #summary>
+        <AssociationsSummary :node="node" :category="category" />
+      </template>
+
+      <!-- table view of associations -->
+      <template #table>
+        <AssociationsTable :node="node" :category="category" />
+      </template>
+    </AppTabs>
   </AppSection>
 </template>
+
+<script lang="ts">
+import { defineComponent, PropType } from "vue";
+import AppSelectSingle from "@/components/AppSelectSingle.vue";
+import { Option, Options } from "@/components/AppSelectSingle";
+import AppTabs from "@/components/AppTabs.vue";
+import { Result as NodeResult } from "@/api/node-lookup";
+import { getAssociationName } from "@/api/categories";
+import AssociationsSummary from "./AssociationsSummary.vue";
+import AssociationsTable from "./AssociationsTable.vue";
+
+// associations node page section
+export default defineComponent({
+  components: {
+    AppSelectSingle,
+    AppTabs,
+    AssociationsSummary,
+    AssociationsTable,
+  },
+  props: {
+    // current node
+    node: {
+      type: Object as PropType<NodeResult>,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      // selected category of associations to show
+      category: {} as Option,
+    };
+  },
+  computed: {
+    // list of options for dropdown
+    categoryOptions(): Options {
+      return this.node.associationCounts.map((association) => ({
+        id: association.id,
+        name: getAssociationName(association.id),
+        icon: `category-${association.id}`,
+        count: association.count,
+      }));
+    },
+  },
+});
+</script>
+
+<style lang="scss" scoped>
+.arrow {
+  color: $gray;
+}
+.evidence-button {
+  min-height: unset !important;
+}
+</style>

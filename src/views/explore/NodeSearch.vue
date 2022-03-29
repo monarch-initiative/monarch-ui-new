@@ -114,7 +114,7 @@ import { kebabCase, startCase, uniq } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
-import { getNodeSearchResults, mapFilters, Result } from "@/api/node-search";
+import { getSearchResults, mapFilters, Result } from "@/api/node-search";
 import { Status } from "@/components/AppStatus";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import { Options } from "@/components/AppSelectMulti";
@@ -223,7 +223,7 @@ export default defineComponent({
 
       try {
         // get results from api
-        const { count, results, facets } = await getNodeSearchResults(
+        const { count, results, facets } = await getSearchResults(
           this.search,
           fresh ? undefined : mapFilters(this.availableFilters),
           fresh ? undefined : mapFilters(this.activeFilters),

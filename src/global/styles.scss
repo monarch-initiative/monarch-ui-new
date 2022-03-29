@@ -52,16 +52,6 @@ h3 {
   text-align: left;
 }
 
-// icons
-
-.category {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: var(--stroke);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
 // elements
 
 svg {
@@ -147,10 +137,16 @@ strong {
 
 .tippy-box {
   max-width: min(600px, 90vw) !important;
-  padding: 8px 12px;
-  background: $off-black;
-  color: $white;
+  padding: 8px 12px !important;
+  background: $off-black !important;
+  color: $white !important;
   font-size: 1rem !important;
+
+  @each $placement in ("top", "right", "bottom", "left") {
+    &[data-placement^="#{$placement}"] > .tippy-arrow:before {
+      border-#{$placement}-color: $off-black !important;
+    }
+  }
 
   li {
     margin: 0;
@@ -169,32 +165,6 @@ strong {
     display: block;
   }
 }
-
-.tippy-box[data-theme~="break"] {
-  word-break: break-all;
-}
-
-// .tippy-box[data-theme~="light"] {
-//   background: $white;
-//   color: $off-black;
-//   border: solid 2px $off-black;
-
-//   $placements: (
-//     "top": "bottom",
-//     "right": "left",
-//     "bottom": "top",
-//     "left": "right",
-//   );
-
-//   @each $placement, $opposite in $placements {
-//     &[data-placement^="#{$placement}"] > .tippy-arrow:before {
-//       border-#{$placement}-color: $off-white;
-//     }
-//     &[data-placement^="#{$placement}"] > .tippy-arrow:after {
-//       #{$opposite}: -9px;
-//     }
-//   }
-// }
 
 // util
 

@@ -78,16 +78,15 @@
           <strong>Ingested Files:</strong>
         </p>
         <div class="files" v-if="source.files?.length">
-          <tippy
+          <AppLink
             v-for="(file, index) in source.files"
             :key="index"
-            theme="break"
+            :to="file"
+            class="truncate"
+            v-tippy="breakUrl(file)"
           >
-            <AppLink :to="file" class="truncate">
-              {{ getFilename(file) }}
-            </AppLink>
-            <template #content>{{ file }}</template>
-          </tippy>
+            {{ getFilename(file) }}
+          </AppLink>
         </div>
       </AppAccordion>
     </AppFlex>
@@ -134,6 +133,7 @@ import { Source } from "@/api/source";
 import AppStatus from "@/components/AppStatus.vue";
 import { Status } from "@/components/AppStatus";
 import { ApiError } from "@/api";
+import { breakUrl } from "@/util/string";
 
 // sources page
 export default defineComponent({
@@ -171,6 +171,7 @@ export default defineComponent({
         .filter((part) => part)
         .pop();
     },
+    breakUrl,
   },
   computed: {
     // shown sources
@@ -231,6 +232,7 @@ export default defineComponent({
   display: grid;
   gap: 10px;
   grid-template-columns: 1fr 1fr;
+  justify-items: flex-start;
   text-align: left;
 
   @media (max-width: 600px) {

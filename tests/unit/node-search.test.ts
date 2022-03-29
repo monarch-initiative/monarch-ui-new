@@ -1,4 +1,4 @@
-import { getNodeSearchResults } from "./../../src/api/node-search";
+import { getSearchResults } from "./../../src/api/node-search";
 
 // expected results
 const result = {
@@ -36,7 +36,7 @@ const taxon = [
 ];
 
 test("Returns formatted results", async () => {
-  const { count, results, facets } = await getNodeSearchResults("marfan");
+  const { count, results, facets } = await getSearchResults("marfan");
   expect(count).toEqual(61);
   expect(results).toContainEqual(result);
   expect(facets.category).toEqual(expect.arrayContaining(category));

@@ -58,13 +58,16 @@
       text="Analyze Phenotypes"
       icon="bars-progress"
       @click="analyze"
+      v-tippy="
+        'Send any annotations above that are phenotypes to Phenotype Explorer'
+      "
     />
   </AppFlex>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { kebabCase } from "lodash";
+import { kebabCase, uniqBy } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppUpload from "@/components/AppUpload.vue";
 import AppStatus from "@/components/AppStatus.vue";
@@ -111,7 +114,7 @@ export default defineComponent({
       this.filename = filename;
 
       // loading...
-      this.status = { code: "loading", text: "Loading results" };
+      this.status = { code: "loading", text: "Computing annotations" };
       this.annotations = [];
 
       try {
@@ -141,8 +144,8 @@ export default defineComponent({
         for (const { id, name } of tokens)
           if (id.startsWith("HP:")) phenotypes.push({ id, name });
 
-      // send them to the phenotype explorer component via router
-      setData(phenotypes);
+      // de-duplicate, and send them to phenotype explorer component via router
+      setData(uniqBy(phenotypes, "id"));
       this.$router.push({ hash: "#phenotype-explorer" });
     },
     kebabCase,

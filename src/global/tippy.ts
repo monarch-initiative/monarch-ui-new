@@ -18,7 +18,7 @@ const onCreate = (instance: Instance): void => {
 const onShow = (instance: Instance): boolean =>
   !!String(instance.props.content).trim();
 
-// for inspecting popup while debugging
+// return false to inspect popup for debugging
 const onHide = (): boolean => true;
 
 export const options = {
