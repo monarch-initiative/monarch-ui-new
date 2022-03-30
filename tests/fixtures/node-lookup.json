@@ -12,7 +12,71 @@
     "id": null,
     "label": null
   },
-  "association_counts": null,
+  "association_counts": {
+    "phenotype": {
+      "counts": 89
+    },
+    "pathway": {
+      "counts": 6
+    },
+    "variant": {
+      "counts": 1544,
+      "counts_by_taxon": {
+        "NCBITaxon:9606": 1541,
+        "NCBITaxon:10090": 3
+      }
+    },
+    "publication": {
+      "counts": 473
+    },
+    "model": {
+      "counts": 79,
+      "counts_by_taxon": {
+        "NCBITaxon:9606": 60,
+        "NCBITaxon:10090": 12,
+        "NCBITaxon:6239": 5,
+        "NCBITaxon:9895": 2
+      }
+    },
+    "genotype": {
+      "counts": 9,
+      "counts_by_taxon": {
+        "NCBITaxon:10090": 9
+      }
+    },
+    "chemical": {
+      "counts": 3
+    },
+    "correlated-gene": {
+      "counts": 2,
+      "counts_by_taxon": {
+        "NCBITaxon:9606": 2
+      }
+    },
+    "causal-gene": {
+      "counts": 1,
+      "counts_by_taxon": {
+        "NCBITaxon:9606": 1
+      }
+    },
+    "sources": {
+      "https://archive.monarchinitiative.org/#hpoa": 96,
+      "https://archive.monarchinitiative.org/#ensembl": 6,
+      "https://archive.monarchinitiative.org/#omim": 8,
+      "https://archive.monarchinitiative.org/#orphanet": 7,
+      "https://archive.monarchinitiative.org/#reactome": 6,
+      "https://data.monarchinitiative.org/ttl/clinvar.nt": 1791,
+      "https://archive.monarchinitiative.org/#mgi": 108,
+      "https://archive.monarchinitiative.org/#wormbase": 90,
+      "https://archive.monarchinitiative.org/#coriell": 74,
+      "https://archive.monarchinitiative.org/#go": 64,
+      "https://archive.monarchinitiative.org/#ncbigene": 51,
+      "https://archive.monarchinitiative.org/#omia": 37,
+      "https://archive.monarchinitiative.org/#biogrid": 10,
+      "https://archive.monarchinitiative.org/#ctd": 6,
+      "https://archive.monarchinitiative.org/#gwascatalog": 6
+    }
+  },
   "xrefs": [
     "NCIT:C34807",
     "UMLS:C0024796",

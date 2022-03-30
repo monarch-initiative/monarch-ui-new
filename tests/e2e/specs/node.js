@@ -90,3 +90,41 @@ it("Publication specific info shows", () => {
   cy.contains("Ramirez F");
   cy.contains("1. Arterioscler Thromb Vasc Biol. 2015 Apr;35(4):911-7.");
 });
+
+it("Summary association info shows", () => {
+  cy.visit("/disease/MONDO:0007947");
+
+  cy.get(".result").contains("Marfan syndrome");
+  cy.get(".result")
+    .contains("Has Phenotype")
+    .invoke("attr", "href")
+    .should("equal", "http://purl.obolibrary.org/obo/RO_0002200");
+  cy.get(".result")
+    .contains("Dural ectasia")
+    .invoke("attr", "href")
+    .should("equal", "/phenotype/HP:0100775");
+});
+
+it("Table association info shows", () => {
+  cy.visit("/disease/MONDO:0007947");
+
+  cy.contains("Table").trigger("click");
+  cy.contains("tr", "Marfan syndrome");
+  cy.contains("tr", "Has Phenotype")
+    .contains("Has Phenotype")
+    .invoke("attr", "href")
+    .should("equal", "http://purl.obolibrary.org/obo/RO_0002200");
+  cy.contains("tr", "Dural ectasia")
+    .contains("Dural ectasia")
+    .invoke("attr", "href")
+    .should("equal", "/phenotype/HP:0100775");
+});
+
+it("Association mode switching works", () => {
+  cy.visit("/disease/MONDO:0007947");
+
+  cy.contains("Table").trigger("click");
+  cy.contains("button", "Phenotypes").trigger("click");
+  cy.contains("[role='option'] > *", "Variants").trigger("click");
+  cy.contains("th", "Variant");
+});
