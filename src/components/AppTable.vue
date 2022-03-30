@@ -21,10 +21,10 @@
               <AppButton
                 v-if="col.sortable"
                 :icon="
-                  'arrow-' + (sort?.key === col.key ? sort?.direction : 'down')
+                  'arrow-' + (sort?.id === col.id ? sort?.direction : 'down')
                 "
                 design="small"
-                :color="sort?.key === col.key ? 'primary' : 'secondary'"
+                :color="sort?.id === col.id ? 'primary' : 'secondary'"
                 @click.stop="emitSort(col)"
                 v-tippy="'Sort by ' + col.heading"
               />
@@ -57,7 +57,8 @@
             <td
               v-for="(col, colIndex) in cols"
               :key="colIndex"
-              :aria-rowindex="rowIndex"
+              :aria-rowindex="rowIndex + 1"
+              :aria-colindex="colIndex + 1"
               :data-align="col.align || 'left'"
             >
               <!-- if slot w/ name == col id, use to custom format/template cell -->
@@ -229,16 +230,16 @@ export default defineComponent({
       let newSort: Sort;
 
       // toggle sort direction
-      if (this.sort?.key === col.key) {
+      if (this.sort?.id === col.id) {
         if (this.sort?.direction === "down")
-          newSort = { key: col.key, direction: "up" };
+          newSort = { id: col.id, direction: "up" };
         else if (this.sort?.direction === "up") {
           newSort = {};
         } else {
-          newSort = { key: col.key, direction: "down" };
+          newSort = { id: col.id, direction: "down" };
         }
       } else {
-        newSort = { key: col.key, direction: "down" };
+        newSort = { id: col.id, direction: "down" };
       }
 
       this.$emit("sort", newSort);
@@ -252,7 +253,6 @@ export default defineComponent({
       this.$emit("perPage", Number(value));
       this.$emit("start", 0);
     },
-
     // when user types in search
     emitSearch(value: string) {
       this.$emit("search", value);

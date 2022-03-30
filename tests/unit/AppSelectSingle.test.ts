@@ -4,8 +4,8 @@ import AppSelectSingle from "@/components/AppSelectSingle.vue";
 // some example props for each test
 const props = {
   name: "Single select",
-  options: ["apple", "banana", "cherry"],
-  modelValue: "banana",
+  options: [{ id: "apple" }, { id: "banana" }, { id: "cherry" }],
+  modelValue: { id: "banana" },
 };
 
 test("Opens/closes on click", async () => {

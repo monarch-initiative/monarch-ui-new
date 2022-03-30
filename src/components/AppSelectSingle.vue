@@ -4,15 +4,14 @@
     <button
       :id="`select-${id}`"
       class="button"
-      role="combobox"
       :aria-label="name"
       :aria-expanded="expanded"
       :aria-controls="`list-${id}`"
       aria-haspopup="listbox"
-      :aria-activedescendant="`option-${id}-${highlighted}`"
       @click="onClick"
       @keydown="onKeydown"
       @blur="onBlur"
+      tabindex="0"
     >
       <AppIcon v-if="modelValue.icon" :icon="modelValue.icon" />
       <span class="button-label">{{ modelValue.name || modelValue.id }}</span>
@@ -25,9 +24,11 @@
     <!-- options list -->
     <div
       v-if="expanded"
-      :id="`list_${id}`"
+      :id="`list-${id}`"
       class="list"
       role="listbox"
+      :aria-labelledby="`select-${id}`"
+      :aria-activedescendant="`option-${id}-${highlighted}`"
       tabindex="0"
     >
       <div class="grid">
@@ -68,6 +69,7 @@ import { wrap } from "@/util/math";
 // https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/combobox/combobox-select-only.html
 // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/listbox_role
 // https://vuetifyjs.com/en/components/selects/
+// https://www.downshift-js.com/use-select
 
 // custom single select
 export default defineComponent({

@@ -4,13 +4,10 @@
     <slot
       v-if="hasSlot"
       :id="`select-${id}`"
-      role="combobox"
       :aria-label="name"
-      aria-multiselectable="true"
       :aria-expanded="expanded"
       :aria-controls="`list-${id}`"
       aria-haspopup="listbox"
-      :aria-activedescendant="`option-${id}-${highlighted}`"
       @click="onClick"
       @keydown="onKeydown"
       @blur="onBlur"
@@ -20,13 +17,10 @@
       v-else
       :id="`select-${id}`"
       class="button"
-      role="combobox"
       v-tippy="name"
-      aria-multiselectable="true"
       :aria-expanded="expanded"
       :aria-controls="`list-${id}`"
       aria-haspopup="listbox"
-      :aria-activedescendant="`option-${id}-${highlighted}`"
       @click="onClick"
       @keydown="onKeydown"
       @blur="onBlur"
@@ -56,6 +50,9 @@
       :id="`list-${id}`"
       class="list"
       role="listbox"
+      :aria-activedescendant="
+        expanded ? `option-${id}-${highlighted}` : undefined
+      "
       tabindex="0"
       :data-slot="hasSlot"
     >
@@ -125,6 +122,7 @@ import { wrap } from "@/util/math";
 // https://w3c.github.io/aria/#aria-multiselectable
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaMultiSelectable
 // https://vuetifyjs.com/en/components/selects/
+// https://www.downshift-js.com/use-select
 
 // custom single select
 export default defineComponent({

@@ -23,6 +23,7 @@ export const waitFor = async (selector = ""): Promise<Element> =>
 export const firstInView = (elements: Array<HTMLElement>): number => {
   const offset = document.querySelector("header")?.clientHeight || 0;
   for (let index = elements.length - 1; index >= 0; index--)
-    if (elements[index].getBoundingClientRect().top < offset + 100) return index;
+    if (elements[index].getBoundingClientRect().top < offset + 100)
+      return index;
   return 0;
 };

@@ -89,7 +89,12 @@
       v-model="multiSelectValue"
       v-slot="props"
     >
-      <AppButton icon="filter" v-bind="props" design="small" />
+      <AppButton
+        icon="filter"
+        v-bind="props"
+        design="small"
+        v-tippy="'Test button'"
+      />
     </AppSelectMulti>
   </AppSection>
 
@@ -115,6 +120,7 @@
         to="/"
         @click="log"
         v-bind="props"
+        v-tippy="'Test button'"
       />
     </AppFlex>
   </AppSection>
@@ -239,7 +245,7 @@ export default defineComponent({
           { name: "abc", score: 4, details: [2, 1] },
           { name: "ghi", score: NaN, details: [1] },
         ] as Rows,
-        sort: { key: "score", direction: "up" },
+        sort: { id: "score", direction: "up" },
         perPage: 10,
         start: 1,
         end: 11,

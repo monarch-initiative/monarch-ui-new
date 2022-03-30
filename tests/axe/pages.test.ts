@@ -8,10 +8,11 @@ import App from "@/App.vue";
 expect.extend(toHaveNoViolations);
 
 // get list of page paths to check
-const exclude = ["NotFound", "Testbed"];
+const exclude = ["NotFound"];
 const pages = routes
   .filter((route) => !exclude.includes(String(route.name || "")))
   .map((route) => route.path);
+// TODO: add some specific node page routes here, like disease/MONDO:012345
 
 test(
   "Page accessibility checks",

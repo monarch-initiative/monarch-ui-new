@@ -2,7 +2,7 @@ import { Options } from "./AppSelectMulti";
 
 // table column
 export interface Col {
-  // unique id, used to match with named slots
+  // unique id, used to identify sorting and match with named slots
   id: string;
   // what item in row object to access as raw cell value
   key?: string;
@@ -29,6 +29,6 @@ export type Rows = Array<Row>;
 
 // sort param
 interface Sort {
-  key?: string;
+  id?: string;
   direction?: "up" | "down";
 }
