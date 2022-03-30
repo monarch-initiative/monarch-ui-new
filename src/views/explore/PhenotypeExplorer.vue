@@ -74,9 +74,9 @@
         v-tippy="'Similarity score'"
       />
 
-      <AppFlex direction="col" hAlign="left" gap="small" class="details">
+      <AppFlex direction="col" hAlign="stretch" gap="small" class="details">
         <!-- primary match info -->
-        <div class="primary">
+        <div class="primary truncate">
           <AppIcon
             :icon="`category-${match.category}`"
             v-tippy="startCase(match.category)"
@@ -106,7 +106,7 @@
         </div>
 
         <!-- secondary match info -->
-        <div class="secondary">
+        <div class="secondary truncate">
           <span>{{ match.id }}</span>
           <span v-if="match.taxon">&nbsp; | &nbsp;{{ match.taxon }}</span>
         </div>
@@ -365,15 +365,20 @@ export default defineComponent({
 
 .details {
   flex-grow: 1;
+  width: 0;
 
   svg {
     margin-right: 10px;
     vertical-align: middle;
   }
 }
+.primary {
+  text-align: left;
+}
 
 .secondary {
   color: $gray;
+  text-align: left;
 }
 
 @media (max-width: 600px) {
@@ -381,6 +386,10 @@ export default defineComponent({
     flex-direction: column;
     gap: 20px;
     margin: 10px 0;
+  }
+
+  .details {
+    width: 100%;
   }
 }
 

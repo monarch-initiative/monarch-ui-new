@@ -125,6 +125,11 @@ export default defineComponent({
       }
     },
   },
+  watch: {
+    category() {
+      this.getAssociations();
+    },
+  },
   mounted() {
     this.getAssociations();
   },
