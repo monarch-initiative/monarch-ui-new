@@ -21,7 +21,7 @@
       v-model="bMode"
     />
     <AppSelectSingle
-      v-if="bMode.includes('genes')"
+      v-if="bMode.id.includes('genes')"
       name="Second set taxon"
       :options="bTaxonOptions"
       v-model="bTaxon"
@@ -29,7 +29,7 @@
   </AppFlex>
 
   <AppSelectTags
-    v-if="bMode.includes('these phenotypes')"
+    v-if="bMode.id.includes('these phenotypes')"
     name="Second set of phenotypes"
     :options="getPhenotypes"
     v-model="bPhenotypes"
@@ -66,14 +66,17 @@
       :key="index"
       class="match"
     >
+      <!-- ring score -->
       <AppRing
         :score="match.score"
         :min="results.minScore"
         :max="results.maxScore"
         v-tippy="'Similarity score'"
       />
-      <div direction="col" class="match-details">
-        <div class="match-primary-details">
+
+      <AppFlex direction="col" hAlign="stretch" gap="small" class="details">
+        <!-- primary match info -->
+        <div class="primary truncate">
           <AppIcon
             :icon="`category-${match.category}`"
             v-tippy="startCase(match.category)"
@@ -101,11 +104,13 @@
             </AppLink>
           </template>
         </div>
-        <div class="match-secondary-details">
+
+        <!-- secondary match info -->
+        <div class="secondary truncate">
           <span>{{ match.id }}</span>
           <span v-if="match.taxon">&nbsp; | &nbsp;{{ match.taxon }}</span>
         </div>
-      </div>
+      </AppFlex>
     </div>
   </AppFlex>
 
@@ -161,11 +166,17 @@ const multiTooltip = `In this box, you can select phenotypes in 3 ways:<br>
   </ol>`;
 
 const bModeOptions = [
-  "phenotypes from all genes of ...",
-  "phenotypes from all human diseases",
-  "these phenotypes ...",
+  { id: "phenotypes from all genes of ..." },
+  { id: "phenotypes from all human diseases" },
+  { id: "these phenotypes ..." },
 ];
-const bTaxonOptions = ["mouse", "zebrafish", "fruitfly", "nematode", "frog"];
+const bTaxonOptions = [
+  { id: "mouse" },
+  { id: "zebrafish" },
+  { id: "fruitfly" },
+  { id: "nematode" },
+  { id: "frog" },
+];
 
 const exampleAPhenotypes = [
   { id: "HP:0004970" },
@@ -233,7 +244,7 @@ export default defineComponent({
 
       try {
         // run appropriate analysis based on selected mode
-        if (this.bMode.includes("these phenotypes"))
+        if (this.bMode.id.includes("these phenotypes"))
           this.results = await compareSetToSet(
             this.aPhenotypes.map(({ id }) => id),
             this.bPhenotypes.map(({ id }) => id)
@@ -241,7 +252,7 @@ export default defineComponent({
         else
           this.results = await compareSetToTaxon(
             this.aPhenotypes.map(({ id }) => id),
-            this.bMode.includes("diseases") ? "human" : this.bTaxon
+            this.bMode.id.includes("diseases") ? "human" : this.bTaxon.id
           );
 
         // run phenogrid, attach to div container
@@ -268,7 +279,7 @@ export default defineComponent({
     // show phenogrid results
     runPhenogrid() {
       // which biolink /sim endpoint to use
-      const mode = this.bMode.includes("these phenotypes")
+      const mode = this.bMode.id.includes("these phenotypes")
         ? "compare"
         : "search";
 
@@ -279,7 +290,9 @@ export default defineComponent({
       let xAxis = [];
       if (mode === "compare") xAxis = this.bPhenotypes;
       else {
-        const taxon = this.bMode.includes("diseases") ? "human" : this.bTaxon;
+        const taxon = this.bMode.id.includes("diseases")
+          ? "human"
+          : this.bTaxon.id;
         xAxis = [
           {
             id: getTaxonIdFromName(taxon),
@@ -297,14 +310,17 @@ export default defineComponent({
     // get description to show below phenotypes select box
     description(phenotypes: Options, generatedFrom: GeneratedFrom): string {
       const description = [];
+
+      // number of phenotypes
       description.push(`${phenotypes.length} selected`);
-      if (isEqual(generatedFrom.options, phenotypes)) {
-        if (generatedFrom.option?.name)
-          description.push(`generated from "${generatedFrom.option?.name}"`);
-        // don't quote raw ids (just for aesthetics)
-        else if (generatedFrom.option?.id)
-          description.push(`generated from ${generatedFrom.option?.id}`);
-      }
+
+      // to avoid misleading text, only show if lists match exactly
+      if (isEqual(generatedFrom.options, phenotypes))
+        description.push(
+          `generated from "${
+            generatedFrom.option?.name || generatedFrom.option?.id
+          }"`
+        );
       return `(${description.join(", ")})`;
     },
     getPhenotypes,
@@ -330,7 +346,6 @@ export default defineComponent({
         options: phenotypes,
       };
     }
-    delete history.state.phenotypes;
   },
 });
 </script>
@@ -343,28 +358,27 @@ export default defineComponent({
 
 .match {
   display: flex;
-  justify-content: center;
   align-items: center;
   width: 100%;
   gap: 40px;
 }
 
-.match-details {
+.details {
   flex-grow: 1;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  gap: 10px;
-  text-align: left;
+  width: 0;
 
   svg {
     margin-right: 10px;
     vertical-align: middle;
   }
 }
+.primary {
+  text-align: left;
+}
 
-.match-secondary-details {
+.secondary {
   color: $gray;
+  text-align: left;
 }
 
 @media (max-width: 600px) {
@@ -372,6 +386,10 @@ export default defineComponent({
     flex-direction: column;
     gap: 20px;
     margin: 10px 0;
+  }
+
+  .details {
+    width: 100%;
   }
 }
 

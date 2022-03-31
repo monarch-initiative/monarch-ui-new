@@ -1,3 +1,5 @@
+import { startCase } from "lodash";
+
 // TODO: POSSIBLY BRING BACK THIS HARD-CODED MAPPING
 // SEE: https://github.com/monarch-initiative/monarch-ui-new/issues/77
 
@@ -43,22 +45,65 @@ type Category = typeof categories[number];
 export const mapCategory = (category: Array<string> = []): string =>
   category[0] || "unknown";
 
+// because biolink is inconsistent with category names, these mappings are needed
+
+// from a category name, get its pluralized form, for querying association endpoints
+export const getAssociationEndpoint = (category = ""): string => {
+  // special
+  if (category === "anatomy") return "expression/anatomy";
+  if (category === "ortholog-phenotype") return "ortholog/phenotypes";
+  if (category === "ortholog-disease") return "ortholog/diseases";
+
+  // causal/correlated
+  if (category === "causal-disease" || category === "correlated-disease")
+    return "diseases";
+  if (category === "causal-gene" || category === "correlated-gene")
+    return "genes";
+
+  // non-pluralized
+  if (category === "function") return category;
+
+  // regular pluralized (most cases)
+  return `${category}s`;
+};
+
+// from a category name, get how it should be labeled when viewing associations
+export const getAssociationName = (category = ""): string => {
+  // special
+  if (category === "ortholog-phenotype") return "Ortholog Phenotypes";
+  if (category === "ortholog-disease") return "Ortholog Diseases";
+
+  // causal/correlated
+  if (category === "causal-disease") return "Causal Diseases";
+  if (category === "correlated-disease") return "Correlated Diseases";
+  if (category === "causal-gene") return "Causal Genes";
+  if (category === "correlated-gene") return "Correlated Genes";
+
+  // regular pluralized (most cases)
+  return `${startCase(category)}s`;
+};
+
 // categories that app supports
+// keep in specific order of "importance", used for sorting
 export const categories = [
-  "anatomy",
-  "case",
-  "cell-line",
+  "phenotype",
   "disease",
-  "function",
   "gene",
+  "variant",
   "genotype",
+  "anatomy",
+  "pathway",
   "homolog",
   "interaction",
+  "publication",
   "model",
+  "case",
+  "cell-line",
+  "function",
   "ortholog-disease",
   "ortholog-phenotype",
-  "pathway",
-  "phenotype",
-  "publication",
-  "variant",
-] as const;
+  "causal-disease",
+  "correlated-disease",
+  "causal-gene",
+  "correlated-gene",
+];

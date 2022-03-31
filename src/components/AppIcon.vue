@@ -88,4 +88,17 @@ export default defineComponent({
 .icon {
   height: 1em;
 }
+
+// common category icon styles
+[data-icon^="category-"] {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  & > circle:first-child {
+    display: none;
+  }
+}
 </style>

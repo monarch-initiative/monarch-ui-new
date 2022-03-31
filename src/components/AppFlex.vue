@@ -3,6 +3,7 @@
     class="flex"
     :data-direction="direction"
     :data-gap="gap"
+    :data-wrap="wrap"
     :style="{ justifyContent, alignItems }"
   >
     <slot />
@@ -23,27 +24,33 @@ const alignMap = {
 };
 
 // utility component to conveniently and consistently align and space items
+// use only for basic flex needs. anything more (like media queries), use custom css
 export default defineComponent({
   props: {
     // horizontal or vertical
     direction: {
-      default: "row",
       type: String as PropType<"row" | "col">,
+      default: "row",
     },
     // spacing between items
     gap: {
-      default: "medium",
       type: String as PropType<"none" | "small" | "medium" | "big">,
+      default: "medium",
     },
     // horizontal alignment
     hAlign: {
-      default: "center",
       type: String as PropType<"left" | "center" | "right" | "stretch">,
+      default: "center",
     },
     // vertical alignment
     vAlign: {
-      default: "center",
       type: String as PropType<"top" | "center" | "bottom" | "stretch">,
+      default: "center",
+    },
+    // whether to wrap
+    wrap: {
+      type: Boolean,
+      default: true,
     },
   },
   computed: {

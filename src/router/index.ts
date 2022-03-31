@@ -7,7 +7,7 @@ import {
   NavigationGuard,
   RouteLocation,
 } from "vue-router";
-import { lowerCase, clone } from "lodash";
+import { startCase, clone } from "lodash";
 import { hideAll } from "tippy.js";
 import Home from "@/views/Home.vue";
 import Explore from "@/views/explore/Explore.vue";
@@ -202,22 +202,27 @@ router.afterEach(async ({ name, query, params, hash }) => {
   // https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
   await nextTick();
 
-  // get name of page (route name prop)
-  const page = typeof name === "string" ? name : "";
+  // separated parts of tab title
+  const parts = [];
 
-  // get "sub page" (e.g. explore mode hash)
-  const subpage = lowerCase(hash.slice(1));
+  // title of app
+  parts.push(process.env.VUE_APP_TITLE_SHORT);
 
-  // get extra details from url params
-  let details = "";
-  if (query.search) details = `"${query.search}"`;
-  if (params.id) details = `${params.id}`;
+  // name of page (route name prop)
+  if (name) parts.push(name);
+
+  // node page params (e.g. disease and HP:12345)
+  if (params?.category) parts.push(params.category);
+  if (params?.id) parts.push(params.id);
+
+  // explore mode (e.g. #text-annotator)
+  if (name === "Explore" && hash) parts.push(startCase(hash.slice(1)));
+
+  // search (e.g. ?search=marfan+syndrome)
+  if (query.search) parts.push(`"${query.search}"`);
 
   // combine into document title
-  if (document)
-    document.title = [process.env.VUE_APP_TITLE_SHORT, page, subpage, details]
-      .filter((part) => part)
-      .join(" - ");
+  if (document) document.title = parts.join(" · ");
 });
 
 // close any open tooltips on route change

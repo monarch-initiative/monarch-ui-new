@@ -1,4 +1,5 @@
-import { mapCategory } from "./categories";
+import { sortBy } from "lodash";
+import { categories, mapCategory } from "./categories";
 import { biolink, request, cleanError } from ".";
 import { getXrefLink } from "./xrefs";
 import { getGene, Result as GeneResult } from "./node-gene";
@@ -9,7 +10,7 @@ interface Response {
   id: string;
   label: string;
   iri: string;
-  category?: Array<string>;
+  category?: Array<string> | null;
   description: string | null;
   types: Array<string>;
   inheritance?: Array<{
@@ -32,16 +33,32 @@ interface Response {
     id: string;
     label: string;
   };
-  association_counts: Record<string, unknown>;
+  association_counts: Record<
+    string,
+    {
+      counts?: number;
+      counts_by_taxon?: number;
+    }
+  >;
   xrefs: Array<string>;
 }
 
 // lookup metadata for a node id
 export const lookupNode = async (id = "", category = ""): Promise<Result> => {
   try {
+    // set flags
+    const params = {
+      fetch_objects: false,
+      unselect_evidence: true,
+      exclude_automatic_assertions: true,
+      use_compact_associations: false,
+      get_association_counts: true, // missing in biolink docs, but essential
+      rows: 1,
+    };
+
     // make query
     const url = `${biolink}/bioentity/${category ? category + "/" : ""}${id}`;
-    const response = await request<Response>(url);
+    const response = await request<Response>(url, params);
 
     // convert into desired result format
     const metadata: Result = {
@@ -49,7 +66,7 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
       id: response.id,
       originalId: id,
       name: response.label,
-      category: mapCategory(response.category),
+      category: mapCategory(response.category || []),
 
       // ...
       synonyms: (response.synonyms || []).map(({ val }) => val),
@@ -79,6 +96,22 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
 
       // ...
       hierarchy: await getHierarchy(id, category),
+
+      // ...
+      associationCounts: sortBy(
+        Object.entries(response.association_counts || {})
+          // don't include other facets
+          .filter(([, data]) => data.counts !== undefined)
+          // only include categories supported by app
+          .filter(([category]) => categories.includes(category))
+          .map(([category, data]) => ({
+            id: category || "",
+            count: data.counts || 0,
+            countByTaxon: data.counts_by_taxon,
+          })),
+        // sort by specific order, and put unmatched at end
+        (category) => categories.indexOf(category.id) + 1 || Infinity
+      ),
     };
 
     // supplement gene with metadata from mygene
@@ -148,4 +181,11 @@ export interface Result {
 
   // hierarchy section
   hierarchy: HierarchyResult;
+
+  // associations section
+  associationCounts: Array<{
+    id: string;
+    count: number;
+    countByTaxon?: number;
+  }>;
 }

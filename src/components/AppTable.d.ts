@@ -2,14 +2,16 @@ import { Options } from "./AppSelectMulti";
 
 // table column
 export interface Col {
+  // unique id, used to identify sorting and match with named slots
+  id: string;
   // what item in row object to access as raw cell value
-  key: string;
+  key?: string;
   // header display text
   heading?: string;
   // how to align column contents (both header and body) horizontally
   align?: "left" | "center" | "end";
-  // width to apply to heading cell, in absolute (px), remaining width (%), or "auto"
-  width: string;
+  // width to apply to heading cell, in any valid css grid col width (px, fr, auto, minmax, etc)
+  width?: string;
   // whether to allow sorting of column
   sortable?: boolean;
   // available filters for column
@@ -27,6 +29,6 @@ export type Rows = Array<Row>;
 
 // sort param
 interface Sort {
-  key?: string;
+  id?: string;
   direction?: "up" | "down";
 }

@@ -18,12 +18,12 @@ export const waitFor = async (selector = ""): Promise<Element> =>
     check();
   });
 
-// find index of first element "in view" (intuitively)
+// find index of first element "in view"
+// model behavior off of wikiwand.com
 export const firstInView = (elements: Array<HTMLElement>): number => {
-  // go up from bottom until we find element that starts in top majority of screen
-  for (const [index, element] of Object.entries(elements).reverse())
-    if (element.getBoundingClientRect().top < window.innerHeight * 0.75)
-      return Number(index);
-
-  return -1;
+  const offset = document.querySelector("header")?.clientHeight || 0;
+  for (let index = elements.length - 1; index >= 0; index--)
+    if (elements[index].getBoundingClientRect().top < offset + 100)
+      return index;
+  return 0;
 };

@@ -1,5 +1,5 @@
 import { biolink, request, cleanError, ApiError } from ".";
-import { getNodeSearchResults } from "./node-search";
+import { getSearchResults } from "./node-search";
 import { Options, OptionsFunc } from "@/components/AppSelectTags.d";
 
 // search individual phenotypes or gene/disease phenotypes
@@ -18,7 +18,7 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
       };
 
     // otherwise perform string search for phenotypes/genes/diseases
-    const { results } = await getNodeSearchResults(
+    const { results } = await getSearchResults(
       search,
       {},
       { category: ["phenotype", "gene", "disease"] }
@@ -158,7 +158,6 @@ const mapMatches = (response: CompareResponse) => {
     category: match.type || "phenotype",
     taxon: match.taxon?.label || "",
   }));
-  console.log(matches);
   const minScore = Math.min(...matches.map(({ score }) => score));
   const maxScore = Math.max(...matches.map(({ score }) => score));
 

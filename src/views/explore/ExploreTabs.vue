@@ -52,6 +52,8 @@ import NodeSearch from "./NodeSearch.vue";
 import TextAnnotator from "./TextAnnotator.vue";
 import PhenotypeExplorer from "./PhenotypeExplorer.vue";
 
+// different explore modes
+// separate into its own component because it is also on homepage
 export default defineComponent({
   components: {
     AppTabs,

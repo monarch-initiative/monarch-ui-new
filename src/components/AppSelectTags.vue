@@ -22,11 +22,12 @@
           :placeholder="placeholder"
           role="combobox"
           :aria-label="name"
-          aria-multiselectable="true"
           :aria-expanded="!!results.length"
           :aria-controls="`list-${id}`"
           aria-haspopup="listbox"
-          :aria-activedescendant="`option-${id}-${highlighted}`"
+          :aria-activedescendant="
+            focused ? `option-${id}-${highlighted}` : undefined
+          "
           aria-autocomplete="list"
           @focus="focused = true"
           @blur="focused = false"
@@ -106,6 +107,7 @@
 // references:
 // https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/combobox/combobox-autocomplete-list.html
 // https://vuetifyjs.com/en/components/autocompletes
+// https://www.downshift-js.com/use-combobox
 
 import { defineComponent, PropType } from "vue";
 import { uniqueId, isEqual, debounce, DebouncedFunc, uniqBy } from "lodash";
