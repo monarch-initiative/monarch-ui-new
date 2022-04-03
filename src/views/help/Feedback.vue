@@ -1,3 +1,9 @@
+<!--
+  help feedback page
+
+  a dedicated page/url for the same feedback form that is openable from any page
+-->
+
 <template>
   <AppSection>
     <AppHeading>Feedback Form</AppHeading>
@@ -5,15 +11,6 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import TheFeedbackForm from "@/components/TheFeedbackForm.vue";
-
-export default defineComponent({
-  components: {
-    TheFeedbackForm,
-  },
-});
 </script>
-
-<style lang="scss" scoped></style>

@@ -1,73 +1,61 @@
+<!--
+  temporary notification at bottom of screen
+-->
+
 <template>
   <Teleport to="body">
     <Transition name="fade">
       <div
-        ref="notification"
-        v-if="notification"
+        ref="element"
+        v-if="text"
         role="alert"
         aria-live="polite"
         class="snackbar"
         @click="onClick"
         @keydown="() => null"
       >
-        {{ notification }}
+        {{ text }}
       </div>
     </Transition>
   </Teleport>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref, computed } from "vue";
 import { restartAnimations } from "@/util/dom";
+import { useEventListener, useTimeoutFn } from "@vueuse/core";
 
-// global function to push a notification to snackbar
-export const push = (message: string): unknown =>
-  window.dispatchEvent(new CustomEvent("snackbar", { detail: message }));
+// current notification text
+const text = ref("");
+// notification element
+const element = ref<Element>();
 
-let timeout: number;
+// make hide delay longer for longer messages
+// https://ux.stackexchange.com/questions/22520/how-long-does-it-take-to-read-x-number-of-characters
+const delay = computed(() => 1500 + text.value.length * 100);
+// timer
+const { start, stop } = useTimeoutFn(() => (text.value = ""), delay);
 
-// "snackbar" component (temporary notification at bottom of screen)
-export default defineComponent({
-  data() {
-    return {
-      // notification text
-      notification: "",
-    };
-  },
-  methods: {
-    // set notification event
-    push(event: Event) {
-      // flash notification
-      restartAnimations(this.$refs.notification as Element);
+// on push notification event
+function onPush(event: Event) {
+  // flash notification
+  if (element.value) restartAnimations(element.value);
 
-      // set notification text
-      this.notification = (event as CustomEvent).detail;
+  // set notification text
+  text.value = (event as CustomEvent).detail;
 
-      // set timer to close
-      window.clearTimeout(timeout);
-      timeout = window.setTimeout(
-        () => (this.notification = ""),
-        // make delay longer for longer messages
-        this.notification.length * 100
-      );
-    },
-    // when user clicks notification
-    onClick() {
-      window.clearTimeout(timeout);
-      this.notification = "";
-    },
-  },
-  created() {
-    // listen for global snackbar push event
-    window.addEventListener("snackbar", this.push);
-  },
-  beforeUnmount() {
-    // cancel any in-progress debounce
-    window.clearTimeout(timeout);
-    // stop listening for global snackbar push event
-    window.removeEventListener("snackbar", this.push);
-  },
-});
+  // set timer to close
+  start();
+}
+
+// when user clicks notification
+function onClick() {
+  stop();
+  text.value = "";
+}
+
+// listen for push notification event
+useEventListener(window, "snackbar", onPush);
 </script>
 
 <style lang="scss" scoped>

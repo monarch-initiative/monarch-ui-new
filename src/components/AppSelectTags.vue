@@ -1,3 +1,12 @@
+<!--
+  custom tag select component with type-in async search and chips
+
+  references:
+  https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/combobox/combobox-autocomplete-list.html
+  https://vuetifyjs.com/en/components/autocompletes
+  https://www.downshift-js.com/use-combobox
+-->
+
 <template>
   <div class="select-tags">
     <!-- box -->
@@ -65,7 +74,7 @@
       tabindex="0"
     >
       <!-- status -->
-      <AppStatus v-if="status" ref="status" :status="status" />
+      <AppStatus v-if="status" :status="status" />
 
       <!-- list of results -->
       <div class="grid" v-if="results.length">
@@ -103,265 +112,257 @@
   </div>
 </template>
 
-<script lang="ts">
-// references:
-// https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/combobox/combobox-autocomplete-list.html
-// https://vuetifyjs.com/en/components/autocompletes
-// https://www.downshift-js.com/use-combobox
-
-import { defineComponent, PropType } from "vue";
-import { uniqueId, isEqual, debounce, DebouncedFunc, uniqBy } from "lodash";
+<script setup lang="ts">
+import { ref, computed, watch, onBeforeUnmount } from "vue";
+import { uniqueId, isEqual, debounce, uniqBy } from "lodash";
 import { Option, Options, OptionsFunc } from "./AppSelectTags";
 import AppStatus from "@/components/AppStatus.vue";
 import { Status } from "@/components/AppStatus";
 import { ApiError } from "@/api";
 import { wrap } from "@/util/math";
-import { push } from "./TheSnackbar.vue";
+import { push } from "./TheSnackbar";
 import { sleep } from "@/util/debug";
 
-// custom tag select component with type-in async search and chips
-export default defineComponent({
-  components: {
-    AppStatus,
+interface Props {
+  // name of the field
+  name: string;
+  // placeholder string when nothing typed in
+  placeholder?: string;
+  // currently selected item
+  modelValue: Options;
+  // async function that returns list of options to show
+  options: OptionsFunc;
+  // tooltip when hovering input
+  tooltip?: string;
+  // description to show below box
+  description?: string;
+}
+
+const props = defineProps<Props>();
+
+interface Emits {
+  // two-way binding value
+  (event: "update:modelValue", value: Options): void;
+  // when value change "submitted"/"committed" by user
+  (event: "change"): void;
+  // when an option has been auto accepted (e.g. text pasted)
+  (event: "autoAccept"): void;
+  // when an option's getOptions func has been called
+  (event: "getOptions", option: Option, options: Options): void;
+}
+
+const emit = defineEmits<Emits>();
+
+// unique id for instance of component
+const id = ref(uniqueId());
+// array of selected options
+const selected = ref<Options>([]);
+// currently searched text
+const search = ref("");
+// results for searched text
+const results = ref<Options>([]);
+// index of option that is highlighted
+const highlighted = ref(0);
+// whether input box focused
+const focused = ref(false);
+// status of query
+const status = ref<Status | null>(null);
+
+// close results dropdown
+function close() {
+  search.value = "";
+  results.value = [];
+  highlighted.value = 0;
+  debouncedGetResults.cancel();
+}
+
+// when user presses key in input
+function onKeydown(event: KeyboardEvent) {
+  // arrow/home/end keys
+  if (["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
+    // prevent page scroll
+    event.preventDefault();
+
+    // move value up/down
+    let index = highlighted.value;
+    if (event.key === "ArrowUp") index--;
+    if (event.key === "ArrowDown") index++;
+    if (event.key === "Home") index = 0;
+    if (event.key === "End") index = availableResults.value.length - 1;
+
+    // update highlighted, wrapping beyond 0 or results length
+    highlighted.value = wrap(index, 0, availableResults.value.length);
+  }
+
+  // backspace key to deselect last-selected option
+  if (event.key === "Backspace") {
+    if (search.value === "") deselect();
+  }
+
+  // enter key to de/select highlighted result
+  if (event.key === "Enter") {
+    // prevent browser re-clicking open button
+    event.preventDefault();
+    if (availableResults.value[highlighted.value]) {
+      select(availableResults.value[highlighted.value]);
+      // if highlighted beyond last option, clamp
+      if (highlighted.value > availableResults.value.length - 1)
+        highlighted.value = availableResults.value.length - 1;
+    }
+  }
+
+  // esc key to close dropdown
+  if (event.key === "Escape") close();
+}
+
+// when user pastes text
+async function onPaste() {
+  // wait for pasted value to take effect
+  // but don't use nextTick because by then search.value will be reset
+  await sleep();
+  // immediately auto-accept results
+  getResults();
+}
+
+// select an option or array of options
+async function select(options: Option | Options) {
+  // make array if single option
+  if (!Array.isArray(options)) options = [options];
+
+  // array of options to select
+  const toSelect: Options = [];
+
+  for (const option of options) {
+    // run func to get options to select
+    if (option.getOptions) {
+      const options = await option.getOptions();
+      toSelect.push(...options);
+      // notify parent that dynamic options were added
+      // provide option selected and options added
+      emit("getOptions", option, options);
+    }
+    // otherwise just select option
+    else toSelect.push(option);
+  }
+
+  // select options
+  selected.value.push(...toSelect);
+
+  // notify parent that user made change to selection
+  emit("change");
+}
+
+// deselect a specific option or last-selected option
+function deselect(option?: Option) {
+  if (option)
+    selected.value = selected.value.filter((model) => model.id !== option.id);
+  else selected.value.pop();
+
+  // notify parent that user made change to selection
+  emit("change");
+}
+
+// clear all selected
+function clear() {
+  selected.value = [];
+}
+
+// copy selected ids to clipboard
+async function copy() {
+  await window.navigator.clipboard.writeText(
+    selected.value.map(({ id }) => id).join(",")
+  );
+  push(`Copied ${selected.value.length} values`);
+}
+
+// get list of results
+async function getResults() {
+  // cancel any pending calls
+  debouncedGetResults.cancel();
+
+  // loading...
+  status.value = { code: "loading", text: "Loading results" };
+  results.value = [];
+  highlighted.value = 0;
+
+  try {
+    // get results
+    const response = await props.options(search.value);
+    // if auto accept flag set, immediately accept/select passed options
+    if ("autoAccept" in response && "options" in response) {
+      select(response.options);
+      search.value = "";
+      emit("autoAccept");
+      push(response.message);
+    }
+    // otherwise, show list of results for user to select
+    else {
+      results.value = response;
+    }
+
+    // clear status
+    status.value = null;
+  } catch (error) {
+    // error...
+    status.value = error as ApiError;
+  }
+}
+
+// list of unselected results to show
+const availableResults = computed(() =>
+  results.value.filter(
+    (option) => !selected.value.find((model) => model.id === option.id)
+  )
+);
+
+// when model changes
+watch(
+  () => props.modelValue,
+  () => {
+    // avoid infinite rerenders
+    if (!isEqual(selected.value, props.modelValue))
+      // update (de-duplicated) selected value
+      selected.value = uniqBy(props.modelValue, "id");
   },
-  emits: ["update:modelValue", "change", "autoAccept", "getOptions"],
-  props: {
-    // name of the field
-    name: {
-      type: String,
-      required: true,
-    },
-    // placeholder string when nothing typed in
-    placeholder: String,
-    // currently selected item
-    modelValue: {
-      type: Array as PropType<Options>,
-      required: true,
-    },
-    // async function that returns list of options to show
-    options: {
-      type: Function as PropType<OptionsFunc>,
-      required: true,
-    },
-    // tooltip when hovering input
-    tooltip: {
-      type: String,
-    },
-    // description to show below box
-    description: String,
+  { deep: true, immediate: true }
+);
+
+// when selected value changes
+watch(
+  selected,
+  () => {
+    // emit (deduplicated) updated model
+    emit("update:modelValue", uniqBy(selected.value, "id"));
   },
-  data() {
-    return {
-      // unique id for instance of component
-      id: uniqueId(),
-      // array of selected options
-      selected: [] as Options,
-      // currently searched text
-      search: "",
-      // results for searched text
-      results: [] as Options,
-      // index of option that is highlighted
-      highlighted: 0,
-      // whether input box focused
-      focused: false,
-      // status of query
-      status: null as Status | null,
-      // debounced get results function
-      debouncedGetResults: debounce(() => null) as DebouncedFunc<
-        () => Promise<void>
-      >,
-    };
-  },
-  methods: {
-    // close results dropdown
-    close() {
-      this.search = "";
-      this.results = [];
-      this.highlighted = 0;
-      this.debouncedGetResults.cancel();
-    },
-    // when user presses key in input
-    onKeydown(event: KeyboardEvent) {
-      // arrow/home/end keys
-      if (["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
-        // prevent page scroll
-        event.preventDefault();
+  { deep: true }
+);
 
-        // move value up/down
-        let highlighted = this.highlighted;
-        if (event.key === "ArrowUp") highlighted--;
-        if (event.key === "ArrowDown") highlighted++;
-        if (event.key === "Home") highlighted = 0;
-        if (event.key === "End") highlighted = this.availableResults.length - 1;
+// run async get results func when search text changes
+watch(search, async () => debouncedGetResults());
 
-        // update highlighted, wrapping beyond 0 or results length
-        this.highlighted = wrap(highlighted, 0, this.availableResults.length);
-      }
+// when focused state changes
+watch(focused, () => {
+  status.value = { code: "loading" };
+  // get results when first focused
+  if (focused.value) getResults();
+  // clear search when input box blurred
+  else close();
+});
 
-      // backspace key to deselect last-selected option
-      if (event.key === "Backspace") {
-        if (this.search === "") this.deselect();
-      }
+// when highlighted index changes
+watch(highlighted, () => {
+  // scroll to highlighted in dropdown
+  document
+    .querySelector(`#option-${id.value}-${highlighted.value} > *`)
+    ?.scrollIntoView({ block: "nearest" });
+});
 
-      // enter key to de/select highlighted result
-      if (event.key === "Enter") {
-        // prevent browser re-clicking open button
-        event.preventDefault();
-        if (this.availableResults[this.highlighted]) {
-          this.select(this.availableResults[this.highlighted]);
-          // if highlighted beyond last option, clamp
-          if (this.highlighted > this.availableResults.length - 1)
-            this.highlighted = this.availableResults.length - 1;
-        }
-      }
+// make instance-unique debounced method of getting results (async options)
+const debouncedGetResults = debounce(getResults, 500);
 
-      // esc key to close dropdown
-      if (event.key === "Escape") this.close();
-    },
-    // when user pastes text
-    async onPaste() {
-      // wait for pasted value to take effect
-      // but don't use nextTick because by then this.search will be reset
-      await sleep();
-      // immediately auto-accept results
-      this.getResults();
-    },
-    // select an option or array of options
-    async select(options: Option | Options) {
-      // make array if single option
-      if (!Array.isArray(options)) options = [options];
-
-      // array of options to select
-      const toSelect: Options = [];
-
-      for (const option of options) {
-        // run func to get options to select
-        if (option.getOptions) {
-          const options = await option.getOptions();
-          toSelect.push(...options);
-          // notify parent that dynamic options were added
-          // provide option selected and options added
-          this.$emit("getOptions", option, options);
-        }
-        // otherwise just select option
-        else toSelect.push(option);
-      }
-
-      // select options
-      this.selected.push(...toSelect);
-
-      // notify parent that user made change to selection
-      this.$emit("change");
-    },
-    // deselect a specific option or last-selected option
-    deselect(option?: Option) {
-      if (option)
-        this.selected = this.selected.filter((model) => model.id !== option.id);
-      else this.selected.pop();
-
-      // notify parent that user made change to selection
-      this.$emit("change");
-    },
-    // clear all selected
-    clear() {
-      this.selected = [];
-    },
-    // copy selected ids to clipboard
-    async copy() {
-      await window.navigator.clipboard.writeText(
-        this.selected.map(({ id }) => id).join(",")
-      );
-      push(`Copied ${this.selected.length} values`);
-    },
-    // get list of results
-    async getResults() {
-      // cancel any pending calls
-      this.debouncedGetResults.cancel();
-
-      // loading...
-      this.status = { code: "loading", text: "Loading results" };
-      this.results = [];
-      this.highlighted = 0;
-
-      try {
-        // get results
-        const response = await this.options(this.search);
-
-        // if auto accept flag set, immediately accept/select passed options
-        if ("autoAccept" in response && "options" in response) {
-          this.select(response.options);
-          this.search = "";
-          this.$emit("autoAccept");
-          push(response.message);
-        }
-        // otherwise, show list of results for user to select
-        else {
-          this.results = response;
-        }
-
-        // clear status
-        this.status = null;
-      } catch (error) {
-        // error...
-        this.status = error as ApiError;
-      }
-    },
-  },
-  computed: {
-    // list of unselected results to show
-    availableResults() {
-      return this.results.filter(
-        (option) => !this.selected.find((model) => model.id === option.id)
-      );
-    },
-  },
-  watch: {
-    // when model changes
-    modelValue: {
-      handler() {
-        // avoid infinite rerenders
-        if (!isEqual(this.selected, this.modelValue))
-          // update (deduplicated) selected value
-          this.selected = uniqBy(this.modelValue, "id");
-      },
-      deep: true,
-      immediate: true,
-    },
-    // when selected value changes
-    selected: {
-      handler() {
-        // emit (deduplicated) updated model
-        this.$emit("update:modelValue", uniqBy(this.selected, "id"));
-      },
-      deep: true,
-    },
-    // run async get results func when search text changes
-    async search() {
-      this.debouncedGetResults();
-    },
-    // when focused state changes
-    focused() {
-      // get results when first focused
-      if (this.focused) this.getResults();
-      // clear search when input box blurred
-      else this.close();
-    },
-    // when highlighted index changes
-    highlighted() {
-      // scroll to highlighted in dropdown
-      document
-        .querySelector(`#option-${this.id}-${this.highlighted} > *`)
-        ?.scrollIntoView({ block: "nearest" });
-    },
-  },
-  created() {
-    // make instance-unique debounced method of getting results (async options)
-    this.debouncedGetResults = debounce(this.getResults, 500);
-  },
-  beforeUnmount() {
-    // cancel any in-progress debounce
-    this.debouncedGetResults.cancel();
-  },
+onBeforeUnmount(() => {
+  // cancel any in-progress debounce
+  debouncedGetResults.cancel();
 });
 </script>
 

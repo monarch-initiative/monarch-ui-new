@@ -1,3 +1,7 @@
+<!--
+  node page details section. more detailed metadata/info about node.
+-->
+
 <template>
   <AppSection>
     <AppHeading icon="clipboard-list">Details</AppHeading>
@@ -56,24 +60,15 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
 import { Result } from "@/api/node-lookup";
 import AppDetail from "@/components/AppDetail.vue";
 import AppDetails from "@/components/AppDetails.vue";
 
-// more detailed metadata/information about node
-export default defineComponent({
-  components: {
-    AppDetails,
-    AppDetail,
-  },
-  props: {
-    // current node
-    node: {
-      type: Object as PropType<Result>,
-      required: true,
-    },
-  },
-});
+interface Props {
+  // current node
+  node: Result;
+}
+
+defineProps<Props>();
 </script>

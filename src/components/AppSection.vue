@@ -1,29 +1,23 @@
+<!--
+  section that spans width of page and contains, aligns, and evenly vertically
+  spaces its contents. all page content should be contained within one of these.
+-->
+
 <template>
   <section :data-width="width" :data-design="design">
     <slot />
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+interface Props {
+  // width of section
+  width?: "full" | "medium" | "big";
+  // visual design
+  design?: "normal" | "fill";
+}
 
-// section that spans width of page
-// contains, aligns, and evenly vertically spaces its contents
-// all main page content should be contained within one of these
-export default defineComponent({
-  props: {
-    // width of section
-    width: {
-      default: "medium",
-      type: String as PropType<"full" | "medium" | "big">,
-    },
-    // visual design
-    design: {
-      default: "normal",
-      type: String as PropType<"normal" | "fill">,
-    },
-  },
-});
+withDefaults(defineProps<Props>(), { width: "medium", design: "normal" });
 </script>
 
 <style lang="scss" scoped>

@@ -1,3 +1,9 @@
+<!--
+  text annotator tab on explore page
+
+  input free/long text and finds references to nodes in monarch knowledge graph
+-->
+
 <template>
   <!-- search box -->
   <AppInput
@@ -19,7 +25,7 @@
   <hr />
 
   <!-- status -->
-  <AppStatus v-if="content && status" ref="status" :status="status" />
+  <AppStatus v-if="content && status" :status="status" />
 
   <!-- filename -->
   <strong v-if="annotations.length"
@@ -65,8 +71,9 @@
   </AppFlex>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useLocalStorage } from "@vueuse/core";
 import { kebabCase, uniqBy } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppUpload from "@/components/AppUpload.vue";
@@ -78,85 +85,78 @@ import { Result } from "@/api/text-annotator";
 import { ApiError } from "@/api";
 import { downloadJson } from "@/util/download";
 import { setData } from "@/router";
+import { useRouter } from "vue-router";
 
-export default defineComponent({
-  components: {
-    AppInput,
-    AppUpload,
-    AppStatus,
-  },
-  data() {
-    return {
-      // text content
-      content: "",
-      // file name of uploaded file (if applicable)
-      filename: "",
-      // annotation results
-      annotations: [] as Result,
-      // status of query
-      status: null as Status | null,
-    };
-  },
-  methods: {
-    // get text content and filename from upload button
-    onUpload(content = "", filename = "") {
-      this.content = content;
-      this.annotate(filename);
-    },
-    // example full text
-    doExample() {
-      this.content = example.content;
-      this.annotate();
-    },
-    // run annotation
-    async annotate(filename = "") {
-      // reset filename depending on search method
-      this.filename = filename;
+// route info
+const router = useRouter();
 
-      // loading...
-      this.status = { code: "loading", text: "Computing annotations" };
-      this.annotations = [];
+// text content
+const content = useLocalStorage("annotations-content", "");
+// file name of uploaded file (if applicable)
+const filename = useLocalStorage("annotations-filename", "");
+// annotation results
+const annotations = ref<Result>([]);
+// status of query
+const status = ref<Status | null>(null);
 
-      try {
-        // get results from api
-        this.annotations = await annotateText(this.content);
+// get text content and filename from upload button
+function onUpload(data = "", file = "") {
+  content.value = data;
+  annotate(file);
+}
 
-        // clear status
-        this.status = null;
-      } catch (error) {
-        // error...
-        if (this.content.trim()) this.status = error as ApiError;
-        else this.status = null;
-      }
-    },
-    // download annotations
-    download() {
-      downloadJson(
-        this.annotations.filter(({ tokens }) => tokens.length),
-        "annotations"
-      );
-    },
-    // send phenotype annotations to phenotype explorer to analyze
-    analyze() {
-      // gather annotations that are phenotypes
-      const phenotypes = [];
-      for (const { tokens } of this.annotations)
-        for (const { id, name } of tokens)
-          if (id.startsWith("HP:")) phenotypes.push({ id, name });
+// example full text
+function doExample() {
+  content.value = example.content;
+  annotate();
+}
 
-      // de-duplicate, and send them to phenotype explorer component via router
-      setData(uniqBy(phenotypes, "id"));
-      this.$router.push({ hash: "#phenotype-explorer" });
-    },
-    kebabCase,
-  },
-  mounted() {
-    this.annotate(this.filename || "");
-  },
-  persist: {
-    keys: ["content", "filename"],
-    namespace: "text-annotator",
-  },
+// run annotation
+async function annotate(file = "") {
+  // reset filename depending on search method
+  filename.value = file;
+
+  // loading...
+  status.value = { code: "loading", text: "Computing annotations" };
+  annotations.value = [];
+
+  try {
+    // get results from api
+    annotations.value = await annotateText(content.value);
+
+    // clear status
+    status.value = null;
+  } catch (error) {
+    // error...
+    if (content.value.trim()) status.value = error as ApiError;
+    else status.value = null;
+  }
+}
+
+// download annotations
+function download() {
+  downloadJson(
+    annotations.value.filter(({ tokens }) => tokens.length),
+    "annotations"
+  );
+}
+
+// send phenotype annotations to phenotype explorer to analyze
+function analyze() {
+  // gather annotations that are phenotypes
+  const phenotypes = [];
+  for (const { tokens } of annotations.value)
+    for (const { id, name } of tokens)
+      if (id.startsWith("HP:")) phenotypes.push({ id, name });
+
+  // de-duplicate, and send them to phenotype explorer component via router
+  setData(uniqBy(phenotypes, "id"));
+  router.push({ hash: "#phenotype-explorer" });
+}
+
+// run annotations on mount if content loaded from storage
+onMounted(() => {
+  if (content.value) annotate(filename.value || "");
 });
 </script>
 

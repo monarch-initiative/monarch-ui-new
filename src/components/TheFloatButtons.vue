@@ -1,3 +1,7 @@
+<!--
+  buttons that float on side of page for handy functions
+-->
+
 <template>
   <div class="float" :style="{ bottom: nudge + 'px' }">
     <transition name="fade">
@@ -26,84 +30,58 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, nextTick } from "vue";
+<script setup lang="ts">
+import { ref, watch, onMounted, nextTick } from "vue";
+import { useRoute } from "vue-router";
+import { useEventListener, useMutationObserver } from "@vueuse/core";
 import AppModal from "@/components/AppModal.vue";
 import TheFeedbackForm from "@/components/TheFeedbackForm.vue";
 
-let mutationObserver: MutationObserver;
+// route info
+const route = useRoute();
 
-// buttons that float on side of page for handy functions
-export default defineComponent({
-  components: {
-    AppModal,
-    TheFeedbackForm,
-  },
-  data() {
-    return {
-      // whether to show jump button
-      showJump: false,
-      // whether to show feedback form button
-      showFeedback: true,
-      // whether to show feedback modal
-      showModal: false,
-      // how much to push buttons upward to make room for footer if in view
-      nudge: 0,
-    };
-  },
-  methods: {
-    // update data state
-    update() {
-      // get dimensions of footer
-      const footerEl = document?.querySelector("footer");
-      if (!footerEl) return;
-      const footer = footerEl.getBoundingClientRect();
+// whether to show jump button
+const showJump = ref(false);
+// whether to show feedback form button
+const showFeedback = ref(true);
+// whether to show feedback modal
+const showModal = ref(false);
+// how much to push buttons upward to make room for footer if in view
+const nudge = ref(0);
 
-      // show jump button if user has scrolled far down enough
-      this.showJump = window.scrollY > window.innerHeight * 0.1;
-      // show feedback button if user not already on dedicated feedback page
-      this.showFeedback =
-        ((this.$route.name || "") as string).toLowerCase() !== "feedback";
+// update data state
+async function update() {
+  // wait for rendering to finish
+  await nextTick();
 
-      // calculate nudge
-      this.nudge = Math.max(
-        0,
-        footer.height + window.innerHeight - footer.bottom
-      );
-    },
-    jump() {
-      // jump to top of page
-      window.scrollTo(0, 0);
-    },
-  },
-  watch: {
-    // run update when route changes (after page finished rendering)
-    $route: {
-      handler: function () {
-        nextTick(this.update);
-      },
-      deep: true,
-    },
-  },
-  mounted() {
-    // run initial update (after page finished rendering)
-    nextTick(this.update);
+  // get dimensions of footer
+  const footerEl = document?.querySelector("footer");
+  if (!footerEl) return;
+  const footer = footerEl.getBoundingClientRect();
 
-    // listen for events that would affect calcs in update and run update
-    window.addEventListener("scroll", this.update);
-    window.addEventListener("resize", this.update);
-    mutationObserver = new MutationObserver(this.update);
-    mutationObserver.observe(document?.body, {
-      subtree: true,
-      childList: true,
-    });
-  },
-  beforeUnmount() {
-    // detach/cleanup event listeners
-    window.removeEventListener("scroll", this.update);
-    window.removeEventListener("resize", this.update);
-    if (mutationObserver) mutationObserver.disconnect();
-  },
+  // show jump button if user has scrolled far down enough
+  showJump.value = window.scrollY > window.innerHeight * 0.1;
+  // show feedback button if user not already on dedicated feedback page
+  showFeedback.value =
+    ((route.name || "") as string).toLowerCase() !== "feedback";
+
+  // calculate nudge
+  nudge.value = Math.max(0, footer.height + window.innerHeight - footer.bottom);
+}
+
+// jump to top of page
+function jump() {
+  window.scrollTo(0, 0);
+}
+
+// run update on: page load, route change, scroll, resize, reflow, etc.
+onMounted(update);
+watch(() => route, update);
+useEventListener(window, "scroll", update);
+useEventListener(window, "resize", update);
+useMutationObserver(document?.body, update, {
+  subtree: true,
+  childList: true,
 });
 </script>
 

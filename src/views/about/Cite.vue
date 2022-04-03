@@ -1,3 +1,9 @@
+<!--
+  about cite page
+
+  info on how to cite and acknowledge monarch
+-->
+
 <template>
   <AppSection>
     <AppHeading>Cite</AppHeading>
@@ -86,13 +92,6 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import AppCitation from "@/components/AppCitation.vue";
-
-export default defineComponent({
-  components: {
-    AppCitation,
-  },
-});
 </script>

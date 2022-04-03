@@ -1,3 +1,7 @@
+<!--
+  help landing page
+-->
+
 <template>
   <!-- main links -->
   <AppSection>
@@ -69,41 +73,32 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import { getUptimes } from "@/api/uptime";
 import { Status } from "@/components/AppStatus";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
 
-// help landing page
-export default defineComponent({
-  components: {
-    AppStatus,
-  },
-  data() {
-    return {
-      // list of status checks to display
-      uptimes: [] as Array<Status>,
-      // overall status of query
-      status: null as Status | null,
-    };
-  },
-  async mounted() {
-    // loading...
-    this.status = { code: "loading", text: "Loading service statuses" };
+// list of status checks to display
+const uptimes = ref<Array<Status>>([]);
+// overall status of query
+const status = ref<Status | null>(null);
 
-    try {
-      // get statuses from uptimerobot api
-      this.uptimes = await getUptimes();
+onMounted(async () => {
+  // loading...
+  status.value = { code: "loading", text: "Loading service statuses" };
 
-      // clear status
-      this.status = null;
-    } catch (error) {
-      // error...
-      this.status = error as ApiError;
-    }
-  },
+  try {
+    // get statuses from uptimerobot api
+    uptimes.value = await getUptimes();
+
+    // clear status
+    status.value = null;
+  } catch (error) {
+    // error...
+    status.value = error as ApiError;
+  }
 });
 </script>
 

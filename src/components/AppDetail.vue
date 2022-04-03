@@ -1,3 +1,7 @@
+<!--
+  simple container for blocks of info (primarily for node page)
+-->
+
 <template>
   <AppFlex
     ref="cell"
@@ -14,33 +18,24 @@
   </AppFlex>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
-// simple container primarily for showing fields of a node as blocks of info
+<script setup lang="ts">
 // for fields not relevant to current page (e.g. taxon on a disease node page),
 // hide with v-if
+
 // for relevant fields, show with v-if, to indicate that field exists, but pass
 // "blank" prop to indicate that no data available
-export default defineComponent({
-  props: {
-    // whether or not to show "no info" placeholder
-    blank: {
-      type: Boolean,
-      default: false,
-    },
-    // title of info
-    title: {
-      type: String,
-      required: true,
-    },
-    // size of info block
-    big: {
-      type: Boolean,
-      default: false,
-    },
-  },
-});
+
+interface Props {
+  // title of info block
+  title: string;
+  // whether or not to show "no info" placeholder. why? to show that this field
+  // exists, but doesn't have data this time.
+  blank?: boolean;
+  // whether info block is full width or not
+  big?: boolean;
+}
+
+withDefaults(defineProps<Props>(), { blank: false, big: false });
 </script>
 
 <style lang="scss" scoped>

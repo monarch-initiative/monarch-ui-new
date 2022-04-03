@@ -1,3 +1,10 @@
+<!--
+  tab buttons that conditionally show their corresponding slots
+
+  references:
+  https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/tabs/tabs-1/tabs.html
+-->
+
 <template>
   <AppFlex role="tablist" :aria-label="name">
     <AppButton
@@ -40,13 +47,15 @@
   <slot :name="selected"></slot>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+import { ref, computed, watch } from "vue";
 import { uniqueId } from "lodash";
 import { wrap } from "@/util/math";
+import { useRouter, useRoute } from "vue-router";
 
-// references:
-// https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/tabs/tabs-1/tabs.html
+// route info
+const router = useRouter();
+const route = useRoute();
 
 interface Tab {
   // page-wide unique id of tab
@@ -59,90 +68,81 @@ interface Tab {
 }
 type Tabs = Array<Tab>;
 
-// tab buttons that conditionally show their corresponding slots
-export default defineComponent({
-  emits: ["change"],
-  props: {
-    // list of tabs with info
-    tabs: {
-      type: Array as PropType<Tabs>,
-      required: true,
-    },
-    // default selected tab id
-    default: String,
-    // name of tab group
-    name: {
-      type: String,
-      required: true,
-    },
-    // whether to show description paragraph
-    showDescription: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  data() {
-    return {
-      // unique id for instance of component
-      id: uniqueId(),
-      // id of selected tab
-      selected: (this.getHash() ||
-        this.$props.default ||
-        this.$props.tabs[0].id ||
-        "") as string,
-    };
-  },
-  computed: {
-    // description of selected tab
-    description() {
-      return this.tabs.find((tab) => tab.id === this.selected)?.description;
-    },
-  },
-  methods: {
-    // when user presses key on button
-    onKeydown(event: KeyboardEvent) {
-      if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
-        // prevent page scroll
-        event.preventDefault();
+interface Props {
+  // list of tabs with info
+  tabs: Tabs;
+  // default selected tab id
+  default?: string;
+  // name of tab group
+  name: string;
+  // whether to show description paragraph
+  showDescription?: boolean;
+}
 
-        // move selected tab
-        let index = this.tabs.findIndex((tab) => tab.id === this.selected);
-        if (event.key === "ArrowLeft") index--;
-        if (event.key === "ArrowRight") index++;
-        if (event.key === "Home") index = 0;
-        if (event.key === "End") index = this.tabs.length - 1;
+const props = withDefaults(defineProps<Props>(), { showDescription: true });
 
-        // update selected, wrapping beyond -1 or options length
-        this.selected = this.tabs[wrap(index, 0, this.tabs.length)].id;
-      }
-    },
-    // when hash in url is changed or loaded
-    getHash() {
-      // set selected tab to id in hash
-      const hash = this.$route.hash.slice(1);
-      if (this.tabs.find((tab) => tab.id === hash)) return hash;
-    },
-  },
-  watch: {
-    // when selected tab changes
-    async selected() {
-      // focus the selected tab
-      const selector = `#tab-${this.id}-${this.selected}`;
-      const button = document?.querySelector(selector) as HTMLButtonElement;
-      button?.focus();
+interface Emits {
+  (event: "change", selected: string): void;
+}
 
-      // update hash in url
-      await this.$router.replace({ ...this.$route, hash: "#" + this.selected });
+const emit = defineEmits<Emits>();
 
-      // emit event to parent that tab changed
-      this.$emit("change", this.selected);
-    },
-    // when url hash changes
-    $route() {
-      // update selected
-      const hash = this.getHash();
-      if (hash) this.selected = hash;
-    },
-  },
+// unique id for instance of component
+const id = ref(uniqueId());
+// id of selected tab
+const selected = ref(getHash() || props.default || props.tabs[0].id || "");
+
+// description of selected tab
+const description = computed(
+  () => props.tabs.find((tab) => tab.id === selected.value)?.description
+);
+
+// when user presses key on button
+function onKeydown(event: KeyboardEvent) {
+  if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+    // prevent page scroll
+    event.preventDefault();
+
+    // move selected tab
+    let index = props.tabs.findIndex((tab) => tab.id === selected.value);
+    if (event.key === "ArrowLeft") index--;
+    if (event.key === "ArrowRight") index++;
+    if (event.key === "Home") index = 0;
+    if (event.key === "End") index = props.tabs.length - 1;
+
+    // update selected, wrapping beyond -1 or options length
+    selected.value = props.tabs[wrap(index, 0, props.tabs.length)].id;
+  }
+}
+
+// get appropriate tab from url hash
+function getHash() {
+  // set selected tab to id in hash
+  const hash = route?.hash?.slice(1) || "";
+  // if there is a tab with name equal to hash, return that one
+  if (props.tabs.find((tab) => tab.id === hash)) return hash;
+  else return "";
+}
+
+// when selected tab changes
+watch(selected, async () => {
+  // focus the selected tab
+  const selector = `#tab-${id.value}-${selected.value}`;
+  const button = document?.querySelector(selector) as HTMLButtonElement;
+  button?.focus();
+
+  // update hash in url
+  await router.replace({ ...route, hash: "#" + selected.value });
+
+  // emit event to parent that tab changed
+  emit("change", selected.value);
 });
+
+// when url hash changes
+watch(
+  () => route.hash,
+  () => {
+    if (getHash()) selected.value = getHash();
+  }
+);
 </script>

@@ -1,3 +1,7 @@
+<!--
+  footer at bottom of every page
+-->
+
 <template>
   <footer>
     <div class="social">

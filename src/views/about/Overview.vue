@@ -1,3 +1,9 @@
+<!--
+  about overview page
+
+  comprehensive diagram of monarch "ecosystem": all related tools and resources
+-->
+
 <template>
   <AppSection>
     <AppHeading>Overview</AppHeading>

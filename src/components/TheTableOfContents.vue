@@ -1,5 +1,6 @@
 <template>
   <AppFlex
+    ref="toc"
     direction="col"
     gap="none"
     hAlign="stretch"
@@ -54,8 +55,13 @@
   </AppFlex>
 </template>
 
-<script lang="ts">
-import { defineComponent, nextTick } from "vue";
+<script setup lang="ts">
+import { ref, watch, onMounted, nextTick } from "vue";
+import {
+  useEventListener,
+  useMutationObserver,
+  onClickOutside,
+} from "@vueuse/core";
 import AppCheckbox from "./AppCheckbox.vue";
 import { firstInView } from "@/util/dom";
 
@@ -66,117 +72,93 @@ type Entries = Array<{
   text: string;
 }>;
 
-let mutationObserver: MutationObserver;
+// toc entries
+const entries = ref<Entries>([]);
+// whether toc is open or not
+const expanded = ref(window.innerWidth > 1400);
+// how much to push downward to make room for header if in view
+const nudge = ref(0);
+// whether to only show one section at a time
+const oneAtATime = ref(false);
+// active (in view or selected) section
+const active = ref(0);
 
-export default defineComponent({
-  components: {
-    AppCheckbox,
-  },
-  data() {
-    return {
-      // toc entries
-      entries: [] as Entries,
-      // whether toc is open or not
-      expanded: window.innerWidth > 1400,
-      // how much to push downward to make room for header if in view
-      nudge: 0,
-      // whether to only show one section at a time
-      oneAtATime: false,
-      // active (in view, or selected) section
-      active: 0,
-    };
-  },
-  methods: {
-    // update toc position
-    updatePosition() {
-      // get dimensions of header and "sub-header" (e.g. first section on node page)
-      const headerEl = document?.querySelector("header");
-      const subHeaderEl = document?.querySelector("main > section:first-child");
-      if (!headerEl || !subHeaderEl) return;
-      const header = headerEl.getBoundingClientRect();
-      const subHeader = subHeaderEl.getBoundingClientRect();
+// table of contents panel element
+const toc = ref<HTMLElement>();
 
-      // calculate nudge
-      this.nudge = Math.max(
-        header.top + header.height,
-        subHeader.top + subHeader.height
-      );
+// update toc position
+async function updatePosition() {
+  // wait for rendering to finish
+  await nextTick();
 
-      // find in view section
-      if (!this.oneAtATime)
-        this.active = firstInView(this.entries.map(({ section }) => section));
-    },
-    // update toc entries
-    updateEntries() {
-      this.entries = Array.from(
-        // get all headings except top level one
-        document?.querySelectorAll("h2[id], h3[id]") || []
-      ).map((element) =>
-        // get relevant props from heading
-        ({
-          section: (element.closest("section") as HTMLElement) || null,
-          id: element.getAttribute("id") || "",
-          icon:
-            element.querySelector("[data-icon]")?.getAttribute("data-icon") ||
-            "",
-          text: (element as HTMLElement).innerText || "",
-        })
-      );
-    },
-    // hide/show sections based on active
-    hideShow() {
-      for (const [index, { section }] of Object.entries(this.entries))
-        if (section)
-          section.style.display =
-            this.active === Number(index) || !this.oneAtATime ? "" : "none";
-    },
-    // when user clicks "off" of toc panel
-    onWindowClick() {
-      if (this.expanded && window.innerWidth < 1240) this.expanded = false;
-    },
-  },
-  watch: {
-    oneAtATime() {
-      this.hideShow();
-    },
-    active() {
-      this.hideShow();
-    },
-  },
-  mounted() {
-    // run initial updatePosition (after page finished rendering)
-    nextTick(this.updatePosition);
+  // get dimensions of header and "sub-header" (e.g. first section on node page)
+  const headerEl = document?.querySelector("header");
+  const subHeaderEl = document?.querySelector("main > section:first-child");
+  if (!headerEl || !subHeaderEl) return;
+  const header = headerEl.getBoundingClientRect();
+  const subHeader = subHeaderEl.getBoundingClientRect();
 
-    // populate entries
-    this.updateEntries();
+  // calculate nudge
+  nudge.value = Math.max(
+    header.top + header.height,
+    subHeader.top + subHeader.height
+  );
 
-    // listen for events that would affect position calcs
-    window.addEventListener("scroll", this.updatePosition);
-    window.addEventListener("resize", this.updatePosition);
-    mutationObserver = new MutationObserver(() => {
-      this.updatePosition();
-      this.updateEntries();
-    });
-    mutationObserver.observe(document?.body, {
-      subtree: true,
-      childList: true,
-    });
+  // find in view section
+  if (!oneAtATime.value)
+    active.value = firstInView(entries.value.map(({ section }) => section));
+}
 
-    // other listeners
-    window.addEventListener("click", this.onWindowClick);
-  },
-  updated() {
-    // update entries
-    this.updateEntries();
-  },
-  beforeUnmount() {
-    // detach/cleanup event listeners
-    window.removeEventListener("scroll", this.updatePosition);
-    window.removeEventListener("resize", this.updatePosition);
-    if (mutationObserver) mutationObserver.disconnect();
-    window.removeEventListener("click", this.onWindowClick);
-  },
+// update toc entries
+function updateEntries() {
+  entries.value = Array.from(
+    // get all headings except top level one
+    document?.querySelectorAll("h2[id], h3[id]") || []
+  ).map((element) =>
+    // get relevant props from heading
+    ({
+      section: (element.closest("section") as HTMLElement) || null,
+      id: element.getAttribute("id") || "",
+      icon:
+        element.querySelector("[data-icon]")?.getAttribute("data-icon") || "",
+      text: (element as HTMLElement).innerText || "",
+    })
+  );
+}
+
+// hide/show sections based on active
+function hideShow() {
+  for (const [index, { section }] of Object.entries(entries.value))
+    if (section)
+      section.style.display =
+        active.value === Number(index) || !oneAtATime.value ? "" : "none";
+}
+
+// when user clicks "off" of toc panel
+onClickOutside(toc, () => {
+  if (expanded.value && window.innerWidth < 1240) expanded.value = false;
 });
+
+watch(oneAtATime, hideShow);
+
+watch(active, hideShow);
+
+// run update on: page load, scroll, resize, reflow, etc.
+onMounted(updateEntries);
+onMounted(updatePosition);
+useEventListener(window, "scroll", updatePosition);
+useEventListener(window, "resize", updatePosition);
+useMutationObserver(
+  document?.body,
+  () => {
+    updatePosition();
+    updateEntries();
+  },
+  {
+    subtree: true,
+    childList: true,
+  }
+);
 </script>
 
 <style lang="scss" scoped>

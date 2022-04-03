@@ -1,3 +1,7 @@
+<!--
+  node page hierarchy section. super/sub/equivalent classes of current node.
+-->
+
 <template>
   <AppSection>
     <AppHeading icon="sitemap">Hierarchy</AppHeading>
@@ -77,22 +81,16 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
 import { Result } from "@/api/node-lookup";
 import AppStatus from "@/components/AppStatus.vue";
 
-// hierarchy info about node
-export default defineComponent({
-  props: {
-    // current node
-    node: {
-      type: Object as PropType<Result>,
-      required: true,
-    },
-  },
-  components: { AppStatus },
-});
+interface Props {
+  // current node
+  node: Result;
+}
+
+defineProps<Props>();
 </script>
 
 <style lang="scss" scoped>

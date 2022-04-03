@@ -69,7 +69,7 @@ interface Response {
 }
 
 // get associations between a node and a category
-export const getAssociations = async (
+export const getTabulatedAssociations = async (
   nodeId = "",
   nodeCategory = "",
   assocationCategory = "",
@@ -177,5 +177,5 @@ export const getTopAssociations = async (
   nodeCategory = "",
   assocationCategory = ""
 ): Promise<Result["associations"]> =>
-  (await getAssociations(nodeId, nodeCategory, assocationCategory, 5))
+  (await getTabulatedAssociations(nodeId, nodeCategory, assocationCategory, 5))
     .associations;

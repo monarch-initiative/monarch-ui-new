@@ -1,3 +1,9 @@
+<!-- 
+  utility component to conveniently and consistently align and space items.
+  use only for basic flex needs. for anything more (like media queries), use 
+  in-situ css.
+-->
+
 <template>
   <div
     class="flex"
@@ -10,8 +16,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 
 // map nice human align names to css flex align names
 const alignMap = {
@@ -23,49 +29,34 @@ const alignMap = {
   stretch: "stretch",
 };
 
-// utility component to conveniently and consistently align and space items
-// use only for basic flex needs. anything more (like media queries), use custom css
-export default defineComponent({
-  props: {
-    // horizontal or vertical
-    direction: {
-      type: String as PropType<"row" | "col">,
-      default: "row",
-    },
-    // spacing between items
-    gap: {
-      type: String as PropType<"none" | "small" | "medium" | "big">,
-      default: "medium",
-    },
-    // horizontal alignment
-    hAlign: {
-      type: String as PropType<"left" | "center" | "right" | "stretch">,
-      default: "center",
-    },
-    // vertical alignment
-    vAlign: {
-      type: String as PropType<"top" | "center" | "bottom" | "stretch">,
-      default: "center",
-    },
-    // whether to wrap
-    wrap: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  computed: {
-    justifyContent(): string {
-      return this.direction === "col"
-        ? alignMap[this.vAlign]
-        : alignMap[this.hAlign];
-    },
-    alignItems(): string {
-      return this.direction === "col"
-        ? alignMap[this.hAlign]
-        : alignMap[this.vAlign];
-    },
-  },
+interface Props {
+  // horizontal or vertical
+  direction?: "row" | "col";
+  // spacing between items
+  gap?: "none" | "small" | "medium" | "big";
+  // horizontal alignment
+  hAlign?: "left" | "center" | "right" | "stretch";
+  // vertical alignment
+  vAlign?: "top" | "center" | "bottom" | "stretch";
+  // whether to wrap contents
+  wrap?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  direction: "row",
+  gap: "medium",
+  hAlign: "center",
+  vAlign: "center",
+  wrap: true,
 });
+
+// css flex props
+const justifyContent = computed(() =>
+  props.direction === "col" ? alignMap[props.vAlign] : alignMap[props.hAlign]
+);
+const alignItems = computed(() =>
+  props.direction === "col" ? alignMap[props.hAlign] : alignMap[props.vAlign]
+);
 </script>
 
 <style lang="scss" scoped>

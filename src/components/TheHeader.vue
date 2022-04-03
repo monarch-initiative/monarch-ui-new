@@ -1,3 +1,7 @@
+<!--
+  floating header at top of every page
+-->
+
 <template>
   <header :data-home="home">
     <!-- header background visualization -->
@@ -61,37 +65,31 @@
   </header>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref, computed, watch } from "vue";
 import TheNexus from "./TheNexus.vue";
 import Logo from "@/assets/Logo.vue";
-import packageJson from "../../package.json";
+import { version } from "../../package.json";
+import { useRoute } from "vue-router";
 
-export default defineComponent({
-  components: {
-    TheNexus,
-    Logo,
-  },
-  data() {
-    return {
-      // version of app
-      version: packageJson.version,
-      // is nav menu expanded
-      expanded: false,
-    };
-  },
-  computed: {
-    // is home page (big) version
-    home(): boolean {
-      return String(this.$route.name).toLowerCase() === "home";
-    },
-  },
-  watch: {
-    $route() {
-      this.expanded = false;
-    },
-  },
+// route info
+const route = useRoute();
+
+// is nav menu expanded
+const expanded = ref(false);
+
+// is home page (big) version
+const home = computed((): boolean => {
+  return String(route.name).toLowerCase() === "home";
 });
+
+// close nav when page changes
+watch(
+  () => route,
+  () => {
+    expanded.value = false;
+  }
+);
 </script>
 
 <style lang="scss" scoped>

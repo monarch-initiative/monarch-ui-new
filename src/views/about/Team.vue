@@ -1,3 +1,9 @@
+<!--
+  about team page
+
+  all monarch-related team members and info about them
+-->
+
 <template>
   <!-- brief intro -->
   <AppSection>
@@ -42,7 +48,7 @@
         :name="member.name"
         :role="member.role"
         :link="member.link"
-        :alumni="group.alumni || member.alumni"
+        :alumni="group.alumni || (member as { alumni?: boolean }).alumni"
       />
     </AppGallery>
   </AppSection>
@@ -85,34 +91,19 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { kebabCase } from "lodash";
 import AppMember from "@/components/AppMember.vue";
 import team from "./team.json";
 
-export default defineComponent({
-  components: {
-    AppMember,
-  },
-  data() {
-    return {
-      // list of team data
-      team,
-    };
-  },
-  methods: {
-    // get group img src with fallback if not found
-    getSrc(image: string) {
-      try {
-        return require(`@/assets/team/groups/${image}`);
-      } catch (error) {
-        return false;
-      }
-    },
-    kebabCase,
-  },
-});
+// get group img src with fallback if not found
+function getSrc(image: string) {
+  try {
+    return require(`@/assets/team/groups/${image}`);
+  } catch (error) {
+    return false;
+  }
+}
 </script>
 
 <style lang="scss" scoped>

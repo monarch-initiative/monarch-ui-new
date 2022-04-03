@@ -1,3 +1,7 @@
+<!--
+  placeholder colored square
+-->
+
 <template>
   <div class="placeholder" />
 </template>

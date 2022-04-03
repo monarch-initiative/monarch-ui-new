@@ -1,3 +1,10 @@
+<!--
+  basic modal component with arbitrary content
+
+  references:
+  https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/dialog.html
+-->
+
 <template>
   <teleport to="body">
     <transition name="fade">
@@ -30,91 +37,86 @@
   </teleport>
 </template>
 
-<script lang="ts">
-import { defineComponent, nextTick } from "vue";
+<script setup lang="ts">
+import { ref, nextTick, onUpdated, onBeforeUpdate } from "vue";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import { useEventListener } from "@vueuse/core";
 
-// references:
-// https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/dialog.html
+interface Props {
+  // open state
+  modelValue?: boolean;
+  // modal aria label
+  label: string;
+}
 
-// basic modal component with arbitrary content
-export default defineComponent({
-  props: {
-    // open state
-    modelValue: Boolean,
-    // modal aria label
-    label: {
-      type: String,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      originalFocus: null as HTMLElement | null,
-    };
-  },
-  emits: ["update:modelValue"],
-  methods: {
-    // update model value to close modal
-    close() {
-      this.$emit("update:modelValue", false);
-    },
-    // on key down
-    keyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") this.close();
-    },
-  },
-  mounted() {
-    // global keydown listener
-    window.addEventListener("keydown", this.keyDown);
-  },
-  updated() {
-    // modal element
-    const modal = this.$refs.modal as HTMLElement;
-    // rest of app besides modal
-    const app = document?.querySelector("#app");
+const props = defineProps<Props>();
 
-    // if modal just opened
-    if (this.modelValue) {
-      // hide for screen readers
-      app?.setAttribute("aria-hidden", "true");
-      // disable focus
-      app?.setAttribute("inert", "true");
-      // disable body scroll
-      disableBodyScroll(modal);
-      // focus first focusable element in modal
-      const query = "input, textarea, button, select";
-      const focusable = modal.querySelector(query) as HTMLElement;
-      focusable?.focus();
-    }
-  },
-  async beforeUpdate() {
-    // modal element
-    const modal = this.$refs.modal as HTMLElement;
-    // rest of app besides modal
-    const app = document?.querySelector("#app");
+interface Emits {
+  (event: "update:modelValue", value: boolean): void;
+}
 
-    // if modal about to be opened
-    if (this.modelValue) {
-      this.originalFocus = document?.activeElement as HTMLElement;
-    }
-    // if modal about to be closed
-    else {
-      // show for screen readers
-      app?.removeAttribute("aria-hidden");
-      // enable focus
-      app?.removeAttribute("inert");
-      // enable body scroll
-      enableBodyScroll(modal);
-      // restore focus to what had focus before modal opened
-      await nextTick();
-      this.originalFocus?.focus();
-    }
-  },
-  beforeUnmount() {
-    // global keydown listener
-    window.removeEventListener("keydown", this.keyDown);
-  },
+const emit = defineEmits<Emits>();
+
+// element that had focus before modal was opened
+const originalFocus = ref<HTMLElement | null>(null);
+
+// update model value to close modal
+function close() {
+  emit("update:modelValue", false);
+}
+
+// when user presses any key
+function keyDown(event: KeyboardEvent) {
+  if (event.key === "Escape") close();
+}
+
+// attach key down listener to window
+useEventListener(window, "keydown", keyDown);
+
+// modal element
+const modal = ref<HTMLElement>();
+
+// after state change
+onUpdated(() => {
+  // rest of app besides modal
+  const app = document?.querySelector("#app");
+
+  // if modal just opened
+  if (props.modelValue) {
+    // hide for screen readers
+    app?.setAttribute("aria-hidden", "true");
+    // disable focus
+    app?.setAttribute("inert", "true");
+    // disable body scroll
+    if (modal.value) disableBodyScroll(modal.value);
+    // focus first focusable element in modal
+    const query = "input, textarea, button, select";
+    const focusable = modal.value?.querySelector(query) as HTMLElement;
+    focusable?.focus();
+  }
+});
+
+// before state change
+onBeforeUpdate(async () => {
+  // rest of app besides modal
+  const app = document?.querySelector("#app");
+
+  // if modal about to be opened
+  if (props.modelValue) {
+    originalFocus.value = document?.activeElement as HTMLElement;
+  }
+  // if modal about to be closed
+  else {
+    // show for screen readers
+    app?.removeAttribute("aria-hidden");
+    // enable focus
+    app?.removeAttribute("inert");
+    // enable body scroll
+    if (modal.value) enableBodyScroll(modal.value);
+    // restore focus to what had focus before modal opened
+    await nextTick();
+    originalFocus.value?.focus();
+  }
 });
 </script>
 

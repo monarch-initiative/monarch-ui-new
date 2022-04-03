@@ -1,3 +1,7 @@
+<!--
+  node page title section, at top, below header. basic identifying info of node.
+-->
+
 <template>
   <AppSection design="fill" class="section">
     <AppFlex dir="column" gap="small">
@@ -33,25 +37,16 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
 import { kebabCase, startCase } from "lodash";
 import { Result } from "@/api/node-lookup";
 
-// most important props (name, type, and id) of node, right below page header
-export default defineComponent({
-  props: {
-    // current node
-    node: {
-      type: Object as PropType<Result>,
-      required: true,
-    },
-  },
-  methods: {
-    kebabCase,
-    startCase,
-  },
-});
+interface Props {
+  // current node
+  node: Result;
+}
+
+defineProps<Props>();
 </script>
 
 <style lang="scss" scoped>

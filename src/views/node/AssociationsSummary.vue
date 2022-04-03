@@ -1,3 +1,7 @@
+<!--
+  node page associations section, summary mode. top few associations.
+-->
+
 <template>
   <!-- status -->
   <AppStatus v-if="status" :status="status" />
@@ -60,8 +64,8 @@
   </template>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+import { ref, watch, onMounted } from "vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { Status } from "@/components/AppStatus";
 import { Result as NodeResult } from "@/api/node-lookup";
@@ -72,68 +76,52 @@ import {
 } from "@/api/node-associations";
 import { ApiError } from "@/api";
 
-// summary (top few) associations
-export default defineComponent({
-  components: {
-    AppStatus,
-  },
-  props: {
-    // current node
-    node: {
-      type: Object as PropType<NodeResult>,
-      required: true,
-    },
-    // selected association category
-    category: {
-      type: Object as PropType<Option>,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      // association data
-      associations: [] as AssociationsResult["associations"],
-      // status of query
-      status: null as Status | null,
-    };
-  },
-  methods: {
-    // get summary association data
-    async getAssociations() {
-      try {
-        // loading...
-        this.status = { code: "loading", text: "Loading association data" };
-        this.associations = [];
+interface Props {
+  // current node
+  node: NodeResult;
+  // selected association category
+  category: Option;
+}
 
-        // catch case where no association categories available
-        if (!this.node.associationCounts.length)
-          throw new ApiError("No association info available", "warning");
+const props = defineProps<Props>();
 
-        // get association data
-        this.associations = await getTopAssociations(
-          this.node.id,
-          this.node.category,
-          this.category.id
-        );
+// association data
+const associations = ref<AssociationsResult["associations"]>([]);
+// status of query
+const status = ref<Status | null>(null);
 
-        // clear status
-        this.status = null;
-      } catch (error) {
-        // error...
-        this.status = error as ApiError;
-        this.associations = [];
-      }
-    },
-  },
-  watch: {
-    category() {
-      this.getAssociations();
-    },
-  },
-  mounted() {
-    this.getAssociations();
-  },
-});
+// get summary association data
+async function getAssociations() {
+  try {
+    // loading...
+    status.value = { code: "loading", text: "Loading association data" };
+    associations.value = [];
+
+    // catch case where no association categories available
+    if (!props.node.associationCounts.length)
+      throw new ApiError("No association info available", "warning");
+
+    // get association data
+    associations.value = await getTopAssociations(
+      props.node.id,
+      props.node.category,
+      props.category.id
+    );
+
+    // clear status
+    status.value = null;
+  } catch (error) {
+    // error...
+    status.value = error as ApiError;
+    associations.value = [];
+  }
+}
+
+// get associations when category changes
+watch(() => props.category, getAssociations);
+
+// get associations on load
+onMounted(getAssociations);
 </script>
 
 <style lang="scss" scoped>

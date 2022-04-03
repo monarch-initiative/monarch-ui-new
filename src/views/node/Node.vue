@@ -1,3 +1,7 @@
+<!--
+  node landing page
+-->
+
 <template>
   <!-- status -->
   <template v-if="status">
@@ -23,8 +27,8 @@
   </template>
 </template>
 
-<script lang="ts">
-import { defineComponent, nextTick } from "vue";
+<script setup lang="ts">
+import { ref, watch, onMounted, nextTick } from "vue";
 import { lookupNode, Result } from "@/api/node-lookup";
 import { Status } from "@/components/AppStatus";
 import { ApiError } from "@/api";
@@ -38,68 +42,45 @@ import Visualization from "./Visualization.vue";
 import Associations from "./Associations.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import { scrollToHash } from "@/router";
-import { RouteRecord } from "vue-router";
+import { useRoute } from "vue-router";
 
-export default defineComponent({
-  components: {
-    AppStatus,
-    Title,
-    Overview,
-    Details,
-    Hierarchy,
-    Visualization,
-    Associations,
-    Breadcrumbs,
-    TheTableOfContents,
-  },
-  data() {
-    return {
-      // info/metadata about node
-      node: null as Result | null,
-      // status of query
-      status: null as Status | null,
-    };
-  },
-  methods: {
-    // get new node data
-    async getData() {
-      // get node from route params
-      const { id = "", category = "" } = this.$route.params;
+// route info
+const route = useRoute();
 
-      try {
-        // loading...
-        this.status = { code: "loading", text: `Loading node info for ${id}` };
-        this.node = null;
+// info/metadata about node
+const node = ref<Result | null>(null);
+// status of query
+const status = ref<Status | null>(null);
 
-        // get node information
-        this.node = await lookupNode(id as string, category as string);
+// get new node data
+async function getData() {
+  // get node from route params
+  const { id = "", category = "" } = route.params;
 
-        // clear status
-        this.status = null;
+  try {
+    // loading...
+    status.value = { code: "loading", text: `Loading node info for ${id}` };
+    node.value = null;
 
-        // scroll to hash once data loaded
-        await nextTick();
-        scrollToHash();
-      } catch (error) {
-        // error...
-        this.status = error as ApiError;
-        this.node = null;
-      }
-    },
-  },
-  async mounted() {
-    // get new node data on page load
-    this.getData();
-  },
-  watch: {
-    // when route/page changes
-    $route(val: RouteRecord, prev: RouteRecord) {
-      // only if path (not hash or query) changed
-      // (e.g going from node page to node page)
-      if (val.path !== prev.path)
-        // get new node data
-        this.getData();
-    },
-  },
-});
+    // get node information
+    node.value = await lookupNode(id as string, category as string);
+
+    // clear status
+    status.value = null;
+
+    // scroll to hash once data loaded
+    await nextTick();
+    scrollToHash();
+  } catch (error) {
+    // error...
+    status.value = error as ApiError;
+    node.value = null;
+  }
+}
+
+// when path (not hash or query) changed, get new node data
+watch(() => route.path, getData);
+
+// get new node data on load
+onMounted(getData);
 </script>

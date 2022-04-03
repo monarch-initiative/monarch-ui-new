@@ -1,3 +1,7 @@
+<!--
+  checkbox with arbitrary content (slot) and icon
+-->
+
 <template>
   <label class="checkbox" :aria-checked="modelValue">
     <input type="checkbox" :checked="modelValue" @change="onChange" />
@@ -7,29 +11,28 @@
   </label>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+interface Props {
+  // checked state
+  modelValue?: boolean;
+  // text to show in label
+  text: string;
+  // icon to show in label
+  icon?: string;
+}
 
-// checkbox with aribitrary content (slot) and icon
-export default defineComponent({
-  props: {
-    // checked state
-    modelValue: Boolean,
-    // text to show in label
-    text: String,
-    // icon to show in label
-    icon: String,
-  },
-  emits: ["update:modelValue"],
-  methods: {
-    onChange(event: Event) {
-      this.$emit(
-        "update:modelValue",
-        (event?.target as HTMLInputElement).checked
-      );
-    },
-  },
-});
+defineProps<Props>();
+
+interface Emits {
+  (event: "update:modelValue", checked: boolean): void;
+}
+
+const emit = defineEmits<Emits>();
+
+// when checkbox value changes
+function onChange(event: Event) {
+  emit("update:modelValue", (event?.target as HTMLInputElement).checked);
+}
 </script>
 
 <style lang="scss" scoped>

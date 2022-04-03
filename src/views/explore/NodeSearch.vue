@@ -1,3 +1,9 @@
+<!--
+  node search tab on explore page
+
+  search for nodes in knowledge graph
+-->
+
 <template>
   <!-- search box -->
   <AppInput
@@ -29,7 +35,8 @@
       <template v-for="(filter, name, index) in availableFilters" :key="index">
         <AppSelectMulti
           v-if="filter.length"
-          :name="name"
+          :name="`${name}`"
+          v-tippy="`${startCase(name)} filter`"
           :options="availableFilters[name]"
           v-model="activeFilters[name]"
           @change="onFilterChange"
@@ -40,7 +47,7 @@
     <hr />
 
     <!-- status -->
-    <AppStatus v-if="status && search" ref="status" :status="status" />
+    <AppStatus v-if="status && search" :status="status" />
 
     <!-- results -->
     <AppFlex
@@ -108,8 +115,8 @@
   </template>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref, computed, watch, onMounted } from "vue";
 import { kebabCase, startCase, uniq } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
@@ -118,6 +125,11 @@ import { getSearchResults, mapFilters, Result } from "@/api/node-search";
 import { Status } from "@/components/AppStatus";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import { Options } from "@/components/AppSelectMulti";
+import { useRoute, useRouter } from "vue-router";
+
+// route info
+const router = useRouter();
+const route = useRoute();
 
 // example searches
 const examples = ["Marfan Syndrome", "Multicystic Kidney Dysplasia", "SSH"];
@@ -133,185 +145,167 @@ const examples = ["Marfan Syndrome", "Multicystic Kidney Dysplasia", "SSH"];
 //   ],
 // };
 
-// node search explore mode
-export default defineComponent({
-  components: {
-    AppInput,
-    AppStatus,
-    AppSelectMulti,
-  },
-  data() {
-    return {
-      // current search text
-      search: String(this.$route.query.search || ""),
-      // original search text that yielded current results
-      originalSearch: "",
-      // search results
-      results: [] as Result["results"],
-      // number of results
-      count: 0,
-      // current page number
-      page: 0,
-      // results per page
-      perPage: 10,
-      // status of query
-      status: null as Status | null,
-      // filters (facets) for search
-      availableFilters: {} as Record<string, Options>,
-      activeFilters: {} as Record<string, Options>,
-      // example searches
-      examples,
-    };
-  },
-  watch: {
-    // when route changes
-    $route() {
-      // update search text from route (if not already)
-      const fromUrl = String(this.$route.query.search || "");
-      if (this.search !== fromUrl) {
-        this.search = fromUrl;
-        this.getResults(true, false);
-      }
-    },
-    // when start page changes
-    from() {
-      this.getResults(false, false);
-    },
-  },
-  methods: {
-    // when user focuses text box
-    async onFocus() {
-      // navigate to explore page
-      await this.$router.push({ ...this.$route, name: "Explore" });
-      // refocus box
-      document?.querySelector("input")?.focus();
-    },
-    // when user "submits" text box
-    onChange() {
-      this.page = 0;
-      // prevent running query if results already match current search text
-      if (this.search !== this.originalSearch) this.getResults(true, true);
-    },
-    // when user changes active filters
-    onFilterChange() {
-      this.page = 0;
-      this.getResults(false, false);
-    },
-    // enter in clicked example and search
-    doExample(search: string) {
-      this.search = search;
-      this.getResults(true, true);
-    },
-    // get search results
-    async getResults(
-      // whether to perform "fresh" search, without filters. set to true when
-      // search changing, false when filters or page number changing.
-      fresh: boolean,
-      // whether to push new entry to browser history
-      history: boolean
-    ) {
-      // push permanent history entry
-      if (history) {
-        const query: Record<string, string> = {};
-        if (this.search) query.search = this.search;
-        await this.$router.push({ ...this.$route, name: "Explore", query });
-      }
+// current search text
+const search = ref(String(route.query.search || ""));
+// original search text that yielded current results
+const originalSearch = ref("");
+// search results
+const results = ref<Result["results"]>([]);
+// number of results
+const count = ref(0);
+// current page number
+const page = ref(0);
+// results per page
+const perPage = ref(10);
+// status of query
+const status = ref<Status | null>(null);
+// filters (facets) for search
+const availableFilters = ref<Record<string, Options>>({});
+const activeFilters = ref<Record<string, Options>>({});
 
-      // loading...
-      this.status = { code: "loading", text: "Loading results" };
-      this.results = [];
+// when user focuses text box
+async function onFocus() {
+  // navigate to explore page
+  await router.push({ ...route, name: "Explore" });
+  // refocus box
+  document?.querySelector("input")?.focus();
+}
 
-      try {
-        // get results from api
-        const { count, results, facets } = await getSearchResults(
-          this.search,
-          fresh ? undefined : mapFilters(this.availableFilters),
-          fresh ? undefined : mapFilters(this.activeFilters),
-          fresh ? undefined : this.from
-        );
-        this.results = results;
-        this.originalSearch = this.search;
-        this.count = count;
+// when user "submits" text box
+function onChange() {
+  page.value = 0;
+  // prevent running query if results already match current search text
+  if (search.value !== originalSearch.value) getResults(true, true);
+}
 
-        if (fresh) {
-          // update filters based on facets from api
-          this.availableFilters = { ...facets };
-          this.activeFilters = { ...facets };
-        }
+// when user changes active filters
+function onFilterChange() {
+  page.value = 0;
+  getResults(false, false);
+}
 
-        // clear status
-        this.status = null;
-      } catch (error) {
-        // error...
-        if (this.search.trim()) this.status = error as ApiError;
-        else this.status = null;
-        // clear results and filters
-        this.results = [];
-        if (fresh) {
-          this.availableFilters = {};
-          this.activeFilters = {};
-        }
-      }
-    },
+// enter in clicked example and search
+function doExample(value: string) {
+  search.value = value;
+  getResults(true, true);
+}
 
-    kebabCase,
-    startCase,
-  },
-  computed: {
-    // is home page
-    home(): boolean {
-      return String(this.$route.name).toLowerCase() === "home";
-    },
-    // "x of n" pages
-    from(): number {
-      return this.page * this.perPage;
-    },
-    to(): number {
-      return this.from + this.results.length - 1;
-    },
-    // pages of results
-    pages(): Array<Array<number>> {
-      // get full list of pages
-      const pages = Array(Math.ceil(this.count / this.perPage))
-        .fill(0)
-        .map((_, i) => i);
+// get search results
+async function getResults(
+  // whether to perform "fresh" search, without filters. set to true when
+  // search changing, false when filters or page number changing.
+  fresh: boolean,
+  // whether to push new entry to browser history
+  history: boolean
+) {
+  // push permanent history entry
+  if (history) {
+    const query: Record<string, string> = {};
+    if (search.value) query.search = search.value;
+    await router.push({ ...route, name: "Explore", query });
+  }
 
-      // make shorter pages list
-      let list = [
-        // first few pages
-        0,
-        1,
-        2,
-        // current few pages
-        this.page - 1,
-        this.page,
-        this.page + 1,
-        // last few pages
-        pages.length - 3,
-        pages.length - 2,
-        pages.length - 1,
-      ];
+  // loading...
+  status.value = { code: "loading", text: "Loading results" };
+  results.value = [];
 
-      // sort, deduplicate, and clamp list
-      list.sort((a, b) => a - b);
-      list = uniq(list).filter((page) => page >= 0 && page <= pages.length - 1);
+  try {
+    // get results from api
+    const response = await getSearchResults(
+      search.value,
+      fresh ? undefined : mapFilters(availableFilters.value),
+      fresh ? undefined : mapFilters(activeFilters.value),
+      fresh ? undefined : from.value
+    );
+    results.value = response.results;
+    originalSearch.value = search.value;
+    count.value = response.count;
 
-      // split into sub lists where page numbers are not sequential
-      const splitList: Array<Array<number>> = [[]];
-      for (let index = 0; index < list.length; index++) {
-        if (list[index - 1] && list[index] - list[index - 1] > 1)
-          splitList.push([]);
-        splitList[splitList.length - 1].push(list[index]);
-      }
+    if (fresh) {
+      // update filters based on facets from api
+      availableFilters.value = { ...response.facets };
+      activeFilters.value = { ...response.facets };
+    }
 
-      return splitList;
-    },
-  },
-  mounted() {
-    // instantly search on page load
-    this.getResults(true, false);
-  },
+    // clear status
+    status.value = null;
+  } catch (error) {
+    // error...
+    if (search.value.trim()) status.value = error as ApiError;
+    else status.value = null;
+    // clear results and filters
+    results.value = [];
+    if (fresh) {
+      availableFilters.value = {};
+      activeFilters.value = {};
+    }
+  }
+}
+
+// is home page
+const home = computed(
+  (): boolean => String(route.name).toLowerCase() === "home"
+);
+
+// "x of n" pages
+const from = computed((): number => page.value * perPage.value);
+const to = computed((): number => from.value + results.value.length - 1);
+
+// pages of results
+const pages = computed((): Array<Array<number>> => {
+  // get full list of pages
+  const pages = Array(Math.ceil(count.value / perPage.value))
+    .fill(0)
+    .map((_, i) => i);
+
+  // make shorter pages list
+  let list = [
+    // first few pages
+    0,
+    1,
+    2,
+    // current few pages
+    page.value - 1,
+    page.value,
+    page.value + 1,
+    // last few pages
+    pages.length - 3,
+    pages.length - 2,
+    pages.length - 1,
+  ];
+
+  // sort, deduplicate, and clamp list
+  list.sort((a, b) => a - b);
+  list = uniq(list).filter((page) => page >= 0 && page <= pages.length - 1);
+
+  // split into sub lists where page numbers are not sequential
+  const splitList: Array<Array<number>> = [[]];
+  for (let index = 0; index < list.length; index++) {
+    if (list[index - 1] && list[index] - list[index - 1] > 1)
+      splitList.push([]);
+    splitList[splitList.length - 1].push(list[index]);
+  }
+
+  return splitList;
 });
+
+// when route changes
+watch(
+  () => route,
+  () => {
+    // update search text from route (if not already)
+    const fromUrl = String(route.query.search || "");
+    if (search.value !== fromUrl) {
+      search.value = fromUrl;
+      getResults(true, false);
+    }
+  }
+);
+
+// when start page changes
+watch(from, () => getResults(false, false));
+
+onMounted(() => getResults(true, false));
 </script>
 
 <style lang="scss" scoped>

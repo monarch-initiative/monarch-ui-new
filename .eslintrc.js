@@ -41,6 +41,13 @@ module.exports = {
     ],
   },
 
+  // TODO: replace with env: "vue/setup-compiler-macros": true after upgrade to eslint-plugin-vue ^8.0.0
+  globals: {
+    defineProps: "readonly",
+    defineEmits: "readonly",
+    withDefaults: "readonly",
+  },
+
   // is this needed?
   overrides: [
     {

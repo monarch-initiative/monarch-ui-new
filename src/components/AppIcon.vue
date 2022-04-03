@@ -1,3 +1,7 @@
+<!--
+  wrapper for font awesome icon or custom icon loaded inline
+-->
+
 <template>
   <InlineSvg
     v-if="custom"
@@ -15,8 +19,7 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
   findIconDefinition,
@@ -24,64 +27,56 @@ import {
   IconName,
 } from "@fortawesome/fontawesome-svg-core";
 import InlineSvg from "vue-inline-svg";
+import { computed } from "vue";
 
-// wrapper for font awesome icon component to make it behave more logically
-// and to allow for adding custom icons
-export default defineComponent({
-  props: {
-    // icon to show in button
-    icon: {
-      type: String,
-      required: true,
-    },
-  },
-  components: {
-    FontAwesomeIcon,
-    InlineSvg,
-  },
-  computed: {
-    // find custom icon with matching name, if there is one
-    custom() {
-      try {
-        return require(`@/assets/icons/${this.icon}.svg`);
-      } catch (error) {
-        if (this.icon.startsWith("category-"))
-          return require(`@/assets/icons/category-fallback.svg`);
-        else return false;
-      }
-    },
-    // find font awesome icon with matching name, if there is one
-    fa() {
-      for (const prefix of ["fas", "far", "fab"]) {
-        const match = findIconDefinition({
-          prefix: prefix as IconPrefix,
-          iconName: this.icon as IconName,
-        });
-        if (match) return match;
-      }
+interface Props {
+  // kebab-case name of icon to show. for font awesome, without fas/far/etc
+  // prefix. for custom icon, match filename, without extension.
+  icon: string;
+}
 
-      return null;
-    },
-  },
-  methods: {
-    // when custom svg icon inlined/loaded
-    loadedInline(element: HTMLElement) {
-      if (!element?.style) return;
+const props = defineProps<Props>();
 
-      // get absolute display size of icon in px
-      const size = Number.parseFloat(window.getComputedStyle(element).fontSize);
-
-      // stroke inversely with size
-      let stroke;
-      if (size >= 32) stroke = 4;
-      else if (size >= 24) stroke = 5;
-      else stroke = 6;
-
-      // set stroke width css variable
-      element?.style?.setProperty("--stroke", stroke + "px");
-    },
-  },
+// find custom icon with matching name, if there is one
+const custom = computed((): string => {
+  try {
+    return require(`@/assets/icons/${props.icon}.svg`);
+  } catch (error) {
+    if (props.icon.startsWith("category-"))
+      return require(`@/assets/icons/category-fallback.svg`);
+    else return "";
+  }
 });
+
+// find font awesome icon with matching name, if there is one
+const fa = computed(() => {
+  for (const prefix of ["fas", "far", "fab"]) {
+    const match = findIconDefinition({
+      prefix: prefix as IconPrefix,
+      iconName: props.icon as IconName,
+    });
+    if (match) return match;
+  }
+
+  return null;
+});
+
+// when custom svg icon inlined/loaded
+function loadedInline(element: HTMLElement) {
+  if (!element?.style) return;
+
+  // get absolute display size of icon in px
+  const size = Number.parseFloat(window.getComputedStyle(element).fontSize);
+
+  // stroke inversely with size
+  let stroke;
+  if (size >= 32) stroke = 4;
+  else if (size >= 24) stroke = 5;
+  else stroke = 6;
+
+  // set stroke width css variable
+  element?.style?.setProperty("--stroke", stroke + "px");
+}
 </script>
 
 <style lang="scss" scoped>
@@ -91,6 +86,7 @@ export default defineComponent({
 
 // common category icon styles
 [data-icon^="category-"] {
+  height: 1.2em;
   fill: none;
   stroke: currentColor;
   stroke-width: var(--stroke);

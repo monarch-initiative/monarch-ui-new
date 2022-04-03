@@ -1,3 +1,7 @@
+<!--
+  ring/arc/pie with number in middle
+-->
+
 <template>
   <div class="ring">
     <div>{{ score }}</div>
@@ -8,45 +12,39 @@
   </div>
 </template>
 
-<script lang="ts">
-import { sin, cos } from "@/util/math";
+<script setup lang="ts">
+import { computed } from "vue";
 import { clamp } from "lodash";
-import { defineComponent } from "vue";
+import { sin, cos } from "@/util/math";
 
-// ring/arc with number in middle
-export default defineComponent({
-  props: {
-    // value to show in center of ring
-    score: {
-      type: Number,
-      default: 50,
-    },
-    // range of score for normalization
-    min: {
-      type: Number,
-      default: 0,
-    },
-    max: {
-      type: Number,
-      default: 100,
-    },
-  },
-  computed: {
-    // normalized score value
-    normalized() {
-      let value = (this.score - this.min) / (this.max - this.min);
-      // if max === min (essentially, if only one ring result to show in list)
-      if (Number.isNaN(value)) value = 0.5;
-      return clamp(value, 0.05, 0.95);
-    },
-    // arc path
-    d() {
-      let angle = 360 * this.normalized;
-      const x = sin(angle) * 50;
-      const y = -cos(angle) * 50;
-      return `M 0 -50 A 50 50 0 ${angle >= 180 ? 1 : 0} 1 ${x} ${y}`;
-    },
-  },
+interface Props {
+  // value to show in center of ring
+  score?: number;
+  // range of score for normalization
+  min?: number;
+  max?: number;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  score: 50,
+  min: 0,
+  max: 100,
+});
+
+// normalized score value
+const normalized = computed(() => {
+  let value = (props.score - props.min) / (props.max - props.min);
+  // if max === min (essentially, if only one ring result to show in list)
+  if (Number.isNaN(value)) value = 0.5;
+  return clamp(value, 0.05, 0.95);
+});
+
+// arc svg path
+const d = computed(() => {
+  let angle = 360 * normalized.value;
+  const x = sin(angle) * 50;
+  const y = -cos(angle) * 50;
+  return `M 0 -50 A 50 50 0 ${angle >= 180 ? 1 : 0} 1 ${x} ${y}`;
 });
 </script>
 

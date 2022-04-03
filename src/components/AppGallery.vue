@@ -1,23 +1,20 @@
+<!-- 
+  responsive grid of arbitrary content items
+-->
+
 <template>
-  <!-- puts arbitrary content into a responsive grid gallery -->
   <div class="gallery" :data-size="size">
     <slot />
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+interface Props {
+  // size of items in gallery
+  size?: "small" | "medium" | "big";
+}
 
-// grid of items
-export default defineComponent({
-  props: {
-    // size of items in gallery
-    size: {
-      default: "medium",
-      type: String as PropType<"small" | "medium" | "big">,
-    },
-  },
-});
+withDefaults(defineProps<Props>(), { size: "medium" });
 </script>
 
 <style lang="scss" scoped>
