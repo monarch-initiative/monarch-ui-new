@@ -29,8 +29,8 @@
     <!-- list of all sources -->
     <AppFlex direction="col">
       <AppAccordion
-        v-for="(source, index) in filteredSources"
-        :key="index"
+        v-for="(source, sourceIndex) in filteredSources"
+        :key="sourceIndex"
         :text="source.name || source.id || ''"
         :icon="source.type === 'dataset' ? 'database' : 'puzzle-piece'"
       >
@@ -38,35 +38,35 @@
         <AppFlex>
           <AppButton
             v-if="source.link"
+            v-tippy="'Homepage or repository for this source'"
             design="small"
             icon="home"
             text="Home"
             :to="source.link"
-            v-tippy="'Homepage or repository for this source'"
           />
           <AppButton
             v-if="source.license"
+            v-tippy="'Link to licensing information for this source'"
             design="small"
             icon="balance-scale"
             text="License"
             :to="source.license"
-            v-tippy="'Link to licensing information for this source'"
           />
           <AppButton
             v-if="source.distribution"
+            v-tippy="'Download Resource Description Framework file'"
             design="small"
             icon="download"
             text="RDF"
             :to="source.distribution"
-            v-tippy="'Download Resource Description Framework file'"
           />
           <AppButton
             v-if="source.date"
+            v-tippy="'Date when this source was ingested into Monarch'"
             design="small"
             color="secondary"
             icon="calendar-alt"
             :text="source.date"
-            v-tippy="'Date when this source was ingested into Monarch'"
           />
         </AppFlex>
 
@@ -84,13 +84,13 @@
         <p v-if="source.files?.length">
           <strong>Ingested Files:</strong>
         </p>
-        <div class="files" v-if="source.files?.length">
+        <div v-if="source.files?.length" class="files">
           <AppLink
-            v-for="(file, index) in source.files"
-            :key="index"
+            v-for="(file, fileIndex) in source.files"
+            :key="fileIndex"
+            v-tippy="breakUrl(file)"
             :to="file"
             class="truncate"
-            v-tippy="breakUrl(file)"
           >
             {{ getFilename(file) }}
           </AppLink>

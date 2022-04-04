@@ -18,10 +18,10 @@
       :aria-expanded="expanded"
       :aria-controls="`list-${id}`"
       aria-haspopup="listbox"
+      tabindex="0"
       @click="onClick"
       @keydown="onKeydown"
       @blur="onBlur"
-      tabindex="0"
     >
       <AppIcon v-if="modelValue?.icon" :icon="modelValue?.icon" />
       <span class="button-label">{{ modelValue?.name || modelValue?.id }}</span>
@@ -44,19 +44,19 @@
       <div class="grid">
         <div
           v-for="(option, index) in options"
-          :key="index"
           :id="`option-${id}-${index}`"
+          :key="index"
           class="option"
           role="option"
           :aria-selected="selected === index"
           :data-selected="selected === index"
           :data-highlighted="index === highlighted"
+          tabindex="0"
           @click="selected = index"
           @mouseenter="highlighted = index"
           @mousedown.prevent=""
           @focusin="() => null"
           @keydown="() => null"
-          tabindex="0"
         >
           <span class="option-icon">
             <AppIcon v-if="option.icon" :icon="option.icon" />

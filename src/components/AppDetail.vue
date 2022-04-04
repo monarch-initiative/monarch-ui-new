@@ -5,7 +5,7 @@
 <template>
   <AppFlex
     ref="cell"
-    hAlign="left"
+    h-align="left"
     direction="col"
     gap="small"
     class="detail"

@@ -10,25 +10,25 @@
       </AppHeading>
       <AppFlex>
         <AppButton
+          v-tippy="'The category/type of this node'"
           design="small"
           color="secondary"
           :text="startCase(node.category)"
-          v-tippy="'The category/type of this node'"
         />
         <AppButton
+          v-tippy="'The ID of this node. Click to copy.'"
           design="small"
           color="secondary"
           icon="hashtag"
           :text="node.id"
           :copy="true"
-          v-tippy="'The ID of this node. Click to copy.'"
         />
         <span
           v-if="node.id !== node.originalId"
-          class="original-id"
           v-tippy="
             'The original ID you visited, which resolved to a different ID.'
           "
+          class="original-id"
         >
           {{ node.originalId }}
         </span>

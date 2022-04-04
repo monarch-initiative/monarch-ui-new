@@ -1,9 +1,9 @@
 import { mount, apiCall } from "../setup";
-import Help from "@/views/help/Help.vue";
+import PageHelp from "@/views/help/PageHelp.vue";
 
 test("Help page renders uptimerobot statuses", async () => {
   // mount and wait until async rendering is done
-  const wrapper = mount(Help);
+  const wrapper = mount(PageHelp);
 
   // wait for api calls to mock
   await apiCall();

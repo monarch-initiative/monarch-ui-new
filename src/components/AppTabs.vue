@@ -9,11 +9,11 @@
   <AppFlex role="tablist" :aria-label="name">
     <AppButton
       v-for="(tab, index) in tabs"
-      :key="index"
       :id="`tab-${id}-${tab.id}`"
+      :key="index"
+      v-tippy="tab.tooltip"
       :text="tab.text"
       :icon="tab.icon"
-      @click="selected = tab.id"
       design="circle"
       :color="selected === tab.id ? 'primary' : 'none'"
       :aria-label="tab.text"
@@ -21,7 +21,7 @@
       :aria-controls="`panel-${id}-${tab.id}`"
       :tabindex="selected === tab.id ? 0 : undefined"
       role="tab"
-      v-tippy="tab.tooltip"
+      @click="selected = tab.id"
       @keydown="onKeydown"
     />
   </AppFlex>
@@ -79,7 +79,10 @@ interface Props {
   showDescription?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), { showDescription: true });
+const props = withDefaults(defineProps<Props>(), {
+  default: "",
+  showDescription: true,
+});
 
 interface Emits {
   (event: "change", selected: string): void;

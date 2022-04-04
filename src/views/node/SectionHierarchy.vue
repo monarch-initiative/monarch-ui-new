@@ -18,13 +18,13 @@
       <!-- nodes that are "parents" of node -->
       <template v-if="node.hierarchy.superClasses.length">
         <AppFlex
-          hAlign="left"
           v-tippy="`Nodes that are &quot;parents&quot; of this node`"
+          h-align="left"
         >
           <AppIcon icon="angle-up" />
           <span>Super-classes</span>
         </AppFlex>
-        <AppFlex hAlign="left" gap="small">
+        <AppFlex h-align="left" gap="small">
           <AppLink
             v-for="(_class, index) in node.hierarchy.superClasses"
             :key="index"
@@ -37,13 +37,13 @@
       <!-- nodes that are "siblings" of node -->
       <template v-if="node.hierarchy.equivalentClasses.length">
         <AppFlex
-          hAlign="left"
           v-tippy="`Nodes that are &quot;siblings&quot; of this node`"
+          h-align="left"
         >
           <AppIcon icon="equals" />
           <span>Equivalent classes</span>
         </AppFlex>
-        <AppFlex hAlign="left" gap="small">
+        <AppFlex h-align="left" gap="small">
           <AppLink
             v-for="(_class, index) in node.hierarchy.equivalentClasses"
             :key="index"
@@ -56,13 +56,13 @@
       <!-- nodes that are "children" of node -->
       <template v-if="node.hierarchy.subClasses.length">
         <AppFlex
-          hAlign="left"
           v-tippy="`Nodes that are &quot;children&quot; of this node`"
+          h-align="left"
         >
           <AppIcon icon="angle-down" />
           <span>Sub-classes</span>
         </AppFlex>
-        <AppFlex hAlign="left" gap="small">
+        <AppFlex h-align="left" gap="small">
           <AppLink
             v-for="(_class, index) in node.hierarchy.subClasses"
             :key="index"

@@ -9,40 +9,40 @@
 
   <!-- set A -->
   <AppSelectTags
+    v-model="aPhenotypes"
     name="First set of phenotypes"
     :options="getPhenotypes"
-    v-model="aPhenotypes"
     placeholder="Select phenotypes"
     :tooltip="multiTooltip"
-    @getOptions="(option, length) => getOptions(option, length, 'a')"
     :description="description(aPhenotypes, aGeneratedFrom)"
+    @get-options="(option, length) => getOptions(option, length, 'a')"
   />
 
   <!-- set B -->
   <AppFlex gap="small">
     <strong>... to</strong>
     <AppSelectSingle
+      v-model="bMode"
       name="Second set mode"
       :options="bModeOptions"
-      v-model="bMode"
     />
     <AppSelectSingle
       v-if="bMode.id.includes('genes')"
+      v-model="bTaxon"
       name="Second set taxon"
       :options="bTaxonOptions"
-      v-model="bTaxon"
     />
   </AppFlex>
 
   <AppSelectTags
     v-if="bMode.id.includes('these phenotypes')"
+    v-model="bPhenotypes"
     name="Second set of phenotypes"
     :options="getPhenotypes"
-    v-model="bPhenotypes"
     placeholder="Select phenotypes"
     :tooltip="multiTooltip"
-    @getOptions="(option, options) => getOptions(option, options, 'b')"
     :description="description(bPhenotypes, bGeneratedFrom)"
+    @get-options="(option, options) => getOptions(option, options, 'b')"
   />
 
   <AppFlex>
@@ -68,36 +68,36 @@
 
     <!-- list of results -->
     <div
-      v-for="(match, index) in results.matches.slice(0, 10)"
-      :key="index"
+      v-for="(match, matchIndex) in results.matches.slice(0, 10)"
+      :key="matchIndex"
       class="match"
     >
       <!-- ring score -->
       <AppRing
+        v-tippy="'Similarity score'"
         :score="match.score"
         :min="results.minScore"
         :max="results.maxScore"
-        v-tippy="'Similarity score'"
       />
 
-      <AppFlex direction="col" hAlign="stretch" gap="small" class="details">
+      <AppFlex direction="col" h-align="stretch" gap="small" class="details">
         <!-- primary match info -->
         <div class="primary truncate">
           <AppIcon
-            :icon="`category-${match.category}`"
             v-tippy="startCase(match.category)"
+            :icon="`category-${match.category}`"
           />
 
           <!-- if name of match is + separated list of phenotype ids, link to each one separately -->
           <template v-if="match.name.includes(' + ')">
             <template
-              v-for="(id, index) of match.name.split(' + ')"
-              :key="index"
+              v-for="(id, idIndex) of match.name.split(' + ')"
+              :key="idIndex"
             >
               <AppLink :to="`/${kebabCase(match.category)}/${id}`">
                 {{ id }}
               </AppLink>
-              <span v-if="index !== match.name.split(' + ').length - 1">
+              <span v-if="idIndex !== match.name.split(' + ').length - 1">
                 +
               </span>
             </template>

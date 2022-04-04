@@ -30,7 +30,7 @@ interface Props {
   design?: "small" | "big";
 }
 
-withDefaults(defineProps<Props>(), { design: "big" });
+withDefaults(defineProps<Props>(), { subtitle: "", design: "big" });
 </script>
 
 <style lang="scss" scoped>

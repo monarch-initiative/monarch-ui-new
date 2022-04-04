@@ -9,10 +9,10 @@
         <img :src="src" :alt="name" loading="lazy" />
       </div>
       <AppIcon
-        icon="history"
-        class="icon"
         v-if="alumni"
         v-tippy="'Alumni team member'"
+        icon="history"
+        class="icon"
       />
     </div>
     <div v-if="role" class="text">

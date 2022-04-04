@@ -234,14 +234,14 @@ onMounted(() => {
   // setup canvas
   canvas = document.querySelector("#nexus");
   ctx = canvas?.getContext("2d") || null;
-});
 
-// listen for resizes to canvas element
-useResizeObserver(canvas, () => {
-  // resize canvas
-  resize();
-  // regenerate field
-  generate();
+  // listen for resizes to canvas element
+  useResizeObserver(canvas, () => {
+    // resize canvas
+    resize();
+    // regenerate field
+    generate();
+  });
 });
 
 // event listeners

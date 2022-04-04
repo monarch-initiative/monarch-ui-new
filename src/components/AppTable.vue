@@ -28,13 +28,13 @@
               </span>
               <AppButton
                 v-if="col.sortable"
+                v-tippy="'Sort by ' + col.heading"
                 :icon="
                   'arrow-' + (sort?.id === col.id ? sort?.direction : 'down')
                 "
                 design="small"
                 :color="sort?.id === col.id ? 'primary' : 'secondary'"
                 @click.stop="emitSort(col)"
-                v-tippy="'Sort by ' + col.heading"
               />
               <AppSelectMulti
                 v-if="
@@ -42,17 +42,17 @@
                   col.activeFilters &&
                   col.availableFilters?.length
                 "
+                v-slot="slotProps"
                 :name="'Filter by ' + col.heading"
                 :options="col.availableFilters"
-                :modelValue="col.activeFilters"
-                @update:modelValue="(value) => emitFilter(colIndex, value)"
-                v-slot="props"
+                :model-value="col.activeFilters"
+                @update:model-value="(value) => emitFilter(colIndex, value)"
               >
                 <AppButton
+                  v-tippy="'Filter by ' + col.heading"
                   icon="filter"
                   design="small"
-                  v-bind="kebabify(props)"
-                  v-tippy="'Filter by ' + col.heading"
+                  v-bind="kebabify(slotProps)"
                 />
               </AppSelectMulti>
             </th>
@@ -99,54 +99,54 @@
             { id: '50' },
             { id: '100' },
           ]"
-          :modelValue="{ id: String(perPage || 5) }"
-          @update:modelValue="(value) => emitPerPage(value.id)"
+          :model-value="{ id: String(perPage || 5) }"
+          @update:model-value="(value) => emitPerPage(value.id)"
         />
       </div>
       <div>
         <AppButton
+          v-tippy="'Go to first page'"
           :disabled="start <= 0"
           icon="angle-double-left"
           design="small"
           @click="clickFirst"
-          v-tippy="'Go to first page'"
         />
         <AppButton
+          v-tippy="'Go to previous page'"
           :disabled="start - perPage < 0"
           icon="angle-left"
           design="small"
           @click="clickPrev"
-          v-tippy="'Go to previous page'"
         />
         <span>{{ start + 1 }} &mdash; {{ end }} of {{ total }}</span>
         <AppButton
+          v-tippy="'Go to next page'"
           :disabled="start + perPage > total"
           icon="angle-right"
           design="small"
           @click="clickNext"
-          v-tippy="'Go to next page'"
         />
         <AppButton
+          v-tippy="'Go to last page'"
           :disabled="start + perPage > total"
           icon="angle-double-right"
           design="small"
           @click="clickLast"
-          v-tippy="'Go to last page'"
         />
       </div>
       <div>
         <AppInput
+          v-tippy="'Search table data'"
           class="search"
           icon="search"
-          :modelValue="search"
+          :model-value="search"
           @change="emitSearch"
-          v-tippy="'Search table data'"
         />
         <AppButton
+          v-tippy="'Download table data'"
           icon="download"
           design="small"
           @click="emitDownload"
-          v-tippy="'Download table data'"
         />
       </div>
     </div>

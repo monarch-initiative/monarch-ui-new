@@ -1,3 +1,7 @@
+<!--
+  entry point for entire app
+-->
+
 <template>
   <TheHeader />
   <main>

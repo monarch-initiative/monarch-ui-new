@@ -35,7 +35,7 @@
       },
     ]"
     default="node-search"
-    :showDescription="!home"
+    :show-description="!home"
     @change="onChange"
   >
     <template #node-search>
@@ -63,9 +63,7 @@ const router = useRouter();
 const route = useRoute();
 
 // is home page
-const home = computed(
-  (): boolean => String(route.name).toLowerCase() === "home"
-);
+const home = computed((): boolean => route.name === "Home");
 
 // when tabs change, navigate to explore page
 function onChange() {

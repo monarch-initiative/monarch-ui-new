@@ -11,15 +11,15 @@
     <AppTable
       :cols="cols"
       :rows="associations"
-      :perPage="perPage"
+      :per-page="perPage"
       :start="start"
       :total="count"
       :search="search"
-      @perPage="(value) => (perPage = value)"
+      :disabled="!!status"
+      @per-page="(value) => (perPage = value)"
       @start="(value) => (start = value)"
       @search="(value) => (search = value)"
       @download="download"
-      :disabled="!!status"
     >
       <!-- "object" (current node) -->
       <template #subject="{ cell }">
@@ -32,7 +32,7 @@
           class="arrow"
           :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
         />
-        <AppLink class="truncate" :to="cell.iri" :noIcon="true">{{
+        <AppLink class="truncate" :to="cell.iri" :no-icon="true">{{
           cell.name
         }}</AppLink>
         <AppIcon
@@ -51,10 +51,10 @@
       <!-- button to show evidence -->
       <template #evidence>
         <AppButton
+          v-tippy="'View supporting evidence for this association'"
           class="evidence-button"
           icon="eye"
           color="secondary"
-          v-tippy="'View supporting evidence for this association'"
         />
       </template>
     </AppTable>

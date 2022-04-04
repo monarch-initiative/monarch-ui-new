@@ -13,13 +13,13 @@
 
   <!-- results -->
   <template v-else-if="node">
-    <Title :node="node" />
-    <Overview :node="node" />
-    <Details :node="node" />
-    <Hierarchy :node="node" />
-    <Associations :node="node" />
-    <Visualization :node="node" />
-    <Breadcrumbs :node="node" />
+    <SectionTitle :node="node" />
+    <SectionOverview :node="node" />
+    <SectionDetails :node="node" />
+    <SectionHierarchy :node="node" />
+    <SectionAssociations :node="node" />
+    <SectionVisualization :node="node" />
+    <SectionBreadcrumbs :node="node" />
 
     <Teleport to="body">
       <TheTableOfContents />
@@ -34,13 +34,13 @@ import { Status } from "@/components/AppStatus";
 import { ApiError } from "@/api";
 import AppStatus from "@/components/AppStatus.vue";
 import TheTableOfContents from "@/components/TheTableOfContents.vue";
-import Title from "./Title.vue";
-import Overview from "./Overview.vue";
-import Details from "./Details.vue";
-import Hierarchy from "./Hierarchy.vue";
-import Visualization from "./Visualization.vue";
-import Associations from "./Associations.vue";
-import Breadcrumbs from "./Breadcrumbs.vue";
+import SectionTitle from "./SectionTitle.vue";
+import SectionOverview from "./SectionOverview.vue";
+import SectionDetails from "./SectionDetails.vue";
+import SectionHierarchy from "./SectionHierarchy.vue";
+import SectionVisualization from "./SectionVisualization.vue";
+import SectionAssociations from "./SectionAssociations.vue";
+import SectionBreadcrumbs from "./SectionBreadcrumbs.vue";
 import { scrollToHash } from "@/router";
 import { useRoute } from "vue-router";
 

@@ -1,3 +1,7 @@
+<!--
+  homepage of entire site
+-->
+
 <template>
   <AppSection design="fill">
     <ExploreTabs />

@@ -4,15 +4,15 @@
 
 <template>
   <component
-    class="button"
     :is="component"
+    class="button"
     :to="to"
     :type="type"
-    @click="copy ? copyToClipboard() : click"
     :data-design="design"
     :data-color="color"
     :data-text="!!text"
     :data-notification="notification"
+    @click="copy ? copyToClipboard() : click"
   >
     <span v-if="text">{{ text }}</span>
     <AppIcon v-if="icon" :icon="icon" />
@@ -45,10 +45,15 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  text: "",
+  icon: "",
+  to: "",
+  click: undefined,
   design: "normal",
   color: "primary",
   notification: false,
   copy: false,
+  type: "",
 });
 
 // copy text prop to clipboard

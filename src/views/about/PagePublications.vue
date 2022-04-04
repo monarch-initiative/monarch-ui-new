@@ -8,11 +8,7 @@
   <AppSection>
     <AppHeading>Publications</AppHeading>
     <p>
-      <template
-        class="link"
-        v-for="(group, index) in publications"
-        :key="index"
-      >
+      <template v-for="(group, index) in publications" :key="index">
         <AppLink :to="'#' + group.year">{{ group.year }}</AppLink>
         <span v-if="index !== publications.length - 1"> · </span>
       </template>

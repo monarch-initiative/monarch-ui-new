@@ -12,22 +12,22 @@
       <textarea
         v-if="multi"
         :value="modelValue"
+        :placeholder="placeholder"
+        :required="required"
         @focus="onFocus"
         @input="onInput"
         @change="onChange"
-        :placeholder="placeholder"
-        :required="required"
       >
       </textarea>
       <input
         v-else
         :value="modelValue"
-        @focus="onFocus"
-        @input="onInput"
-        @change="onChange"
         :placeholder="placeholder"
         :type="type"
         :required="required"
+        @focus="onFocus"
+        @input="onInput"
+        @change="onChange"
       />
       <div class="icon">
         <AppIcon v-if="icon" :icon="icon" />

@@ -3,7 +3,7 @@
 -->
 
 <template>
-  <component :is="tag || 'div'" ref="heading" :id="link">
+  <component :is="tag || 'div'" :id="link" ref="heading">
     <!-- heading icon -->
     <AppIcon v-if="icon" :icon="icon" :fallback="fallbackIcon" class="icon" />
 

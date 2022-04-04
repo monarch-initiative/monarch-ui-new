@@ -5,9 +5,9 @@
 <template>
   <button
     class="title"
-    @click="expanded = !expanded"
-    :aria-expanded="expanded"
     :aria-label="expanded ? 'Collapse section' : 'Expand section'"
+    :aria-expanded="expanded"
+    @click="expanded = !expanded"
   >
     <span class="text">
       <span v-if="text">{{ text }}</span>

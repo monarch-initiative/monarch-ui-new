@@ -33,10 +33,10 @@
       <!-- paragraph description -->
       <AppDetail :blank="!node.description" title="Description" :big="true">
         <p
+          v-tippy="'Click to expand'"
           class="description truncate-10"
           tabindex="0"
           v-html="node.description.trim()"
-          v-tippy="'Click to expand'"
         ></p>
       </AppDetail>
     </AppDetails>

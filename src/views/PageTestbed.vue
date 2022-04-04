@@ -1,8 +1,8 @@
 <!--
   dev page for experimenting with design and behavior of components. also a 
-  place for seeing all variations at once to check for coherence. not included
-  in production build of site.
+  place for seeing all variations at once to check for coherence.
 -->
+
 <template>
   <AppSection>
     <AppHeading>Testbed</AppHeading>
@@ -49,7 +49,7 @@
       @filter="
         (colIndex, value) => (table.cols[colIndex].activeFilters = value)
       "
-      @perPage="(value) => (table.perPage = value)"
+      @per-page="(value) => (table.perPage = value)"
       @search="(value) => (table.search = value)"
     >
       <template #arbitrary>Arbitrary slot content</template>
@@ -68,9 +68,9 @@
     <AppHeading>Single Select</AppHeading>
     <span>{{ singleSelectValue }}</span>
     <AppSelectSingle
+      v-model="singleSelectValue"
       name="Fruit"
       :options="singleSelectOptions"
-      v-model="singleSelectValue"
     />
   </AppSection>
 
@@ -79,21 +79,21 @@
     <AppHeading>Multi Select</AppHeading>
     <span>{{ multiSelectValue }}</span>
     <AppSelectMulti
+      v-model="multiSelectValue"
       name="Category"
       :options="multiSelectOptions"
-      v-model="multiSelectValue"
     />
     <AppSelectMulti
+      v-slot="props"
+      v-model="multiSelectValue"
       name="Category"
       :options="multiSelectOptions"
-      v-model="multiSelectValue"
-      v-slot="props"
     >
       <AppButton
+        v-tippy="'Test button'"
         icon="filter"
         v-bind="props"
         design="small"
-        v-tippy="'Test button'"
       />
     </AppSelectMulti>
   </AppSection>
@@ -103,24 +103,24 @@
     <AppHeading>Tags Select</AppHeading>
     <span>{{ tagsSelectValue }}</span>
     <AppSelectTags
+      v-model="tagsSelectValue"
       name="Dessert"
       placeholder="Search for a dessert"
       :options="tagsSelectOptions"
-      v-model="tagsSelectValue"
     />
   </AppSection>
 
   <!-- button component -->
   <AppSection>
     <AppHeading>Button</AppHeading>
-    <AppFlex v-for="(row, index) of buttons" :key="index">
+    <AppFlex v-for="(row, rowIndex) of buttons" :key="rowIndex">
       <AppButton
-        v-for="(props, index) of row"
-        :key="index"
-        to="/"
-        @click="log"
-        v-bind="props"
+        v-for="(props, colIndex) of row"
+        :key="colIndex"
         v-tippy="'Test button'"
+        to="/"
+        v-bind="props"
+        @click="log"
       />
     </AppFlex>
   </AppSection>

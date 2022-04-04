@@ -7,10 +7,10 @@
 <template>
   <!-- search box -->
   <AppInput
+    v-model="content"
     :multi="true"
     icon="file-lines"
     placeholder="Paste full text"
-    v-model="content"
     @change="annotate()"
   />
 
@@ -35,8 +35,8 @@
   <!-- results -->
   <p v-if="annotations.length">
     <tippy
-      v-for="({ text, tokens }, index) in annotations"
-      :key="index"
+      v-for="({ text, tokens }, annotationIndex) in annotations"
+      :key="annotationIndex"
       :interactive="true"
       theme="light"
     >
@@ -45,7 +45,7 @@
       }}</span>
       <template v-if="tokens.length" #content>
         <div class="table">
-          <template v-for="(token, index) in tokens" :key="index">
+          <template v-for="(token, tokenIndex) in tokens" :key="tokenIndex">
             <AppIcon :icon="`category-${kebabCase(token.category)}`" />
             <AppLink :to="`/${kebabCase(token.category)}/${token.id}`">{{
               token.id
@@ -61,12 +61,12 @@
   <AppFlex v-if="annotations.length">
     <AppButton text="Download" icon="download" @click="download" />
     <AppButton
-      text="Analyze Phenotypes"
-      icon="bars-progress"
-      @click="analyze"
       v-tippy="
         'Send any annotations above that are phenotypes to Phenotype Explorer'
       "
+      text="Analyze Phenotypes"
+      icon="bars-progress"
+      @click="analyze"
     />
   </AppFlex>
 </template>

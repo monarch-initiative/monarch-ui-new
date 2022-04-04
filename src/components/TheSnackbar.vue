@@ -6,8 +6,8 @@
   <Teleport to="body">
     <Transition name="fade">
       <div
-        ref="element"
         v-if="text"
+        ref="element"
         role="alert"
         aria-live="polite"
         class="snackbar"

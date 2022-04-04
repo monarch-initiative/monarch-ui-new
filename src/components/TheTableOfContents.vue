@@ -3,7 +3,7 @@
     ref="toc"
     direction="col"
     gap="none"
-    hAlign="stretch"
+    h-align="stretch"
     class="toc"
     :style="{ top: nudge + 'px' }"
     :data-expanded="expanded"
@@ -14,12 +14,12 @@
     <!-- toggle button -->
     <div class="title">
       <button
-        class="title-button"
-        @click="expanded = !expanded"
-        :aria-expanded="expanded"
         v-tippy="
           expanded ? 'Close table of contents' : 'Expand table of contents'
         "
+        class="title-button"
+        :aria-expanded="expanded"
+        @click="expanded = !expanded"
       >
         <AppIcon :icon="expanded ? 'times' : 'bars'" />
       </button>
@@ -36,8 +36,8 @@
         :to="'#' + entry.id"
         class="entry"
         :data-active="active === index"
-        @click="active = index"
         :aria-current="active === index"
+        @click="active = index"
       >
         <AppIcon :icon="entry.icon" class="entry-icon" />
         <span class="entry-text truncate">{{ entry.text }}</span>
@@ -48,8 +48,8 @@
       <!-- options -->
       <AppCheckbox
         v-model="oneAtATime"
-        text="Show single section"
         v-tippy="'Only show one section at a time'"
+        text="Show single section"
       />
     </template>
   </AppFlex>

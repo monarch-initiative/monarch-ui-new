@@ -26,10 +26,10 @@
     <AppHeading>
       {{ group.name }}
       <AppIcon
-        class="icon"
-        icon="history"
         v-if="group.alumni"
         v-tippy="'Alumni group'"
+        class="icon"
+        icon="history"
       />
     </AppHeading>
     <AppLink v-if="group.link" :to="group.link" :aria-label="group.name">

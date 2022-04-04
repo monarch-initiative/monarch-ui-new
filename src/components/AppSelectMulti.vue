@@ -19,10 +19,10 @@
       :aria-expanded="expanded"
       :aria-controls="`list-${id}`"
       aria-haspopup="listbox"
+      :notification="!allSelected"
       @click="onClick"
       @keydown="onKeydown"
       @blur="onBlur"
-      :notification="!allSelected"
     ></slot>
     <button
       v-else
@@ -75,12 +75,12 @@
           :aria-label="allSelected ? 'Deselect all' : 'Select all'"
           :data-selected="allSelected"
           :data-highlighted="highlighted === -1"
+          tabindex="0"
           @click="() => toggleSelect(-1)"
           @mouseenter="highlighted = -1"
           @mousedown.prevent=""
           @focusin="() => null"
           @keydown="() => null"
-          tabindex="0"
         >
           <span class="option-icon">
             <AppIcon :icon="allSelected ? 'square-check' : 'square'" />
@@ -94,19 +94,19 @@
         <!-- options -->
         <div
           v-for="(option, index) in options"
-          :key="index"
           :id="`option-${id}-${index}`"
+          :key="index"
           class="option"
           role="option"
           :aria-selected="selected.includes(index)"
           :data-selected="selected.includes(index)"
           :data-highlighted="index === highlighted"
+          tabindex="0"
           @click="(event) => toggleSelect(index, event.shiftKey)"
           @mouseenter="highlighted = index"
           @mousedown.prevent=""
           @focusin="() => null"
           @keydown="() => null"
-          tabindex="0"
         >
           <span class="option-icon">
             <AppIcon

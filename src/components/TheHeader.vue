@@ -11,12 +11,12 @@
     <div class="title" :title="version">
       <!-- logo image and text -->
       <AppLink
+        v-tippy="home ? '' : 'Homepage'"
         :to="home ? '' : '/'"
         class="logo"
         :data-home="home"
-        v-tippy="home ? '' : 'Homepage'"
       >
-        <Logo class="image" />
+        <TheLogo class="image" />
         <!-- make logo text the h1 on homepage -->
         <component :is="home ? 'h1' : 'div'" class="text">
           Monarch
@@ -28,11 +28,11 @@
       <!-- nav toggle button -->
       <button
         class="button"
-        @click="expanded = !expanded"
         :aria-expanded="expanded"
         :aria-label="
           expanded ? 'Close navigation menu' : 'Expand navigation menu'
         "
+        @click="expanded = !expanded"
       >
         <AppIcon :icon="expanded ? 'times' : 'bars'" />
       </button>
@@ -41,23 +41,23 @@
     <!-- navigation bar -->
     <nav :data-home="home" :data-expanded="expanded">
       <AppLink
+        v-tippy="'Dive right in and use Monarch'"
         class="link"
         to="/explore"
-        v-tippy="'Dive right in and use Monarch'"
       >
         Explore
       </AppLink>
       <AppLink
+        v-tippy="'Citing, licensing, sources, and other info'"
         class="link"
         to="/about"
-        v-tippy="'Citing, licensing, sources, and other info'"
       >
         About
       </AppLink>
       <AppLink
+        v-tippy="'Feedback, docs, guides, contact, and more'"
         class="link"
         to="/help"
-        v-tippy="'Feedback, docs, guides, contact, and more'"
       >
         Help
       </AppLink>
@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import TheNexus from "./TheNexus.vue";
-import Logo from "@/assets/Logo.vue";
+import TheLogo from "@/assets/TheLogo.vue";
 import { version } from "../../package.json";
 import { useRoute } from "vue-router";
 
@@ -79,9 +79,7 @@ const route = useRoute();
 const expanded = ref(false);
 
 // is home page (big) version
-const home = computed((): boolean => {
-  return String(route.name).toLowerCase() === "home";
-});
+const home = computed((): boolean => route.name === "Home");
 
 // close nav when page changes
 watch(
@@ -158,7 +156,7 @@ header[data-home="true"] {
 .logo {
   display: flex;
   align-items: center;
-  padding: 0 15px;
+  padding: 0 10px;
   color: $white;
   text-decoration: none;
 }

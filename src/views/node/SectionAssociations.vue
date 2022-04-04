@@ -12,9 +12,9 @@
         >Associations between <strong>{{ node.name }}</strong> and</span
       >
       <AppSelectSingle
+        v-model="category"
         name="category"
         :options="categoryOptions"
-        v-model="category"
       />
     </AppFlex>
 

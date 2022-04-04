@@ -12,13 +12,13 @@
 
     <!-- result -->
     <div
-      class="result"
       v-for="(association, index) in associations"
       :key="index"
+      class="result"
     >
       <AppFlex direction="col" gap="small" class="details">
         <!-- primary result info -->
-        <AppFlex gap="small" hAlign="left" class="title">
+        <AppFlex gap="small" h-align="left" class="title">
           <span>{{ node.name }}</span>
           <AppIcon
             class="arrow"
@@ -28,7 +28,7 @@
                 : 'arrow-right-long'
             "
           />
-          <AppLink :to="association.relation.iri" :noIcon="true">{{
+          <AppLink :to="association.relation.iri" :no-icon="true">{{
             association.relation.name
           }}</AppLink>
           <AppIcon
@@ -46,7 +46,7 @@
         </AppFlex>
 
         <!-- secondary result info -->
-        <AppFlex hAlign="left" class="secondary">
+        <AppFlex h-align="left" class="secondary">
           <span>XX supporting evidence</span>
           <span>XX frequency</span>
           <span>XX publications</span>
@@ -54,11 +54,11 @@
       </AppFlex>
 
       <AppButton
+        v-tippy="'View supporting evidence for this association'"
         class="evidence"
         text="Evidence"
         icon="eye"
         color="secondary"
-        v-tippy="'View supporting evidence for this association'"
       />
     </div>
   </template>

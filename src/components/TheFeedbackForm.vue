@@ -4,7 +4,7 @@
 
 <template>
   <!-- add heading -->
-  <AppHeading :level="1" v-if="modal">Feedback Form</AppHeading>
+  <AppHeading v-if="modal" :level="1">Feedback Form</AppHeading>
 
   <!-- overview info -->
   <p>
@@ -17,32 +17,32 @@
     <!-- fields for user to fill out -->
     <div class="fields">
       <AppInput
+        v-model.trim="name"
         title="Name"
         description="So we can address you"
         placeholder="Jane Smith"
-        v-model.trim="name"
       />
       <AppInput
+        v-model.trim="email"
         title="Email"
         description="So we can follow up with you"
         placeholder="jane.smith@gmail.com"
         type="email"
-        v-model.trim="email"
       />
       <AppInput
+        v-model.trim="github"
         title="GitHub username"
         description="So we can tag you"
         placeholder="@janesmith"
-        v-model.trim="github"
       />
       <AppInput
+        v-model="feedback"
         class="feedback"
         title="Feedback"
         description="Please give us as many details as possible!"
         placeholder=""
         :required="true"
         :multi="true"
-        v-model="feedback"
       />
     </div>
 

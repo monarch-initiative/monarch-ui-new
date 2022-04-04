@@ -9,19 +9,19 @@ import {
 } from "vue-router";
 import { startCase, clone } from "lodash";
 import { hideAll } from "tippy.js";
-import Home from "@/views/Home.vue";
-import Explore from "@/views/explore/Explore.vue";
-import About from "@/views/about/About.vue";
-import Overview from "@/views/about/Overview.vue";
-import Sources from "@/views/about/Sources.vue";
-import Cite from "@/views/about/Cite.vue";
-import Team from "@/views/about/Team.vue";
-import Publications from "@/views/about/Publications.vue";
-import Terms from "@/views/about/Terms.vue";
-import Help from "@/views/help/Help.vue";
-import Feedback from "@/views/help/Feedback.vue";
-import Node from "@/views/node/Node.vue";
-import Testbed from "@/views/Testbed.vue";
+import PageHome from "@/views/PageHome.vue";
+import PageExplore from "@/views/explore/PageExplore.vue";
+import PageAbout from "@/views/about/PageAbout.vue";
+import PageOverview from "@/views/about/PageOverview.vue";
+import PageSources from "@/views/about/PageSources.vue";
+import PageCite from "@/views/about/PageCite.vue";
+import PageTeam from "@/views/about/PageTeam.vue";
+import PagePublications from "@/views/about/PagePublications.vue";
+import PageTerms from "@/views/about/PageTerms.vue";
+import PageHelp from "@/views/help/PageHelp.vue";
+import PageFeedback from "@/views/help/PageFeedback.vue";
+import PageNode from "@/views/node/PageNode.vue";
+import PageTestbed from "@/views/PageTestbed.vue";
 import { sleep } from "@/util/debug";
 import { lookupNode } from "@/api/node-lookup";
 
@@ -32,7 +32,7 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: PageHome,
     beforeEnter: (async () => {
       // look for redirect in session storage (saved from public/404.html page)
       const redirect = window.sessionStorage.redirect;
@@ -52,68 +52,68 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: "/explore",
     name: "Explore",
-    component: Explore,
+    component: PageExplore,
   },
   {
     path: "/about",
     name: "About",
-    component: About,
+    component: PageAbout,
   },
   {
     path: "/help",
     name: "Help",
-    component: Help,
+    component: PageHelp,
   },
 
   // about pages
   {
     path: "/overview",
     name: "Overview",
-    component: Overview,
+    component: PageOverview,
   },
   {
     path: "/sources",
     name: "Sources",
-    component: Sources,
+    component: PageSources,
   },
   {
     path: "/cite",
     name: "Cite",
-    component: Cite,
+    component: PageCite,
   },
   {
     path: "/team",
     name: "Team",
-    component: Team,
+    component: PageTeam,
   },
   {
     path: "/publications",
     name: "Publications",
-    component: Publications,
+    component: PagePublications,
   },
   {
     path: "/terms",
     name: "Terms",
-    component: Terms,
+    component: PageTerms,
   },
 
   // help pages
   {
     path: "/feedback",
     name: "Feedback",
-    component: Feedback,
+    component: PageFeedback,
   },
 
   // node pages
   {
     path: "/:category/:id",
     name: "Node",
-    component: Node,
+    component: PageNode,
   },
   {
     path: "/:id",
     name: "NodeRaw",
-    component: Home,
+    component: PageHome,
     beforeEnter: (async (to) => {
       // try to lookup node id and infer category
       const id = to.path.slice(1) as string;
@@ -128,14 +128,14 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: "/testbed",
     name: "Testbed",
-    component: Testbed,
+    component: PageTestbed,
   },
 
   // if no other route match found (404)
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
-    component: Home,
+    component: PageHome,
   },
 ];
 

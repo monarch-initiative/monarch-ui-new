@@ -17,18 +17,18 @@
         <div
           ref="modal"
           class="modal"
-          @mousedown.stop
-          @touchstart.stop
           role="dialog"
           aria-modal="true"
           :aria-label="label"
+          @mousedown.stop
+          @touchstart.stop
         >
           <AppButton
+            v-tippy="'Close dialog (esc)'"
             class="close"
             design="circle"
             icon="times"
             @click="close"
-            v-tippy="'Close dialog (esc)'"
           />
           <slot />
         </div>

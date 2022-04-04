@@ -8,9 +8,9 @@
   <!-- search box -->
   <AppInput
     ref="searchBox"
+    v-model="search"
     placeholder="Search for a gene, disease, phenotype, etc."
     icon="search"
-    v-model="search"
     @change="onChange"
     @focus="onFocus"
   />
@@ -20,11 +20,11 @@
     <AppFlex>
       <span>Try:</span>
       <AppButton
-        v-for="(search, index) of examples"
+        v-for="(text, index) of examples"
         :key="index"
-        :text="search"
+        :text="text"
         design="small"
-        @click="doExample(search)"
+        @click="doExample(text)"
       />
     </AppFlex>
   </template>
@@ -35,10 +35,10 @@
       <template v-for="(filter, name, index) in availableFilters" :key="index">
         <AppSelectMulti
           v-if="filter.length"
-          :name="`${name}`"
-          v-tippy="`${startCase(name)} filter`"
-          :options="availableFilters[name]"
           v-model="activeFilters[name]"
+          v-tippy="`${startCase(name)} filter`"
+          :name="`${name}`"
+          :options="availableFilters[name]"
           @change="onFilterChange"
         />
       </template>
@@ -55,13 +55,13 @@
       :key="index"
       direction="col"
       gap="small"
-      hAlign="stretch"
+      h-align="stretch"
     >
       <div class="title">
         <AppIcon
+          v-tippy="startCase(result.category)"
           :icon="`category-${kebabCase(result.category)}`"
           class="type"
-          v-tippy="startCase(result.category)"
         />
         <AppLink
           :to="`/${kebabCase(result.category)}/${result.id}`"
@@ -70,16 +70,16 @@
           <span v-html="result.highlight"></span>
         </AppLink>
         <AppButton
+          v-tippy="'Node ID (click to copy)'"
           class="id"
           :text="result.id"
           icon="hashtag"
           design="small"
           :copy="true"
           color="secondary"
-          v-tippy="'Node ID (click to copy)'"
         />
       </div>
-      <p class="truncate-3" tabindex="0" v-tippy="'Click to expand'">
+      <p v-tippy="'Click to expand'" class="truncate-3" tabindex="0">
         {{ result.description || "No description available" }}
       </p>
       <p v-if="result.altNames?.length" class="names truncate-1" tabindex="0">
@@ -101,10 +101,10 @@
           <button
             v-for="pageNumber of list"
             :key="pageNumber"
-            @click="page = pageNumber"
+            v-tippy="`Go to page ${pageNumber + 1} of results`"
             class="page-button"
             :disabled="pageNumber === page"
-            v-tippy="`Go to page ${pageNumber + 1} of results`"
+            @click="page = pageNumber"
           >
             {{ pageNumber + 1 }}
           </button>
@@ -243,9 +243,7 @@ async function getResults(
 }
 
 // is home page
-const home = computed(
-  (): boolean => String(route.name).toLowerCase() === "home"
-);
+const home = computed((): boolean => route.name === "Home");
 
 // "x of n" pages
 const from = computed((): number => page.value * perPage.value);

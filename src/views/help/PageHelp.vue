@@ -49,9 +49,9 @@
     <!-- indiviual statuses -->
     <AppGallery v-else size="small">
       <AppStatus
-        class="status"
         v-for="(uptime, index) in uptimes"
         :key="index"
+        class="status"
         :status="uptime"
       />
     </AppGallery>

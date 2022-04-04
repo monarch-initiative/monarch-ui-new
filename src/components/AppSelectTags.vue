@@ -15,12 +15,12 @@
       <AppButton
         v-for="(option, index) in selected"
         :key="index"
+        v-tippy="`Deselect ${option.id}`"
         design="circle"
         :text="option.name || option.id"
         icon="xmark"
         class="selected"
         :aria-label="`Deselect ${option.id}`"
-        v-tippy="`Deselect ${option.id}`"
         @click="deselect(option)"
       />
 
@@ -28,6 +28,7 @@
         <!-- input box -->
         <input
           v-model="search"
+          v-tippy="{ content: tooltip, offset: [20, 20] }"
           :placeholder="placeholder"
           role="combobox"
           :aria-label="name"
@@ -42,24 +43,23 @@
           @blur="focused = false"
           @keydown="onKeydown"
           @paste="onPaste"
-          v-tippy="{ content: tooltip, offset: [20, 20] }"
         />
 
         <span class="meta">
           <!-- copy ids -->
           <AppButton
+            v-tippy="`Copy selected values`"
             design="small"
             icon="copy"
             @click="copy"
-            v-tippy="`Copy selected values`"
           />
           {{ " " }}
           <!-- clear box -->
           <AppButton
+            v-tippy="`Clear selected values`"
             design="small"
             icon="times"
             @click="clear"
-            v-tippy="`Clear selected values`"
           />
         </span>
       </AppFlex>
@@ -77,31 +77,31 @@
       <AppStatus v-if="status" :status="status" />
 
       <!-- list of results -->
-      <div class="grid" v-if="results.length">
+      <div v-if="results.length" class="grid">
         <div
           v-for="(option, index) in availableResults"
-          :key="index"
           :id="`option-${id}-${index}`"
+          :key="index"
           class="option"
           role="option"
           :aria-selected="true"
           :data-highlighted="index === highlighted"
+          tabindex="0"
           @click="select(option)"
           @mouseenter="highlighted = index"
           @mousedown.prevent=""
           @focusin="() => null"
           @keydown="() => null"
-          tabindex="0"
         >
           <span class="option-icon">
             <AppIcon :icon="option.icon || ''" />
           </span>
-          <span class="option-label"
-            ><span
+          <span class="option-label">
+            <span
               class="truncate"
               v-html="option.highlight || option.name || option.id"
-            ></span
-          ></span>
+            ></span>
+          </span>
           <span class="option-info truncate">{{ option.info }}</span>
         </div>
       </div>

@@ -4,11 +4,11 @@
 
 <template>
   <AppButton
+    v-tippy="'Choose or drag & drop a file'"
     class="button"
     text="Upload"
     icon="upload"
     :data-drag="drag"
-    v-tippy="'Choose or drag & drop a file'"
     @click="onClick"
     @dragenter="drag = true"
     @dragleave="drag = false"
@@ -19,10 +19,10 @@
   <input
     ref="input"
     aria-label="invisible input"
-    @change="onChange"
     type="file"
     accept="text/plain"
     :style="{ display: 'none' }"
+    @change="onChange"
   />
 </template>
 
