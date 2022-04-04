@@ -48,7 +48,7 @@
         :name="member.name"
         :role="member.role"
         :link="member.link"
-        :alumni="group.alumni || (member as { alumni?: boolean }).alumni"
+        :alumni="group.alumni || member.alumni"
       />
     </AppGallery>
   </AppSection>
@@ -94,7 +94,21 @@
 <script setup lang="ts">
 import { kebabCase } from "lodash";
 import AppMember from "@/components/AppMember.vue";
-import team from "./team.json";
+import teamData from "./team.json";
+
+// define types manually because typescript can't infer them completely correctly
+const team = teamData as Array<{
+  name: string;
+  image: string;
+  link: string;
+  alumni?: boolean;
+  members: Array<{
+    name: string;
+    role?: string;
+    link?: string;
+    alumni?: boolean;
+  }>;
+}>;
 
 // get group img src with fallback if not found
 function getSrc(image: string) {
