@@ -1,3 +1,7 @@
+<!--
+  node page title section, at top, below header. basic identifying info of node.
+-->
+
 <template>
   <AppSection design="fill" class="section">
     <AppFlex dir="column" gap="small">
@@ -6,25 +10,25 @@
       </AppHeading>
       <AppFlex>
         <AppButton
+          v-tippy="'The category/type of this node'"
           design="small"
           color="secondary"
           :text="startCase(node.category)"
-          v-tippy="'The category/type of this node'"
         />
         <AppButton
+          v-tippy="'The ID of this node. Click to copy.'"
           design="small"
           color="secondary"
           icon="hashtag"
           :text="node.id"
           :copy="true"
-          v-tippy="'The ID of this node. Click to copy.'"
         />
         <span
           v-if="node.id !== node.originalId"
-          class="original-id"
           v-tippy="
             'The original ID you visited, which resolved to a different ID.'
           "
+          class="original-id"
         >
           {{ node.originalId }}
         </span>
@@ -33,25 +37,16 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
 import { kebabCase, startCase } from "lodash";
 import { Result } from "@/api/node-lookup";
 
-// most important props (name, type, and id) of node, right below page header
-export default defineComponent({
-  props: {
-    // current node
-    node: {
-      type: Object as PropType<Result>,
-      required: true,
-    },
-  },
-  methods: {
-    kebabCase,
-    startCase,
-  },
-});
+interface Props {
+  // current node
+  node: Result;
+}
+
+defineProps<Props>();
 </script>
 
 <style lang="scss" scoped>

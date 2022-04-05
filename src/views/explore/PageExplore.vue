@@ -1,3 +1,7 @@
+<!--
+  explore landing page
+-->
+
 <template>
   <AppSection>
     <AppHeading>Explore</AppHeading>
@@ -5,13 +9,6 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import ExploreTabs from "./ExploreTabs.vue";
-
-export default defineComponent({
-  components: {
-    ExploreTabs,
-  },
-});
 </script>

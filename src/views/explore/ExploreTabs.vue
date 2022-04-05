@@ -1,3 +1,8 @@
+<!--
+  different explore modes. separate into its own component because it is also
+  on homepage.
+-->
+
 <template>
   <AppTabs
     name="Explore Mode"
@@ -30,7 +35,7 @@
       },
     ]"
     default="node-search"
-    :showDescription="!home"
+    :show-description="!home"
     @change="onChange"
   >
     <template #node-search>
@@ -45,33 +50,23 @@
   </AppTabs>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import AppTabs from "@/components/AppTabs.vue";
 import NodeSearch from "./NodeSearch.vue";
 import TextAnnotator from "./TextAnnotator.vue";
 import PhenotypeExplorer from "./PhenotypeExplorer.vue";
 
-// different explore modes
-// separate into its own component because it is also on homepage
-export default defineComponent({
-  components: {
-    AppTabs,
-    NodeSearch,
-    TextAnnotator,
-    PhenotypeExplorer,
-  },
-  computed: {
-    // is home page
-    home(): boolean {
-      return String(this.$route.name).toLowerCase() === "home";
-    },
-  },
-  methods: {
-    // when tabs change, navigate to explore page
-    onChange() {
-      this.$router.push({ ...this.$route, name: "Explore" });
-    },
-  },
-});
+// route info
+const router = useRouter();
+const route = useRoute();
+
+// is home page
+const home = computed((): boolean => route.name === "Home");
+
+// when tabs change, navigate to explore page
+function onChange() {
+  router.push({ ...route, name: "Explore" });
+}
 </script>

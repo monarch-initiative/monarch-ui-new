@@ -1,3 +1,7 @@
+<!--
+  homepage of entire site
+-->
+
 <template>
   <AppSection design="fill">
     <ExploreTabs />
@@ -13,13 +17,6 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import ExploreTabs from "./explore/ExploreTabs.vue";
-
-export default defineComponent({
-  components: {
-    ExploreTabs,
-  },
-});
 </script>

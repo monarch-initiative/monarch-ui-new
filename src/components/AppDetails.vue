@@ -1,10 +1,12 @@
+<!--
+  grid container for multiple AppDetail components
+-->
+
 <template>
   <div class="details">
     <slot />
   </div>
 </template>
-
-<!-- grid container for multiple AppDetail components  -->
 
 <style lang="scss" scoped>
 .details {

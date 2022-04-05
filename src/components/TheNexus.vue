@@ -1,9 +1,12 @@
+<!--
+  fun background visualization element behind header
+-->
+
 <template>
-  <canvas ref="canvas"></canvas>
+  <canvas id="nexus"></canvas>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { debounce } from "lodash";
 import {
   sin,
@@ -14,6 +17,12 @@ import {
   project,
   getMidpoint,
 } from "@/util/math";
+import { onMounted } from "vue";
+import {
+  useEventListener,
+  useResizeObserver,
+  useIntervalFn,
+} from "@vueuse/core";
 
 // settings shared across functions
 const size = 4; // size of dots and links
@@ -221,49 +230,28 @@ const step = () => {
   draw();
 };
 
-let observer: ResizeObserver;
-let stepInterval: number;
-let pulseInterval: number;
+onMounted(() => {
+  // setup canvas
+  canvas = document.querySelector("#nexus");
+  ctx = canvas?.getContext("2d") || null;
 
-// fun background visualization element behind header
-export default defineComponent({
-  mounted() {
-    // setup canvas
-    canvas = this.$refs.canvas as HTMLCanvasElement;
-    ctx = canvas.getContext("2d");
-
-    // listen for resizes to canvas element
-    observer = new ResizeObserver(() => {
-      // resize canvas
-      resize();
-      // regenerate field
-      generate();
-    });
-    observer.observe(canvas);
-
-    // set intervals
-    stepInterval = window.setInterval(step, 1000 / 60);
-    pulseInterval = window.setInterval(pulse, 10000);
-
-    // attach listeners
-    window.addEventListener("mousemove", rotate);
-    window.addEventListener("touchmove", rotate);
-    window.addEventListener("mousedown", pulse);
-  },
-  beforeUnmount() {
-    // stop listening for resizes
-    if (observer.disconnect) observer.disconnect();
-
-    // clear intervals
-    window.clearInterval(stepInterval);
-    window.clearInterval(pulseInterval);
-
-    // detach listeners
-    window.removeEventListener("mousemove", rotate);
-    window.removeEventListener("touchmove", rotate);
-    window.removeEventListener("mousedown", pulse);
-  },
+  // listen for resizes to canvas element
+  useResizeObserver(canvas, () => {
+    // resize canvas
+    resize();
+    // regenerate field
+    generate();
+  });
 });
+
+// event listeners
+useEventListener(window, "mousemove", rotate);
+useEventListener(window, "touchmove", rotate);
+useEventListener(window, "mousedown", pulse);
+
+// intervals
+useIntervalFn(step, 1000 / 60);
+useIntervalFn(pulse, 10000);
 </script>
 
 <style lang="scss" scoped>

@@ -1,3 +1,7 @@
+<!--
+  about landing page
+-->
+
 <template>
   <!-- brief overview -->
   <AppSection>

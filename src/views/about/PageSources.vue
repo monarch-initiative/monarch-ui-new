@@ -1,3 +1,10 @@
+<!--
+  about sources page
+
+  detailed information on all datasets and ontologies involved in the monarch
+  knowledge graph.
+-->
+
 <template>
   <AppSection>
     <AppHeading>Sources</AppHeading>
@@ -22,8 +29,8 @@
     <!-- list of all sources -->
     <AppFlex direction="col">
       <AppAccordion
-        v-for="(source, index) in filteredSources"
-        :key="index"
+        v-for="(source, sourceIndex) in filteredSources"
+        :key="sourceIndex"
         :text="source.name || source.id || ''"
         :icon="source.type === 'dataset' ? 'database' : 'puzzle-piece'"
       >
@@ -31,35 +38,35 @@
         <AppFlex>
           <AppButton
             v-if="source.link"
+            v-tippy="'Homepage or repository for this source'"
             design="small"
             icon="home"
             text="Home"
             :to="source.link"
-            v-tippy="'Homepage or repository for this source'"
           />
           <AppButton
             v-if="source.license"
+            v-tippy="'Link to licensing information for this source'"
             design="small"
             icon="balance-scale"
             text="License"
             :to="source.license"
-            v-tippy="'Link to licensing information for this source'"
           />
           <AppButton
             v-if="source.distribution"
+            v-tippy="'Download Resource Description Framework file'"
             design="small"
             icon="download"
             text="RDF"
             :to="source.distribution"
-            v-tippy="'Download Resource Description Framework file'"
           />
           <AppButton
             v-if="source.date"
+            v-tippy="'Date when this source was ingested into Monarch'"
             design="small"
             color="secondary"
             icon="calendar-alt"
             :text="source.date"
-            v-tippy="'Date when this source was ingested into Monarch'"
           />
         </AppFlex>
 
@@ -77,13 +84,13 @@
         <p v-if="source.files?.length">
           <strong>Ingested Files:</strong>
         </p>
-        <div class="files" v-if="source.files?.length">
+        <div v-if="source.files?.length" class="files">
           <AppLink
-            v-for="(file, index) in source.files"
-            :key="index"
+            v-for="(file, fileIndex) in source.files"
+            :key="fileIndex"
+            v-tippy="breakUrl(file)"
             :to="file"
             class="truncate"
-            v-tippy="breakUrl(file)"
           >
             {{ getFilename(file) }}
           </AppLink>
@@ -123,8 +130,8 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
 import AppCheckbox from "@/components/AppCheckbox.vue";
 import AppAccordion from "@/components/AppAccordion.vue";
 import { getDatasets } from "@/api/datasets";
@@ -135,89 +142,81 @@ import { Status } from "@/components/AppStatus";
 import { ApiError } from "@/api";
 import { breakUrl } from "@/util/string";
 
-// sources page
-export default defineComponent({
-  components: {
-    AppCheckbox,
-    AppAccordion,
-    AppStatus,
-  },
-  data() {
-    return {
-      // sources data
-      sources: [] as Array<Source>,
-      // whether to show dataset sources
-      showDatasets: true,
-      // whether to show ontology sources
-      showOntologies: true,
-      // status of query
-      status: null as Status | null,
-    };
-  },
-  methods: {
-    // get source img src
-    getSrc(image = "") {
-      try {
-        if (image.startsWith("http")) return image;
-        else return require(`@/assets/sources/${image}`);
-      } catch (error) {
-        return false;
-      }
-    },
-    // get filename from full path
-    getFilename(path = "") {
-      return path
-        .split("/")
-        .filter((part) => part)
-        .pop();
-    },
-    breakUrl,
-  },
-  computed: {
-    // shown sources
-    filteredSources(): Array<Source> {
-      return this.sources.filter(
-        (source: Source) =>
-          (source.type === "dataset" && this.showDatasets) ||
-          (source.type === "ontology" && this.showOntologies)
-      );
-    },
-    // number of dataset sources
-    datasetCount(): number {
-      return this.sources.filter((source) => source.type === "dataset").length;
-    },
-    // number of ontology sources
-    ontologyCount(): number {
-      return this.sources.filter((source) => source.type === "ontology").length;
-    },
-  },
-  async mounted() {
-    // loading...
-    this.status = { code: "loading", text: "Loading sources" };
+// sources data
+const sources = ref<Array<Source>>([]);
+// whether to show dataset sources
+const showDatasets = ref(true);
+// whether to show ontology sources
+const showOntologies = ref(true);
+// status of query
+const status = ref<Status | null>(null);
 
-    try {
-      // get sources from apis
-      const datasets = await getDatasets();
-      const ontologies = await getOntologies();
-      this.sources = [...datasets, ...ontologies];
+// get source img src
+function getSrc(image = "") {
+  try {
+    if (image.startsWith("http")) return image;
+    else return require(`@/assets/sources/${image}`);
+  } catch (error) {
+    return false;
+  }
+}
 
-      // sort sources alphabetically by name or id
-      this.sources.sort((a: Source, b: Source) => {
-        if (
-          (a?.name || a?.id || "").toLowerCase() <
-          (b?.name || b?.id || "").toLowerCase()
-        )
-          return -1;
-        else return 1;
-      });
+// get filename from full path
+function getFilename(path = "") {
+  return path
+    .split("/")
+    .filter((part) => part)
+    .pop();
+}
 
-      // clear status
-      this.status = null;
-    } catch (error) {
-      // error...
-      this.status = error as ApiError;
-    }
-  },
+// shown sources
+const filteredSources = computed(
+  (): Array<Source> =>
+    sources.value.filter(
+      (source: Source) =>
+        (source.type === "dataset" && showDatasets.value) ||
+        (source.type === "ontology" && showOntologies.value)
+    )
+);
+
+// number of dataset sources
+const datasetCount = computed(
+  (): number =>
+    sources.value.filter((source) => source.type === "dataset").length
+);
+
+// number of ontology sources
+const ontologyCount = computed(
+  (): number =>
+    sources.value.filter((source) => source.type === "ontology").length
+);
+
+onMounted(async () => {
+  // loading...
+  status.value = { code: "loading", text: "Loading sources" };
+
+  try {
+    // get sources from apis
+    const datasets = await getDatasets();
+    const ontologies = await getOntologies();
+    sources.value = [...datasets, ...ontologies];
+
+    // sort sources alphabetically by name or id
+    sources.value.sort((a: Source, b: Source) => {
+      if (
+        (a?.name || a?.id || "").toLowerCase() <
+        (b?.name || b?.id || "").toLowerCase()
+      )
+        return -1;
+      else return 1;
+    });
+
+    // clear status
+    status.value = null;
+  } catch (error) {
+    // error...
+    status.value = error as ApiError;
+  }
 });
 </script>
 

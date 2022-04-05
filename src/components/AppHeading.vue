@@ -1,5 +1,9 @@
+<!--
+  heading component with anchor link and (optionally) automatic level
+-->
+
 <template>
-  <component :is="tag || 'div'" ref="heading" :id="link">
+  <component :is="tag || 'div'" :id="link" ref="heading">
     <!-- heading icon -->
     <AppIcon v-if="icon" :icon="icon" :fallback="fallbackIcon" class="icon" />
 
@@ -18,74 +22,69 @@
   </component>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { onMounted, onUpdated, ref } from "vue";
 import { kebabCase } from "lodash";
 
-// heading component with anchor link and (optionally) automatic level
-export default defineComponent({
-  props: {
-    // manually specified heading level
-    level: Number,
-    // icon to show next to text
-    icon: String,
-    // fall back icon
-    fallbackIcon: String,
-  },
-  data() {
-    return {
-      // tag of heading (default to blank to avoid conflict with automatic level)
-      tag: "",
-      // hash link of heading
-      link: "",
-    };
-  },
-  methods: {
-    // get heading level/tag, i.e. h1, h2, h3, etc
-    getTag() {
-      // if level manually specified, just use that
-      if (this.level) return "h" + this.level;
+interface Props {
+  // manually specified heading level
+  level?: number;
+  // icon to show next to text
+  icon?: string;
+  // fall back icon
+  fallbackIcon?: string;
+}
 
-      // otherwise, determine automatically based on heading's position in document
-      // https://dequeuniversity.com/rules/axe/4.1/page-has-heading-one
+const props = defineProps<Props>();
 
-      // heading element
-      const element = this?.$refs?.heading as HTMLElement;
-      // section element
-      const parent = element.parentElement as HTMLElement;
+// tag of heading (default to blank to avoid conflict with automatic level)
+const tag = ref("");
+// hash link of heading
+const link = ref("");
 
-      // if heading is first in section
-      const firstHeading = element.matches("*:first-child");
-      // if section is first in main
-      const firstSection = parent.matches("*:first-child");
+// heading ref
+const heading = ref<HTMLElement>();
 
-      // determine level
-      if (firstSection) {
-        if (firstHeading) return "h1";
-        else return "h2";
-      } else {
-        if (firstHeading) return "h2";
-        else return "h3";
-      }
-    },
-    // determine hash link
-    getLink() {
-      // heading element
-      const element = this?.$refs?.heading as HTMLElement;
+// get heading level/tag, i.e. h1, h2, h3, etc
+function getTag() {
+  // if level manually specified, just use that
+  if (props.level) return "h" + props.level;
 
-      // determine link from text content of heading
-      return kebabCase(element.textContent || "");
-    },
-  },
-  mounted() {
-    this.tag = this.getTag();
-    this.link = this.getLink();
-  },
-  updated() {
-    this.tag = this.getTag();
-    this.link = this.getLink();
-  },
-});
+  // otherwise, determine automatically based on heading's position in document
+  // https://dequeuniversity.com/rules/axe/4.1/page-has-heading-one
+
+  // heading element
+  const element = heading.value;
+  // section element
+  const parent = element?.parentElement as HTMLElement;
+
+  // if heading is first in section
+  const firstHeading = element?.matches("*:first-child");
+  // if section is first in main
+  const firstSection = parent?.matches("*:first-child");
+
+  // determine level
+  if (firstSection) {
+    if (firstHeading) return "h1";
+    else return "h2";
+  } else {
+    if (firstHeading) return "h2";
+    else return "h3";
+  }
+}
+
+// determine link from text content of heading
+function getLink() {
+  return kebabCase(heading.value?.textContent || "");
+}
+
+// update tag and link on mount and change
+function update() {
+  tag.value = getTag();
+  link.value = getLink();
+}
+onMounted(update);
+onUpdated(update);
 </script>
 
 <style lang="scss" scoped>

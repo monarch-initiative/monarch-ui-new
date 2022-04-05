@@ -1,3 +1,7 @@
+<!--
+  big circular link button with text and sub text
+-->
+
 <template>
   <div class="tile" :data-design="design">
     <AppButton
@@ -12,33 +16,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+interface Props {
+  // where to link to
+  to: string;
+  // icon to show in button
+  icon: string;
+  // main text
+  title: string;
+  // secondary text
+  subtitle?: string;
+  // visual design
+  design?: "small" | "big";
+}
 
-// big circular link button with text and sub text
-export default defineComponent({
-  props: {
-    // where to link to
-    to: String,
-    // icon to show in button
-    icon: {
-      type: String,
-      required: true,
-    },
-    // main text
-    title: {
-      type: String,
-      required: true,
-    },
-    // secondary text
-    subtitle: String,
-    // visual design
-    design: {
-      default: "big",
-      type: String as PropType<"small" | "big">,
-    },
-  },
-});
+withDefaults(defineProps<Props>(), { subtitle: "", design: "big" });
 </script>
 
 <style lang="scss" scoped>

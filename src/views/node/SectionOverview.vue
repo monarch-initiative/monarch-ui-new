@@ -1,3 +1,7 @@
+<!--
+  node page overview section. basic, high level information about node.
+-->
+
 <template>
   <AppSection>
     <AppHeading icon="lightbulb">Overview</AppHeading>
@@ -29,36 +33,27 @@
       <!-- paragraph description -->
       <AppDetail :blank="!node.description" title="Description" :big="true">
         <p
+          v-tippy="'Click to expand'"
           class="description truncate-10"
           tabindex="0"
           v-html="node.description.trim()"
-          v-tippy="'Click to expand'"
         ></p>
       </AppDetail>
     </AppDetails>
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
 import { Result } from "@/api/node-lookup";
 import AppDetails from "@/components/AppDetails.vue";
 import AppDetail from "@/components/AppDetail.vue";
 
-// basic, high level information about node
-export default defineComponent({
-  components: {
-    AppDetails,
-    AppDetail,
-  },
-  props: {
-    // current node
-    node: {
-      type: Object as PropType<Result>,
-      required: true,
-    },
-  },
-});
+interface Props {
+  // current node
+  node: Result;
+}
+
+defineProps<Props>();
 </script>
 
 <style lang="scss" scoped>

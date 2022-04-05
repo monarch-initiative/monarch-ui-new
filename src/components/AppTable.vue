@@ -1,3 +1,11 @@
+<!--
+  raw/controlled table component. takes pre-sorted/filtered/paginated/etc data
+  from parent and simply displays it, with minimal logic
+
+  references:
+  https://adamlynch.com/flexible-data-tables-with-css-grid/
+-->
+
 <template>
   <AppFlex direction="col">
     <div class="table" :data-disabled="disabled">
@@ -20,13 +28,13 @@
               </span>
               <AppButton
                 v-if="col.sortable"
+                v-tippy="'Sort by ' + col.heading"
                 :icon="
                   'arrow-' + (sort?.id === col.id ? sort?.direction : 'down')
                 "
                 design="small"
                 :color="sort?.id === col.id ? 'primary' : 'secondary'"
                 @click.stop="emitSort(col)"
-                v-tippy="'Sort by ' + col.heading"
               />
               <AppSelectMulti
                 v-if="
@@ -34,17 +42,17 @@
                   col.activeFilters &&
                   col.availableFilters?.length
                 "
+                v-slot="slotProps"
                 :name="'Filter by ' + col.heading"
                 :options="col.availableFilters"
-                :modelValue="col.activeFilters"
-                @update:modelValue="(value) => emitFilter(colIndex, value)"
-                v-slot="props"
+                :model-value="col.activeFilters"
+                @update:model-value="(value) => emitFilter(colIndex, value)"
               >
                 <AppButton
+                  v-tippy="'Filter by ' + col.heading"
                   icon="filter"
                   design="small"
-                  v-bind="kebabify(props)"
-                  v-tippy="'Filter by ' + col.heading"
+                  v-bind="kebabify(slotProps)"
                 />
               </AppSelectMulti>
             </th>
@@ -91,62 +99,62 @@
             { id: '50' },
             { id: '100' },
           ]"
-          :modelValue="{ id: String(perPage || 5) }"
-          @update:modelValue="(value) => emitPerPage(value.id)"
+          :model-value="{ id: String(perPage || 5) }"
+          @update:model-value="(value) => emitPerPage(value.id)"
         />
       </div>
       <div>
         <AppButton
+          v-tippy="'Go to first page'"
           :disabled="start <= 0"
           icon="angle-double-left"
           design="small"
           @click="clickFirst"
-          v-tippy="'Go to first page'"
         />
         <AppButton
+          v-tippy="'Go to previous page'"
           :disabled="start - perPage < 0"
           icon="angle-left"
           design="small"
           @click="clickPrev"
-          v-tippy="'Go to previous page'"
         />
         <span>{{ start + 1 }} &mdash; {{ end }} of {{ total }}</span>
         <AppButton
+          v-tippy="'Go to next page'"
           :disabled="start + perPage > total"
           icon="angle-right"
           design="small"
           @click="clickNext"
-          v-tippy="'Go to next page'"
         />
         <AppButton
+          v-tippy="'Go to last page'"
           :disabled="start + perPage > total"
           icon="angle-double-right"
           design="small"
           @click="clickLast"
-          v-tippy="'Go to last page'"
         />
       </div>
       <div>
         <AppInput
+          v-tippy="'Search table data'"
           class="search"
           icon="search"
-          :modelValue="search"
+          :model-value="search"
           @change="emitSearch"
-          v-tippy="'Search table data'"
         />
         <AppButton
+          v-tippy="'Download table data'"
           icon="download"
           design="small"
           @click="emitDownload"
-          v-tippy="'Download table data'"
         />
       </div>
     </div>
   </AppFlex>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import { Col, Cols, Rows, Sort } from "./AppTable";
 import AppInput from "./AppInput.vue";
 import AppSelectMulti from "./AppSelectMulti.vue";
@@ -154,132 +162,123 @@ import AppSelectSingle from "./AppSelectSingle.vue";
 import { Options } from "./AppSelectMulti";
 import { kebabify } from "@/util/object";
 
-// reference:
-// https://adamlynch.com/flexible-data-tables-with-css-grid/
+interface Props {
+  // info for each column of table
+  cols: Cols;
+  // list of table rows, i.e. the table data
+  rows: Rows;
+  // sort key and direction
+  sort?: Sort | null;
+  // items per page
+  perPage: number;
+  // starting item index
+  start: number;
+  // total number of items
+  total: number;
+  // text being searched
+  search?: string;
+  // whether table is disabled (e.g. loading)
+  disabled?: boolean;
+}
 
-// raw/controlled table component. takes pre-sorted/filtered/paginated/etc data
-// from parent and simply displays it, with minimal logic
-export default defineComponent({
-  components: {
-    AppInput,
-    AppSelectMulti,
-    AppSelectSingle,
-  },
-  emits: ["sort", "filter", "perPage", "start", "search", "download"],
-  props: {
-    // info for each column of table
-    cols: {
-      required: true,
-      type: Array as PropType<Cols>,
-    },
-    // list of table rows, i.e. the table data
-    rows: {
-      required: true,
-      type: Array as PropType<Rows>,
-    },
-    // sort key and direction
-    sort: {
-      type: Object as PropType<Sort>,
-      default: null,
-    },
-    // items per page
-    perPage: {
-      type: Number,
-      required: true,
-    },
-    // starting item index
-    start: {
-      type: Number,
-      required: true,
-    },
-    // total number of items
-    total: {
-      type: Number,
-      required: true,
-    },
-    // text being searched
-    search: {
-      type: String,
-      default: "",
-    },
-    // whether table is disabled (e.g. loading)
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  methods: {
-    // when user clicks to first page
-    clickFirst() {
-      this.$emit("start", 0);
-    },
-    // when user clicks to previous page
-    clickPrev() {
-      this.$emit("start", this.start - this.perPage);
-    },
-    // when user clicks to next page
-    clickNext() {
-      this.$emit("start", this.start + this.perPage);
-    },
-    // when user clicks to last page
-    clickLast() {
-      this.$emit("start", Math.floor(this.total / this.perPage) * this.perPage);
-    },
-    // when user clicks a sort button
-    emitSort(col: Col) {
-      let newSort: Sort;
+const props = withDefaults(defineProps<Props>(), {
+  sort: null,
+  search: "",
+  disabled: false,
+});
 
-      // toggle sort direction
-      if (this.sort?.id === col.id) {
-        if (this.sort?.direction === "down")
-          newSort = { id: col.id, direction: "up" };
-        else if (this.sort?.direction === "up") {
-          newSort = {};
-        } else {
-          newSort = { id: col.id, direction: "down" };
-        }
-      } else {
-        newSort = { id: col.id, direction: "down" };
-      }
+interface Emits {
+  // when sort changes
+  (event: "sort", sort: Sort): void;
+  // when filter changes
+  (event: "filter", colIndex: number, value: Options): void;
+  // when per page changes
+  (event: "perPage", value: number): void;
+  // when start row changes
+  (event: "start", row: number): void;
+  // when search changes
+  (event: "search", value: string): void;
+  // when user requests download
+  (event: "download"): void;
+}
 
-      this.$emit("sort", newSort);
-    },
-    // when user changes a filter
-    emitFilter(colIndex: number, value: Options) {
-      this.$emit("filter", colIndex, value);
-    },
-    // when user changes rows per page
-    emitPerPage(value: string) {
-      this.$emit("perPage", Number(value));
-      this.$emit("start", 0);
-    },
-    // when user types in search
-    emitSearch(value: string) {
-      this.$emit("search", value);
-      this.$emit("start", 0);
-    },
-    // when user clicks download
-    emitDownload() {
-      this.$emit("download");
-    },
-    kebabify,
-  },
-  computed: {
-    // ending item index
-    end(): number {
-      return this.start + this.rows.length;
-    },
-    // grid column template widths
-    widths(): string {
-      return this.cols.map((col) => col.width || "auto").join(" ");
-    },
-    // aria sort direction attribute
-    ariaSort() {
-      if (this.sort?.direction === "up") return "ascending";
-      if (this.sort?.direction === "down") return "descending";
-      return "none";
-    },
-  },
+const emit = defineEmits<Emits>();
+
+// when user clicks to first page
+function clickFirst() {
+  emit("start", 0);
+}
+
+// when user clicks to previous page
+function clickPrev() {
+  emit("start", props.start - props.perPage);
+}
+
+// when user clicks to next page
+function clickNext() {
+  emit("start", props.start + props.perPage);
+}
+
+// when user clicks to last page
+function clickLast() {
+  emit("start", Math.floor(props.total / props.perPage) * props.perPage);
+}
+
+// when user clicks a sort button
+function emitSort(col: Col) {
+  let newSort: Sort;
+
+  // toggle sort direction
+  if (props.sort?.id === col.id) {
+    if (props.sort?.direction === "down")
+      newSort = { id: col.id, direction: "up" };
+    else if (props.sort?.direction === "up") {
+      newSort = {};
+    } else {
+      newSort = { id: col.id, direction: "down" };
+    }
+  } else {
+    newSort = { id: col.id, direction: "down" };
+  }
+
+  emit("sort", newSort);
+}
+
+// when user changes a filter
+function emitFilter(colIndex: number, value: Options) {
+  emit("filter", colIndex, value);
+}
+
+// when user changes rows per page
+function emitPerPage(value: string) {
+  emit("perPage", Number(value));
+  emit("start", 0);
+}
+
+// when user types in search
+function emitSearch(value: string) {
+  emit("search", value);
+  emit("start", 0);
+}
+
+// when user clicks download
+function emitDownload() {
+  emit("download");
+}
+
+// ending item index
+const end = computed((): number => props.start + props.rows.length);
+
+// grid column template widths
+const widths = computed((): string =>
+  props.cols.map((col) => col.width || "auto").join(" ")
+);
+
+// aria sort direction attribute
+const ariaSort = computed(() => {
+  if (props.sort?.direction === "up") return "ascending";
+  if (props.sort?.direction === "down") return "descending";
+  return "none";
 });
 </script>
 

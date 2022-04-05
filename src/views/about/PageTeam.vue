@@ -1,3 +1,9 @@
+<!--
+  about team page
+
+  all monarch-related team members and info about them
+-->
+
 <template>
   <!-- brief intro -->
   <AppSection>
@@ -20,10 +26,10 @@
     <AppHeading>
       {{ group.name }}
       <AppIcon
-        class="icon"
-        icon="history"
         v-if="group.alumni"
         v-tippy="'Alumni group'"
+        class="icon"
+        icon="history"
       />
     </AppHeading>
     <AppLink v-if="group.link" :to="group.link" :aria-label="group.name">
@@ -85,34 +91,33 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { kebabCase } from "lodash";
 import AppMember from "@/components/AppMember.vue";
-import team from "./team.json";
+import teamData from "./team.json";
 
-export default defineComponent({
-  components: {
-    AppMember,
-  },
-  data() {
-    return {
-      // list of team data
-      team,
-    };
-  },
-  methods: {
-    // get group img src with fallback if not found
-    getSrc(image: string) {
-      try {
-        return require(`@/assets/team/groups/${image}`);
-      } catch (error) {
-        return false;
-      }
-    },
-    kebabCase,
-  },
-});
+// define types manually because typescript can't infer them completely correctly
+const team = teamData as Array<{
+  name: string;
+  image: string;
+  link: string;
+  alumni?: boolean;
+  members: Array<{
+    name: string;
+    role?: string;
+    link?: string;
+    alumni?: boolean;
+  }>;
+}>;
+
+// get group img src with fallback if not found
+function getSrc(image: string) {
+  try {
+    return require(`@/assets/team/groups/${image}`);
+  } catch (error) {
+    return false;
+  }
+}
 </script>
 
 <style lang="scss" scoped>

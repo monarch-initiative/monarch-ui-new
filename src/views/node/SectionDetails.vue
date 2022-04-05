@@ -1,3 +1,7 @@
+<!--
+  node page details section. more detailed metadata/info about node.
+-->
+
 <template>
   <AppSection>
     <AppHeading icon="clipboard-list">Details</AppHeading>
@@ -10,12 +14,12 @@
 
       <!-- inheritance -->
       <AppDetail :blank="!node.inheritance.length" title="Heritability">
-        <AppFlex hAlign="left" gap="small">
+        <AppFlex h-align="left" gap="small">
           <AppLink
             v-for="(inheritance, index) of node.inheritance"
             :key="index"
-            :to="inheritance.link"
             v-tippy="inheritance.id"
+            :to="inheritance.link"
             >{{ inheritance.name }}</AppLink
           >
         </AppFlex>
@@ -32,7 +36,7 @@
         :blank="!node.taxon?.id"
         title="Taxon"
       >
-        <AppLink :to="node.taxon?.link" v-tippy="node?.taxon?.id">{{
+        <AppLink v-tippy="node?.taxon?.id" :to="node.taxon?.link">{{
           node.taxon?.name
         }}</AppLink>
       </AppDetail>
@@ -43,7 +47,7 @@
         title="External References"
         :big="true"
       >
-        <AppFlex hAlign="left" gap="small">
+        <AppFlex h-align="left" gap="small">
           <AppLink
             v-for="(xref, index) of node.xrefs"
             :key="index"
@@ -56,24 +60,15 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
 import { Result } from "@/api/node-lookup";
 import AppDetail from "@/components/AppDetail.vue";
 import AppDetails from "@/components/AppDetails.vue";
 
-// more detailed metadata/information about node
-export default defineComponent({
-  components: {
-    AppDetails,
-    AppDetail,
-  },
-  props: {
-    // current node
-    node: {
-      type: Object as PropType<Result>,
-      required: true,
-    },
-  },
-});
+interface Props {
+  // current node
+  node: Result;
+}
+
+defineProps<Props>();
 </script>

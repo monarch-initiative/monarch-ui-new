@@ -1,14 +1,18 @@
+<!--
+  team member profile/portrait
+-->
+
 <template>
-  <AppLink :to="link" class="member">
+  <AppLink :to="link || ''" class="member">
     <div class="image">
       <div class="portrait">
         <img :src="src" :alt="name" loading="lazy" />
       </div>
       <AppIcon
-        icon="history"
-        class="icon"
         v-if="alumni"
         v-tippy="'Alumni team member'"
+        icon="history"
+        class="icon"
       />
     </div>
     <div v-if="role" class="text">
@@ -18,33 +22,31 @@
   </AppLink>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import { kebabCase, deburr } from "lodash";
 
-// team member profile/portrait
-export default defineComponent({
-  props: {
-    // member name
-    name: String,
-    // their role
-    role: String,
-    // link to bio
-    link: String,
-    // whether or not member is a past contributor
-    alumni: Boolean,
-  },
-  computed: {
-    // get member img src with fallback if not found
-    src() {
-      const image = kebabCase(deburr((this.name || "").toLowerCase()));
-      try {
-        return require(`@/assets/team/members/${image}.jpg`);
-      } catch (error) {
-        return require(`@/assets/team/_member.jpg`);
-      }
-    },
-  },
+interface Props {
+  // member name
+  name: string;
+  // their role
+  role?: string;
+  // link to bio
+  link?: string;
+  // whether or not member is a past contributor
+  alumni?: boolean;
+}
+
+const props = defineProps<Props>();
+
+// get member img src with fallback if not found
+const src = computed(() => {
+  const image = kebabCase(deburr((props.name || "").toLowerCase()));
+  try {
+    return require(`@/assets/team/members/${image}.jpg`);
+  } catch (error) {
+    return require(`@/assets/team/_member.jpg`);
+  }
 });
 </script>
 

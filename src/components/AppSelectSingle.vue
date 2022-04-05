@@ -1,3 +1,13 @@
+<!--
+  custom single select
+
+  references:
+  https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/combobox/combobox-select-only.html
+  https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/listbox_role
+  https://vuetifyjs.com/en/components/selects/
+  https://www.downshift-js.com/use-select
+-->
+
 <template>
   <div class="select-single">
     <!-- select button -->
@@ -8,13 +18,13 @@
       :aria-expanded="expanded"
       :aria-controls="`list-${id}`"
       aria-haspopup="listbox"
+      tabindex="0"
       @click="onClick"
       @keydown="onKeydown"
       @blur="onBlur"
-      tabindex="0"
     >
-      <AppIcon v-if="modelValue.icon" :icon="modelValue.icon" />
-      <span class="button-label">{{ modelValue.name || modelValue.id }}</span>
+      <AppIcon v-if="modelValue?.icon" :icon="modelValue?.icon" />
+      <span class="button-label">{{ modelValue?.name || modelValue?.id }}</span>
       <AppIcon
         class="button-icon"
         :icon="expanded ? 'angle-up' : 'angle-down'"
@@ -34,19 +44,19 @@
       <div class="grid">
         <div
           v-for="(option, index) in options"
-          :key="index"
           :id="`option-${id}-${index}`"
+          :key="index"
           class="option"
           role="option"
           :aria-selected="selected === index"
           :data-selected="selected === index"
           :data-highlighted="index === highlighted"
+          tabindex="0"
           @click="selected = index"
           @mouseenter="highlighted = index"
           @mousedown.prevent=""
           @focusin="() => null"
           @keydown="() => null"
-          tabindex="0"
         >
           <span class="option-icon">
             <AppIcon v-if="option.icon" :icon="option.icon" />
@@ -59,145 +69,145 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+import { ref, watch } from "vue";
 import { uniqueId } from "lodash";
 import { Option, Options } from "./AppSelectSingle";
 import { wrap } from "@/util/math";
 
-// references:
-// https://www.w3.org/TR/2021/NOTE-wai-aria-practices-1.2-20211129/examples/combobox/combobox-select-only.html
-// https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/listbox_role
-// https://vuetifyjs.com/en/components/selects/
-// https://www.downshift-js.com/use-select
+interface Props {
+  // name of the field
+  name: string;
+  // currently selected item
+  modelValue?: Option;
+  // list of options to show
+  options: Options;
+}
 
-// custom single select
-export default defineComponent({
-  props: {
-    // name of the field
-    name: {
-      type: String,
-      required: true,
-    },
-    // currently selected item
-    modelValue: {
-      type: Object as PropType<Option>,
-      required: true,
-    },
-    // list of options to show
-    options: {
-      type: Array as PropType<Options>,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      // unique id for instance of component
-      id: uniqueId(),
-      // whether dropdown is open
-      expanded: false,
-      // index of option that is selected
-      selected: this.getSelected(),
-      // index of option that is highlighted
-      highlighted: 0,
-    };
-  },
-  methods: {
-    // open dropdown
-    open() {
-      this.expanded = true;
-      // auto highlight selected option
-      this.highlighted = this.selected;
-    },
-    // close dropdown
-    close() {
-      this.expanded = false;
-    },
-    // when button clicked
-    onClick() {
-      // toggle dropdown
-      this.expanded ? this.close() : this.open();
-      // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#clicking_and_focus
-      (
-        document?.querySelector(`#select-${this.id}`) as HTMLButtonElement
-      )?.focus();
-    },
-    // when button blurred
-    onBlur() {
-      this.close();
-    },
-    // when user presses key on button
-    onKeydown(event: KeyboardEvent) {
-      // arrow/home/end keys
-      if (["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
-        // prevent page scroll
-        event.preventDefault();
+const props = defineProps<Props>();
 
-        // if dropdown open, control highlighted option
-        // if dropdown closed, control selected option
-        const prop = this.expanded ? "highlighted" : "selected";
+interface Emits {
+  // two-way binding value
+  (event: "update:modelValue", value: Option): void;
+  // when value changed
+  (event: "input"): void;
+  // when value change "submitted"/"committed" by user
+  (event: "change"): void;
+}
 
-        // move value up/down
-        let value = this[prop];
-        if (event.key === "ArrowUp") value--;
-        if (event.key === "ArrowDown") value++;
-        if (event.key === "Home") value = 0;
-        if (event.key === "End") value = this.options.length - 1;
+const emit = defineEmits<Emits>();
 
-        // update value, wrapping beyond 0 or options length
-        this[prop] = wrap(value, 0, this.options.length);
-      }
+// unique id for instance of component
+const id = ref(uniqueId());
+// whether dropdown is open
+const expanded = ref(false);
+// index of option that is selected
+const selected = ref(getSelected());
+// index of option that is highlighted
+const highlighted = ref(0);
 
-      // enter key to select highlighted option
-      if (this.expanded && (event.key === "Enter" || event.key === " ")) {
-        // prevent browser re-clicking open button
-        event.preventDefault();
-        this.selected = this.highlighted;
-      }
+// open dropdown
+function open() {
+  expanded.value = true;
+  // auto highlight selected option
+  highlighted.value = selected.value;
+}
 
-      // esc key to close dropdown
-      if (this.expanded && event.key === "Escape") this.close();
+// close dropdown
+function close() {
+  expanded.value = false;
+}
 
-      // TODO: type ahead
-      // not strictly necessary for now because this component only used for
-      // small number of options
-    },
-    // get selected option index from model
-    getSelected() {
-      return this.options.findIndex(
-        (option) => option?.id === this.modelValue?.id
-      );
-    },
-  },
-  watch: {
-    // when model changes
-    modelValue() {
-      // update selected index
-      this.selected = this.getSelected();
-    },
-    // when selected index changes
-    selected() {
-      // emit updated model
-      this.$emit("update:modelValue", this.options[this.selected]);
-      this.close();
-    },
-    // when highlighted index changes
-    highlighted() {
-      // scroll to highlighted in dropdown
-      document
-        .querySelector(`#option-${this.id}-${this.highlighted}`)
-        ?.scrollIntoView({ block: "nearest" });
-    },
-    // when available options change
-    options: {
-      handler() {
-        // if can't find selected value, select first option
-        if (this.selected === -1 && this.options.length) this.selected = 0;
-      },
-      immediate: true,
-    },
-  },
+// when button clicked
+function onClick() {
+  // toggle dropdown
+  expanded.value ? close() : open();
+  // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#clicking_and_focus
+  (document.querySelector(`#select-${id.value}`) as HTMLElement)?.focus();
+}
+
+// when button blurred
+function onBlur() {
+  close();
+}
+
+// when user presses key on button
+function onKeydown(event: KeyboardEvent) {
+  // arrow/home/end keys
+  if (["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
+    // prevent page scroll
+    event.preventDefault();
+
+    // if dropdown open, control highlighted option
+    // if dropdown closed, control selected option
+    let index = expanded.value ? highlighted.value : selected.value;
+
+    // move value up/down
+    if (event.key === "ArrowUp") index--;
+    if (event.key === "ArrowDown") index++;
+    if (event.key === "Home") index = 0;
+    if (event.key === "End") index = props.options.length - 1;
+
+    // update value, wrapping beyond 0 or options length
+    index = wrap(index, 0, props.options.length);
+    if (expanded.value) highlighted.value = index;
+    else selected.value = index;
+  }
+
+  // enter key to select highlighted option
+  if (expanded.value && (event.key === "Enter" || event.key === " ")) {
+    // prevent browser re-clicking open button
+    event.preventDefault();
+    selected.value = highlighted.value;
+  }
+
+  // esc key to close dropdown
+  if (expanded.value && event.key === "Escape") close();
+
+  // TODO: type ahead
+  // not strictly necessary for now because this component only used with a
+  // small number of options
+}
+
+// get selected option index from model
+function getSelected() {
+  return props.options.findIndex(
+    (option) => option?.id === props.modelValue?.id
+  );
+}
+
+// when model changes
+watch(
+  () => props.modelValue,
+  () =>
+    // update selected index
+    (selected.value = getSelected())
+);
+
+// when selected index changes
+watch(selected, () => {
+  // emit updated model
+  emit("update:modelValue", props.options[selected.value]);
+  close();
 });
+
+// when highlighted index changes
+watch(highlighted, () =>
+  // scroll to highlighted in dropdown
+  document
+    .querySelector(`#option-${id.value}-${highlighted.value}`)
+    ?.scrollIntoView({ block: "nearest" })
+);
+
+// when available options change
+watch(
+  () => props.options,
+  () => {
+    // if can't find selected value, select first option (if it exists)
+    if (selected.value === -1 && props.options.length) selected.value = 0;
+  },
+  { immediate: true }
+);
 </script>
 
 <style lang="scss" scoped>

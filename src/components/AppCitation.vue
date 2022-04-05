@@ -1,3 +1,7 @@
+<!--
+  citation block of title, authors, and other info
+-->
+
 <template>
   <blockquote class="citation">
     <div v-if="title" class="truncate-2" tabindex="0">{{ title }}</div>
@@ -11,24 +15,23 @@
   </blockquote>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 
-// block quote specifically for a citation
-export default defineComponent({
-  props: {
-    // work title
-    title: String,
-    // list of authors
-    authors: String,
-    // journal, issue, date, or other misc info
-    details: Array,
-  },
-  computed: {
-    detailsString() {
-      return (this.details || []).filter((e) => e).join("&nbsp; · &nbsp;");
-    },
-  },
+interface Props {
+  // work title
+  title?: string;
+  // list of authors
+  authors?: string;
+  // journal, issue, date, or other misc info
+  details?: Array<string>;
+}
+
+const props = defineProps<Props>();
+
+// joined details as string
+const detailsString = computed(() => {
+  return (props.details || []).filter((e) => e).join("&nbsp; · &nbsp;");
 });
 </script>
 

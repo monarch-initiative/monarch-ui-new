@@ -3,12 +3,13 @@ module.exports = {
 
   env: {
     node: true,
+    "vue/setup-compiler-macros": true,
   },
 
   plugins: ["vuejs-accessibility"],
 
   extends: [
-    "plugin:vue/vue3-essential",
+    "plugin:vue/vue3-recommended",
     "plugin:vuejs-accessibility/recommended",
     "eslint:recommended",
     "@vue/typescript/recommended",
@@ -25,20 +26,15 @@ module.exports = {
     // count v-tippy (which adds an accessible aria-label attribute) as accessible
     "vuejs-accessibility/anchor-has-content": [
       "error",
-      {
-        accessibleDirectives: ["tippy"],
-      },
+      { accessibleDirectives: ["tippy"] },
     ],
     // allow nesting a control in a label without a for attribute (perfectly fine practice)
     "vuejs-accessibility/label-has-for": [
       "error",
-      {
-        required: {
-          some: ["nesting", "id"],
-        },
-        allowChildren: true,
-      },
+      { required: { some: ["nesting", "id"] }, allowChildren: true },
     ],
+    // allow v-html. we are only using this from very controlled sources, so little risk of XSS.
+    "vue/no-v-html": ["off"],
   },
 
   // is this needed?

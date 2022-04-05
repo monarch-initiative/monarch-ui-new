@@ -1,8 +1,8 @@
 <!--
   dev page for experimenting with design and behavior of components. also a 
-  place for seeing all variations at once to check for coherence. not included
-  in production build of site.
+  place for seeing all variations at once to check for coherence.
 -->
+
 <template>
   <AppSection>
     <AppHeading>Testbed</AppHeading>
@@ -49,7 +49,7 @@
       @filter="
         (colIndex, value) => (table.cols[colIndex].activeFilters = value)
       "
-      @perPage="(value) => (table.perPage = value)"
+      @per-page="(value) => (table.perPage = value)"
       @search="(value) => (table.search = value)"
     >
       <template #arbitrary>Arbitrary slot content</template>
@@ -68,9 +68,9 @@
     <AppHeading>Single Select</AppHeading>
     <span>{{ singleSelectValue }}</span>
     <AppSelectSingle
+      v-model="singleSelectValue"
       name="Fruit"
       :options="singleSelectOptions"
-      v-model="singleSelectValue"
     />
   </AppSection>
 
@@ -79,21 +79,21 @@
     <AppHeading>Multi Select</AppHeading>
     <span>{{ multiSelectValue }}</span>
     <AppSelectMulti
+      v-model="multiSelectValue"
       name="Category"
       :options="multiSelectOptions"
-      v-model="multiSelectValue"
     />
     <AppSelectMulti
+      v-slot="props"
+      v-model="multiSelectValue"
       name="Category"
       :options="multiSelectOptions"
-      v-model="multiSelectValue"
-      v-slot="props"
     >
       <AppButton
+        v-tippy="'Test button'"
         icon="filter"
         v-bind="props"
         design="small"
-        v-tippy="'Test button'"
       />
     </AppSelectMulti>
   </AppSection>
@@ -103,24 +103,24 @@
     <AppHeading>Tags Select</AppHeading>
     <span>{{ tagsSelectValue }}</span>
     <AppSelectTags
+      v-model="tagsSelectValue"
       name="Dessert"
       placeholder="Search for a dessert"
       :options="tagsSelectOptions"
-      v-model="tagsSelectValue"
     />
   </AppSection>
 
   <!-- button component -->
   <AppSection>
     <AppHeading>Button</AppHeading>
-    <AppFlex v-for="(row, index) of buttons" :key="index">
+    <AppFlex v-for="(row, rowIndex) of buttons" :key="rowIndex">
       <AppButton
-        v-for="(props, index) of row"
-        :key="index"
-        to="/"
-        @click="log"
-        v-bind="props"
+        v-for="(props, colIndex) of row"
+        :key="colIndex"
         v-tippy="'Test button'"
+        to="/"
+        v-bind="props"
+        @click="log"
       />
     </AppFlex>
   </AppSection>
@@ -164,9 +164,10 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { omit, pick } from "lodash";
+<script setup lang="ts">
+import { ref } from "vue";
+import { omit } from "lodash";
+import AppButton from "@/components/AppButton.vue";
 import AppInput from "@/components/AppInput.vue";
 import AppRing from "@/components/AppRing.vue";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
@@ -175,123 +176,114 @@ import AppSelectTags from "@/components/AppSelectTags.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import AppTable from "@/components/AppTable.vue";
 import AppTabs from "@/components/AppTabs.vue";
-import { Cols, Rows } from "@/components/AppTable";
+import { Cols, Rows, Sort } from "@/components/AppTable";
 import { sleep } from "@/util/debug";
 
-export default defineComponent({
-  components: {
-    AppInput,
-    AppRing,
-    AppSelectMulti,
-    AppSelectSingle,
-    AppSelectTags,
-    AppStatus,
-    AppTable,
-    AppTabs,
-  },
-  data() {
-    const buttons = [];
-    for (const design of ["normal", "circle", "small"]) {
-      for (const color of ["primary", "secondary"]) {
-        const row = [];
-        for (const [text, icon] of [
-          ["Text", ""],
-          ["Text", "download"],
-          ["", "download"],
-        ]) {
-          row.push({ design, color, text, icon });
-        }
-        buttons.push(row);
-      }
-    }
+type ButtonProps = InstanceType<typeof AppButton>["$props"];
 
-    return {
-      buttons,
-      table: {
-        cols: [
-          {
-            id: "name",
-            key: "name",
-            heading: "Name",
-            align: "left",
-            sortable: true,
-          },
-          {
-            id: "score",
-            key: "score",
-            heading: "Score",
-            availableFilters: [{ id: "numbers" }, { id: "nulls" }],
-            activeFilters: [{ id: "numbers" }],
-            sortable: true,
-          },
-          {
-            id: "details",
-            key: "details",
-            heading: "Details",
-            align: "left",
-            sortable: true,
-          },
-          {
-            id: "arbitrary",
-            key: "arbitrary",
-            heading: "Arbitrary",
-            align: "right",
-          },
-        ] as Cols,
-        rows: [
-          { name: "abc", score: 9, details: [1, 2] },
-          { name: "def", score: -1, details: [2, 1, 3] },
-          { name: "def", score: 2, details: [1] },
-          { name: "abc", score: 4, details: [2, 1] },
-          { name: "ghi", score: NaN, details: [1] },
-        ] as Rows,
-        sort: { id: "score", direction: "up" },
-        perPage: 10,
-        start: 1,
-        end: 11,
-        total: 123,
-        search: "",
-      },
-      singleSelectOptions: [
-        { id: "apple" },
-        { id: "banana" },
-        { id: "cherry" },
-        { id: "durian" },
-        { id: "elderberry" },
-        { id: "fig" },
-        { id: "grape" },
-        { id: "honeydew" },
-      ],
-      singleSelectValue: { id: "durian" },
-      multiSelectOptions: [
-        { id: "fruits", count: 0 },
-        { id: "vegetables", count: 7 },
-        { id: "colors", count: 42 },
-        { id: "animals", count: 999 },
-        { id: "cars" },
-        { id: "schools" },
-        { id: "appliances" },
-      ],
-      multiSelectValue: [{ id: "vegetables" }],
-      tagsSelectOptions: async (search = "") => {
-        await sleep(200);
-        return [
-          { id: "ice cream", icon: "home" },
-          { id: "candy", icon: "database", count: "8 phenotypes" },
-          { id: "gummies", icon: "download", count: "4 phenotypes" },
-          { id: "brownies", icon: "puzzle-piece", count: "1 phenotype" },
-          { id: "cookies", icon: "comment" },
-        ].filter(({ id }) => id.includes(search));
-      },
-      tagsSelectValue: [
-        { id: "candy", icon: "database", count: "8 phenotypes" },
-      ],
-    };
-  },
-  methods: {
-    log: console.info,
-    omit,
-    pick,
-  },
+// enumerate permutations of button options
+const buttons = ref<Array<Array<ButtonProps>>>([]);
+for (const design of ["normal", "circle", "small"]) {
+  for (const color of ["primary", "secondary"]) {
+    const row = [];
+    for (const [text, icon] of [
+      ["Text", ""],
+      ["Text", "download"],
+      ["", "download"],
+    ]) {
+      row.push({ design, color, text, icon } as ButtonProps);
+    }
+    buttons.value.push(row);
+  }
+}
+
+// table input props
+const table = ref({
+  cols: [
+    {
+      id: "name",
+      key: "name",
+      heading: "Name",
+      align: "left",
+      sortable: true,
+    },
+    {
+      id: "score",
+      key: "score",
+      heading: "Score",
+      availableFilters: [{ id: "numbers" }, { id: "nulls" }],
+      activeFilters: [{ id: "numbers" }],
+      sortable: true,
+    },
+    {
+      id: "details",
+      key: "details",
+      heading: "Details",
+      align: "left",
+      sortable: true,
+    },
+    {
+      id: "arbitrary",
+      key: "arbitrary",
+      heading: "Arbitrary",
+      align: "right",
+    },
+  ] as Cols,
+  rows: [
+    { name: "abc", score: 9, details: [1, 2] },
+    { name: "def", score: -1, details: [2, 1, 3] },
+    { name: "def", score: 2, details: [1] },
+    { name: "abc", score: 4, details: [2, 1] },
+    { name: "ghi", score: NaN, details: [1] },
+  ] as Rows,
+  sort: { id: "score", direction: "up" } as Sort,
+  perPage: 10,
+  start: 1,
+  end: 11,
+  total: 123,
+  search: "",
 });
+
+// single select
+const singleSelectOptions = ref([
+  { id: "apple" },
+  { id: "banana" },
+  { id: "cherry" },
+  { id: "durian" },
+  { id: "elderberry" },
+  { id: "fig" },
+  { id: "grape" },
+  { id: "honeydew" },
+]);
+const singleSelectValue = ref({ id: "durian" });
+
+// multi select
+const multiSelectOptions = ref([
+  { id: "fruits", count: 0 },
+  { id: "vegetables", count: 7 },
+  { id: "colors", count: 42 },
+  { id: "animals", count: 999 },
+  { id: "cars" },
+  { id: "schools" },
+  { id: "appliances" },
+]);
+const multiSelectValue = ref([{ id: "vegetables" }]);
+
+// tags select
+const tagsSelectOptions = ref(async (search = "") => {
+  await sleep(200);
+  return [
+    { id: "ice cream", icon: "home" },
+    { id: "candy", icon: "database", count: "8 phenotypes" },
+    { id: "gummies", icon: "download", count: "4 phenotypes" },
+    { id: "brownies", icon: "puzzle-piece", count: "1 phenotype" },
+    { id: "cookies", icon: "comment" },
+  ].filter(({ id }) => id.includes(search));
+});
+const tagsSelectValue = ref([
+  { id: "candy", icon: "database", count: "8 phenotypes" },
+]);
+
+// util
+const log = console.log;
 </script>

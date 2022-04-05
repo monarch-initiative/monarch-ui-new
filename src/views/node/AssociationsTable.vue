@@ -1,3 +1,7 @@
+<!--
+  node page associations section, table mode. all associations.
+-->
+
 <template>
   <div class="container">
     <!-- status -->
@@ -7,15 +11,15 @@
     <AppTable
       :cols="cols"
       :rows="associations"
-      :perPage="perPage"
+      :per-page="perPage"
       :start="start"
       :total="count"
       :search="search"
-      @perPage="(value) => (perPage = value)"
+      :disabled="!!status"
+      @per-page="(value) => (perPage = value)"
       @start="(value) => (start = value)"
       @search="(value) => (search = value)"
       @download="download"
-      :disabled="!!status"
     >
       <!-- "object" (current node) -->
       <template #subject="{ cell }">
@@ -28,7 +32,7 @@
           class="arrow"
           :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
         />
-        <AppLink class="truncate" :to="cell.iri" :noIcon="true">{{
+        <AppLink class="truncate" :to="cell.iri" :no-icon="true">{{
           cell.name
         }}</AppLink>
         <AppIcon
@@ -47,18 +51,18 @@
       <!-- button to show evidence -->
       <template #evidence>
         <AppButton
+          v-tippy="'View supporting evidence for this association'"
           class="evidence-button"
           icon="eye"
           color="secondary"
-          v-tippy="'View supporting evidence for this association'"
         />
       </template>
     </AppTable>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+import { ref, computed, watch, onMounted } from "vue";
 import { startCase } from "lodash";
 import { Option } from "@/components/AppSelectSingle";
 import AppStatus from "@/components/AppStatus.vue";
@@ -67,148 +71,122 @@ import AppTable from "@/components/AppTable.vue";
 import { Cols } from "@/components/AppTable";
 import { Result as NodeResult } from "@/api/node-lookup";
 import {
-  getAssociations,
+  getTabulatedAssociations,
   Result as AssociationsResult,
 } from "@/api/node-associations";
 import { ApiError } from "@/api";
 import { downloadJson } from "@/util/download";
-import { push } from "@/components/TheSnackbar.vue";
+import { push } from "@/components/TheSnackbar";
 
-// table (full) associations
-export default defineComponent({
-  components: {
-    AppStatus,
-    AppTable,
-  },
-  props: {
-    // current node
-    node: {
-      type: Object as PropType<NodeResult>,
-      required: true,
-    },
-    // selected association category
-    category: {
-      type: Object as PropType<Option>,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      // association data
-      associations: [] as AssociationsResult["associations"],
-      // total number of associations
-      count: 0,
-      // status of query
-      status: null as Status | null,
-      // table state
-      perPage: 5,
-      start: 0,
-      search: "",
-    };
-  },
-  computed: {
-    // table columns
-    cols(): Cols {
-      return [
-        {
-          id: "subject",
-          key: "subject",
-          heading: startCase(this.node.category),
-        },
-        {
-          id: "relation",
-          key: "relation",
-          heading: "Association",
-          width: "min-content",
-        },
-        {
-          id: "object",
-          key: "object",
-          heading: startCase(this.category.id),
-          width: "minmax(150px, 1fr)",
-        },
-        {
-          id: "evidence",
-          key: "evidence",
-          heading: "Evidence",
-          width: "min-content",
-          align: "center",
-        },
-      ];
-    },
-  },
-  methods: {
-    // get table association data
-    async getAssociations() {
-      try {
-        // loading...
-        this.status = { code: "loading", text: "Loading association data" };
+interface Props {
+  // current node
+  node: NodeResult;
+  // selected association category
+  category: Option;
+}
 
-        // catch case where no association categories available
-        if (!this.node.associationCounts.length)
-          throw new ApiError("No association info available", "warning");
+const props = defineProps<Props>();
 
-        // get association data
-        const { count, associations } = await getAssociations(
-          this.node.id,
-          this.node.category,
-          this.category.id,
-          this.perPage,
-          this.start,
-          this.search
-        );
-        this.count = count;
-        this.associations = associations;
+// association data
+const associations = ref<AssociationsResult["associations"]>([]);
+// total number of associations
+const count = ref(0);
+// table state
+const perPage = ref(5);
+const start = ref(0);
+const search = ref("");
+// status of query
+const status = ref<Status | null>(null);
 
-        // clear status
-        this.status = null;
-      } catch (error) {
-        // error...
-        this.status = error as ApiError;
-        this.count = 0;
-        this.associations = [];
-      }
+// table columns
+const cols = computed(
+  (): Cols => [
+    {
+      id: "subject",
+      key: "subject",
+      heading: startCase(props.node.category),
     },
-    // download table data
-    async download() {
-      // max rows to try to query
-      const max = 100000;
+    {
+      id: "relation",
+      key: "relation",
+      heading: "Association",
+      width: "min-content",
+    },
+    {
+      id: "object",
+      key: "object",
+      heading: startCase(props.category.id),
+      width: "minmax(150px, 1fr)",
+    },
+    {
+      id: "evidence",
+      key: "evidence",
+      heading: "Evidence",
+      width: "min-content",
+      align: "center",
+    },
+  ]
+);
 
-      // warn user
-      push(
-        `Downloading data for ${Math.min(this.count, max)} table entries.` +
-          (this.count >= 100 ? " This may take a minute." : "")
-      );
+// get table association data
+async function getAssociations() {
+  try {
+    // loading...
+    status.value = { code: "loading", text: "Loading association data" };
 
-      // attempt to request all rows
-      const response = await getAssociations(
-        this.node.id,
-        this.node.category,
-        this.category.id,
-        max,
-        0
-      );
-      downloadJson(response);
-    },
-  },
-  watch: {
-    category() {
-      this.getAssociations();
-    },
-    perPage() {
-      this.getAssociations();
-    },
-    start() {
-      this.getAssociations();
-    },
-    search() {
-      this.getAssociations();
-    },
-  },
-  mounted() {
-    this.getAssociations();
-  },
-});
+    // catch case where no association categories available
+    if (!props.node.associationCounts.length)
+      throw new ApiError("No association info available", "warning");
+
+    // get association data
+    const response = await getTabulatedAssociations(
+      props.node.id,
+      props.node.category,
+      props.category.id,
+      perPage.value,
+      start.value,
+      search.value
+    );
+    count.value = response.count;
+    associations.value = response.associations;
+
+    // clear status
+    status.value = null;
+  } catch (error) {
+    // error...
+    status.value = error as ApiError;
+    count.value = 0;
+    associations.value = [];
+  }
+}
+
+// download table data
+async function download() {
+  // max rows to try to query
+  const max = 100000;
+
+  // warn user
+  push(
+    `Downloading data for ${Math.min(count.value, max)} table entries.` +
+      (count.value >= 100 ? " This may take a minute." : "")
+  );
+
+  // attempt to request all rows
+  const response = await getTabulatedAssociations(
+    props.node.id,
+    props.node.category,
+    props.category.id,
+    max,
+    0
+  );
+  downloadJson(response);
+}
+
+// get associations when category or table state changes
+watch([() => props.category, perPage, start, search], getAssociations);
+
+// get associations on load
+onMounted(getAssociations);
 </script>
 
 <style lang="scss" scoped>

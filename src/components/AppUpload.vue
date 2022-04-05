@@ -1,10 +1,14 @@
+<!--
+  upload button
+-->
+
 <template>
   <AppButton
+    v-tippy="'Choose or drag & drop a file'"
     class="button"
     text="Upload"
     icon="upload"
     :data-drag="drag"
-    v-tippy="'Choose or drag & drop a file'"
     @click="onClick"
     @dragenter="drag = true"
     @dragleave="drag = false"
@@ -15,53 +19,56 @@
   <input
     ref="input"
     aria-label="invisible input"
-    @change="onChange"
     type="file"
     accept="text/plain"
     :style="{ display: 'none' }"
+    @change="onChange"
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 
-// upload button
-export default defineComponent({
-  emits: ["upload"],
-  data() {
-    return {
-      drag: false,
-    };
-  },
-  methods: {
-    // upload file
-    async upload(target: HTMLInputElement | DataTransfer | null) {
-      // get file name and contents from event
-      const file = (target?.files || [])[0];
-      const content = (await file.text()) || "";
-      const filename = file?.name || "";
+interface Emits {
+  (event: "upload", content: string, filename: string): void;
+}
 
-      // signal upload to parent
-      this.$emit("upload", content, filename);
+const emit = defineEmits<Emits>();
 
-      // reset file input
-      if (content) (this.$refs.input as HTMLInputElement).value = "";
-    },
-    // on file input change
-    onChange(event: Event) {
-      this.upload(event.target as HTMLInputElement);
-    },
-    // on button click, click hidden file input
-    onClick() {
-      (this.$refs.input as HTMLInputElement)?.click();
-    },
-    // on button file drop
-    onDrop(event: DragEvent) {
-      this.drag = false;
-      this.upload(event.dataTransfer);
-    },
-  },
-});
+// dragging state
+const drag = ref(false);
+// input element
+const input = ref<HTMLInputElement>();
+
+// upload file
+async function upload(target: HTMLInputElement | DataTransfer | null) {
+  // get file name and contents from event
+  const file = (target?.files || [])[0];
+  const content = (await file.text()) || "";
+  const filename = file?.name || "";
+
+  // signal upload to parent
+  emit("upload", content, filename);
+
+  // reset file input
+  if (content && input.value) input.value.value = "";
+}
+
+// on file input change
+function onChange(event: Event) {
+  upload(event.target as HTMLInputElement);
+}
+
+// on button click, click hidden file input
+function onClick() {
+  input.value?.click();
+}
+
+// on button file drop
+function onDrop(event: DragEvent) {
+  drag.value = false;
+  upload(event.dataTransfer);
+}
 </script>
 
 <style lang="scss" scoped>

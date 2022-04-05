@@ -1,9 +1,13 @@
+<!--
+  feedback form higher-order component
+-->
+
 <template>
   <!-- add heading -->
-  <AppHeading :level="1" v-if="modal">Feedback Form</AppHeading>
+  <AppHeading v-if="modal" :level="1">Feedback Form</AppHeading>
 
   <!-- overview info -->
-  <p v-if="!status">
+  <p>
     Request a feature, report a bug, or chat with us about anything
     Monarch-related.
   </p>
@@ -13,32 +17,32 @@
     <!-- fields for user to fill out -->
     <div class="fields">
       <AppInput
+        v-model.trim="name"
         title="Name"
         description="So we can address you"
         placeholder="Jane Smith"
-        v-model.trim="name"
       />
       <AppInput
+        v-model.trim="email"
         title="Email"
         description="So we can follow up with you"
         placeholder="jane.smith@gmail.com"
         type="email"
-        v-model.trim="email"
       />
       <AppInput
+        v-model.trim="github"
         title="GitHub username"
         description="So we can tag you"
         placeholder="@janesmith"
-        v-model.trim="github"
       />
       <AppInput
+        v-model="feedback"
         class="feedback"
         title="Feedback"
         description="Please give us as many details as possible!"
         placeholder=""
         :required="true"
         :multi="true"
-        v-model="feedback"
       />
     </div>
 
@@ -72,8 +76,10 @@
   </form>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref, computed } from "vue";
+import { useRoute } from "vue-router";
+import { useLocalStorage } from "@vueuse/core";
 import parser from "ua-parser-js";
 import AppInput from "@/components/AppInput.vue";
 import { Status } from "@/components/AppStatus";
@@ -82,117 +88,99 @@ import { postFeedback } from "@/api/feedback";
 import AppStatus from "./AppStatus.vue";
 import { ApiError } from "@/api";
 
-// feedback form
-export default defineComponent({
-  components: {
-    AppInput,
-    AppStatus,
-  },
-  props: {
-    // whether form is in a modal
-    modal: Boolean,
-  },
-  data() {
-    return {
-      // user's name
-      name: "",
-      // user's email
-      email: "",
-      // user's github name
-      github: "",
-      // user's freeform feedback
-      feedback: "",
-      // result of submitting form
-      status: null as Status | null,
-      // link to created issue
-      link: "",
-    };
-  },
-  computed: {
-    // list of automatic details to record
-    details() {
-      // get browser/device/os/etc details from ua parser  library
-      const { browser, device, os, engine, cpu } = parser();
+// route info
+const route = useRoute();
 
-      // filter and join strings together
-      const concat = (...array: Array<string | undefined>) =>
-        array.filter((e) => e && e !== "()").join(" ");
+interface Props {
+  // whether form is inside a modal
+  modal?: boolean;
+}
 
-      // make map of desired properties in desired stringified format
-      return {
-        Page: this.$route.fullPath,
-        Browser: concat(browser.name, browser.version),
-        Device: concat(device.vendor, device.model, device.type),
-        OS: concat(os.name, os.version, cpu.architecture),
-        Engine: concat(engine.name, engine.version),
-      };
-    },
-  },
-  // custom persist mixin
-  persist: {
-    keys: ["name", "email", "github", "feedback"],
-    namespace: "feedback-form",
-  },
-  methods: {
-    async onSubmit() {
-      // only proceed if submitted through button, not "implicitly" (enter press)
-      const active = document?.activeElement;
-      if (active && active.getAttribute("type") !== "submit") return;
+withDefaults(defineProps<Props>(), { modal: false });
 
-      // make issue title (unclear what char limit is?)
-      const title = [
-        "Feedback form",
-        truncate(this.name, 20),
-        truncate(collapse(this.feedback), 60),
-      ].join(" - ");
+// user's name
+const name = useLocalStorage("feedback-form-name", "");
+// user's email
+const email = useLocalStorage("feedback-form-email", "");
+// user's github name
+const github = useLocalStorage("feedback-form-github", "");
+// user's freeform feedback
+const feedback = useLocalStorage("feedback-form-feedback", "");
+// result of submitting form
+const status = ref<Status | null>(null);
+// link to created issue
+const link = ref("");
 
-      // make issue body markdown
-      const body = [
-        "**Name**",
-        this.name,
-        "",
-        "**Email**",
-        this.email,
-        "",
-        "**GitHub Username**",
-        this.github,
+// list of automatic details to record
+const details = computed(() => {
+  // get browser/device/os/etc details from ua parser  library
+  const { browser, device, os, engine, cpu } = parser();
 
-        "",
-        "**Details**",
-        ...Object.entries(this.details).map(
-          ([key, value]) => `${key}: ${value}`
-        ),
-        "",
-        "",
-        this.feedback,
-      ].join("\n");
+  // filter and join strings together
+  const concat = (...array: Array<string | undefined>) =>
+    array.filter((e) => e && e !== "()").join(" ");
 
-      // loading...
-      this.status = { code: "loading", text: "Submitting feedback" };
-
-      try {
-        // post feedback and get link of created issue
-        this.link = await postFeedback(title, body);
-
-        // success...
-        this.status = {
-          code: "success",
-          text: "Feedback submitted successfully",
-        };
-
-        // clear form data from storage after successful submit
-        (this as unknown as { clearPersist: () => void })?.clearPersist();
-      } catch (error) {
-        // error...
-        this.status = error as ApiError;
-      }
-    },
-  },
-  mounted() {
-    // reset status when reloading form
-    this.status = null;
-  },
+  // make map of desired properties in desired stringified format
+  return {
+    Page: route.fullPath,
+    Browser: concat(browser.name, browser.version),
+    Device: concat(device.vendor, device.model, device.type),
+    OS: concat(os.name, os.version, cpu.architecture),
+    Engine: concat(engine.name, engine.version),
+  };
 });
+
+async function onSubmit() {
+  // only proceed if submitted through button, not "implicitly" (enter press)
+  const active = document?.activeElement;
+  if (active && active.getAttribute("type") !== "submit") return;
+
+  // make issue title (unclear what char limit is?)
+  const title = [
+    "Feedback form",
+    truncate(name.value, 20),
+    truncate(collapse(feedback.value), 60),
+  ].join(" - ");
+
+  // make issue body markdown
+  const body = [
+    "**Name**",
+    name.value,
+    "",
+    "**Email**",
+    email.value,
+    "",
+    "**GitHub Username**",
+    github.value,
+
+    "",
+    "**Details**",
+    ...Object.entries(details.value).map(([key, value]) => `${key}: ${value}`),
+    "",
+    "",
+    feedback.value,
+  ].join("\n");
+
+  // loading...
+  status.value = { code: "loading", text: "Submitting feedback" };
+
+  try {
+    // post feedback and get link of created issue
+    link.value = await postFeedback(title, body);
+
+    // success...
+    status.value = { code: "success", text: "Feedback submitted successfully" };
+
+    // clear form data from storage after successful submit
+    name.value = null;
+    email.value = null;
+    github.value = null;
+    feedback.value = null;
+  } catch (error) {
+    // error...
+    status.value = error as ApiError;
+  }
+}
 </script>
 
 <style lang="scss" scoped>

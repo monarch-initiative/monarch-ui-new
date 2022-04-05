@@ -1,3 +1,7 @@
+<!--
+  the monarch logo. do this as a vue component for css scoping.
+-->
+
 <template>
   <svg viewBox="-50 -30 100 60">
     <mask id="logo-mask">

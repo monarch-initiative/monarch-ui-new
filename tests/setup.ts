@@ -11,7 +11,6 @@ import fetch from "node-fetch";
 import { cloneDeep } from "lodash";
 import router from "@/router";
 import components from "@/global/components";
-import mixins from "@/global/mixins";
 import plugins from "@/global/plugins";
 import { sleep } from "./../src/util/debug";
 import { handlers } from "./fixtures";
@@ -61,7 +60,6 @@ export const mount = <T>(
     props: cloneDeep(props),
     global: {
       components,
-      mixins,
       plugins,
     },
     slots,

@@ -1,3 +1,7 @@
+<!--
+  node page associations section
+-->
+
 <template>
   <AppSection>
     <AppHeading icon="arrows-left-right">Associations</AppHeading>
@@ -8,9 +12,9 @@
         >Associations between <strong>{{ node.name }}</strong> and</span
       >
       <AppSelectSingle
+        v-model="category"
         name="category"
         :options="categoryOptions"
-        v-model="category"
       />
     </AppFlex>
 
@@ -45,8 +49,8 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+import { computed, ref } from "vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
 import { Option, Options } from "@/components/AppSelectSingle";
 import AppTabs from "@/components/AppTabs.vue";
@@ -55,39 +59,26 @@ import { getAssociationName } from "@/api/categories";
 import AssociationsSummary from "./AssociationsSummary.vue";
 import AssociationsTable from "./AssociationsTable.vue";
 
-// associations node page section
-export default defineComponent({
-  components: {
-    AppSelectSingle,
-    AppTabs,
-    AssociationsSummary,
-    AssociationsTable,
-  },
-  props: {
-    // current node
-    node: {
-      type: Object as PropType<NodeResult>,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      // selected category of associations to show
-      category: {} as Option,
-    };
-  },
-  computed: {
-    // list of options for dropdown
-    categoryOptions(): Options {
-      return this.node.associationCounts.map((association) => ({
-        id: association.id,
-        name: getAssociationName(association.id),
-        icon: `category-${association.id}`,
-        count: association.count,
-      }));
-    },
-  },
-});
+interface Props {
+  // current node
+  node: NodeResult;
+}
+
+const props = defineProps<Props>();
+
+// selected category of associations to show
+const category = ref<Option>();
+
+// list of options for dropdown
+const categoryOptions = computed(
+  (): Options =>
+    props.node.associationCounts.map((association) => ({
+      id: association.id,
+      name: getAssociationName(association.id),
+      icon: `category-${association.id}`,
+      count: association.count,
+    }))
+);
 </script>
 
 <style lang="scss" scoped>

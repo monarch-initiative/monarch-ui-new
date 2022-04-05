@@ -1,3 +1,7 @@
+<!--
+  an icon, text, and link showing the status of something
+-->
+
 <template>
   <AppLink
     :to="status?.link || ''"
@@ -10,8 +14,8 @@
   </AppLink>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import { Status } from "./AppStatus";
 
 // icons for status codes
@@ -24,18 +28,15 @@ const icons: Record<string, string> = {
   unknown: "question-circle",
 };
 
-// an icon, text, and link showing the status of something
-export default defineComponent({
-  props: {
-    // status object
-    status: Object as PropType<Status>,
-  },
-  computed: {
-    icon() {
-      return icons[this.status?.code || "unknown"];
-    },
-  },
-});
+interface Props {
+  // status object
+  status: Status;
+}
+
+const props = defineProps<Props>();
+
+// icon to show, associated with a status
+const icon = computed(() => icons[props.status?.code || "unknown"]);
 </script>
 
 <style lang="scss" scoped>

@@ -1,9 +1,13 @@
+<!--
+  button with expandable/collapsible content
+-->
+
 <template>
   <button
     class="title"
-    @click="expanded = !expanded"
-    :aria-expanded="expanded"
     :aria-label="expanded ? 'Collapse section' : 'Expand section'"
+    :aria-expanded="expanded"
+    @click="expanded = !expanded"
   >
     <span class="text">
       <span v-if="text">{{ text }}</span>
@@ -16,24 +20,20 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 
-// button with expandable/collapsible content
-export default defineComponent({
-  props: {
-    // text to show in title
-    text: String,
-    // icon to show in title
-    icon: String,
-  },
-  data() {
-    return {
-      // whether accordion is open or not
-      expanded: false,
-    };
-  },
-});
+interface Props {
+  // text to show in title button
+  text: string;
+  // icon to show in title button
+  icon?: string;
+}
+
+defineProps<Props>();
+
+// whether accordion is open or not
+const expanded = ref(false);
 </script>
 
 <style lang="scss" scoped>

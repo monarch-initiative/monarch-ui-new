@@ -1,3 +1,7 @@
+<!--
+  basic text box input, single line or multi-line
+-->
+
 <template>
   <label class="label">
     <div v-if="title" class="title">
@@ -8,22 +12,22 @@
       <textarea
         v-if="multi"
         :value="modelValue"
+        :placeholder="placeholder"
+        :required="required"
         @focus="onFocus"
         @input="onInput"
         @change="onChange"
-        :placeholder="placeholder"
-        :required="required"
       >
       </textarea>
       <input
         v-else
         :value="modelValue"
-        @focus="onFocus"
-        @input="onInput"
-        @change="onChange"
         :placeholder="placeholder"
         :type="type"
         :required="required"
+        @focus="onFocus"
+        @input="onInput"
+        @change="onChange"
       />
       <div class="icon">
         <AppIcon v-if="icon" :icon="icon" />
@@ -33,75 +37,80 @@
   </label>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { debounce, DebouncedFunc } from "lodash";
+<script setup lang="ts">
+import { onBeforeUnmount, ref } from "vue";
+import { debounce } from "lodash";
 
-// basic text box input, single line or multi-line
-export default defineComponent({
-  emits: ["update:modelValue", "focus", "input", "change"],
-  props: {
-    // state
-    modelValue: String,
-    // placeholder string when nothing typed in
-    placeholder: String,
-    // type of text box
-    type: String,
-    // name of field, shown above box
-    title: String,
-    // description of field, shown below box
-    description: String,
-    // whether field is required
-    required: Boolean,
-    // whether field is multi-line
-    multi: Boolean,
-    // optional side icon
-    icon: String,
-  },
-  data() {
-    return {
-      // debounced on change event
-      debounced: debounce(() => null) as DebouncedFunc<(event: Event) => void>,
-      // last on change value that was emitted
-      last: undefined as string | undefined,
-    };
-  },
-  methods: {
-    // when user focuses box
-    onFocus() {
-      this.$emit("focus");
-    },
-    // when user types in box
-    onInput(event: Event) {
-      this.$emit("update:modelValue", (event.target as HTMLInputElement).value);
-      this.$emit("input");
-      this.debounced(event);
-    },
-    // when user "commits" change to value, e.g. pressing enter, de-focusing, etc
-    onChange(event: Event) {
-      // cancel any pending calls
-      this.debounced.cancel();
+interface Props {
+  // state
+  modelValue?: string;
+  // placeholder string when nothing typed in
+  placeholder?: string;
+  // type of text box
+  type?: string;
+  // name of field, shown above box
+  title?: string;
+  // description of field, shown below box
+  description?: string;
+  // whether field is required
+  required?: boolean;
+  // whether field is multi-line
+  multi?: boolean;
+  // optional side icon
+  icon?: string;
+}
 
-      // if you see this event fire unexpectedly, check this:
-      // https://bugs.chromium.org/p/chromium/issues/detail?id=1297334
+defineProps<Props>();
 
-      const value = (event.target as HTMLInputElement).value;
-      // debounced on change has not already emitted
-      if (value !== this.last) {
-        this.$emit("change", value);
-        this.last = value;
-      }
-    },
-  },
-  created() {
-    // make instance-unique debounced version of on change func
-    this.debounced = debounce(this.onChange, 500);
-  },
-  beforeUnmount() {
-    // cancel any in-progress debounce
-    this.debounced.cancel();
-  },
-});
+interface Emits {
+  // two-way binding value
+  (event: "update:modelValue", value: string): void;
+  // when input focused
+  (event: "focus"): void;
+  // when input value changed
+  (event: "input"): void;
+  // when input value change "submitted"/"committed" by user
+  (event: "change", value: string): void;
+}
+
+const emit = defineEmits<Emits>();
+
+// last on change value that was emitted
+const last = ref<string | undefined>(undefined);
+
+// when user focuses box
+function onFocus() {
+  emit("focus");
+}
+
+// when user types in box
+function onInput(event: Event) {
+  emit("update:modelValue", (event.target as HTMLInputElement).value);
+  emit("input");
+  debouncedOnChange(event);
+}
+
+// when user "commits" change to value, e.g. pressing enter, de-focusing, etc
+function onChange(event: Event) {
+  // cancel any pending calls
+  debouncedOnChange.cancel();
+
+  // if you see this event fire unexpectedly, check this:
+  // https://bugs.chromium.org/p/chromium/issues/detail?id=1297334
+
+  // if on change (for this value) has not already emitted
+  const value = (event.target as HTMLInputElement).value;
+  if (value !== last.value) {
+    emit("change", value);
+    last.value = value;
+  }
+}
+
+// make instance-unique debounced version of on change func
+const debouncedOnChange = debounce(onChange, 500);
+
+// cancel any in-progress debounce
+onBeforeUnmount(debouncedOnChange.cancel);
 </script>
 
 <style lang="scss" scoped>

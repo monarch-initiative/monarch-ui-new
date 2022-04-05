@@ -1,3 +1,7 @@
+<!--
+  floating header at top of every page
+-->
+
 <template>
   <header :data-home="home">
     <!-- header background visualization -->
@@ -7,12 +11,12 @@
     <div class="title" :title="version">
       <!-- logo image and text -->
       <AppLink
+        v-tippy="home ? '' : 'Homepage'"
         :to="home ? '' : '/'"
         class="logo"
         :data-home="home"
-        v-tippy="home ? '' : 'Homepage'"
       >
-        <Logo class="image" />
+        <TheLogo class="image" />
         <!-- make logo text the h1 on homepage -->
         <component :is="home ? 'h1' : 'div'" class="text">
           Monarch
@@ -24,11 +28,11 @@
       <!-- nav toggle button -->
       <button
         class="button"
-        @click="expanded = !expanded"
         :aria-expanded="expanded"
         :aria-label="
           expanded ? 'Close navigation menu' : 'Expand navigation menu'
         "
+        @click="expanded = !expanded"
       >
         <AppIcon :icon="expanded ? 'times' : 'bars'" />
       </button>
@@ -37,23 +41,23 @@
     <!-- navigation bar -->
     <nav :data-home="home" :data-expanded="expanded">
       <AppLink
+        v-tippy="'Dive right in and use Monarch'"
         class="link"
         to="/explore"
-        v-tippy="'Dive right in and use Monarch'"
       >
         Explore
       </AppLink>
       <AppLink
+        v-tippy="'Citing, licensing, sources, and other info'"
         class="link"
         to="/about"
-        v-tippy="'Citing, licensing, sources, and other info'"
       >
         About
       </AppLink>
       <AppLink
+        v-tippy="'Feedback, docs, guides, contact, and more'"
         class="link"
         to="/help"
-        v-tippy="'Feedback, docs, guides, contact, and more'"
       >
         Help
       </AppLink>
@@ -61,37 +65,29 @@
   </header>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref, computed, watch } from "vue";
 import TheNexus from "./TheNexus.vue";
-import Logo from "@/assets/Logo.vue";
-import packageJson from "../../package.json";
+import TheLogo from "@/assets/TheLogo.vue";
+import { version } from "../../package.json";
+import { useRoute } from "vue-router";
 
-export default defineComponent({
-  components: {
-    TheNexus,
-    Logo,
-  },
-  data() {
-    return {
-      // version of app
-      version: packageJson.version,
-      // is nav menu expanded
-      expanded: false,
-    };
-  },
-  computed: {
-    // is home page (big) version
-    home(): boolean {
-      return String(this.$route.name).toLowerCase() === "home";
-    },
-  },
-  watch: {
-    $route() {
-      this.expanded = false;
-    },
-  },
-});
+// route info
+const route = useRoute();
+
+// is nav menu expanded
+const expanded = ref(false);
+
+// is home page (big) version
+const home = computed((): boolean => route.name === "Home");
+
+// close nav when page changes
+watch(
+  () => route,
+  () => {
+    expanded.value = false;
+  }
+);
 </script>
 
 <style lang="scss" scoped>
@@ -160,7 +156,7 @@ header[data-home="true"] {
 .logo {
   display: flex;
   align-items: center;
-  padding: 0 15px;
+  padding: 0 10px;
   color: $white;
   text-decoration: none;
 }

@@ -1,3 +1,9 @@
+<!--
+  about terms page
+
+  agreements and legal stuff
+-->
+
 <template>
   <AppSection>
     <AppHeading>Terms of Use</AppHeading>

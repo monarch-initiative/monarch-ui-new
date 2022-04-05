@@ -99,8 +99,8 @@ Tip: use VS Code extension "Sort Lines".
 Use `// TODO` as a consistent in-code flag for pieces of code that should eventually be replaced with something better.
 Also link to a GitHub issue that tracks the issue.
 
-Use `console.log` for temporary debugging during local development (all of these should be removed before merging PR's).
-Use `console.info` for logging we want to keep in production.
-Do not use `console.error`, to distinguish between uncaught/unhandled errors.
+Use `console.log` for strictly for temporary debugging during local development that should be removed before merging PRs.
+Use `info`/`warn`/`debug`/`error` at your discretion, but only for major, infrequent events, as logging too frequently (say, multiple times per second, sustained) can impact page performance.
+Leaving select logging *in production* will be beneficial for in this particular app, for user and in-situ troubleshooting of complex, hard-to-replicate problems.
 
 To analyze the size of the compiled bundle, uncomment the `stats-webpack-plugin` line in the `vue.config.js`, build the app, then try running `npx webpack-bundle-analyzer dist/stats.json` or `npx source-map-explorer dist/js/*`.

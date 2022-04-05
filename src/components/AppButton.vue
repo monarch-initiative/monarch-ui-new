@@ -1,75 +1,69 @@
+<!--
+  looks like a button and either does something (<button>) or goes somewhere (<a>)
+-->
+
 <template>
   <component
-    class="button"
     :is="component"
+    class="button"
     :to="to"
-    @click="copy ? copyToClipboard() : click"
+    :type="type"
     :data-design="design"
     :data-color="color"
     :data-text="!!text"
     :data-notification="notification"
+    @click="copy ? copyToClipboard() : click"
   >
     <span v-if="text">{{ text }}</span>
     <AppIcon v-if="icon" :icon="icon" />
   </component>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { push } from "./TheSnackbar.vue";
+<script setup lang="ts">
+import { computed } from "vue";
+import { push } from "./TheSnackbar";
 
-// component that looks like a button that either does something or goes somewhere
-export default defineComponent({
-  props: {
-    // text to show
-    text: String,
-    // icon to show
-    icon: String,
-    // location to link to
-    to: String,
-    // on click action
-    click: Function,
-    // visual design
-    design: {
-      default: "normal",
-      type: String as PropType<"normal" | "circle" | "small">,
-    },
-    // color
-    color: {
-      default: "primary",
-      type: String as PropType<"primary" | "secondary" | "none">,
-    },
-    // whether to show little notification dot
-    notification: {
-      default: false,
-      type: Boolean,
-    },
-    // whether to copy text prop to clipboard on click
-    copy: {
-      default: false,
-      type: Boolean,
-    },
-  },
-  computed: {
-    // type of component to render
-    component() {
-      if (this.to) return "AppLink";
-      else if (
-        this.$attrs.onClick ||
-        this.$attrs.type === "submit" ||
-        this.copy
-      )
-        return "button";
-      else return "span";
-    },
-  },
-  methods: {
-    async copyToClipboard() {
-      await window.navigator.clipboard.writeText(this.text || "");
-      push("Text copied");
-    },
-  },
+interface Props {
+  // text to show
+  text?: string;
+  // icon to show
+  icon?: string;
+  // location to link to
+  to?: string;
+  // on click action
+  click?: () => unknown;
+  // visual design
+  design?: "normal" | "circle" | "small";
+  // color
+  color?: "primary" | "secondary" | "none";
+  // whether to show little notification dot
+  notification?: boolean;
+  // whether to copy text prop to clipboard on click
+  copy?: boolean;
+  // html button type attribute
+  type?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  text: "",
+  icon: "",
+  to: "",
+  click: undefined,
+  design: "normal",
+  color: "primary",
+  notification: false,
+  copy: false,
+  type: "",
 });
+
+// copy text prop to clipboard
+async function copyToClipboard() {
+  await window.navigator.clipboard.writeText(props.text || "");
+  push("Text copied");
+}
+
+// type of component to render
+const component = computed(() => (props.to ? "AppLink" : "button"));
 </script>
 
 <style lang="scss" scoped>

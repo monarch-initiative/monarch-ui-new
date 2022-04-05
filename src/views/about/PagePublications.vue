@@ -1,12 +1,14 @@
+<!--
+  about publications page
+
+  list of publication and other works related to monarch, sorted by year
+-->
+
 <template>
   <AppSection>
     <AppHeading>Publications</AppHeading>
     <p>
-      <template
-        class="link"
-        v-for="(group, index) in publications"
-        :key="index"
-      >
+      <template v-for="(group, index) in publications" :key="index">
         <AppLink :to="'#' + group.year">{{ group.year }}</AppLink>
         <span v-if="index !== publications.length - 1"> · </span>
       </template>
@@ -28,17 +30,7 @@
   </AppSection>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import AppCitation from "@/components/AppCitation.vue";
 import publications from "./publications.json";
-
-export default defineComponent({
-  components: {
-    AppCitation,
-  },
-  data() {
-    return { publications };
-  },
-});
 </script>
