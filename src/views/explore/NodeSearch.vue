@@ -39,6 +39,7 @@
           v-tippy="`${startCase(name)} filter`"
           :name="`${name}`"
           :options="availableFilters[name]"
+          :show-counts="showCounts"
           @change="onFilterChange"
         />
       </template>
@@ -117,7 +118,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
-import { kebabCase, startCase, uniq } from "lodash";
+import { isEqual, kebabCase, startCase, uniq } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
@@ -163,6 +164,8 @@ const status = ref<Status | null>(null);
 // filters (facets) for search
 const availableFilters = ref<Record<string, Options>>({});
 const activeFilters = ref<Record<string, Options>>({});
+// whether to show counts in filter dropdowns
+const showCounts = ref(true);
 
 // when user focuses text box
 async function onFocus() {
@@ -205,6 +208,9 @@ async function getResults(
     if (search.value) query.search = search.value;
     await router.push({ ...route, name: "Explore", query });
   }
+
+  // hide counts in filter dropdowns if any filtering being done
+  showCounts.value = isEqual(activeFilters.value, availableFilters.value);
 
   // loading...
   status.value = { code: "loading", text: "Loading results" };

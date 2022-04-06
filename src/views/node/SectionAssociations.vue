@@ -97,9 +97,10 @@ watch(category, (value, prev) =>
 
 // update selected category from url
 function setCategoryFromUrl() {
-  category.value = categoryOptions.value.find(
-    (option) => option.id === route.query.associations
-  );
+  if (route.query.associations)
+    category.value = categoryOptions.value.find(
+      (option) => option.id === route.query.associations
+    );
 }
 watch(() => route.query.associations, setCategoryFromUrl);
 onMounted(setCategoryFromUrl);
