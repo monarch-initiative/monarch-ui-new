@@ -20,7 +20,11 @@
     <slot v-else />
   </a>
 
-  <router-link v-else :to="to" :replace="to.startsWith('#')">
+  <router-link
+    v-else
+    :to="to.startsWith('#') ? { ...$route, hash: to } : to"
+    :replace="to.startsWith('#')"
+  >
     <!-- use vue router component for relative urls -->
     <slot />
   </router-link>

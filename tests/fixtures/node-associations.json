@@ -1897,6 +1897,38 @@
   "objects": null,
   "numFound": 89,
   "docs": null,
-  "facet_counts": {},
+  "facet_counts": {
+    "object_taxon_label": {
+      "Homo sapiens": 1541,
+      "Mus musculus": 3
+    },
+    "subject_closure": {
+      "BFO:0000001": 1544,
+      "BFO:0000002": 1544,
+      "BFO:0000016": 1544,
+      "BFO:0000017": 1544,
+      "BFO:0000020": 1544,
+      "COHD:253549": 1544,
+      "COHD:258540": 1544,
+      "COHD:374362": 1544,
+      "COHD:375252": 1544,
+      "COHD:379805": 1544,
+      "DOID:0050736": 1544,
+      "DOID:0050739": 1544,
+      "DOID:0080015": 1544,
+      "DOID:10124": 1544,
+      "DOID:10126": 1544,
+      "DOID:110": 1544,
+      "DOID:11830": 1544,
+      "DOID:1287": 1544,
+      "DOID:14323": 1544,
+      "DOID:1492": 1544,
+      "DOID:16": 1544,
+      "DOID:178": 1544,
+      "DOID:225": 1544,
+      "DOID:4": 1544,
+      "DOID:5614": 1544
+    }
+  },
   "highlighting": null
 }

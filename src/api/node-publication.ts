@@ -1,12 +1,13 @@
+import { mapKeys, mapValues } from "lodash";
 import { request, cleanError } from ".";
+
 // entrez endpoint for getting publication metadata
-const entrez = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
+const entrez = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils";
 
 // get metadata of publication from entrez
 export const getPublication = async (id = ""): Promise<Result> => {
   try {
-    id = id.replace("PMID:", "");
-    const summary = await getSummary(id);
+    const summary = (await getSummaries([id]))[id];
     const abstract = await getAbstract(id);
 
     return { ...summary, abstract };
@@ -42,17 +43,26 @@ interface SummaryResponse {
   };
 }
 
-// get summary information of publication from entrez
-export const getSummary = async (id = ""): Promise<SummaryResult> => {
+// get summary information of publication(s) from entrez
+export const getSummaries = async (
+  ids: Array<string>
+): Promise<SummariesResult> => {
   try {
+    // strip prefix as entrez expects
+    ids = ids
+      .map((id) => id.replace("PMID:", ""))
+      .map((id) => id.trim())
+      .filter((id) => id);
+
+    if (!ids.length) return {};
+
     // make query
-    const params = { db: "pubmed", retmode: "json", id };
+    const params = { db: "pubmed", retmode: "json", id: ids.join(",") };
     const url = `${entrez}/esummary.fcgi`;
     const { result } = await request<SummaryResponse>(url, params);
-    const publication = Object.values(result)[0];
 
     // convert into desired result format
-    return {
+    let publications = mapValues(result, (publication) => ({
       id: publication.uid,
       title: publication.title,
       authors: (publication.authors || []).map(({ name }) => name),
@@ -61,14 +71,22 @@ export const getSummary = async (id = ""): Promise<SummaryResult> => {
         (publication.articleids || []).find(({ idtype }) => idtype === "doi")
           ?.value || "",
       journal: publication.fulljournalname,
-    };
+    }));
+
+    publications = mapKeys(publications, (value, key) => "PMID:" + key);
+
+    return publications;
   } catch (error) {
     throw cleanError(error);
   }
 };
+
 // get abstract text of publication from entrez
 export const getAbstract = async (id = ""): Promise<AbstractResult> => {
   try {
+    // strip prefix as entrez expects
+    id = id.replace("PMID:", "");
+
     // make query
     const params = { db: "pubmed", retmode: "text", rettype: "abstract", id };
     const url = `${entrez}/efetch.fcgi`;
@@ -78,17 +96,25 @@ export const getAbstract = async (id = ""): Promise<AbstractResult> => {
   }
 };
 
-interface SummaryResult {
+interface SummariesResult {
+  [key: string]: {
+    id: string;
+    title: string;
+    authors: Array<string>;
+    date: Date;
+    doi: string;
+    journal: string;
+  };
+}
+
+type AbstractResult = string;
+
+export interface Result {
   id: string;
   title: string;
   authors: Array<string>;
   date: Date;
   doi: string;
   journal: string;
-}
-
-type AbstractResult = string;
-
-export interface Result extends SummaryResult {
-  abstract: AbstractResult;
+  abstract: string;
 }

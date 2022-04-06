@@ -18,8 +18,8 @@
     >
       <AppFlex direction="col" gap="small" class="details">
         <!-- primary result info -->
-        <AppFlex gap="small" h-align="left" class="title">
-          <span>{{ node.name }}</span>
+        <AppFlex gap="small" h-align="left" :wrap="false" class="title">
+          <span class="truncate">{{ node.name }}</span>
           <AppIcon
             class="arrow"
             :icon="
@@ -47,9 +47,10 @@
 
         <!-- secondary result info -->
         <AppFlex h-align="left" class="secondary">
-          <span>XX supporting evidence</span>
-          <span>XX frequency</span>
-          <span>XX publications</span>
+          <span
+            >{{ association.supportCount }} piece(s) of supporting
+            evidence</span
+          >
         </AppFlex>
       </AppFlex>
 
@@ -69,7 +70,6 @@ import { ref, watch, onMounted } from "vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { Status } from "@/components/AppStatus";
 import { Result as NodeResult } from "@/api/node-lookup";
-import { Option } from "@/components/AppSelectSingle";
 import {
   getTopAssociations,
   Result as AssociationsResult,
@@ -80,7 +80,7 @@ interface Props {
   // current node
   node: NodeResult;
   // selected association category
-  category: Option;
+  category: string;
 }
 
 const props = defineProps<Props>();
@@ -105,7 +105,7 @@ async function getAssociations() {
     associations.value = await getTopAssociations(
       props.node.id,
       props.node.category,
-      props.category.id
+      props.category
     );
 
     // clear status
@@ -137,6 +137,7 @@ onMounted(getAssociations);
 }
 
 .details {
+  width: 0;
   flex-grow: 1;
 }
 

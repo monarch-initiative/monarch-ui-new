@@ -138,7 +138,7 @@ export const compareSetToTaxon = async (
 ): Promise<CompareResult> => {
   // endpoint settings
   const params = {
-    id: phenotypes.join(","),
+    id: phenotypes,
     taxon: getTaxonIdFromName(taxon),
   };
 

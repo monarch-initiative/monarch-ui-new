@@ -199,30 +199,44 @@ const router = createRouter({
 
 // set document title after route
 router.afterEach(async ({ name, query, params, hash }) => {
+  // for test environments
+  if (!document) return;
+
   // https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
   await nextTick();
 
   // separated parts of tab title
-  const parts = [];
+  const parts: Array<Array<string>> = [];
 
   // title of app
-  parts.push(process.env.VUE_APP_TITLE_SHORT);
+  parts.push([process.env.VUE_APP_TITLE_SHORT || ""]);
 
   // name of page (route name prop)
-  if (name) parts.push(name);
+  if (name !== "Node") parts.push([String(name)]);
 
-  // node page params (e.g. disease and HP:12345)
-  if (params?.category) parts.push(params.category);
-  if (params?.id) parts.push(params.id);
+  // url params (e.g. /disease/HP:12345)
+  parts.push(Object.values(params).map((value) => [value].flat().join(",")));
 
-  // explore mode (e.g. #text-annotator)
-  if (name === "Explore" && hash) parts.push(startCase(hash.slice(1)));
+  // url query's (e.g. ?search=marfan+syndrome)
+  parts.push(
+    Object.entries(query).map(
+      ([key, value]) => `${key}: ${[value].flat().join(",")}`
+    )
+  );
 
-  // search (e.g. ?search=marfan+syndrome)
-  if (query.search) parts.push(`"${query.search}"`);
+  // url hash
+  if (hash) parts.push([startCase(hash.slice(1))]);
 
   // combine into document title
-  if (document) document.title = parts.join(" · ");
+  document.title = parts
+    .map((part) =>
+      part
+        .map((subpart) => subpart.trim())
+        .filter((subpart) => subpart)
+        .join(" ")
+    )
+    .filter((part) => part)
+    .join(" · ");
 });
 
 // close any open tooltips on route change

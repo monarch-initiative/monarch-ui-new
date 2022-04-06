@@ -83,10 +83,11 @@ import { useLocalStorage } from "@vueuse/core";
 import parser from "ua-parser-js";
 import AppInput from "@/components/AppInput.vue";
 import { Status } from "@/components/AppStatus";
-import { truncate, collapse } from "@/util/string";
+import { collapse } from "@/util/string";
 import { postFeedback } from "@/api/feedback";
 import AppStatus from "./AppStatus.vue";
 import { ApiError } from "@/api";
+import { truncate } from "lodash";
 
 // route info
 const route = useRoute();
@@ -138,8 +139,8 @@ async function onSubmit() {
   // make issue title (unclear what char limit is?)
   const title = [
     "Feedback form",
-    truncate(name.value, 20),
-    truncate(collapse(feedback.value), 60),
+    truncate(name.value, { length: 20 }),
+    truncate(collapse(feedback.value), { length: 60 }),
   ].join(" - ");
 
   // make issue body markdown

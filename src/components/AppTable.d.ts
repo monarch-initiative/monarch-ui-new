@@ -1,8 +1,7 @@
-import { Options } from "./AppSelectMulti";
-
 // table column
 export interface Col {
-  // unique id, used to identify sorting and match with named slots
+  // unique id, used to identify/match for sorting, filtering, and named slots
+  // use "divider" to create vertical divider to separate cols
   id: string;
   // what item in row object to access as raw cell value
   key?: string;
@@ -14,10 +13,6 @@ export interface Col {
   width?: string;
   // whether to allow sorting of column
   sortable?: boolean;
-  // available filters for column
-  availableFilters?: Options;
-  // active filters for column
-  activeFilters?: Options;
 }
 
 // object with arbitrary keys
@@ -27,8 +22,8 @@ export type Row = Record<string, unknown>;
 export type Cols = Array<Col>;
 export type Rows = Array<Row>;
 
-// sort param
-interface Sort {
-  id?: string;
-  direction?: "up" | "down";
-}
+// sort prop
+export type Sort = {
+  id: string;
+  direction: "up" | "down";
+} | null;

@@ -238,7 +238,7 @@ watch(
   transform: translateX(-50%);
   min-width: 100%;
   max-width: 90vw;
-  max-height: 200px;
+  max-height: 300px;
   overflow-x: hidden;
   overflow-y: auto;
   background: $white;
