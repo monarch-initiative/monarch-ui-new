@@ -83,9 +83,7 @@ it("Publication specific info shows", () => {
   cy.visit("/publication/MONDO:0007947");
 
   cy.contains("Publication");
-  cy.contains(
-    "Dimorphic effects of transforming growth factor-β signaling during aortic aneurysm progression in mice suggest a combinatorial therapy for Marfan syndrome."
-  );
+  cy.contains("Dimorphic effects of transforming growth factor-β signaling");
   cy.contains("Cook JR");
   cy.contains("Ramirez F");
   cy.contains("1. Arterioscler Thromb Vasc Biol. 2015 Apr;35(4):911-7.");
@@ -103,6 +101,9 @@ it("Summary association info shows", () => {
     .contains("Dural ectasia")
     .invoke("attr", "href")
     .should("equal", "/phenotype/HP:0100775");
+
+  cy.get(".result").contains("5 piece(s) of supporting evidence");
+  cy.get(".result").contains("4 piece(s) of supporting evidence");
 });
 
 it("Table association info shows", () => {
@@ -127,4 +128,30 @@ it("Association mode switching works", () => {
   cy.contains("button", "Phenotypes").trigger("click");
   cy.contains("[role='option'] > *", "Variants").trigger("click");
   cy.contains("th", "Variant");
+});
+
+it("Association table has extra metadata columns", () => {
+  cy.visit("/disease/MONDO:0007947");
+
+  cy.contains("Table").trigger("click");
+
+  cy.contains("tr", "Frequent")
+    .contains("Frequent")
+    .invoke("attr", "href")
+    .should("equal", "http://purl.obolibrary.org/obo/HP_0040282");
+
+  cy.contains("button", "Phenotypes").as("category");
+
+  cy.get("@category").trigger("click");
+  cy.contains("[role='option'] > *", "Variants").trigger("click");
+  cy.contains("td", "Mus musculus");
+  cy.contains("th", "Taxon").find("button").trigger("click");
+  cy.get("[role='listbox']").contains("Homo Sapiens");
+  cy.get("[role='listbox']").contains("Mus Musculus");
+
+  cy.get("@category").trigger("click");
+  cy.contains("[role='option'] > *", "Publications").trigger("click");
+  cy.contains("Author");
+  cy.contains("Year");
+  cy.contains("Publisher");
 });

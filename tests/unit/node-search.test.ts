@@ -39,6 +39,6 @@ test("Returns formatted results", async () => {
   const { count, results, facets } = await getSearchResults("marfan");
   expect(count).toEqual(61);
   expect(results).toContainEqual(result);
-  expect(facets.category).toEqual(expect.arrayContaining(category));
-  expect(facets.taxon).toEqual(expect.arrayContaining(taxon));
+  expect(facets?.category).toEqual(expect.arrayContaining(category));
+  expect(facets?.taxon).toEqual(expect.arrayContaining(taxon));
 });
