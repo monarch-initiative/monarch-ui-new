@@ -210,18 +210,20 @@ const cols = computed((): Cols => {
         id: "author",
         key: "author",
         heading: "Author",
+        width: "max-content",
       },
       {
         id: "year",
         key: "year",
         heading: "Year",
-        width: "max-content",
         align: "center",
+        width: "max-content",
       },
       {
         id: "publisher",
         key: "publisher",
         heading: "Publisher",
+        width: "max-content",
       }
     );
 

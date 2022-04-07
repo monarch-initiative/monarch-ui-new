@@ -13,7 +13,12 @@
 
     <!-- table data -->
     <AppFlex direction="col" :data-disabled="!!status">
-      <div class="table">
+      <div
+        ref="table"
+        class="table"
+        :data-left="arrivedState.left"
+        :data-right="arrivedState.right"
+      >
         <table
           :aria-colcount="cols.length"
           :aria-rowcount="rows.length"
@@ -166,7 +171,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { ref, computed } from "vue";
+import { useScroll } from "@vueuse/core";
 import { Col, Cols, Rows, Sort } from "./AppTable";
 import AppInput from "./AppInput.vue";
 import AppSelectMulti from "./AppSelectMulti.vue";
@@ -223,6 +229,10 @@ interface Emits {
 }
 
 const emit = defineEmits<Emits>();
+
+// table reference
+const table = ref<HTMLElement | null>(null);
+const { arrivedState } = useScroll(table);
 
 // when user clicks to first page
 function clickFirst() {
@@ -319,6 +329,25 @@ const ariaSort = computed(() => {
 .table {
   width: 100%;
   overflow-x: auto;
+  transition: mask-image $fast;
+
+  &[data-left="false"] {
+    mask-image: linear-gradient(to left, black 90%, transparent);
+  }
+
+  &[data-right="false"] {
+    mask-image: linear-gradient(to right, black 90%, transparent);
+  }
+
+  &[data-left="false"][data-right="false"] {
+    mask-image: linear-gradient(
+      to left,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
+  }
 }
 
 table {
