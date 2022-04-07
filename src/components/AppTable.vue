@@ -332,14 +332,23 @@ const ariaSort = computed(() => {
   transition: mask-image $fast;
 
   &[data-left="false"] {
+    --webkit-mask-image: linear-gradient(to left, black 90%, transparent);
     mask-image: linear-gradient(to left, black 90%, transparent);
   }
 
   &[data-right="false"] {
+    --webkit-mask-image: linear-gradient(to right, black 90%, transparent);
     mask-image: linear-gradient(to right, black 90%, transparent);
   }
 
   &[data-left="false"][data-right="false"] {
+    --webkit-mask-image: linear-gradient(
+      to left,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
     mask-image: linear-gradient(
       to left,
       transparent,
