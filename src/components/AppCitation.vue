@@ -30,9 +30,9 @@ interface Props {
 const props = defineProps<Props>();
 
 // joined details as string
-const detailsString = computed(() => {
-  return (props.details || []).filter((e) => e).join("&nbsp; · &nbsp;");
-});
+const detailsString = computed(() =>
+  (props.details || []).filter((e) => e).join("&nbsp; · &nbsp;")
+);
 </script>
 
 <style lang="scss" scoped>

@@ -3,72 +3,107 @@
 -->
 
 <template>
-  <div class="container">
-    <!-- status -->
-    <AppStatus v-if="status" :status="status" />
-
-    <!-- results -->
-    <AppTable
-      :cols="cols"
-      :rows="associations"
-      :per-page="perPage"
-      :start="start"
-      :total="count"
-      :search="search"
-      :disabled="!!status"
-      @per-page="(value) => (perPage = value)"
-      @start="(value) => (start = value)"
-      @search="(value) => (search = value)"
-      @download="download"
-    >
-      <!-- "object" (current node) -->
-      <template #subject="{ cell }">
+  <!-- results -->
+  <AppTable
+    :cols="cols"
+    :rows="associations"
+    :per-page="perPage"
+    :start="start"
+    :total="count"
+    :search="search"
+    :sort="sort"
+    :available-filters="availableFilters"
+    :active-filters="activeFilters"
+    :status="status"
+    @per-page="(value) => (perPage = value)"
+    @start="(value) => (start = value)"
+    @search="(value) => (search = value)"
+    @download="download"
+    @sort="(value) => (sort = value)"
+    @filter="onFilterChange"
+  >
+    <!-- "object" (current node) -->
+    <template #subject="{ cell }">
+      <span class="truncate">
         {{ cell.name }}
-      </template>
+      </span>
+    </template>
 
-      <!-- type of association/relation -->
-      <template #relation="{ cell }">
-        <AppIcon
-          class="arrow"
-          :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
-        />
-        <AppLink class="truncate" :to="cell.iri" :no-icon="true">{{
-          cell.name
-        }}</AppLink>
-        <AppIcon
-          class="arrow"
-          :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
-        />
-      </template>
+    <!-- type of association/relation -->
+    <template #relation="{ cell }">
+      <AppIcon
+        class="arrow"
+        :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
+      />
+      <AppLink class="truncate" :to="cell.iri" :no-icon="true">{{
+        cell.name
+      }}</AppLink>
+      <AppIcon
+        class="arrow"
+        :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
+      />
+    </template>
 
-      <!-- "subject" (what current node has an association with) -->
-      <template #object="{ cell }">
-        <AppLink class="truncate" :to="`/${cell.category}/${cell.id}`">{{
-          cell.name
-        }}</AppLink>
-      </template>
+    <!-- "subject" (what current node has an association with) -->
+    <template #object="{ cell }">
+      <AppLink class="truncate" :to="`/${cell.category}/${cell.id}`">{{
+        cell.name
+      }}</AppLink>
+    </template>
 
-      <!-- button to show evidence -->
-      <template #evidence>
-        <AppButton
-          v-tippy="'View supporting evidence for this association'"
-          class="evidence-button"
-          icon="eye"
-          color="secondary"
-        />
-      </template>
-    </AppTable>
-  </div>
+    <!-- button to show evidence -->
+    <template #evidence="{ cell }">
+      <AppButton
+        v-tippy="
+          `View ${cell} piece(s) of supporting evidence for this association`
+        "
+        class="evidence-button"
+        icon="eye"
+        :text="String(cell)"
+        color="secondary"
+      />
+    </template>
+
+    <!-- extra columns -->
+
+    <!-- taxon specific -->
+    <template #taxon="{ cell }">
+      <span class="truncate">
+        {{ cell?.name }}
+      </span>
+    </template>
+
+    <!-- publication specific -->
+    <template #frequency="{ cell }">
+      <AppLink
+        v-if="cell"
+        class="truncate"
+        :to="`http://purl.obolibrary.org/obo/${cell?.id?.replace(':', '_')}`"
+        :no-icon="true"
+      >
+        {{ cell?.name }}
+      </AppLink>
+    </template>
+
+    <template #onset="{ cell }">
+      <AppLink
+        v-if="cell"
+        class="truncate"
+        :to="`http://purl.obolibrary.org/obo/${cell?.id?.replace(':', '_')}`"
+        :no-icon="true"
+      >
+        {{ cell?.name }}
+      </AppLink>
+    </template>
+  </AppTable>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
 import { startCase } from "lodash";
-import { Option } from "@/components/AppSelectSingle";
-import AppStatus from "@/components/AppStatus.vue";
 import { Status } from "@/components/AppStatus";
 import AppTable from "@/components/AppTable.vue";
-import { Cols } from "@/components/AppTable";
+import { Col, Cols, Sort } from "@/components/AppTable";
 import { Result as NodeResult } from "@/api/node-lookup";
 import {
   getTabulatedAssociations,
@@ -77,12 +112,14 @@ import {
 import { ApiError } from "@/api";
 import { downloadJson } from "@/util/download";
 import { push } from "@/components/TheSnackbar";
+import { Filters, filtersToQuery } from "@/api/facets";
+import { Options } from "@/components/AppSelectMulti";
 
 interface Props {
   // current node
   node: NodeResult;
   // selected association category
-  category: Option;
+  category: string;
 }
 
 const props = defineProps<Props>();
@@ -92,44 +129,129 @@ const associations = ref<AssociationsResult["associations"]>([]);
 // total number of associations
 const count = ref(0);
 // table state
+const sort = ref<Sort>();
 const perPage = ref(5);
 const start = ref(0);
 const search = ref("");
+const availableFilters = ref<Filters>({});
+const activeFilters = ref<Filters>({});
 // status of query
 const status = ref<Status | null>(null);
 
 // table columns
-const cols = computed(
-  (): Cols => [
+const cols = computed((): Cols => {
+  // standard columns, always present
+  const baseCols: Cols = [
     {
       id: "subject",
       key: "subject",
       heading: startCase(props.node.category),
+      width: "1fr",
+      sortable: true,
     },
     {
       id: "relation",
       key: "relation",
       heading: "Association",
-      width: "min-content",
+      width: "1fr",
+      sortable: true,
     },
     {
       id: "object",
       key: "object",
-      heading: startCase(props.category.id),
-      width: "minmax(150px, 1fr)",
+      heading: startCase(props.category),
+      width: "1fr",
+      sortable: true,
     },
     {
       id: "evidence",
-      key: "evidence",
+      key: "supportCount",
       heading: "Evidence",
       width: "min-content",
       align: "center",
     },
-  ]
-);
+  ];
+
+  // extra, supplemental columns for certain association types
+  let extraCols: Cols = [];
+
+  // taxon column
+  // exists for many categories, so just add if any row has taxon
+  if (associations.value.some((association) => association.taxon))
+    extraCols.push({
+      id: "taxon",
+      key: "taxon",
+      heading: "Taxon",
+      width: "max-content",
+    });
+
+  // phenotype specific columns
+  if (props.category === "phenotype") {
+    extraCols.push(
+      {
+        id: "frequency",
+        key: "frequency",
+        heading: "Frequency",
+        sortable: true,
+      },
+      {
+        id: "onset",
+        key: "onset",
+        heading: "Onset",
+        sortable: true,
+      }
+    );
+  }
+
+  // publication specific columns
+  if (props.category === "publication")
+    extraCols.push(
+      {
+        id: "author",
+        key: "author",
+        heading: "Author",
+        width: "max-content",
+      },
+      {
+        id: "year",
+        key: "year",
+        heading: "Year",
+        align: "center",
+        width: "max-content",
+      },
+      {
+        id: "publisher",
+        key: "publisher",
+        heading: "Publisher",
+        width: "max-content",
+      }
+    );
+
+  // filter out extra columns with nothing in them (all rows for that col falsey)
+  // extraCols = extraCols.filter((col) =>
+  //   associations.value.some((association) => association[col.key || ""])
+  // );
+
+  // put divider to separate base cols from extra cols
+  if (extraCols[0]) extraCols.unshift({ id: "divider" });
+
+  return [...baseCols, ...extraCols];
+});
+
+// when user changes active filters
+function onFilterChange(colId: Col["id"], value: Options) {
+  if (activeFilters.value && activeFilters.value[colId]) {
+    activeFilters.value[colId] = value;
+    getAssociations(false);
+  }
+}
 
 // get table association data
-async function getAssociations() {
+async function getAssociations(
+  // whether to perform "fresh" search, without filters. set to true when
+  // category changing, false when filters changing.
+  fresh: boolean
+) {
   try {
     // loading...
     status.value = { code: "loading", text: "Loading association data" };
@@ -142,13 +264,22 @@ async function getAssociations() {
     const response = await getTabulatedAssociations(
       props.node.id,
       props.node.category,
-      props.category.id,
+      props.category,
       perPage.value,
       start.value,
-      search.value
+      search.value,
+      sort.value,
+      fresh ? undefined : filtersToQuery(availableFilters.value),
+      fresh ? undefined : filtersToQuery(activeFilters.value)
     );
     count.value = response.count;
     associations.value = response.associations;
+
+    if (fresh) {
+      // update filters based on facets from api
+      availableFilters.value = { ...response.facets };
+      activeFilters.value = { ...response.facets };
+    }
 
     // clear status
     status.value = null;
@@ -157,6 +288,10 @@ async function getAssociations() {
     status.value = error as ApiError;
     count.value = 0;
     associations.value = [];
+    if (fresh) {
+      availableFilters.value = {};
+      activeFilters.value = {};
+    }
   }
 }
 
@@ -175,7 +310,7 @@ async function download() {
   const response = await getTabulatedAssociations(
     props.node.id,
     props.node.category,
-    props.category.id,
+    props.category,
     max,
     0
   );
@@ -183,25 +318,16 @@ async function download() {
 }
 
 // get associations when category or table state changes
-watch([() => props.category, perPage, start, search], getAssociations);
+watch([() => props.category], () => getAssociations(true));
+watch([() => props.category, perPage, start, search, sort], () =>
+  getAssociations(false)
+);
 
 // get associations on load
-onMounted(getAssociations);
+onMounted(() => getAssociations(true));
 </script>
 
 <style lang="scss" scoped>
-.container {
-  position: relative;
-  width: 100%;
-
-  .status {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-  }
-}
 .arrow {
   color: $gray;
 }

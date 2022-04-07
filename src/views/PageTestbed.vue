@@ -42,12 +42,12 @@
   <AppSection>
     <AppHeading>Table</AppHeading>
     <span>{{ omit(table, ["cols", "rows"]) }}</span>
-    <span>{{ table.cols.map(({ activeFilters }) => activeFilters) }}</span>
     <AppTable
       v-bind="table"
+      @start="(value) => (table.start = value)"
       @sort="(value) => (table.sort = value)"
       @filter="
-        (colIndex, value) => (table.cols[colIndex].activeFilters = value)
+        (colId, value) => ((table.activeFilters || {})[colId] = [...value])
       "
       @per-page="(value) => (table.perPage = value)"
       @search="(value) => (table.search = value)"
@@ -178,6 +178,7 @@ import AppTable from "@/components/AppTable.vue";
 import AppTabs from "@/components/AppTabs.vue";
 import { Cols, Rows, Sort } from "@/components/AppTable";
 import { sleep } from "@/util/debug";
+import { Filters } from "@/api/facets";
 
 type ButtonProps = InstanceType<typeof AppButton>["$props"];
 
@@ -211,8 +212,7 @@ const table = ref({
       id: "score",
       key: "score",
       heading: "Score",
-      availableFilters: [{ id: "numbers" }, { id: "nulls" }],
-      activeFilters: [{ id: "numbers" }],
+
       sortable: true,
     },
     {
@@ -238,10 +238,12 @@ const table = ref({
   ] as Rows,
   sort: { id: "score", direction: "up" } as Sort,
   perPage: 10,
-  start: 1,
+  start: 0,
   end: 11,
   total: 123,
   search: "",
+  availableFilters: { score: [{ id: "numbers" }, { id: "nulls" }] } as Filters,
+  activeFilters: { score: [{ id: "numbers" }] } as Filters,
 });
 
 // single select
@@ -285,5 +287,5 @@ const tagsSelectValue = ref([
 ]);
 
 // util
-const log = console.log;
+const log = console.info;
 </script>

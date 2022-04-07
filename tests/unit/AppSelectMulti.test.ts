@@ -26,6 +26,14 @@ test("Opens/closes on click", async () => {
   expect(wrapper.find("[role='listbox']").exists()).toBe(false);
 });
 
+test("Opens/closes on keyboard", async () => {
+  const wrapper = mount(AppSelectMulti, { props });
+  const button = wrapper.find("button");
+  await button.trigger("click");
+  expect(wrapper.find("[role='listbox']").exists()).toBe(true);
+  await button.trigger("keydown", { key: "Escape" });
+});
+
 // expected type of emitted update:modelValue events
 type T = Array<unknown>;
 

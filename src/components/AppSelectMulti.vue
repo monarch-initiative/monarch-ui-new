@@ -114,7 +114,9 @@
             />
           </span>
           <span class="option-label">{{ startCase(option.id) }}</span>
-          <span class="option-count">{{ option.count }}</span>
+          <span class="option-count">
+            {{ showCounts ? option.count : "" }}
+          </span>
         </div>
       </div>
     </div>
@@ -136,6 +138,8 @@ interface Props {
   options: Options;
   // width style of button
   width?: string;
+  // whether to show count col
+  showCounts?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -146,7 +150,7 @@ interface Emits {
   // when value changed
   (event: "input"): void;
   // when value change "submitted"/"committed" by user
-  (event: "change"): void;
+  (event: "change", value: Options): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -159,23 +163,19 @@ const expanded = ref(false);
 const selected = ref<Array<number>>([]);
 // index of option that is highlighted
 const highlighted = ref(0);
-// model value when opened
-const original = ref<Options>([]);
 
 function open() {
   // open dropdown
   expanded.value = true;
   // auto highlight first selected option
   highlighted.value = selected.value[0] || 0;
-  // remember model value when opened
-  original.value = props.modelValue;
 }
 
 function close() {
   // close dropdown
   expanded.value = false;
   // emit event that user has "committed" change
-  if (!isEqual(props.modelValue, original.value)) emit("change");
+  emit("change", getModel());
 }
 
 // when button clicked
@@ -249,16 +249,21 @@ function toggleSelect(index = -1, shift = false) {
         .fill(0)
         .map((_, index) => index);
   }
+  // solo/un-solo one
+  else if (shift) {
+    if (isEqual(selected.value, [index]))
+      selected.value = Array(props.options.length)
+        .fill(0)
+        .map((_, index) => index);
+    else selected.value = [index];
+  }
   // toggle one
   else {
-    if (shift) {
-      selected.value = [index];
-    } else {
-      if (selected.value.includes(index))
-        selected.value = selected.value.filter((value) => value !== index);
-      else selected.value.push(index);
-    }
+    if (selected.value.includes(index))
+      selected.value = selected.value.filter((value) => value !== index);
+    else selected.value.push(index);
   }
+
   // keep in order for easy comparison
   selected.value.sort();
   // emit input event for listening for only user-originated inputs
@@ -275,7 +280,7 @@ watch(
   { deep: true, immediate: true }
 );
 
-// when selected index changes
+// when selected index changes, update model
 watch(selected, () => emit("update:modelValue", getModel()), { deep: true });
 
 // when highlighted index changes
@@ -326,7 +331,7 @@ const allSelected = computed(
   position: absolute;
   min-width: 100%;
   max-width: 90vw;
-  max-height: 200px;
+  max-height: 300px;
   overflow-x: auto;
   overflow-y: auto;
   background: $white;

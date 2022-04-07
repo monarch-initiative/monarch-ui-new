@@ -38,3 +38,15 @@ export const kebabify = (
   mapKeys(object, (value, key: string) =>
     key.includes("on") ? key : kebabCase(key)
   );
+
+// rename key in object in place
+export const renameKey = (
+  object: Record<string, unknown>,
+  oldKey: string,
+  newKey: string
+): void => {
+  if (object[oldKey]) {
+    object[newKey] = object[oldKey];
+    delete object[oldKey];
+  }
+};

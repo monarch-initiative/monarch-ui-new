@@ -15,8 +15,6 @@ const props = {
       id: "score",
       key: "score",
       heading: "Score",
-      availableFilters: [{ id: "numbers" }, { id: "nulls" }],
-      activeFilters: [{ id: "numbers" }],
       sortable: true,
     },
     {
@@ -44,6 +42,8 @@ const props = {
   start: 1,
   total: 123,
   search: "",
+  availableFilters: { score: [{ id: "numbers" }, { id: "nulls" }] },
+  activeFilters: { score: [{ id: "numbers" }] },
 };
 
 test("Changes sort", async () => {
@@ -57,11 +57,15 @@ test("Changes sort", async () => {
 
 test("Changes filter", async () => {
   const wrapper = mount(AppTable, { props });
-  await wrapper.findAll("thead button").at(2)?.trigger("click");
+  const button = wrapper.findAll("thead button").at(2);
+  await button?.trigger("click");
   await wrapper.find("[role='option']").trigger("click");
-  expect(emitted(wrapper, "filter")).toEqual([1, []]);
+  await button?.trigger("keydown", { key: "Escape" });
+  expect(emitted(wrapper, "filter")).toEqual(["score", []]);
+  await button?.trigger("click");
   await wrapper.findAll("[role='option']").at(1)?.trigger("click");
-  expect(emitted(wrapper, "filter")).toEqual([1, [{ id: "nulls" }]]);
+  await button?.trigger("keydown", { key: "Escape" });
+  expect(emitted(wrapper, "filter")).toEqual(["score", [{ id: "nulls" }]]);
 });
 
 test("Changes per page", async () => {

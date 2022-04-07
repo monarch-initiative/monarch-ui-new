@@ -40,7 +40,6 @@ export const mountPhenogrid = async (
 
     patchSvg(await waitFor("#phenogrid_svg"));
   } catch (error) {
-    console.error(error);
     throw cleanError(error);
   }
 };

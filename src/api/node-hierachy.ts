@@ -36,7 +36,7 @@ export const getHierarchy = async (id = "", category = ""): Promise<Result> => {
         "function",
       ].includes(category)
         ? // only do subclass and "part of"for certain node types
-          `equivalentClass,subClassOf,${partOf}`
+          ["equivalentClass", "subClassOf", partOf]
         : // otherwise just look for equivalent classes
           "equivalentClass",
     };

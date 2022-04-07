@@ -3,21 +3,31 @@ import { Codes } from "@/components/AppStatus";
 // base biolink url
 export const biolink = "https://api.monarchinitiative.org/api";
 
+// key/value object for request query parameters
+// use primitive for single, e.g. evidence=true
+// use array for multiple/duplicate, e.g. id=abc&id=def&id=ghi
+type Param = string | number | boolean | undefined | null;
+export type Params = Record<string, Param | Array<Param>>;
+
 // generic fetch request wrapper
 export const request = async <T>(
   // request url
   path = "",
   // url params. comma-separated values expand to repeated keys.
-  params = {},
+  params: Params = {},
   // fetch options
-  options = {},
+  options: RequestInit = {},
   // parse response mode
-  parse = "json"
+  parse: "text" | "json" = "json"
 ): Promise<T> => {
   // get string of url parameters/options
   const paramsObject = new URLSearchParams();
-  for (const [key, value] of Object.entries(params))
-    for (const part of String(value).split(",")) paramsObject.append(key, part);
+  for (const [key, value] of Object.entries(params)) {
+    const values = [value].flat();
+    for (const value of values)
+      if (["string", "number", "boolean"].includes(typeof value))
+        paramsObject.append(key, String(value));
+  }
 
   // sort params for consistency
   paramsObject.sort();
@@ -27,7 +37,10 @@ export const request = async <T>(
   const url = path + paramsString;
 
   // make request
-  console.info("Making request", url.replaceAll(" ", "%20"));
+  console.info(
+    "Making request",
+    window.decodeURIComponent(url).replaceAll(" ", "%20")
+  );
   const response = await fetch(url, options);
   if (!response.ok) throw new ApiError(`Response not OK`);
 

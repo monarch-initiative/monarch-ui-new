@@ -413,7 +413,7 @@ input {
 
 .list {
   position: absolute;
-  max-height: 200px;
+  max-height: 300px;
   width: 100%;
   overflow-x: auto;
   overflow-y: auto;
