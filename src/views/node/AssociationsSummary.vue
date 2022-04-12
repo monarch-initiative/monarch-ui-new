@@ -8,7 +8,7 @@
 
   <!-- results -->
   <template v-else>
-    <strong>Top {{ associations.length }} associations</strong>
+    <span>Top {{ associations.length }} association(s)</span>
 
     <!-- result -->
     <div
@@ -18,7 +18,7 @@
     >
       <AppFlex direction="col" gap="small" class="details">
         <!-- primary result info -->
-        <AppFlex gap="small" h-align="left" :wrap="false" class="title">
+        <AppFlex gap="small" h-align="left" class="title">
           <span class="truncate">{{ node.name }}</span>
           <AppIcon
             class="arrow"
@@ -157,6 +157,7 @@ onMounted(getAssociations);
 .details {
   width: 0;
   flex-grow: 1;
+  text-align: left;
 }
 
 .secondary {

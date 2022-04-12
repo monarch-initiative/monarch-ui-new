@@ -5,6 +5,17 @@
 -->
 
 <template>
+  <!-- description -->
+  <template v-if="$route.name !== 'Home'">
+    <p>
+      Search our extensive knowledge graphs to find particular nodes — such as
+      genes, diseases, phenotypes, genotypes, variants, and more — and see rich
+      information about them — such as related nodes, publications, and more.
+    </p>
+
+    <hr />
+  </template>
+
   <!-- search box -->
   <AppInput
     ref="searchBox"
@@ -29,7 +40,7 @@
     </AppFlex>
   </template>
 
-  <template v-if="!home">
+  <template v-if="$route.name !== 'Home'">
     <!-- filters -->
     <AppFlex v-if="Object.keys(availableFilters).length">
       <template v-for="(filter, name, index) in availableFilters" :key="index">
@@ -248,9 +259,6 @@ async function getResults(
     }
   }
 }
-
-// is home page
-const home = computed((): boolean => route.name === "Home");
 
 // "x of n" pages
 const from = computed((): number => page.value * perPage.value);

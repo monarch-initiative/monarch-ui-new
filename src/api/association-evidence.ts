@@ -3,6 +3,16 @@ import { uniq, flatMap, uniqBy } from "lodash";
 import { getXrefLink } from "./xrefs";
 import { biolink, request, cleanError } from ".";
 
+interface EvidenceType {
+  id: string;
+  label?: string;
+}
+
+interface Publication {
+  id: string;
+  label?: string;
+}
+
 interface Response {
   associations: Array<{
     id: string;
@@ -34,15 +44,11 @@ interface Response {
       category?: Array<string> | null;
       inverse: boolean;
     };
-    evidence_types?: Array<{
-      id: string;
-      label: string;
-    }>;
+    evidence_types?: Array<EvidenceType>;
     provided_by?: Array<string>;
-    publications?: Array<{
-      id: string;
-      label: string;
-    }>;
+    publications?: Array<Publication>;
+    object_eq?: Array<string>;
+    subject_eq?: Array<string>;
   }>;
 }
 
@@ -58,22 +64,38 @@ export const getEvidence = async (id: string): Promise<Result> => {
     const publications = uniqBy(flatMap(associations, "publications"), "id");
     const sources = uniq(flatMap(associations, "provided_by"));
 
-    // convert into desired result format
+    // convert evidence code into desired format
+    const mapCode = (code: EvidenceType) => ({
+      name: code.label || "",
+      link: getXrefLink(code.id),
+    });
+
+    // convert publication into desired format
+    const mapPublication = (publication: Publication) => ({
+      name: publication.label || publication.id || "",
+      link: getXrefLink(publication.id),
+    });
+
+    // convert "provided by" into desired format
+    const mapSource = (source = "") => ({
+      name: source.split("/").pop() || source,
+      link: source,
+    });
+
+    // convert reference into desired format
+    const mapReference = (reference = "") => ({
+      name: reference,
+      link: getXrefLink(reference),
+    });
+
+    // convert summary data into desired result format
     const summary = {
-      codes:
-        codes?.map((type) => ({
-          name: type.label,
-          link: getXrefLink(type.id),
-        })) || [],
-      publications:
-        publications?.map((publication) => ({
-          name: publication.label || publication.id || "",
-          link: getXrefLink(publication.id),
-        })) || [],
+      codes: codes?.map(mapCode) || [],
+      publications: publications?.map(mapPublication) || [],
       sources: sources || [],
     };
 
-    // convert into desired result format
+    // convert table data into desired result format
     const table: Table = associations.map((association) => ({
       // see result interface below...
       object: {
@@ -99,6 +121,21 @@ export const getEvidence = async (id: string): Promise<Result> => {
         category: (association.relation?.category || [])[0] || "",
         inverse: association.relation.inverse,
       },
+
+      // ...
+      codes: association.evidence_types?.map(mapCode) || [],
+
+      // ...
+      publications: association.publications?.map(mapPublication) || [],
+
+      // ...
+      sources: association.provided_by?.map(mapSource) || [],
+
+      // ...
+      references: [
+        ...(association.object_eq || []),
+        ...(association.subject_eq || []),
+      ].map(mapReference),
     }));
 
     return { summary, table };
@@ -122,7 +159,7 @@ interface Summary {
 
 // detailed data of evidence
 type Table = Array<{
-  // subject of association, i.e. current node
+  // subject of association
   subject: {
     id: string;
     name: string;
@@ -130,7 +167,7 @@ type Table = Array<{
     category: string;
   };
 
-  // object of association, i.e. what current node has association with
+  // object of association
   object: {
     id: string;
     name: string;
@@ -146,6 +183,30 @@ type Table = Array<{
     category: string;
     inverse: boolean;
   };
+
+  // evidence codes (add explanation of meaning)
+  codes: Array<{
+    name: string;
+    link: string;
+  }>;
+
+  // publications (add explanation of meaning)
+  publications: Array<{
+    name: string;
+    link: string;
+  }>;
+
+  // sources (add explanation of meaning)
+  sources: Array<{
+    name: string;
+    link: string;
+  }>;
+
+  // references (add explanation of meaning)
+  references: Array<{
+    name: string;
+    link: string;
+  }>;
 }>;
 
 export interface Result {

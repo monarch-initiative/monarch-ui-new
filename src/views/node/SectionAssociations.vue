@@ -21,6 +21,7 @@
     <AppTabs
       v-if="category"
       name="Association viewing mode"
+      :url="false"
       :tabs="[
         {
           id: 'summary',
@@ -57,12 +58,10 @@
         />
       </template>
     </AppTabs>
-
-    <hr v-if="association" />
-
-    <!-- evidence viewer of association -->
-    <EvidenceViewer v-if="association" :selected-association="association" />
   </AppSection>
+
+  <!-- evidence viewer of association -->
+  <EvidenceViewer v-if="association" :selected-association="association" />
 </template>
 
 <script setup lang="ts">
@@ -126,6 +125,17 @@ function setCategoryFromUrl() {
 }
 watch(() => route.query.associations, setCategoryFromUrl);
 onMounted(setCategoryFromUrl);
+
+// auto-select first category
+watch(
+  categoryOptions,
+  () => {
+    // if no category selected, and no category about to be selected from url
+    if (!category.value && !route.query.associations)
+      category.value = categoryOptions.value[0];
+  },
+  { immediate: true }
+);
 </script>
 
 <style lang="scss" scoped>

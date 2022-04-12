@@ -18,6 +18,7 @@
         class="table"
         :data-left="arrivedState.left"
         :data-right="arrivedState.right"
+        :data-expanded="expanded"
       >
         <table
           :aria-colcount="cols.length"
@@ -103,6 +104,7 @@
       </div>
 
       <div class="controls">
+        <!-- left side controls -->
         <div>
           <span>Per page</span>
           <AppSelectSingle
@@ -119,6 +121,8 @@
             @update:model-value="(value) => emitPerPage(value.id)"
           />
         </div>
+
+        <!-- center controls -->
         <div>
           <AppButton
             v-tippy="'Go to first page'"
@@ -150,6 +154,8 @@
             @click="clickLast"
           />
         </div>
+
+        <!-- right side controls -->
         <div>
           <AppInput
             v-tippy="'Search table data'"
@@ -164,6 +170,12 @@
             design="small"
             @click="emitDownload"
           />
+          <AppButton
+            v-tippy="expanded ? 'Collapse table' : 'Expand table to full width'"
+            :icon="expanded ? 'minimize' : 'maximize'"
+            design="small"
+            @click="expanded = !expanded"
+          />
         </div>
       </div>
     </AppFlex>
@@ -171,7 +183,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUpdated } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useEventListener, useScroll } from "@vueuse/core";
 import { Col, Cols, Rows, Sort } from "./AppTable";
 import AppInput from "./AppInput.vue";
@@ -231,18 +243,20 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 
+// whether table is expanded to be full width
+const expanded = ref(false);
 // table reference
 const table = ref<HTMLElement | null>(null);
 
 // table scroll state
-const { arrivedState } = useScroll(table);
+const { arrivedState } = useScroll(table, { offset: { left: 10, right: 10 } });
 
 // force table scroll to update
 function updateScroll() {
   table.value?.dispatchEvent(new Event("scroll"));
 }
 onMounted(updateScroll);
-onUpdated(updateScroll);
+watch(expanded, updateScroll);
 useEventListener("resize", updateScroll);
 
 // when user clicks to first page
@@ -368,6 +382,13 @@ const ariaSort = computed(() => {
       transparent
     );
   }
+
+  &[data-expanded="true"] {
+    position: relative;
+    left: 0;
+    width: calc(100vw - 80px);
+    transform: translateX(0);
+  }
 }
 
 table {
@@ -431,7 +452,7 @@ th > span {
 
 // body cells
 td {
-  border-bottom: solid 1px $light-gray;
+  border-bottom: solid 2px $light-gray;
 }
 
 .controls {
@@ -453,6 +474,7 @@ td {
 
   .search {
     --height: 30px;
+    max-width: 150px;
   }
 }
 

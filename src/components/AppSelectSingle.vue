@@ -199,15 +199,14 @@ watch(highlighted, () =>
     ?.scrollIntoView({ block: "nearest" })
 );
 
-// when available options change
-watch(
-  () => props.options,
-  () => {
-    // if can't find selected value, select first option (if it exists)
-    if (selected.value === -1 && props.options.length) selected.value = 0;
-  },
-  { immediate: true }
-);
+// auto-select first option as fallback
+// watch(
+//   () => props.options,
+//   () => {
+//     if (selected.value === -1 && props.options.length) selected.value = 0;
+//   },
+//   { immediate: true }
+// );
 </script>
 
 <style lang="scss" scoped>

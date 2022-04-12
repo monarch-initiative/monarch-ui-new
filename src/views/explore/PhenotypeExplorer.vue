@@ -5,6 +5,17 @@
 -->
 
 <template>
+  <!-- description -->
+  <template v-if="$route.name !== 'Home'">
+    <p>
+      Construct two sets of phenotypes and see various comparisons between them.
+      You can use this to find phenotypically similar diseases or genes in a
+      variety of organisms and visualize their overlap.
+    </p>
+
+    <hr />
+  </template>
+
   <strong>Compare these phenotypes ...</strong>
 
   <!-- set A -->
@@ -355,6 +366,7 @@ onMounted(() => {
 .details {
   flex-grow: 1;
   width: 0;
+  text-align: left;
 
   svg {
     margin-right: 10px;

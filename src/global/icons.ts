@@ -57,6 +57,8 @@ library.add(
     fas.faLightbulb,
     fas.faLink,
     fas.faLocationDot,
+    fas.faMaximize,
+    fas.faMinimize,
     fas.faNewspaper,
     fas.faPaperPlane,
     fas.faPauseCircle,

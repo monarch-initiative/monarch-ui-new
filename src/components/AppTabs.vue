@@ -35,20 +35,12 @@
     :style="{ display: 'contents' }"
   ></div>
 
-  <!-- description of tab -->
-  <template v-if="description">
-    <p>
-      {{ description }}
-    </p>
-    <hr />
-  </template>
-
   <!-- tab panel content -->
   <slot :name="selected"></slot>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, watch } from "vue";
 import { uniqueId } from "lodash";
 import { wrap } from "@/util/math";
 import { useRouter, useRoute } from "vue-router";
@@ -76,12 +68,12 @@ interface Props {
   // name of tab group
   name: string;
   // whether to sync active tab with url hash
-  history?: boolean;
+  url?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   default: "",
-  history: true,
+  url: true,
 });
 
 interface Emits {
@@ -94,11 +86,6 @@ const emit = defineEmits<Emits>();
 const id = ref(uniqueId());
 // id of selected tab
 const selected = ref(getHash() || props.default || props.tabs[0].id || "");
-
-// description of selected tab
-const description = computed(
-  () => props.tabs.find((tab) => tab.id === selected.value)?.description
-);
 
 // when user presses key on button
 function onKeydown(event: KeyboardEvent) {
@@ -135,8 +122,7 @@ watch(selected, async () => {
   button?.focus();
 
   // update hash in url
-  if (props.history)
-    await router.replace({ ...route, hash: "#" + selected.value });
+  if (props.url) await router.replace({ ...route, hash: "#" + selected.value });
 
   // emit event to parent that tab changed
   emit("change", selected.value);
@@ -146,7 +132,7 @@ watch(selected, async () => {
 watch(
   () => route.hash,
   () => {
-    if (props.history && getHash()) selected.value = getHash();
+    if (props.url && getHash()) selected.value = getHash();
   }
 );
 </script>

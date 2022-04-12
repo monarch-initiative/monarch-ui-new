@@ -5,6 +5,16 @@
 -->
 
 <template>
+  <!-- description -->
+  <template v-if="$route.name !== 'Home'">
+    <p>
+      Same as the node search, but searches full text and finds references to
+      nodes that are in our knowledge graph.
+    </p>
+
+    <hr />
+  </template>
+
   <!-- search box -->
   <AppInput
     v-model="content"
@@ -38,12 +48,10 @@
       v-for="({ text, tokens }, annotationIndex) in annotations"
       :key="annotationIndex"
       :interactive="true"
-      theme="light"
+      :append-to="appendToBody"
     >
-      <span :data-has="!!tokens.length" :tabindex="tokens.length ? 0 : -1">{{
-        text
-      }}</span>
-      <template v-if="tokens.length" #content>
+      <span :tabindex="tokens.length ? 0 : -1">{{ text }}</span>
+      <template v-if="!!tokens.length" #content>
         <div class="table">
           <template v-for="(token, tokenIndex) in tokens" :key="tokenIndex">
             <AppIcon :icon="`category-${kebabCase(token.category)}`" />
@@ -86,6 +94,7 @@ import { ApiError } from "@/api";
 import { downloadJson } from "@/util/download";
 import { setData } from "@/router";
 import { useRouter } from "vue-router";
+import { appendToBody } from "@/global/tippy";
 
 // route info
 const router = useRouter();
@@ -163,16 +172,6 @@ onMounted(() => {
 <style lang="scss" scoped>
 p {
   white-space: pre-line;
-}
-
-span[data-has="false"] {
-  color: $dark-gray;
-}
-
-span[data-has="true"] {
-  text-decoration: underline;
-  color: $black;
-  cursor: help;
 }
 
 .table {

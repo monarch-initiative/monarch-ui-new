@@ -162,7 +162,7 @@ const scrollBehavior: RouterScrollBehavior = async (
 };
 
 // given element, get (possibly) modified target
-const getTarget = (element: HTMLElement): HTMLElement => {
+const getTarget = (element: Element): Element => {
   // move target to parent section element if first child
   if (
     element.parentElement?.tagName === "SECTION" &&
@@ -184,7 +184,7 @@ const getTarget = (element: HTMLElement): HTMLElement => {
 const getOffset = () => document?.querySelector("header")?.clientHeight || 0;
 
 // scroll to element
-export const scrollToElement = (element?: HTMLElement | null): void => {
+export const scrollToElement = (element?: Element | null): void => {
   if (!element) return;
 
   window.scrollTo({

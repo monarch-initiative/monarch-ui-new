@@ -322,7 +322,10 @@ async function download() {
 }
 
 // get associations when category or table state changes
-watch([() => props.selectedCategory], () => getAssociations(true));
+watch(
+  () => props.selectedCategory,
+  () => getAssociations(true)
+);
 watch([() => props.selectedCategory, perPage, start, search, sort], () =>
   getAssociations(false)
 );
