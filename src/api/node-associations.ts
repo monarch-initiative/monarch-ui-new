@@ -1,4 +1,4 @@
-import { startCase } from "lodash";
+import { getXrefLink } from "./xrefs";
 import { biolink, request, cleanError } from ".";
 import { Filters, Query, facetsToFilters, queryToParams } from "./facets";
 import { getSummaries } from "./node-publication";
@@ -36,18 +36,6 @@ interface Response {
       iri: string;
       category?: Array<string> | null;
       inverse: boolean;
-    };
-    evidence_graph: {
-      nodes: Array<{
-        id: string;
-        label: string;
-      }>;
-      edges: Array<{
-        sub: string;
-        pred: string;
-        obj: string;
-        meta: Record<string, unknown>;
-      }>;
     };
     evidence_types?: Array<{
       id: string;
@@ -132,7 +120,7 @@ export const getTabulatedAssociations = async (
         // ...
         relation: {
           id: association.relation.id,
-          name: startCase(association.relation.label),
+          name: association.relation.label,
           iri: association.relation.iri,
           category: (association.relation?.category || [])[0] || "",
           inverse: association.relation.inverse,
@@ -154,15 +142,15 @@ export const getTabulatedAssociations = async (
         frequency:
           association.frequency?.id || association.frequency?.label
             ? {
-                id: association.frequency?.id || "",
                 name: association.frequency?.label || "",
+                link: getXrefLink(association.frequency?.id || ""),
               }
             : undefined,
         onset:
           association.onset?.id || association.onset?.label
             ? {
-                id: association.onset?.id || "",
                 name: association.onset?.label || "",
+                link: getXrefLink(association.onset?.id || ""),
               }
             : undefined,
 
@@ -257,12 +245,12 @@ export interface Result {
 
     // phenotype specific info
     frequency?: {
-      id: string;
       name: string;
+      link: string;
     };
     onset?: {
-      id: string;
       name: string;
+      link: string;
     };
 
     // publication specific info

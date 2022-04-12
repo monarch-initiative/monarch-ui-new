@@ -75,6 +75,7 @@ const component = computed(() => (props.to ? "AppLink" : "button"));
   flex-grow: 0;
   flex-shrink: 0;
   text-decoration: none;
+  text-transform: capitalize;
   transition: color $fast, background $fast, opacity $fast, box-shadow $fast;
 
   &[data-design="normal"] {

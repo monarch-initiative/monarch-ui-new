@@ -11,7 +11,15 @@
     class="detail"
     :data-big="big"
   >
-    <div class="text">{{ title }}</div>
+    <AppFlex gap="small" h-align="left">
+      <AppIcon v-if="icon" :icon="icon" class="icon" />
+      <span class="text">
+        {{ title }}
+      </span>
+      <span v-if="count !== undefined" class="count">
+        {{ count }}
+      </span>
+    </AppFlex>
 
     <div v-if="blank" class="empty">No info</div>
     <slot v-else />
@@ -28,6 +36,10 @@
 interface Props {
   // title of info block
   title: string;
+  // icon next to title
+  icon?: string;
+  // number next to title
+  count?: number;
   // whether or not to show "no info" placeholder. why? to show that this field
   // exists, but doesn't have data this time.
   blank?: boolean;
@@ -35,13 +47,19 @@ interface Props {
   big?: boolean;
 }
 
-withDefaults(defineProps<Props>(), { blank: false, big: false });
+withDefaults(defineProps<Props>(), {
+  icon: "",
+  count: undefined,
+  blank: false,
+  big: false,
+});
 </script>
 
 <style lang="scss" scoped>
 .detail {
   flex-grow: 1;
   text-align: left;
+  line-height: $spacing;
 
   &[data-big="true"] {
     width: 100%;
@@ -59,8 +77,16 @@ withDefaults(defineProps<Props>(), { blank: false, big: false });
   }
 }
 
+.icon {
+  color: $gray;
+}
+
 .text {
   font-weight: 600;
+}
+
+.count {
+  color: $gray;
 }
 
 .empty {

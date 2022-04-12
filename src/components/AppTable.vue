@@ -171,8 +171,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useScroll } from "@vueuse/core";
+import { ref, computed, onMounted, onUpdated } from "vue";
+import { useEventListener, useScroll } from "@vueuse/core";
 import { Col, Cols, Rows, Sort } from "./AppTable";
 import AppInput from "./AppInput.vue";
 import AppSelectMulti from "./AppSelectMulti.vue";
@@ -191,7 +191,7 @@ interface Props {
   // sort key and direction
   sort?: Sort;
   // items per page
-  perPage: number;
+  perPage?: number;
   // starting item index
   start: number;
   // total number of items
@@ -206,6 +206,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  perPage: 5,
   sort: undefined,
   search: "",
   availableFilters: undefined,
@@ -232,7 +233,17 @@ const emit = defineEmits<Emits>();
 
 // table reference
 const table = ref<HTMLElement | null>(null);
+
+// table scroll state
 const { arrivedState } = useScroll(table);
+
+// force table scroll to update
+function updateScroll() {
+  table.value?.dispatchEvent(new Event("scroll"));
+}
+onMounted(updateScroll);
+onUpdated(updateScroll);
+useEventListener("resize", updateScroll);
 
 // when user clicks to first page
 function clickFirst() {
@@ -331,12 +342,12 @@ const ariaSort = computed(() => {
   overflow-x: auto;
   transition: mask-image $fast;
 
-  &[data-left="false"] {
+  &[data-left="false"][data-right="true"] {
     --webkit-mask-image: linear-gradient(to left, black 90%, transparent);
     mask-image: linear-gradient(to left, black 90%, transparent);
   }
 
-  &[data-right="false"] {
+  &[data-right="false"][data-left="true"] {
     --webkit-mask-image: linear-gradient(to right, black 90%, transparent);
     mask-image: linear-gradient(to right, black 90%, transparent);
   }
@@ -411,6 +422,7 @@ td {
 th {
   padding-bottom: 10px;
   font-weight: 400;
+  text-transform: capitalize;
 }
 
 th > span {

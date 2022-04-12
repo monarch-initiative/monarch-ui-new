@@ -27,6 +27,8 @@ import { onMounted, onUpdated, ref } from "vue";
 import { kebabCase } from "lodash";
 
 interface Props {
+  // manually specified heading id
+  id?: string;
   // manually specified heading level
   level?: number;
   // icon to show next to text
@@ -75,7 +77,7 @@ function getTag() {
 
 // determine link from text content of heading
 function getLink() {
-  return kebabCase(heading.value?.textContent || "");
+  return kebabCase(props.id || heading.value?.textContent || "");
 }
 
 // update tag and link on mount and change

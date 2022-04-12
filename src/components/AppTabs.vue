@@ -36,7 +36,7 @@
   ></div>
 
   <!-- description of tab -->
-  <template v-if="description && showDescription">
+  <template v-if="description">
     <p>
       {{ description }}
     </p>
@@ -75,13 +75,13 @@ interface Props {
   default?: string;
   // name of tab group
   name: string;
-  // whether to show description paragraph
-  showDescription?: boolean;
+  // whether to sync active tab with url hash
+  history?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   default: "",
-  showDescription: true,
+  history: true,
 });
 
 interface Emits {
@@ -135,7 +135,8 @@ watch(selected, async () => {
   button?.focus();
 
   // update hash in url
-  await router.replace({ ...route, hash: "#" + selected.value });
+  if (props.history)
+    await router.replace({ ...route, hash: "#" + selected.value });
 
   // emit event to parent that tab changed
   emit("change", selected.value);
@@ -145,7 +146,7 @@ watch(selected, async () => {
 watch(
   () => route.hash,
   () => {
-    if (getHash()) selected.value = getHash();
+    if (props.history && getHash()) selected.value = getHash();
   }
 );
 </script>

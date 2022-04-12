@@ -58,8 +58,17 @@
         v-tippy="'View supporting evidence for this association'"
         class="evidence"
         text="Evidence"
-        icon="eye"
-        color="secondary"
+        :aria-selected="association.id === selectedAssociation"
+        icon="flask"
+        :color="
+          association.id === selectedAssociation ? 'primary' : 'secondary'
+        "
+        @click="
+          emit(
+            'select',
+            association.id === selectedAssociation ? '' : association.id
+          )
+        "
       />
     </div>
   </template>
@@ -80,10 +89,19 @@ interface Props {
   // current node
   node: NodeResult;
   // selected association category
-  category: string;
+  selectedCategory: string;
+  // selected association id
+  selectedAssociation: string;
 }
 
 const props = defineProps<Props>();
+
+interface Emits {
+  // change selected association
+  (event: "select", id: string): void;
+}
+
+const emit = defineEmits<Emits>();
 
 // association data
 const associations = ref<AssociationsResult["associations"]>([]);
@@ -105,7 +123,7 @@ async function getAssociations() {
     associations.value = await getTopAssociations(
       props.node.id,
       props.node.category,
-      props.category
+      props.selectedCategory
     );
 
     // clear status
@@ -118,7 +136,7 @@ async function getAssociations() {
 }
 
 // get associations when category changes
-watch(() => props.category, getAssociations);
+watch(() => props.selectedCategory, getAssociations);
 
 // get associations on load
 onMounted(getAssociations);
