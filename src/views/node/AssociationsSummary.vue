@@ -55,18 +55,22 @@
       </AppFlex>
 
       <AppButton
-        v-tippy="'View supporting evidence for this association'"
+        v-tippy="
+          association.id === selectedAssociation?.id
+            ? 'Viewing supporting evidence. Click again to hide.'
+            : 'View supporting evidence for this association'
+        "
         class="evidence"
         text="Evidence"
-        :aria-selected="association.id === selectedAssociation"
-        icon="flask"
+        :aria-selected="association.id === selectedAssociation?.id"
+        :icon="association.id === selectedAssociation?.id ? 'check' : 'flask'"
         :color="
-          association.id === selectedAssociation ? 'primary' : 'secondary'
+          association.id === selectedAssociation?.id ? 'primary' : 'secondary'
         "
         @click="
           emit(
             'select',
-            association.id === selectedAssociation ? '' : association.id
+            association.id === selectedAssociation?.id ? undefined : association
           )
         "
       />
@@ -82,6 +86,7 @@ import { Result as NodeResult } from "@/api/node-lookup";
 import {
   getTopAssociations,
   Result as AssociationsResult,
+  Association,
 } from "@/api/node-associations";
 import { ApiError } from "@/api";
 
@@ -91,14 +96,14 @@ interface Props {
   // selected association category
   selectedCategory: string;
   // selected association id
-  selectedAssociation: string;
+  selectedAssociation?: Association;
 }
 
 const props = defineProps<Props>();
 
 interface Emits {
   // change selected association
-  (event: "select", id: string): void;
+  (event: "select", value?: Association): void;
 }
 
 const emit = defineEmits<Emits>();

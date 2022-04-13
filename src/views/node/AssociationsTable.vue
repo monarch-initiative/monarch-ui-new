@@ -55,14 +55,18 @@
     <template #evidence="{ cell, row }">
       <AppButton
         v-tippy="
-          `View ${cell} piece(s) of supporting evidence for this association`
+          row.id === selectedAssociation?.id
+            ? 'Viewing supporting evidence. Click again to hide.'
+            : 'View supporting evidence for this association'
         "
         class="evidence-button"
         :text="String(cell)"
-        :aria-selected="row.id === selectedAssociation"
-        icon="flask"
-        :color="row.id === selectedAssociation ? 'primary' : 'secondary'"
-        @click="emit('select', row.id === selectedAssociation ? '' : row.id)"
+        :aria-selected="row.id === selectedAssociation?.id"
+        :icon="row.id === selectedAssociation?.id ? 'check' : 'flask'"
+        :color="row.id === selectedAssociation?.id ? 'primary' : 'secondary'"
+        @click="
+          emit('select', row.id === selectedAssociation?.id ? undefined : row)
+        "
       />
     </template>
 
@@ -103,10 +107,11 @@ import { Result as NodeResult } from "@/api/node-lookup";
 import {
   getTabulatedAssociations,
   Result as AssociationsResult,
+  Association,
 } from "@/api/node-associations";
 import { ApiError } from "@/api";
 import { downloadJson } from "@/util/download";
-import { push } from "@/components/TheSnackbar";
+import { snackbar } from "@/components/TheSnackbar";
 import { Filters, filtersToQuery } from "@/api/facets";
 import { Options } from "@/components/AppSelectMulti";
 
@@ -116,14 +121,14 @@ interface Props {
   // selected association category
   selectedCategory: string;
   // selected association id
-  selectedAssociation: string;
+  selectedAssociation?: Association;
 }
 
 const props = defineProps<Props>();
 
 interface Emits {
   // change selected association
-  (event: "select", id: string): void;
+  (event: "select", value?: Association): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -305,7 +310,7 @@ async function download() {
   const max = 100000;
 
   // warn user
-  push(
+  snackbar(
     `Downloading data for ${Math.min(count.value, max)} table entries.` +
       (count.value >= 100 ? " This may take a minute." : "")
   );

@@ -197,67 +197,69 @@ export const getTabulatedAssociations = async (
   }
 };
 
+export interface Association {
+  // allow arbitrary key access
+  [key: string]: unknown;
+
+  // unique id of association
+  id: string;
+
+  // subject of association, i.e. current node
+  subject: {
+    id: string;
+    name: string;
+    iri: string;
+    category: string;
+  };
+
+  // object of association, i.e. what current node has association with
+  object: {
+    id: string;
+    name: string;
+    iri: string;
+    category: string;
+  };
+
+  // info about the association
+  relation: {
+    id: string;
+    name: string;
+    iri: string;
+    category: string;
+    inverse: boolean;
+  };
+
+  // evidence info supporting this association
+  evidence: Array<Record<string, unknown>>;
+
+  // mixed-type total of pieces of supporting evidence
+  supportCount: number;
+
+  // taxon specific (gene/genotype/model/variant/homolog/ortholog) info
+  taxon?: {
+    id: string;
+    name: string;
+  };
+
+  // phenotype specific info
+  frequency?: {
+    name: string;
+    link: string;
+  };
+  onset?: {
+    name: string;
+    link: string;
+  };
+
+  // publication specific info
+  author?: string;
+  year?: string;
+  publisher?: string;
+}
+
 export interface Result {
   count: number;
-  associations: Array<{
-    // allow arbitrary key access
-    [key: string]: unknown;
-
-    // unique id of association
-    id: string;
-
-    // subject of association, i.e. current node
-    subject: {
-      id: string;
-      name: string;
-      iri: string;
-      category: string;
-    };
-
-    // object of association, i.e. what current node has association with
-    object: {
-      id: string;
-      name: string;
-      iri: string;
-      category: string;
-    };
-
-    // info about the association
-    relation: {
-      id: string;
-      name: string;
-      iri: string;
-      category: string;
-      inverse: boolean;
-    };
-
-    // evidence info supporting this association
-    evidence: Array<Record<string, unknown>>;
-
-    // mixed-type total of pieces of supporting evidence
-    supportCount: number;
-
-    // taxon specific (gene/genotype/model/variant/homolog/ortholog) info
-    taxon?: {
-      id: string;
-      name: string;
-    };
-
-    // phenotype specific info
-    frequency?: {
-      name: string;
-      link: string;
-    };
-    onset?: {
-      name: string;
-      link: string;
-    };
-
-    // publication specific info
-    author?: string;
-    year?: string;
-    publisher?: string;
-  }>;
+  associations: Array<Association>;
 
   facets: Filters;
 }

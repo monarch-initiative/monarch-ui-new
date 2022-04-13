@@ -171,7 +171,7 @@ import { Status } from "@/components/AppStatus";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
 import { Option, Options } from "@/components/AppSelectTags";
-import { push } from "@/components/TheSnackbar";
+import { snackbar } from "@/components/TheSnackbar";
 import { mountPhenogrid } from "@/api/phenogrid";
 
 // common tooltip explaining how to use multi-select component
@@ -273,8 +273,8 @@ async function runAnalysis() {
 // when multi select component runs get options function
 function getOptions(option: Option, options: Options, set: string) {
   // notify
-  if (options.length === 0) push("No associated phenotypes found");
-  else push(`Selected ${options.length} phenotypes`);
+  if (options.length === 0) snackbar("No associated phenotypes found");
+  else snackbar(`Selected ${options.length} phenotypes`);
 
   // set "generated from" helpers
   if (set === "a") aGeneratedFrom.value = { option, options };

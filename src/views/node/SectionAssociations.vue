@@ -36,7 +36,7 @@
           tooltip: 'All association data, in tabular form',
         },
       ]"
-      @change="association = ''"
+      @change="association = undefined"
     >
       <!-- summary view of associations -->
       <template #summary>
@@ -44,7 +44,7 @@
           :node="node"
           :selected-category="category.id"
           :selected-association="association"
-          @select="(id) => (association = id)"
+          @select="(value) => (association = value)"
         />
       </template>
 
@@ -54,14 +54,18 @@
           :node="node"
           :selected-category="category.id"
           :selected-association="association"
-          @select="(id) => (association = id)"
+          @select="(value) => (association = value)"
         />
       </template>
     </AppTabs>
   </AppSection>
 
   <!-- evidence viewer of association -->
-  <EvidenceViewer v-if="association" :selected-association="association" />
+  <EvidenceViewer
+    v-if="association"
+    :node="node"
+    :selected-association="association"
+  />
 </template>
 
 <script setup lang="ts">
@@ -72,6 +76,7 @@ import { Option, Options } from "@/components/AppSelectSingle";
 import AppTabs from "@/components/AppTabs.vue";
 import { Result as NodeResult } from "@/api/node-lookup";
 import { getAssociationName } from "@/api/categories";
+import { Association } from "@/api/node-associations";
 import AssociationsSummary from "./AssociationsSummary.vue";
 import AssociationsTable from "./AssociationsTable.vue";
 import EvidenceViewer from "./EvidenceViewer.vue";
@@ -90,7 +95,7 @@ const props = defineProps<Props>();
 // selected category of associations to show
 const category = ref<Option>();
 // selected association id
-const association = ref("");
+const association = ref<Association>();
 
 // list of options for dropdown
 const categoryOptions = computed(
@@ -104,7 +109,7 @@ const categoryOptions = computed(
 );
 
 // deselect association when selected category changes
-watch(category, () => (association.value = ""));
+watch(category, () => (association.value = undefined));
 
 // update url from selected category
 watch(category, (value, prev) =>

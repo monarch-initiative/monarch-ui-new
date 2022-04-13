@@ -7,7 +7,36 @@
   <AppSection>
     <AppHeading icon="flask">Evidence</AppHeading>
 
-    <span>... for selected association</span>
+    <AppFlex direction="col">
+      <span>... for the selected association:</span>
+
+      <AppFlex gap="small">
+        <span class="truncate">{{ node.name }}</span>
+        <AppIcon
+          class="arrow"
+          :icon="
+            selectedAssociation.relation.inverse
+              ? 'arrow-left-long'
+              : 'arrow-right-long'
+          "
+        />
+        <AppLink :to="selectedAssociation.relation.iri" :no-icon="true">{{
+          selectedAssociation.relation.name
+        }}</AppLink>
+        <AppIcon
+          class="arrow"
+          :icon="
+            selectedAssociation.relation.inverse
+              ? 'arrow-left-long'
+              : 'arrow-right-long'
+          "
+        />
+        <AppLink
+          :to="`/${selectedAssociation.object.category}/${selectedAssociation.object.id}`"
+          >{{ selectedAssociation.object.name }}</AppLink
+        >
+      </AppFlex>
+    </AppFlex>
 
     <!-- status -->
     <AppStatus v-if="status" :status="status" />
@@ -85,6 +114,7 @@
           :rows="table || []"
           :start="0"
           :total="table?.length || 0"
+          :show-controls="false"
         >
           <!-- "subject" -->
           <template #subject="{ cell }">
@@ -191,6 +221,7 @@ import AppDetails from "@/components/AppDetails.vue";
 import AppDetail from "@/components/AppDetail.vue";
 import AppTable from "@/components/AppTable.vue";
 import AppStatus from "@/components/AppStatus.vue";
+import { Result as NodeResult } from "@/api/node-lookup";
 import { Status } from "@/components/AppStatus";
 import { scrollToElement } from "@/router";
 import { getEvidence, Result } from "@/api/association-evidence";
@@ -198,10 +229,13 @@ import { ApiError } from "@/api";
 import { breakUrl } from "@/util/string";
 import { appendToBody } from "@/global/tippy";
 import { waitFor } from "@/util/dom";
+import { Association } from "@/api/node-associations";
 
 interface Props {
+  // current node
+  node: NodeResult;
   // selected association id
-  selectedAssociation: string;
+  selectedAssociation: Association;
 }
 
 const props = defineProps<Props>();
@@ -263,7 +297,7 @@ async function getData() {
     status.value = { code: "loading", text: "Loading evidence data" };
 
     // get evidence data
-    const response = await getEvidence(props.selectedAssociation);
+    const response = await getEvidence(props.selectedAssociation?.id);
     summary.value = response.summary;
     table.value = response.table;
 

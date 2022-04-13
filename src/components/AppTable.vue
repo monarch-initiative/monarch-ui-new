@@ -106,8 +106,9 @@
       <div class="controls">
         <!-- left side controls -->
         <div>
-          <span>Per page</span>
+          <span v-if="showControls">Per page</span>
           <AppSelectSingle
+            v-if="showControls"
             name="Rows per page"
             :options="[
               { id: '5' },
@@ -125,6 +126,7 @@
         <!-- center controls -->
         <div>
           <AppButton
+            v-if="showControls"
             v-tippy="'Go to first page'"
             :disabled="start <= 0"
             icon="angle-double-left"
@@ -132,14 +134,18 @@
             @click="clickFirst"
           />
           <AppButton
+            v-if="showControls"
             v-tippy="'Go to previous page'"
             :disabled="start - perPage < 0"
             icon="angle-left"
             design="small"
             @click="clickPrev"
           />
-          <span>{{ start + 1 }} &mdash; {{ end }} of {{ total }}</span>
+          <span v-if="showControls"
+            >{{ start + 1 }} &mdash; {{ end }} of {{ total }}</span
+          >
           <AppButton
+            v-if="showControls"
             v-tippy="'Go to next page'"
             :disabled="start + perPage > total"
             icon="angle-right"
@@ -147,6 +153,7 @@
             @click="clickNext"
           />
           <AppButton
+            v-if="showControls"
             v-tippy="'Go to last page'"
             :disabled="start + perPage > total"
             icon="angle-double-right"
@@ -158,6 +165,7 @@
         <!-- right side controls -->
         <div>
           <AppInput
+            v-if="showControls"
             v-tippy="'Search table data'"
             class="search"
             icon="search"
@@ -165,6 +173,7 @@
             @change="emitSearch"
           />
           <AppButton
+            v-if="showControls"
             v-tippy="'Download table data'"
             icon="download"
             design="small"
@@ -194,6 +203,7 @@ import { Options } from "./AppSelectMulti";
 import { kebabify } from "@/util/object";
 import { Filters } from "@/api/facets";
 import { Status } from "./AppStatus";
+import { closeToc } from "./TheTableOfContents";
 
 interface Props {
   // info for each column of table
@@ -215,6 +225,10 @@ interface Props {
   activeFilters?: Filters;
   // status to show on top of table (e.g. loading)
   status?: Status | null;
+  // whether to show certain controls
+  // (temp solution, needed b/c this is a controlled component and cannot
+  // paginate/search/etc on its own where needed yet)
+  showControls?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -224,6 +238,7 @@ const props = withDefaults(defineProps<Props>(), {
   availableFilters: undefined,
   activeFilters: undefined,
   status: null,
+  showControls: true,
 });
 
 interface Emits {
@@ -258,6 +273,11 @@ function updateScroll() {
 onMounted(updateScroll);
 watch(expanded, updateScroll);
 useEventListener("resize", updateScroll);
+
+// close table of contents when expanding
+watch(expanded, () => {
+  if (expanded.value) closeToc();
+});
 
 // when user clicks to first page
 function clickFirst() {
@@ -388,6 +408,11 @@ const ariaSort = computed(() => {
     left: 0;
     width: calc(100vw - 80px);
     transform: translateX(0);
+
+    td,
+    th {
+      max-width: unset;
+    }
   }
 }
 

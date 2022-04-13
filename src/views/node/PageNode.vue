@@ -18,8 +18,6 @@
     <SectionDetails :node="node" />
     <SectionHierarchy :node="node" />
     <SectionAssociations :node="node" />
-    <SectionVisualization :node="node" />
-    <SectionBreadcrumbs :node="node" />
 
     <Teleport to="body">
       <TheTableOfContents />
@@ -38,9 +36,7 @@ import SectionTitle from "./SectionTitle.vue";
 import SectionOverview from "./SectionOverview.vue";
 import SectionDetails from "./SectionDetails.vue";
 import SectionHierarchy from "./SectionHierarchy.vue";
-import SectionVisualization from "./SectionVisualization.vue";
 import SectionAssociations from "./SectionAssociations.vue";
-import SectionBreadcrumbs from "./SectionBreadcrumbs.vue";
 import { scrollToHash } from "@/router";
 import { useRoute } from "vue-router";
 
