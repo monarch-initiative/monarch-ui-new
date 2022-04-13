@@ -218,5 +218,5 @@ it("Evidence summary viewer works", () => {
     .should("equal", "http://www.ncbi.nlm.nih.gov/pubmed/10489951");
 
   cy.contains("and 2 more").trigger("mouseenter");
-  cy.contains(/PMID:3189335.*Marfan syndrome/)
+  cy.contains(/PMID:3189335.*Marfan syndrome/);
 });
