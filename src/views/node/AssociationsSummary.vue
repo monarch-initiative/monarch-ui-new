@@ -8,7 +8,7 @@
 
   <!-- results -->
   <template v-else>
-    <strong>Top {{ associations.length }} associations</strong>
+    <span>Top {{ associations.length }} association(s)</span>
 
     <!-- result -->
     <div
@@ -18,7 +18,7 @@
     >
       <AppFlex direction="col" gap="small" class="details">
         <!-- primary result info -->
-        <AppFlex gap="small" h-align="left" :wrap="false" class="title">
+        <AppFlex gap="small" h-align="left" class="title">
           <span class="truncate">{{ node.name }}</span>
           <AppIcon
             class="arrow"
@@ -55,11 +55,24 @@
       </AppFlex>
 
       <AppButton
-        v-tippy="'View supporting evidence for this association'"
+        v-tippy="
+          association.id === selectedAssociation?.id
+            ? 'Viewing supporting evidence. Click again to hide.'
+            : 'View supporting evidence for this association'
+        "
         class="evidence"
         text="Evidence"
-        icon="eye"
-        color="secondary"
+        :aria-selected="association.id === selectedAssociation?.id"
+        :icon="association.id === selectedAssociation?.id ? 'check' : 'flask'"
+        :color="
+          association.id === selectedAssociation?.id ? 'primary' : 'secondary'
+        "
+        @click="
+          emit(
+            'select',
+            association.id === selectedAssociation?.id ? undefined : association
+          )
+        "
       />
     </div>
   </template>
@@ -73,6 +86,7 @@ import { Result as NodeResult } from "@/api/node-lookup";
 import {
   getTopAssociations,
   Result as AssociationsResult,
+  Association,
 } from "@/api/node-associations";
 import { ApiError } from "@/api";
 
@@ -80,10 +94,19 @@ interface Props {
   // current node
   node: NodeResult;
   // selected association category
-  category: string;
+  selectedCategory: string;
+  // selected association id
+  selectedAssociation?: Association;
 }
 
 const props = defineProps<Props>();
+
+interface Emits {
+  // change selected association
+  (event: "select", value?: Association): void;
+}
+
+const emit = defineEmits<Emits>();
 
 // association data
 const associations = ref<AssociationsResult["associations"]>([]);
@@ -105,7 +128,7 @@ async function getAssociations() {
     associations.value = await getTopAssociations(
       props.node.id,
       props.node.category,
-      props.category
+      props.selectedCategory
     );
 
     // clear status
@@ -118,7 +141,7 @@ async function getAssociations() {
 }
 
 // get associations when category changes
-watch(() => props.category, getAssociations);
+watch(() => props.selectedCategory, getAssociations);
 
 // get associations on load
 onMounted(getAssociations);
@@ -139,6 +162,7 @@ onMounted(getAssociations);
 .details {
   width: 0;
   flex-grow: 1;
+  text-align: left;
 }
 
 .secondary {

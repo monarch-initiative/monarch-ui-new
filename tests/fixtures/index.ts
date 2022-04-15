@@ -14,6 +14,7 @@ import nodePublicationSummary from "./node-publication-summary.json";
 import { text as nodePublicationAbstract } from "./node-publication-abstract.json";
 import nodeHierarchy from "./node-hierarchy.json";
 import nodeAssociations from "./node-associations.json";
+import associationEvidence from "./association-evidence.json";
 
 // api calls to be mocked with fixture data
 export const handlers = [
@@ -92,5 +93,10 @@ export const handlers = [
   // node associations data
   rest.get(/\/bioentity\/\w+\/[^/]+\/\w+.*$/i, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(nodeAssociations))
+  ),
+
+  // association evidence data
+  rest.get(/evidence\/graph/, (req, res, ctx) =>
+    res(ctx.status(200), ctx.json(associationEvidence))
   ),
 ];

@@ -22,7 +22,7 @@
     @sort="(value) => (sort = value)"
     @filter="onFilterChange"
   >
-    <!-- "object" (current node) -->
+    <!-- "subject" (current node) -->
     <template #subject="{ cell }">
       <span class="truncate">
         {{ cell.name }}
@@ -36,7 +36,7 @@
         :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
       />
       <AppLink class="truncate" :to="cell.iri" :no-icon="true">{{
-        cell.name
+        startCase(cell.name)
       }}</AppLink>
       <AppIcon
         class="arrow"
@@ -44,7 +44,7 @@
       />
     </template>
 
-    <!-- "subject" (what current node has an association with) -->
+    <!-- "object" (what current node has an association with) -->
     <template #object="{ cell }">
       <AppLink class="truncate" :to="`/${cell.category}/${cell.id}`">{{
         cell.name
@@ -52,15 +52,21 @@
     </template>
 
     <!-- button to show evidence -->
-    <template #evidence="{ cell }">
+    <template #evidence="{ cell, row }">
       <AppButton
         v-tippy="
-          `View ${cell} piece(s) of supporting evidence for this association`
+          row.id === selectedAssociation?.id
+            ? 'Viewing supporting evidence. Click again to hide.'
+            : 'View supporting evidence for this association'
         "
         class="evidence-button"
-        icon="eye"
         :text="String(cell)"
-        color="secondary"
+        :aria-selected="row.id === selectedAssociation?.id"
+        :icon="row.id === selectedAssociation?.id ? 'check' : 'flask'"
+        :color="row.id === selectedAssociation?.id ? 'primary' : 'secondary'"
+        @click="
+          emit('select', row.id === selectedAssociation?.id ? undefined : row)
+        "
       />
     </template>
 
@@ -73,28 +79,21 @@
       </span>
     </template>
 
-    <!-- publication specific -->
+    <!-- phenotype specific -->
     <template #frequency="{ cell }">
-      <AppLink
-        v-if="cell"
-        class="truncate"
-        :to="`http://purl.obolibrary.org/obo/${cell?.id?.replace(':', '_')}`"
-        :no-icon="true"
-      >
+      <AppLink v-if="cell" class="truncate" :to="cell?.link" :no-icon="true">
         {{ cell?.name }}
       </AppLink>
     </template>
 
     <template #onset="{ cell }">
-      <AppLink
-        v-if="cell"
-        class="truncate"
-        :to="`http://purl.obolibrary.org/obo/${cell?.id?.replace(':', '_')}`"
-        :no-icon="true"
-      >
+      <AppLink v-if="cell" class="truncate" :to="cell?.link" :no-icon="true">
         {{ cell?.name }}
       </AppLink>
     </template>
+
+    <!-- publication specific -->
+    <!-- no template needed because info just plain text -->
   </AppTable>
 </template>
 
@@ -108,10 +107,11 @@ import { Result as NodeResult } from "@/api/node-lookup";
 import {
   getTabulatedAssociations,
   Result as AssociationsResult,
+  Association,
 } from "@/api/node-associations";
 import { ApiError } from "@/api";
 import { downloadJson } from "@/util/download";
-import { push } from "@/components/TheSnackbar";
+import { snackbar } from "@/components/TheSnackbar";
 import { Filters, filtersToQuery } from "@/api/facets";
 import { Options } from "@/components/AppSelectMulti";
 
@@ -119,10 +119,19 @@ interface Props {
   // current node
   node: NodeResult;
   // selected association category
-  category: string;
+  selectedCategory: string;
+  // selected association id
+  selectedAssociation?: Association;
 }
 
 const props = defineProps<Props>();
+
+interface Emits {
+  // change selected association
+  (event: "select", value?: Association): void;
+}
+
+const emit = defineEmits<Emits>();
 
 // association data
 const associations = ref<AssociationsResult["associations"]>([]);
@@ -145,7 +154,7 @@ const cols = computed((): Cols => {
     {
       id: "subject",
       key: "subject",
-      heading: startCase(props.node.category),
+      heading: props.node.category,
       width: "1fr",
       sortable: true,
     },
@@ -159,7 +168,7 @@ const cols = computed((): Cols => {
     {
       id: "object",
       key: "object",
-      heading: startCase(props.category),
+      heading: props.selectedCategory,
       width: "1fr",
       sortable: true,
     },
@@ -186,7 +195,7 @@ const cols = computed((): Cols => {
     });
 
   // phenotype specific columns
-  if (props.category === "phenotype") {
+  if (props.selectedCategory === "phenotype") {
     extraCols.push(
       {
         id: "frequency",
@@ -204,7 +213,7 @@ const cols = computed((): Cols => {
   }
 
   // publication specific columns
-  if (props.category === "publication")
+  if (props.selectedCategory === "publication")
     extraCols.push(
       {
         id: "author",
@@ -264,7 +273,7 @@ async function getAssociations(
     const response = await getTabulatedAssociations(
       props.node.id,
       props.node.category,
-      props.category,
+      props.selectedCategory,
       perPage.value,
       start.value,
       search.value,
@@ -301,7 +310,7 @@ async function download() {
   const max = 100000;
 
   // warn user
-  push(
+  snackbar(
     `Downloading data for ${Math.min(count.value, max)} table entries.` +
       (count.value >= 100 ? " This may take a minute." : "")
   );
@@ -310,7 +319,7 @@ async function download() {
   const response = await getTabulatedAssociations(
     props.node.id,
     props.node.category,
-    props.category,
+    props.selectedCategory,
     max,
     0
   );
@@ -318,8 +327,11 @@ async function download() {
 }
 
 // get associations when category or table state changes
-watch([() => props.category], () => getAssociations(true));
-watch([() => props.category, perPage, start, search, sort], () =>
+watch(
+  () => props.selectedCategory,
+  () => getAssociations(true)
+);
+watch([() => props.selectedCategory, perPage, start, search, sort], () =>
   getAssociations(false)
 );
 
@@ -332,6 +344,7 @@ onMounted(() => getAssociations(true));
   color: $gray;
 }
 .evidence-button {
+  width: 100%;
   min-height: unset !important;
 }
 </style>

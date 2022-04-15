@@ -120,7 +120,7 @@ import AppStatus from "@/components/AppStatus.vue";
 import { Status } from "@/components/AppStatus";
 import { ApiError } from "@/api";
 import { wrap } from "@/util/math";
-import { push } from "./TheSnackbar";
+import { snackbar } from "./TheSnackbar";
 import { sleep } from "@/util/debug";
 
 interface Props {
@@ -272,7 +272,7 @@ async function copy() {
   await window.navigator.clipboard.writeText(
     selected.value.map(({ id }) => id).join(",")
   );
-  push(`Copied ${selected.value.length} values`);
+  snackbar(`Copied ${selected.value.length} values`);
 }
 
 // get list of results
@@ -293,7 +293,7 @@ async function getResults() {
       select(response.options);
       search.value = "";
       emit("autoAccept");
-      push(response.message);
+      snackbar(response.message);
     }
     // otherwise, show list of results for user to select
     else {

@@ -504,4 +504,7 @@ const map: Record<string, Record<string, string>> = {
     WD_Prop: "https://www.wikidata.org/wiki/Property:[reference]",
     WD_Entity: "https://www.wikidata.org/wiki/[reference]",
   },
+  hp: {
+    HP: "http://purl.obolibrary.org/obo/HP_[reference]",
+  },
 };

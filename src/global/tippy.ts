@@ -1,7 +1,7 @@
 import { Instance } from "tippy.js";
 
 // when tippy instances attached to element
-const onCreate = (instance: Instance): void => {
+const update = (instance: Instance): void => {
   if (
     // element has no text
     !(instance.reference as HTMLElement).innerText?.trim() &&
@@ -12,6 +12,11 @@ const onCreate = (instance: Instance): void => {
   )
     // set aria label from tooltip content as fallback
     instance.reference.setAttribute("aria-label", instance.props.content);
+
+  // if tooltip target/reference is plain text (not link, not button, etc)
+  // add styling to indicate it has tooltip
+  if (instance.reference.tagName === "SPAN" && !!instance.props.content)
+    instance.reference.setAttribute("data-tooltip", "true");
 };
 
 // cancel show if no content to show
@@ -29,8 +34,12 @@ export const options = {
     duration: 200,
     offset: [13, 13],
     allowHTML: true,
-    onCreate,
+    onCreate: update,
+    onAfterUpdate: update,
     onShow,
     onHide,
   },
 };
+
+// https://github.com/KABBOUCHI/vue-tippy/issues/140
+export const appendToBody = (): Element => document.body;

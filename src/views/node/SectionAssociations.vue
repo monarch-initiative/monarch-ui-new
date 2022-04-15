@@ -21,6 +21,7 @@
     <AppTabs
       v-if="category"
       name="Association viewing mode"
+      :url="false"
       :tabs="[
         {
           id: 'summary',
@@ -35,18 +36,36 @@
           tooltip: 'All association data, in tabular form',
         },
       ]"
+      @change="association = undefined"
     >
       <!-- summary view of associations -->
       <template #summary>
-        <AssociationsSummary :node="node" :category="category.id" />
+        <AssociationsSummary
+          :node="node"
+          :selected-category="category.id"
+          :selected-association="association"
+          @select="(value) => (association = value)"
+        />
       </template>
 
       <!-- table view of associations -->
       <template #table>
-        <AssociationsTable :node="node" :category="category.id" />
+        <AssociationsTable
+          :node="node"
+          :selected-category="category.id"
+          :selected-association="association"
+          @select="(value) => (association = value)"
+        />
       </template>
     </AppTabs>
   </AppSection>
+
+  <!-- evidence viewer of association -->
+  <EvidenceViewer
+    v-if="association"
+    :node="node"
+    :selected-association="association"
+  />
 </template>
 
 <script setup lang="ts">
@@ -57,8 +76,10 @@ import { Option, Options } from "@/components/AppSelectSingle";
 import AppTabs from "@/components/AppTabs.vue";
 import { Result as NodeResult } from "@/api/node-lookup";
 import { getAssociationName } from "@/api/categories";
+import { Association } from "@/api/node-associations";
 import AssociationsSummary from "./AssociationsSummary.vue";
 import AssociationsTable from "./AssociationsTable.vue";
+import EvidenceViewer from "./EvidenceViewer.vue";
 
 // route info
 const router = useRouter();
@@ -73,6 +94,8 @@ const props = defineProps<Props>();
 
 // selected category of associations to show
 const category = ref<Option>();
+// selected association id
+const association = ref<Association>();
 
 // list of options for dropdown
 const categoryOptions = computed(
@@ -84,6 +107,9 @@ const categoryOptions = computed(
       count: association.count,
     }))
 );
+
+// deselect association when selected category changes
+watch(category, () => (association.value = undefined));
 
 // update url from selected category
 watch(category, (value, prev) =>
@@ -104,6 +130,17 @@ function setCategoryFromUrl() {
 }
 watch(() => route.query.associations, setCategoryFromUrl);
 onMounted(setCategoryFromUrl);
+
+// auto-select first category
+watch(
+  categoryOptions,
+  () => {
+    // if no category selected, and no category about to be selected from url
+    if (!category.value && !route.query.associations)
+      category.value = categoryOptions.value[0];
+  },
+  { immediate: true }
+);
 </script>
 
 <style lang="scss" scoped>

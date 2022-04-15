@@ -6,25 +6,16 @@
   <AppSection>
     <AppHeading icon="sitemap">Hierarchy</AppHeading>
 
-    <!-- results -->
-    <div
-      v-if="
-        node.hierarchy.superClasses.length ||
-        node.hierarchy.equivalentClasses.length ||
-        node.hierarchy.subClasses.length
-      "
-      class="hierarchy"
-    >
+    <AppDetails>
       <!-- nodes that are "parents" of node -->
-      <template v-if="node.hierarchy.superClasses.length">
-        <AppFlex
-          v-tippy="`Nodes that are &quot;parents&quot; of this node`"
-          h-align="left"
-        >
-          <AppIcon icon="angle-up" />
-          <span>Super-classes</span>
-        </AppFlex>
-        <AppFlex h-align="left" gap="small">
+      <AppDetail
+        title="Super-classes"
+        icon="angle-up"
+        :blank="!node.hierarchy.superClasses.length"
+        :big="true"
+        :v-tippy="`Nodes that are &quot;parents&quot; of this node`"
+      >
+        <AppFlex class="flex" h-align="left" gap="small">
           <AppLink
             v-for="(_class, index) in node.hierarchy.superClasses"
             :key="index"
@@ -32,18 +23,17 @@
             >{{ _class.name || _class.id }}</AppLink
           >
         </AppFlex>
-      </template>
+      </AppDetail>
 
       <!-- nodes that are "siblings" of node -->
-      <template v-if="node.hierarchy.equivalentClasses.length">
-        <AppFlex
-          v-tippy="`Nodes that are &quot;siblings&quot; of this node`"
-          h-align="left"
-        >
-          <AppIcon icon="equals" />
-          <span>Equivalent classes</span>
-        </AppFlex>
-        <AppFlex h-align="left" gap="small">
+      <AppDetail
+        title="Equivalent classes"
+        icon="equals"
+        :blank="!node.hierarchy.equivalentClasses.length"
+        :big="true"
+        :v-tippy="`Nodes that are &quot;siblings&quot; of this node`"
+      >
+        <AppFlex class="flex" h-align="left" gap="small">
           <AppLink
             v-for="(_class, index) in node.hierarchy.equivalentClasses"
             :key="index"
@@ -51,18 +41,17 @@
             >{{ _class.name || _class.id }}</AppLink
           >
         </AppFlex>
-      </template>
+      </AppDetail>
 
       <!-- nodes that are "children" of node -->
-      <template v-if="node.hierarchy.subClasses.length">
-        <AppFlex
-          v-tippy="`Nodes that are &quot;children&quot; of this node`"
-          h-align="left"
-        >
-          <AppIcon icon="angle-down" />
-          <span>Sub-classes</span>
-        </AppFlex>
-        <AppFlex h-align="left" gap="small">
+      <AppDetail
+        title="Sub-classes"
+        icon="angle-down"
+        :blank="!node.hierarchy.subClasses.length"
+        :big="true"
+        :v-tippy="`Nodes that are &quot;children&quot; of this node`"
+      >
+        <AppFlex class="flex" h-align="left" gap="small">
           <AppLink
             v-for="(_class, index) in node.hierarchy.subClasses"
             :key="index"
@@ -70,20 +59,15 @@
             >{{ _class.name || _class.id }}</AppLink
           >
         </AppFlex>
-      </template>
-    </div>
-
-    <!-- empty status -->
-    <AppStatus
-      v-else
-      :status="{ code: 'warning', text: 'No hierarchy info available' }"
-    />
+      </AppDetail>
+    </AppDetails>
   </AppSection>
 </template>
 
 <script setup lang="ts">
 import { Result } from "@/api/node-lookup";
-import AppStatus from "@/components/AppStatus.vue";
+import AppDetails from "@/components/AppDetails.vue";
+import AppDetail from "@/components/AppDetail.vue";
 
 interface Props {
   // current node
@@ -94,20 +78,7 @@ defineProps<Props>();
 </script>
 
 <style lang="scss" scoped>
-.hierarchy {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  align-items: flex-start;
-  gap: 40px;
-  width: 100%;
-  text-align: left;
-}
-
-@media (max-width: 700px) {
-  .hierarchy {
-    justify-content: flex-start;
-    grid-template-columns: unset;
-    gap: 20px;
-  }
+.flex {
+  column-gap: 20px !important;
 }
 </style>

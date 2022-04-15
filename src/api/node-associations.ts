@@ -1,4 +1,4 @@
-import { startCase } from "lodash";
+import { getXrefLink } from "./xrefs";
 import { biolink, request, cleanError } from ".";
 import { Filters, Query, facetsToFilters, queryToParams } from "./facets";
 import { getSummaries } from "./node-publication";
@@ -36,18 +36,6 @@ interface Response {
       iri: string;
       category?: Array<string> | null;
       inverse: boolean;
-    };
-    evidence_graph: {
-      nodes: Array<{
-        id: string;
-        label: string;
-      }>;
-      edges: Array<{
-        sub: string;
-        pred: string;
-        obj: string;
-        meta: Record<string, unknown>;
-      }>;
     };
     evidence_types?: Array<{
       id: string;
@@ -132,7 +120,7 @@ export const getTabulatedAssociations = async (
         // ...
         relation: {
           id: association.relation.id,
-          name: startCase(association.relation.label),
+          name: association.relation.label,
           iri: association.relation.iri,
           category: (association.relation?.category || [])[0] || "",
           inverse: association.relation.inverse,
@@ -154,15 +142,15 @@ export const getTabulatedAssociations = async (
         frequency:
           association.frequency?.id || association.frequency?.label
             ? {
-                id: association.frequency?.id || "",
                 name: association.frequency?.label || "",
+                link: getXrefLink(association.frequency?.id || ""),
               }
             : undefined,
         onset:
           association.onset?.id || association.onset?.label
             ? {
-                id: association.onset?.id || "",
                 name: association.onset?.label || "",
+                link: getXrefLink(association.onset?.id || ""),
               }
             : undefined,
 
@@ -209,67 +197,69 @@ export const getTabulatedAssociations = async (
   }
 };
 
+export interface Association {
+  // allow arbitrary key access
+  [key: string]: unknown;
+
+  // unique id of association
+  id: string;
+
+  // subject of association, i.e. current node
+  subject: {
+    id: string;
+    name: string;
+    iri: string;
+    category: string;
+  };
+
+  // object of association, i.e. what current node has association with
+  object: {
+    id: string;
+    name: string;
+    iri: string;
+    category: string;
+  };
+
+  // info about the association
+  relation: {
+    id: string;
+    name: string;
+    iri: string;
+    category: string;
+    inverse: boolean;
+  };
+
+  // evidence info supporting this association
+  evidence: Array<Record<string, unknown>>;
+
+  // mixed-type total of pieces of supporting evidence
+  supportCount: number;
+
+  // taxon specific (gene/genotype/model/variant/homolog/ortholog) info
+  taxon?: {
+    id: string;
+    name: string;
+  };
+
+  // phenotype specific info
+  frequency?: {
+    name: string;
+    link: string;
+  };
+  onset?: {
+    name: string;
+    link: string;
+  };
+
+  // publication specific info
+  author?: string;
+  year?: string;
+  publisher?: string;
+}
+
 export interface Result {
   count: number;
-  associations: Array<{
-    // allow arbitrary key access
-    [key: string]: unknown;
-
-    // unique id of association
-    id: string;
-
-    // subject of association, i.e. current node
-    subject: {
-      id: string;
-      name: string;
-      iri: string;
-      category: string;
-    };
-
-    // object of association, i.e. what current node has association with
-    object: {
-      id: string;
-      name: string;
-      iri: string;
-      category: string;
-    };
-
-    // info about the association
-    relation: {
-      id: string;
-      name: string;
-      iri: string;
-      category: string;
-      inverse: boolean;
-    };
-
-    // evidence info supporting this association
-    evidence: Array<Record<string, unknown>>;
-
-    // mixed-type total of pieces of supporting evidence
-    supportCount: number;
-
-    // taxon specific (gene/genotype/model/variant/homolog/ortholog) info
-    taxon?: {
-      id: string;
-      name: string;
-    };
-
-    // phenotype specific info
-    frequency?: {
-      id: string;
-      name: string;
-    };
-    onset?: {
-      id: string;
-      name: string;
-    };
-
-    // publication specific info
-    author?: string;
-    year?: string;
-    publisher?: string;
-  }>;
+  associations: Array<Association>;
 
   facets: Filters;
 }

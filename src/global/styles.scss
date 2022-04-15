@@ -69,6 +69,7 @@ blockquote {
 a {
   color: $theme;
   transition: color $fast;
+  text-underline-offset: 1px;
 
   &:hover {
     color: currentColor;
@@ -156,15 +157,23 @@ strong {
 
 .tippy-content {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 10px;
   width: 100%;
   padding: 0 !important;
+}
 
-  span {
-    width: 100%;
-    display: block;
-  }
+// useless tippy wrapper span that sometimes appears
+.tippy-content > span {
+  display: contents !important; // effectively take out of dom
+}
+
+// for spans of text (not clickable, not links, not buttons) with tooltips
+[data-tooltip="true"] {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  cursor: help;
 }
 
 // util

@@ -18,6 +18,7 @@
         class="table"
         :data-left="arrivedState.left"
         :data-right="arrivedState.right"
+        :data-expanded="expanded"
       >
         <table
           :aria-colcount="cols.length"
@@ -103,9 +104,11 @@
       </div>
 
       <div class="controls">
+        <!-- left side controls -->
         <div>
-          <span>Per page</span>
+          <span v-if="showControls">Per page</span>
           <AppSelectSingle
+            v-if="showControls"
             name="Rows per page"
             :options="[
               { id: '5' },
@@ -119,8 +122,11 @@
             @update:model-value="(value) => emitPerPage(value.id)"
           />
         </div>
+
+        <!-- center controls -->
         <div>
           <AppButton
+            v-if="showControls"
             v-tippy="'Go to first page'"
             :disabled="start <= 0"
             icon="angle-double-left"
@@ -128,14 +134,18 @@
             @click="clickFirst"
           />
           <AppButton
+            v-if="showControls"
             v-tippy="'Go to previous page'"
             :disabled="start - perPage < 0"
             icon="angle-left"
             design="small"
             @click="clickPrev"
           />
-          <span>{{ start + 1 }} &mdash; {{ end }} of {{ total }}</span>
+          <span v-if="showControls"
+            >{{ start + 1 }} &mdash; {{ end }} of {{ total }}</span
+          >
           <AppButton
+            v-if="showControls"
             v-tippy="'Go to next page'"
             :disabled="start + perPage > total"
             icon="angle-right"
@@ -143,6 +153,7 @@
             @click="clickNext"
           />
           <AppButton
+            v-if="showControls"
             v-tippy="'Go to last page'"
             :disabled="start + perPage > total"
             icon="angle-double-right"
@@ -150,8 +161,11 @@
             @click="clickLast"
           />
         </div>
+
+        <!-- right side controls -->
         <div>
           <AppInput
+            v-if="showControls"
             v-tippy="'Search table data'"
             class="search"
             icon="search"
@@ -159,10 +173,17 @@
             @change="emitSearch"
           />
           <AppButton
+            v-if="showControls"
             v-tippy="'Download table data'"
             icon="download"
             design="small"
             @click="emitDownload"
+          />
+          <AppButton
+            v-tippy="expanded ? 'Collapse table' : 'Expand table to full width'"
+            :icon="expanded ? 'minimize' : 'maximize'"
+            design="small"
+            @click="expanded = !expanded"
           />
         </div>
       </div>
@@ -171,8 +192,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useScroll } from "@vueuse/core";
+import { ref, computed, watch, onMounted } from "vue";
+import { useEventListener, useScroll } from "@vueuse/core";
 import { Col, Cols, Rows, Sort } from "./AppTable";
 import AppInput from "./AppInput.vue";
 import AppSelectMulti from "./AppSelectMulti.vue";
@@ -182,6 +203,7 @@ import { Options } from "./AppSelectMulti";
 import { kebabify } from "@/util/object";
 import { Filters } from "@/api/facets";
 import { Status } from "./AppStatus";
+import { closeToc } from "./TheTableOfContents";
 
 interface Props {
   // info for each column of table
@@ -191,7 +213,7 @@ interface Props {
   // sort key and direction
   sort?: Sort;
   // items per page
-  perPage: number;
+  perPage?: number;
   // starting item index
   start: number;
   // total number of items
@@ -203,14 +225,20 @@ interface Props {
   activeFilters?: Filters;
   // status to show on top of table (e.g. loading)
   status?: Status | null;
+  // whether to show certain controls
+  // (temp solution, needed b/c this is a controlled component and cannot
+  // paginate/search/etc on its own where needed yet)
+  showControls?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  perPage: 5,
   sort: undefined,
   search: "",
   availableFilters: undefined,
   activeFilters: undefined,
   status: null,
+  showControls: true,
 });
 
 interface Emits {
@@ -230,9 +258,26 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 
+// whether table is expanded to be full width
+const expanded = ref(false);
 // table reference
 const table = ref<HTMLElement | null>(null);
-const { arrivedState } = useScroll(table);
+
+// table scroll state
+const { arrivedState } = useScroll(table, { offset: { left: 10, right: 10 } });
+
+// force table scroll to update
+function updateScroll() {
+  table.value?.dispatchEvent(new Event("scroll"));
+}
+onMounted(updateScroll);
+watch(expanded, updateScroll);
+useEventListener("resize", updateScroll);
+
+// close table of contents when expanding
+watch(expanded, () => {
+  if (expanded.value) closeToc();
+});
 
 // when user clicks to first page
 function clickFirst() {
@@ -331,12 +376,12 @@ const ariaSort = computed(() => {
   overflow-x: auto;
   transition: mask-image $fast;
 
-  &[data-left="false"] {
+  &[data-left="false"][data-right="true"] {
     --webkit-mask-image: linear-gradient(to left, black 90%, transparent);
     mask-image: linear-gradient(to left, black 90%, transparent);
   }
 
-  &[data-right="false"] {
+  &[data-right="false"][data-left="true"] {
     --webkit-mask-image: linear-gradient(to right, black 90%, transparent);
     mask-image: linear-gradient(to right, black 90%, transparent);
   }
@@ -356,6 +401,18 @@ const ariaSort = computed(() => {
       black 90%,
       transparent
     );
+  }
+
+  &[data-expanded="true"] {
+    position: relative;
+    left: 0;
+    width: calc(100vw - 80px);
+    transform: translateX(0);
+
+    td,
+    th {
+      max-width: unset;
+    }
   }
 }
 
@@ -411,6 +468,7 @@ td {
 th {
   padding-bottom: 10px;
   font-weight: 400;
+  text-transform: capitalize;
 }
 
 th > span {
@@ -419,7 +477,7 @@ th > span {
 
 // body cells
 td {
-  border-bottom: solid 1px $light-gray;
+  border-bottom: solid 2px $light-gray;
 }
 
 .controls {
@@ -441,6 +499,7 @@ td {
 
   .search {
     --height: 30px;
+    max-width: 150px;
   }
 }
 

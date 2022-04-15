@@ -86,6 +86,9 @@ const active = ref(0);
 // table of contents panel element
 const toc = ref<HTMLElement>();
 
+// listen for close event
+useEventListener(window, "closetoc", () => (expanded.value = false));
+
 // update toc position
 async function updatePosition() {
   // wait for rendering to finish

@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { push } from "./TheSnackbar";
+import { snackbar } from "./TheSnackbar";
 
 interface Props {
   // text to show
@@ -59,7 +59,7 @@ const props = withDefaults(defineProps<Props>(), {
 // copy text prop to clipboard
 async function copyToClipboard() {
   await window.navigator.clipboard.writeText(props.text || "");
-  push("Text copied");
+  snackbar("Text copied");
 }
 
 // type of component to render
@@ -75,6 +75,7 @@ const component = computed(() => (props.to ? "AppLink" : "button"));
   flex-grow: 0;
   flex-shrink: 0;
   text-decoration: none;
+  text-transform: capitalize;
   transition: color $fast, background $fast, opacity $fast, box-shadow $fast;
 
   &[data-design="normal"] {

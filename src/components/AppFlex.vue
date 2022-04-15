@@ -9,7 +9,6 @@
     class="flex"
     :data-direction="direction"
     :data-gap="gap"
-    :data-wrap="wrap"
     :style="{ justifyContent, alignItems }"
   >
     <slot />
@@ -33,13 +32,11 @@ interface Props {
   // horizontal or vertical
   direction?: "row" | "col";
   // spacing between items
-  gap?: "none" | "small" | "medium" | "big";
+  gap?: "none" | "tiny" | "small" | "medium" | "big";
   // horizontal alignment
   hAlign?: "left" | "center" | "right" | "stretch";
   // vertical alignment
   vAlign?: "top" | "center" | "bottom" | "stretch";
-  // whether to wrap contents
-  wrap?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -47,7 +44,6 @@ const props = withDefaults(defineProps<Props>(), {
   gap: "medium",
   hAlign: "center",
   vAlign: "center",
-  wrap: true,
 });
 
 // css flex props
@@ -74,6 +70,9 @@ const alignItems = computed(() =>
 
   &[data-gap="none"] {
     gap: 0;
+  }
+  &[data-gap="tiny"] {
+    gap: 5px;
   }
   &[data-gap="small"] {
     gap: 10px;

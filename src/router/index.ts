@@ -5,7 +5,6 @@ import {
   RouteRecordRaw,
   RouterScrollBehavior,
   NavigationGuard,
-  RouteLocation,
 } from "vue-router";
 import { startCase, clone } from "lodash";
 import { hideAll } from "tippy.js";
@@ -151,41 +150,55 @@ const scrollBehavior: RouterScrollBehavior = async (
   // scroll to previous position if exists
   if (savedPosition) return savedPosition;
 
-  // scroll to hash
-  return getHashScroll(to);
-};
-
-// get target element of url hash and scroll offset
-const getHashScroll = (
-  to: RouteLocation | Location
-): { el: Element; top: number } | undefined => {
   // get hash
   const hash = to.hash;
   if (!hash) return;
 
-  // get target element of hash
-  let target = document?.getElementById(to.hash.slice(1));
-  if (!target) return;
+  // get element corresponding to hash
+  const element = document?.getElementById(to.hash.slice(1));
+  if (!element) return;
 
+  return { el: getTarget(element), top: getOffset(), behavior: "smooth" };
+};
+
+// given element, get (possibly) modified target
+const getTarget = (element: Element): Element => {
   // move target to parent section element if first child
-  const parent = target.parentElement;
-  if (parent?.tagName === "SECTION" && target.matches(":first-child"))
-    target = parent;
+  if (
+    element.parentElement?.tagName === "SECTION" &&
+    element.matches(":first-child")
+  )
+    return element.parentElement;
 
-  // get offset to account for header
-  const offset = document?.querySelector("header")?.clientHeight || 0;
+  // move target to previous horizontal rule
+  if (
+    element.previousElementSibling instanceof HTMLElement &&
+    element.previousElementSibling?.tagName === "HR"
+  )
+    return element.previousElementSibling;
 
-  return { el: target, top: offset };
+  return element;
+};
+
+// get offset to account for header
+const getOffset = () => document?.querySelector("header")?.clientHeight || 0;
+
+// scroll to element
+export const scrollToElement = (element?: Element | null): void => {
+  if (!element) return;
+
+  window.scrollTo({
+    top:
+      getTarget(element).getBoundingClientRect().top +
+      window.scrollY -
+      getOffset(),
+    behavior: "smooth",
+  });
 };
 
 // scroll to hash
-export const scrollToHash = (): void => {
-  const scroll = getHashScroll(window.location);
-  if (!scroll) return;
-  const { el, top } = scroll;
-  el.scrollIntoView(true);
-  window.scrollBy(0, -top);
-};
+export const scrollToHash = (): void =>
+  scrollToElement(document?.getElementById(window.location.hash.slice(1)));
 
 // navigation history object
 const history = createWebHistory(process.env.BASE_URL);

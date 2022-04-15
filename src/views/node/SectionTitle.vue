@@ -13,7 +13,7 @@
           v-tippy="'The category/type of this node'"
           design="small"
           color="secondary"
-          :text="startCase(node.category)"
+          :text="node.category"
         />
         <AppButton
           v-tippy="'The ID of this node. Click to copy.'"
@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { kebabCase, startCase } from "lodash";
+import { kebabCase } from "lodash";
 import { Result } from "@/api/node-lookup";
 
 interface Props {

@@ -36,7 +36,7 @@
       @blur="onBlur"
     >
       <span class="button-label">
-        {{ startCase(name) }}
+        {{ name }}
         <span class="button-more">
           <template v-if="selected.length === 0">none selected</template>
           <template v-else-if="selected.length === options.length">
@@ -113,7 +113,7 @@
               :icon="selected.includes(index) ? 'square-check' : 'square'"
             />
           </span>
-          <span class="option-label">{{ startCase(option.id) }}</span>
+          <span class="option-label">{{ option.id }}</span>
           <span class="option-count">
             {{ showCounts ? option.count : "" }}
           </span>
@@ -125,7 +125,7 @@
 
 <script setup lang="ts">
 import { ref, computed, useSlots, watch } from "vue";
-import { isEqual, uniqueId, startCase } from "lodash";
+import { isEqual, uniqueId } from "lodash";
 import { Options } from "./AppSelectMulti";
 import { wrap } from "@/util/math";
 
@@ -304,6 +304,7 @@ const allSelected = computed(
 .select-multi {
   position: relative;
   max-width: 100%;
+  text-transform: capitalize;
 }
 
 .button {

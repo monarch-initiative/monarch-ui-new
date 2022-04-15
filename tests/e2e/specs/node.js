@@ -93,6 +93,7 @@ it("Summary association info shows", () => {
   cy.visit("/disease/MONDO:0007947");
 
   cy.get(".result").contains("Marfan syndrome");
+  cy.get(".result").contains(/5 piece.*supporting evidence/);
   cy.get(".result")
     .contains("Has Phenotype")
     .invoke("attr", "href")
@@ -154,4 +155,65 @@ it("Association table has extra metadata columns", () => {
   cy.contains("Author");
   cy.contains("Year");
   cy.contains("Publisher");
+});
+
+it("Evidence summary viewer works", () => {
+  cy.visit("/disease/MONDO:0007947");
+
+  cy.contains("button", "Evidence").trigger("click");
+
+  cy.contains(/selected.*association/)
+    .next()
+    .contains("has phenotype");
+  cy.contains(/selected.*association/)
+    .next()
+    .contains("Dural ectasia");
+
+  cy.contains("Evidence codes").next().contains("2");
+  cy.contains("Sources").next().contains("1");
+  cy.contains("Publications").next().contains("3");
+
+  cy.contains("experimental evidence used in manual assertion")
+    .invoke("attr", "href")
+    .should("equal", "http://purl.obolibrary.org/obo/ECO_0000269");
+
+  cy.contains("https://archive.monarchinitiative.org/#hpoa")
+    .invoke("attr", "href")
+    .should("equal", "https://archive.monarchinitiative.org/#hpoa");
+
+  cy.contains("PMID:10489951")
+    .invoke("attr", "href")
+    .should("equal", "http://www.ncbi.nlm.nih.gov/pubmed/10489951");
+});
+
+it("Evidence table viewer works", () => {
+  cy.visit("/disease/MONDO:0007947");
+
+  cy.contains("button", "Evidence").click();
+  cy.contains("selected association").parent().parent().as("evidence-section");
+
+  cy.get("@evidence-section").contains("table").trigger("click");
+
+  cy.contains("Subject");
+  cy.contains("Relation");
+  cy.contains("Object");
+  cy.contains("Evidence Codes");
+  cy.contains("Publications");
+  cy.contains("Sources");
+  cy.contains("References");
+
+  cy.contains("experimental evidence used in manual assertion")
+    .invoke("attr", "href")
+    .should("equal", "http://purl.obolibrary.org/obo/ECO_0000269");
+
+  cy.contains("#hpoa")
+    .invoke("attr", "href")
+    .should("equal", "https://archive.monarchinitiative.org/#hpoa");
+
+  cy.contains("PMID:10489951")
+    .invoke("attr", "href")
+    .should("equal", "http://www.ncbi.nlm.nih.gov/pubmed/10489951");
+
+  cy.contains("and 2 more").trigger("mouseenter");
+  cy.contains(/PMID:3189335.*Marfan syndrome/);
 });
