@@ -69,6 +69,7 @@ blockquote {
 a {
   color: $theme;
   transition: color $fast;
+  text-underline-offset: 1px;
 
   &:hover {
     color: currentColor;
@@ -170,7 +171,8 @@ strong {
 // for spans of text (not clickable, not links, not buttons) with tooltips
 [data-tooltip="true"] {
   text-decoration: underline;
-  text-decoration-style: dashed;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
   cursor: help;
 }
 

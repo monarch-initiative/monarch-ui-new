@@ -15,7 +15,7 @@
         :big="true"
         :v-tippy="`Nodes that are &quot;parents&quot; of this node`"
       >
-        <AppFlex h-align="left" gap="small">
+        <AppFlex class="flex" h-align="left" gap="small">
           <AppLink
             v-for="(_class, index) in node.hierarchy.superClasses"
             :key="index"
@@ -33,7 +33,7 @@
         :big="true"
         :v-tippy="`Nodes that are &quot;siblings&quot; of this node`"
       >
-        <AppFlex h-align="left" gap="small">
+        <AppFlex class="flex" h-align="left" gap="small">
           <AppLink
             v-for="(_class, index) in node.hierarchy.equivalentClasses"
             :key="index"
@@ -51,7 +51,7 @@
         :big="true"
         :v-tippy="`Nodes that are &quot;children&quot; of this node`"
       >
-        <AppFlex h-align="left" gap="small">
+        <AppFlex class="flex" h-align="left" gap="small">
           <AppLink
             v-for="(_class, index) in node.hierarchy.subClasses"
             :key="index"
@@ -76,3 +76,9 @@ interface Props {
 
 defineProps<Props>();
 </script>
+
+<style lang="scss" scoped>
+.flex {
+  column-gap: 20px !important;
+}
+</style>
