@@ -186,16 +186,13 @@ it("Evidence summary viewer works", () => {
     .should("equal", "http://www.ncbi.nlm.nih.gov/pubmed/10489951");
 });
 
-it("Evidence summary viewer works", () => {
+it("Evidence table viewer works", () => {
   cy.visit("/disease/MONDO:0007947");
 
   cy.contains("button", "Evidence").click();
-  cy.contains("selected association")
-    .next()
-    .parent()
-    .next()
-    .contains("table")
-    .trigger("click");
+  cy.contains("selected association").parent().parent().as("evidence-section");
+
+  cy.get("@evidence-section").contains("table").trigger("click");
 
   cy.contains("Subject");
   cy.contains("Relation");
