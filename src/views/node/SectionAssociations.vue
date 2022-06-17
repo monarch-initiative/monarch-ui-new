@@ -113,8 +113,7 @@ watch(category, () => (association.value = undefined));
 
 // update url from selected category
 watch(category, (value, prev) =>
-  // if category changed because it was set to default on page load, don't
-  // create new history entry
+  // if category changed because it was set to default on page load, don't create new history entry
   (prev ? router.push : router.replace)({
     ...route,
     query: { associations: category.value?.id },

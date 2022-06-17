@@ -138,8 +138,7 @@ function onKeydown(event: KeyboardEvent) {
     // prevent page scroll
     event.preventDefault();
 
-    // if dropdown open, control highlighted option
-    // if dropdown closed, control selected option
+    // if dropdown open, control highlighted option. if dropdown closed, control selected option.
     let index = expanded.value ? highlighted.value : selected.value;
 
     // move value up/down
@@ -196,13 +195,15 @@ watch(highlighted, () =>
 );
 
 // auto-select first option as fallback
-// watch(
-//   () => props.options,
-//   () => {
-//     if (selected.value === -1 && props.options.length) selected.value = 0;
-//   },
-//   { immediate: true }
-// );
+/*
+watch(
+  () => props.options,
+  () => {
+    if (selected.value === -1 && props.options.length) selected.value = 0;
+  },
+  { immediate: true }
+);
+*/
 </script>
 
 <style lang="scss" scoped>

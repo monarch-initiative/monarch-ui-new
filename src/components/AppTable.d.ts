@@ -1,7 +1,6 @@
 // table column
 export interface Col {
-  // unique id, used to identify/match for sorting, filtering, and named slots
-  // use "divider" to create vertical divider to separate cols
+  // unique id, used to identify/match for sorting, filtering, and named slots. use "divider" to create vertical divider to separate cols
   id: string;
   // what item in row object to access as raw cell value
   key?: string;

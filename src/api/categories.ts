@@ -40,8 +40,7 @@ export const getAssociationName = (category = ""): string => {
   return `${startCase(category)}s`;
 };
 
-// categories that app supports
-// keep in specific order of "importance", used for sorting
+// categories that app supports. keep in specific order of "importance", used for sorting.
 export const categories = [
   "phenotype",
   "disease",

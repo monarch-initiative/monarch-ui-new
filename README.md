@@ -102,7 +102,6 @@ Keep long lists, such as those in `/global`, sorted alphabetically for consisten
 Tip: use VS Code extension "Sort Lines".
 
 Use `console.log` for strictly for temporary debugging during local development that should be removed before merging PRs.
-Use `info`/`warn`/`debug`/`error` at your discretion, but only for major, infrequent events, as logging too frequently (say, multiple times per second, sustained) can impact page performance.
-Leaving select logging _in production_ will be beneficial for in this particular app, for user and in-situ troubleshooting of complex, hard-to-replicate problems.
-
-To analyze the size of the compiled bundle, uncomment the `stats-webpack-plugin` line in the `vue.config.js`, build the app, then try running `npx webpack-bundle-analyzer dist/stats.json` or `npx source-map-explorer dist/js/*`.
+Use `console.error` for in-production logging of _caught_ errors.
+Use `console.info` for generic in-production logging, but only use for major, infrequent events, as logging too frequently (say, multiple times per second, sustained) can impact page performance.
+Leaving select logging in production will be beneficial for in this particular app, for user and in-situ troubleshooting of complex, hard-to-replicate problems.

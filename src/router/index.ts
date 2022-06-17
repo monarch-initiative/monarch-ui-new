@@ -24,8 +24,8 @@ import PageTestbed from "@/views/PageTestbed.vue";
 import { sleep } from "@/util/debug";
 import { lookupNode } from "@/api/node-lookup";
 
-// list of routes and corresponding components
-// CHECK PUBLIC/SITEMAP.XML AND KEEP IN SYNC
+// list of routes and corresponding components.
+// KEEP IN SYNC WITH PUBLIC/SITEMAP.XML
 export const routes: Array<RouteRecordRaw> = [
   // home page
   {
@@ -259,9 +259,7 @@ router.beforeEach(() => {
 
 export default router;
 
-// dirty way to allow passing arbitrary data with router.push
-// will no longer be needed once this vue-router RFC is implemented:
-// https://github.com/vuejs/rfcs/discussions/400
+// dirty way to allow passing arbitrary data with router.push. will no longer be needed once this vue-router RFC is implemented: https://github.com/vuejs/rfcs/discussions/400
 let routeData: unknown = null;
 export const setData = (data: unknown): void => {
   routeData = data;

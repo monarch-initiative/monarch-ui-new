@@ -25,12 +25,16 @@ import {
 } from "@vueuse/core";
 
 // settings shared across functions
-const size = 4; // size of dots and links
-const gap = 50; // distance between dots
-// https://pinetools.com/blend-colors
-const baseColor: Color = [25, 143, 154]; // color of elements at rest (10% white, 90% theme-dark)
-const pulseColor: Color = [127, 193, 199]; // color of element when pulsing (50% white, 50% theme-dark)
-// (other one-off settings in place below)
+
+// size of dots and links
+const size = 4;
+// distance between dots
+const gap = 50;
+
+// color of elements at rest (10% white, 90% theme-dark)
+const baseColor: Color = [25, 143, 154];
+// color of element when pulsing (50% white, 50% theme-dark)
+const pulseColor: Color = [127, 193, 199];
 
 // 3d axis rotations
 let rx = 0;
@@ -167,9 +171,9 @@ const move = () => {
   }
 
   // for each entity (dot or link)
-  // move color toward target smoothly
   for (const entity of [...dots, ...links])
     for (let c = 0; c < 3; c++)
+      // move color toward target smoothly
       entity.color[c] += (entity.colorTarget[c] - entity.color[c]) / 15;
 };
 

@@ -30,8 +30,7 @@ const text = ref("");
 // notification element
 const element = ref<Element>();
 
-// make hide delay longer for longer messages
-// https://ux.stackexchange.com/questions/22520/how-long-does-it-take-to-read-x-number-of-characters
+// make hide delay longer for longer messages https://ux.stackexchange.com/questions/22520/how-long-does-it-take-to-read-x-number-of-characters
 const delay = computed(() => 1500 + text.value.length * 100);
 // timer
 const { start, stop } = useTimeoutFn(() => (text.value = ""), delay);

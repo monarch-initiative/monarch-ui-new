@@ -148,15 +148,17 @@ const route = useRoute();
 const examples = ["Marfan Syndrome", "Multicystic Kidney Dysplasia", "SSH"];
 
 // default filters to show before anything typed in
-// const defaultFilters = {
-//   category: [
-//     { id: "gene" },
-//     { id: "disease" },
-//     { id: "phenotype" },
-//     { id: "genotype" },
-//     { id: "variant" },
-//   ],
-// };
+/*
+const defaultFilters = {
+  category: [
+    { id: "gene" },
+    { id: "disease" },
+    { id: "phenotype" },
+    { id: "genotype" },
+    { id: "variant" },
+  ],
+};
+*/
 
 // current search text
 const search = ref(String(route.query.search || ""));
@@ -207,8 +209,7 @@ function doExample(value: string) {
 
 // get search results
 async function getResults(
-  // whether to perform "fresh" search, without filters. set to true when
-  // search changing, false when filters or page number changing.
+  // whether to perform "fresh" search, without filters. set to true when search changing, false when filters or page number changing.
   fresh: boolean,
   // whether to push new entry to browser history
   history: boolean

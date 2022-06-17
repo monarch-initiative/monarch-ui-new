@@ -9,9 +9,7 @@ module.exports = {
     "\\.vue$": "vue-jest",
   },
 
-  // force babel to transpile everything in node_modules to avoid "import" errors
-  // https://github.com/facebook/jest/issues/9292
-  // https://www.npmjs.com/package/@vue/cli-plugin-unit-jest#transform-dependencies-from-node_modules
+  // force babel to transpile everything in node_modules to avoid "import" errors https://github.com/facebook/jest/issues/9292 https://www.npmjs.com/package/@vue/cli-plugin-unit-jest#transform-dependencies-from-node_modules
   transformIgnorePatterns: [],
 
   // setup to run before each test (but after jest env and globals installed)

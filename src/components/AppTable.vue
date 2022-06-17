@@ -225,9 +225,7 @@ interface Props {
   activeFilters?: Filters;
   // status to show on top of table (e.g. loading)
   status?: Status | null;
-  // whether to show certain controls
-  // (temp solution, needed b/c this is a controlled component and cannot
-  // paginate/search/etc on its own where needed yet)
+  // whether to show certain controls (temp solution, needed b/c this is a controlled component and cannot paginate/search/etc on its own where needed yet)
   showControls?: boolean;
 }
 

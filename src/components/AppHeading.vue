@@ -52,8 +52,7 @@ function getTag() {
   // if level manually specified, just use that
   if (props.level) return "h" + props.level;
 
-  // otherwise, determine automatically based on heading's position in document
-  // https://dequeuniversity.com/rules/axe/4.1/page-has-heading-one
+  // otherwise, determine automatically based on heading's position in document https://dequeuniversity.com/rules/axe/4.1/page-has-heading-one
 
   // heading element
   const element = heading.value;

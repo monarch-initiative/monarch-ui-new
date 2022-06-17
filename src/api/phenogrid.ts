@@ -13,8 +13,7 @@ export const mountPhenogrid = async (
   mode = "compare"
 ): Promise<void> => {
   try {
-    // wait for phenogrid container to render on mount, and clear any previous
-    // phenogrid instances from showing
+    // wait for phenogrid container to render on mount, and clear any previous phenogrid instances from showing
     (await waitFor("#phenogrid")).innerHTML = "";
 
     // map in particular way based on mode, per ui 2.0
@@ -43,8 +42,7 @@ export const mountPhenogrid = async (
   }
 };
 
-// BELOW ARE SHIMS FOR PHENOGRID
-// when (if) we rewrite phenogrid from scratch, these should no longer be needed
+// SHIMS FOR PHENOGRID
 
 // typescript definition
 export interface PhenogridDefinition {

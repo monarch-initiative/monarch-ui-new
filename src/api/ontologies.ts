@@ -34,8 +34,7 @@ export const getOntologies = async (): Promise<Result> => {
       })
     );
 
-    // merge static (manually entered) data in with dynamic (fetched) data
-    // (but only including entries in static)
+    // merge static (manually entered) data in with dynamic (fetched) data (but only including entries in static)
     ontologies = mergeArrays(staticData, ontologies, true);
 
     // tag as ontology type of source

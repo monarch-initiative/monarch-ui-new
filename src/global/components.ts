@@ -9,8 +9,7 @@ import AppPlaceholder from "@/components/AppPlaceholder.vue";
 import AppSection from "@/components/AppSection.vue";
 import AppTile from "@/components/AppTile.vue";
 
-// list of components we want to be available in any vue file without importing
-// only include components used very repetitively
+// list of components we want to be available in any vue file without importing. only include components used very repetitively.
 const globalComponents = {
   AppButton,
   AppFlex,

@@ -217,8 +217,7 @@ function onKeydown(event: KeyboardEvent) {
 
 // when user pastes text
 async function onPaste() {
-  // wait for pasted value to take effect
-  // but don't use nextTick because by then search.value will be reset
+  // wait for pasted value to take effect but don't use nextTick because by then search.value will be reset
   await sleep();
   // immediately auto-accept results
   getResults();
@@ -237,8 +236,7 @@ async function select(options: Option | Options) {
     if (option.getOptions) {
       const options = await option.getOptions();
       toSelect.push(...options);
-      // notify parent that dynamic options were added
-      // provide option selected and options added
+      // notify parent that dynamic options were added. provide option selected and options added.
       emit("getOptions", option, options);
     }
     // otherwise just select option

@@ -1,8 +1,6 @@
 import { request, cleanError } from ".";
 
-// map our id prefixes to prefixes that mygene expects
-// http://docs.mygene.info/en/latest/doc/data.html#species
-// http://docs.mygene.info/en/latest/doc/query_service.html#available-fields
+// map our id prefixes to prefixes that mygene expects http://docs.mygene.info/en/latest/doc/data.html#species http://docs.mygene.info/en/latest/doc/query_service.html#available-fields
 const map: Record<string, { replace: string; species: string }> = {
   "NCBIGene:": { replace: "", species: "all" },
   "OMIM:": { replace: "mim:", species: "9606" },

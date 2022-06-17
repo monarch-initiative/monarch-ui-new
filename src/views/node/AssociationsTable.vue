@@ -184,8 +184,7 @@ const cols = computed((): Cols => {
   // extra, supplemental columns for certain association types
   let extraCols: Cols = [];
 
-  // taxon column
-  // exists for many categories, so just add if any row has taxon
+  // taxon column. exists for many categories, so just add if any row has taxon.
   if (associations.value.some((association) => association.taxon))
     extraCols.push({
       id: "taxon",
@@ -237,9 +236,11 @@ const cols = computed((): Cols => {
     );
 
   // filter out extra columns with nothing in them (all rows for that col falsey)
-  // extraCols = extraCols.filter((col) =>
-  //   associations.value.some((association) => association[col.key || ""])
-  // );
+  /*
+  extraCols = extraCols.filter((col) =>
+    associations.value.some((association) => association[col.key || ""])
+  );
+  */
 
   // put divider to separate base cols from extra cols
   if (extraCols[0]) extraCols.unshift({ id: "divider" });
@@ -257,8 +258,7 @@ function onFilterChange(colId: Col["id"], value: Options) {
 
 // get table association data
 async function getAssociations(
-  // whether to perform "fresh" search, without filters. set to true when
-  // category changing, false when filters changing.
+  // whether to perform "fresh" search, without filters. set to true when category changing, false when filters changing.
   fresh: boolean
 ) {
   try {

@@ -3,9 +3,7 @@ import { Codes } from "@/components/AppStatus";
 // base biolink url
 export const biolink = "https://api.monarchinitiative.org/api";
 
-// key/value object for request query parameters
-// use primitive for single, e.g. evidence=true
-// use array for multiple/duplicate, e.g. id=abc&id=def&id=ghi
+// key/value object for request query parameters. use primitive for single, e.g. evidence=true. use array for multiple/duplicate, e.g. id=abc&id=def&id=ghi
 type Param = string | number | boolean | undefined | null;
 export type Params = Record<string, Param | Array<Param>>;
 
@@ -53,8 +51,7 @@ export const request = async <T>(
 export const cleanError = (error: unknown): ApiError => {
   // if this error hasn't already been logged
   if (!(error as ApiError).logged) {
-    // log error to console like normal for advanced debugging and stack trace
-    // but wrap in group to distinguish between unhandled errors
+    // log error to console like normal for advanced debugging and stack trace but wrap in group to distinguish between unhandled errors
     console.groupCollapsed((error as ApiError).text);
     console.error(error);
     console.groupEnd();
@@ -73,8 +70,7 @@ export const cleanError = (error: unknown): ApiError => {
 export class ApiError extends Error {
   code: typeof Codes[number];
   text: string;
-  // flag to track if error already logged
-  // prevents duplicate logs when kicking errors up multiple try/catch levels
+  // flag to track if error already logged. prevents duplicate logs when kicking errors up multiple try/catch levels.
   logged: boolean;
   constructor(text = "", code: typeof Codes[number] = "error") {
     super();

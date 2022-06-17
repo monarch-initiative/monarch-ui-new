@@ -23,8 +23,7 @@ export const facetsToFilters = (facets: Facets): Filters => {
     }
   }
 
-  // rename facet names to be consistent, and to be what biolink expects in
-  // future queries
+  // rename facet names to be consistent, and to be what biolink expects in future queries
   renameKey(filters, "taxon_label", "taxon");
   renameKey(filters, "object_taxon_label", "taxon");
 

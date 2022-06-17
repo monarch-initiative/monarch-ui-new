@@ -198,8 +198,6 @@ useMutationObserver(
 .spacer {
   content: "";
   width: 100%;
-  // height: 2px;
-  // background: $light-gray;
   margin: 5px 0;
 }
 
