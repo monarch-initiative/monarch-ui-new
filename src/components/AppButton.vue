@@ -24,23 +24,23 @@ import { computed } from "vue";
 import { snackbar } from "./TheSnackbar";
 
 interface Props {
-  // text to show
+  /** text to show */
   text?: string;
-  // icon to show
+  /** icon to show */
   icon?: string;
-  // location to link to
+  /** location to link to */
   to?: string;
-  // on click action
+  /** on click action */
   click?: () => unknown;
-  // visual design
+  /** visual design */
   design?: "normal" | "circle" | "small";
-  // color
+  /** color */
   color?: "primary" | "secondary" | "none";
-  // whether to show little notification dot
+  /** whether to show little notification dot */
   notification?: boolean;
-  // whether to copy text prop to clipboard on click
+  /** whether to copy text prop to clipboard on click */
   copy?: boolean;
-  // html button type attribute
+  /** html button type attribute */
   type?: string;
 }
 
@@ -56,13 +56,13 @@ const props = withDefaults(defineProps<Props>(), {
   type: "",
 });
 
-// copy text prop to clipboard
+/** copy text prop to clipboard */
 async function copyToClipboard() {
   await window.navigator.clipboard.writeText(props.text || "");
   snackbar("Text copied");
 }
 
-// type of component to render
+/** type of component to render */
 const component = computed(() => (props.to ? "AppLink" : "button"));
 </script>
 

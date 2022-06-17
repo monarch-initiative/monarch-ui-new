@@ -232,21 +232,21 @@ import { waitFor } from "@/util/dom";
 import { Association } from "@/api/node-associations";
 
 interface Props {
-  // current node
+  /** current node */
   node: NodeResult;
-  // selected association id
+  /** selected association id */
   selectedAssociation: Association;
 }
 
 const props = defineProps<Props>();
 
-// evidence data
+/** evidence data */
 const summary = ref<Result["summary"]>();
 const table = ref<Result["table"]>();
-// status of query
+/** status of query */
 const status = ref<Status | null>(null);
 
-// table columns
+/** table columns */
 const cols = [
   {
     id: "subject",
@@ -287,24 +287,24 @@ const cols = [
   },
 ];
 
-// get evidence data
+/** get evidence data */
 async function getData() {
   try {
-    // scroll to evidence section
+    /** scroll to evidence section */
     waitFor("#evidence", scrollToElement);
 
-    // loading...
+    /** loading... */
     status.value = { code: "loading", text: "Loading evidence data" };
 
-    // get evidence data
+    /** get evidence data */
     const response = await getEvidence(props.selectedAssociation?.id);
     summary.value = response.summary;
     table.value = response.table;
 
-    // clear status
+    /** clear status */
     status.value = null;
   } catch (error) {
-    // error...
+    /** error... */
     status.value = error as ApiError;
   }
 }

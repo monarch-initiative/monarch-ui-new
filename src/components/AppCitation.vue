@@ -19,17 +19,17 @@
 import { computed } from "vue";
 
 interface Props {
-  // work title
+  /** work title */
   title?: string;
-  // list of authors
+  /** list of authors */
   authors?: string;
-  // journal, issue, date, or other misc info
+  /** journal, issue, date, or other misc info */
   details?: Array<string>;
 }
 
 const props = defineProps<Props>();
 
-// joined details as string
+/** joined details as string */
 const detailsString = computed(() =>
   (props.details || []).filter((e) => e).join("&nbsp; · &nbsp;")
 );

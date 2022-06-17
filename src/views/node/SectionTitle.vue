@@ -42,7 +42,7 @@ import { kebabCase } from "lodash";
 import { Result } from "@/api/node-lookup";
 
 interface Props {
-  // current node
+  /** current node */
   node: Result;
 }
 

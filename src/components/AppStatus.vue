@@ -18,7 +18,7 @@
 import { computed } from "vue";
 import { Status } from "./AppStatus";
 
-// icons for status codes
+/** icons for status codes */
 const icons: Record<string, string> = {
   loading: "loading",
   paused: "pause-circle",
@@ -29,13 +29,13 @@ const icons: Record<string, string> = {
 };
 
 interface Props {
-  // status object
+  /** status object */
   status: Status;
 }
 
 const props = defineProps<Props>();
 
-// icon to show, associated with a status
+/** icon to show, associated with a status */
 const icon = computed(() => icons[props.status?.code || "unknown"]);
 </script>
 
@@ -49,7 +49,7 @@ const icon = computed(() => icons[props.status?.code || "unknown"]);
   text-decoration: none;
 }
 
-// icon
+/** icon */
 
 .icon {
   font-size: 1.5rem;
@@ -79,7 +79,7 @@ const icon = computed(() => icons[props.status?.code || "unknown"]);
   color: $gray;
 }
 
-// text
+/** text */
 
 .text {
   text-align: left;

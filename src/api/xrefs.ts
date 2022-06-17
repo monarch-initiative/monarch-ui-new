@@ -1,22 +1,22 @@
-// external references
+/** external references */
 
-// get external link from identifier
+/** get external link from identifier */
 export const getXrefLink = (id = "", name = ""): string => {
-  // get parts of id
+  /** get parts of id */
   const prefix = id.split(":")[0] || "";
   let reference = id.split(":")[1] || "";
 
-  // OMIM:1234.123 -> OMIM:1234#123
+  /** OMIM:1234.123 -> OMIM:1234#123 */
   if (prefix === "OMIM") reference = reference.replace(".", "#");
 
-  // get link template from map
+  /** get link template from map */
   const url = (map[prefix.toLowerCase()] || {})[prefix] || "";
 
-  // make id replacements
+  /** make id replacements */
   return url.replace("[reference]", reference).replace("[label]", name);
 };
 
-// hard coded map of external reference urls based on identifier prefix
+/** hard coded map of external reference urls based on identifier prefix */
 const map: Record<string, Record<string, string>> = {
   animalqtldb: {
     AQTLTrait: "http://identifiers.org/animalqtltrait/[reference]",

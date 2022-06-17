@@ -1,7 +1,7 @@
 import { mount, emitted } from "../setup";
 import AppTable from "@/components/AppTable.vue";
 
-// some example props
+/** some example props */
 const props = {
   cols: [
     {

@@ -11,9 +11,9 @@
 
 <script setup lang="ts">
 interface Props {
-  // width of section
+  /** width of section */
   width?: "full" | "medium" | "big";
-  // visual design
+  /** visual design */
   design?: "normal" | "fill";
 }
 

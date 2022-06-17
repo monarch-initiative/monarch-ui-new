@@ -1,7 +1,7 @@
 import { mount } from "./../setup";
 import AppTabs from "@/components/AppTabs.vue";
 
-// some example props for each test
+/** some example props for each test */
 const props = {
   name: "Tab group",
   tabs: [
@@ -12,7 +12,7 @@ const props = {
   default: "banana",
 };
 
-// some example slots for each test
+/** some example slots for each test */
 const slots = {
   apple: "I'm a little apple",
   banana: "I'm a little banana",

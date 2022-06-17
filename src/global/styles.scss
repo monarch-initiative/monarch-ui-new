@@ -1,6 +1,6 @@
-// normalize.css also installed
+/** normalize.css also installed */
 
-// document
+/** document */
 
 * {
   box-sizing: border-box;
@@ -21,7 +21,7 @@ main {
   flex-direction: column;
 }
 
-// headings
+/** headings */
 
 h1 {
   width: 100%;
@@ -31,7 +31,7 @@ h1 {
   font-weight: 600;
   text-align: center;
   letter-spacing: 1px;
-  // text-transform: uppercase;
+  /** text-transform: uppercase; */
 }
 
 h2 {
@@ -52,7 +52,7 @@ h3 {
   text-align: left;
 }
 
-// elements
+/** elements */
 
 svg {
   overflow: visible;
@@ -135,7 +135,7 @@ strong {
   font-weight: 500;
 }
 
-// tooltips
+/** tooltips */
 
 .tippy-box {
   max-width: min(600px, 90vw) !important;
@@ -163,12 +163,12 @@ strong {
   padding: 0 !important;
 }
 
-// useless tippy wrapper span that sometimes appears
+/** useless tippy wrapper span that sometimes appears */
 .tippy-content > span {
-  display: contents !important; // effectively take out of dom
+  display: contents !important; /** effectively take out of dom */
 }
 
-// for spans of text (not clickable, not links, not buttons) with tooltips
+/** for spans of text (not clickable, not links, not buttons) with tooltips */
 [data-tooltip="true"] {
   text-decoration: underline;
   text-decoration-style: dotted;
@@ -176,7 +176,7 @@ strong {
   cursor: help;
 }
 
-// util
+/** util */
 
 .truncate:not(:focus) {
   overflow: hidden;
@@ -198,7 +198,7 @@ strong {
   }
 }
 
-// transitions
+/** transitions */
 
 .fade-enter-active,
 .fade-leave-active {

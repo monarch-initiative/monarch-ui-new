@@ -50,11 +50,11 @@ import NodeSearch from "./NodeSearch.vue";
 import TextAnnotator from "./TextAnnotator.vue";
 import PhenotypeExplorer from "./PhenotypeExplorer.vue";
 
-// route info
+/** route info */
 const router = useRouter();
 const route = useRoute();
 
-// when tabs change, navigate to explore page
+/** when tabs change, navigate to explore page */
 function onChange() {
   router.push({ ...route, name: "Explore" });
 }

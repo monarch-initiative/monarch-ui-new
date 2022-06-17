@@ -182,7 +182,7 @@ import { Filters } from "@/api/facets";
 
 type ButtonProps = InstanceType<typeof AppButton>["$props"];
 
-// enumerate permutations of button options
+/** enumerate permutations of button options */
 const buttons = ref<Array<Array<ButtonProps>>>([]);
 for (const design of ["normal", "circle", "small"]) {
   for (const color of ["primary", "secondary"]) {
@@ -198,7 +198,7 @@ for (const design of ["normal", "circle", "small"]) {
   }
 }
 
-// table input props
+/** table input props */
 const table = ref({
   cols: [
     {
@@ -246,7 +246,7 @@ const table = ref({
   activeFilters: { score: [{ id: "numbers" }] } as Filters,
 });
 
-// single select
+/** single select */
 const singleSelectOptions = ref([
   { id: "apple" },
   { id: "banana" },
@@ -259,7 +259,7 @@ const singleSelectOptions = ref([
 ]);
 const singleSelectValue = ref({ id: "durian" });
 
-// multi select
+/** multi select */
 const multiSelectOptions = ref([
   { id: "fruits", count: 0 },
   { id: "vegetables", count: 7 },
@@ -271,7 +271,7 @@ const multiSelectOptions = ref([
 ]);
 const multiSelectValue = ref([{ id: "vegetables" }]);
 
-// tags select
+/** tags select */
 const tagsSelectOptions = ref(async (search = "") => {
   await sleep(200);
   return [
@@ -286,6 +286,6 @@ const tagsSelectValue = ref([
   { id: "candy", icon: "database", count: "8 phenotypes" },
 ]);
 
-// util
+/** util */
 const log = console.info;
 </script>

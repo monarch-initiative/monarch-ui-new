@@ -142,16 +142,16 @@ import { Status } from "@/components/AppStatus";
 import { ApiError } from "@/api";
 import { breakUrl } from "@/util/string";
 
-// sources data
+/** sources data */
 const sources = ref<Array<Source>>([]);
-// whether to show dataset sources
+/** whether to show dataset sources */
 const showDatasets = ref(true);
-// whether to show ontology sources
+/** whether to show ontology sources */
 const showOntologies = ref(true);
-// status of query
+/** status of query */
 const status = ref<Status | null>(null);
 
-// get source img src
+/** get source img src */
 function getSrc(image = "") {
   try {
     if (image.startsWith("http")) return image;
@@ -161,7 +161,7 @@ function getSrc(image = "") {
   }
 }
 
-// get filename from full path
+/** get filename from full path */
 function getFilename(path = "") {
   return path
     .split("/")
@@ -169,7 +169,7 @@ function getFilename(path = "") {
     .pop();
 }
 
-// shown sources
+/** shown sources */
 const filteredSources = computed(
   (): Array<Source> =>
     sources.value.filter(
@@ -179,29 +179,29 @@ const filteredSources = computed(
     )
 );
 
-// number of dataset sources
+/** number of dataset sources */
 const datasetCount = computed(
   (): number =>
     sources.value.filter((source) => source.type === "dataset").length
 );
 
-// number of ontology sources
+/** number of ontology sources */
 const ontologyCount = computed(
   (): number =>
     sources.value.filter((source) => source.type === "ontology").length
 );
 
 onMounted(async () => {
-  // loading...
+  /** loading... */
   status.value = { code: "loading", text: "Loading sources" };
 
   try {
-    // get sources from apis
+    /** get sources from apis */
     const datasets = await getDatasets();
     const ontologies = await getOntologies();
     sources.value = [...datasets, ...ontologies];
 
-    // sort sources alphabetically by name or id
+    /** sort sources alphabetically by name or id */
     sources.value.sort((a: Source, b: Source) => {
       if (
         (a?.name || a?.id || "").toLowerCase() <
@@ -211,10 +211,10 @@ onMounted(async () => {
       else return 1;
     });
 
-    // clear status
+    /** clear status */
     status.value = null;
   } catch (error) {
-    // error...
+    /** error... */
     status.value = error as ApiError;
   }
 });

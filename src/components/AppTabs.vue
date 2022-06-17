@@ -45,14 +45,14 @@ import { uniqueId } from "lodash";
 import { wrap } from "@/util/math";
 import { useRouter, useRoute } from "vue-router";
 
-// route info
+/** route info */
 const router = useRouter();
 const route = useRoute();
 
 interface Tab {
-  // page-wide unique id of tab
+  /** page-wide unique id of tab */
   id: string;
-  // tab button props
+  /** tab button props */
   text?: string;
   icon?: string;
   description?: string;
@@ -61,13 +61,13 @@ interface Tab {
 type Tabs = Array<Tab>;
 
 interface Props {
-  // list of tabs with info
+  /** list of tabs with info */
   tabs: Tabs;
-  // default selected tab id
+  /** default selected tab id */
   default?: string;
-  // name of tab group
+  /** name of tab group */
   name: string;
-  // whether to sync active tab with url hash
+  /** whether to sync active tab with url hash */
   url?: boolean;
 }
 
@@ -82,53 +82,53 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 
-// unique id for instance of component
+/** unique id for instance of component */
 const id = ref(uniqueId());
-// id of selected tab
+/** id of selected tab */
 const selected = ref(getHash() || props.default || props.tabs[0].id || "");
 
-// when user presses key on button
+/** when user presses key on button */
 function onKeydown(event: KeyboardEvent) {
   if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
-    // prevent page scroll
+    /** prevent page scroll */
     event.preventDefault();
 
-    // move selected tab
+    /** move selected tab */
     let index = props.tabs.findIndex((tab) => tab.id === selected.value);
     if (event.key === "ArrowLeft") index--;
     if (event.key === "ArrowRight") index++;
     if (event.key === "Home") index = 0;
     if (event.key === "End") index = props.tabs.length - 1;
 
-    // update selected, wrapping beyond -1 or options length
+    /** update selected, wrapping beyond -1 or options length */
     selected.value = props.tabs[wrap(index, 0, props.tabs.length)].id;
   }
 }
 
-// get appropriate tab from url hash
+/** get appropriate tab from url hash */
 function getHash() {
-  // set selected tab to id in hash
+  /** set selected tab to id in hash */
   const hash = route?.hash?.slice(1) || "";
-  // if there is a tab with name equal to hash, return that one
+  /** if there is a tab with name equal to hash, return that one */
   if (props.tabs.find((tab) => tab.id === hash)) return hash;
   else return "";
 }
 
-// when selected tab changes
+/** when selected tab changes */
 watch(selected, async () => {
-  // focus the selected tab
+  /** focus the selected tab */
   const selector = `#tab-${id.value}-${selected.value}`;
   const button = document?.querySelector(selector) as HTMLButtonElement;
   button?.focus();
 
-  // update hash in url
+  /** update hash in url */
   if (props.url) await router.replace({ ...route, hash: "#" + selected.value });
 
-  // emit event to parent that tab changed
+  /** emit event to parent that tab changed */
   emit("change", selected.value);
 });
 
-// when url hash changes
+/** when url hash changes */
 watch(
   () => route.hash,
   () => {

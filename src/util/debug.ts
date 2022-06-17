@@ -1,8 +1,8 @@
-// wait
+/** wait */
 export const sleep = async (ms = 0): Promise<void> =>
   new Promise((resolve) => window.setTimeout(resolve, ms));
 
-// try to synchronously/immutably log objects/proxies
+/** try to synchronously/immutably log objects/proxies */
 console.log = (...args: Array<unknown>): void => {
   try {
     console.info(...JSON.parse(JSON.stringify(args)));

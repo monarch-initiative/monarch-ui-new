@@ -1,4 +1,4 @@
-// possible properties of a source on the sources page
+/** possible properties of a source on the sources page */
 export interface Source {
   id?: string;
   name?: string;

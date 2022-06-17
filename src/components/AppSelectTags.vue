@@ -124,51 +124,51 @@ import { snackbar } from "./TheSnackbar";
 import { sleep } from "@/util/debug";
 
 interface Props {
-  // name of the field
+  /** name of the field */
   name: string;
-  // placeholder string when nothing typed in
+  /** placeholder string when nothing typed in */
   placeholder?: string;
-  // currently selected item
+  /** currently selected item */
   modelValue: Options;
-  // async function that returns list of options to show
+  /** async function that returns list of options to show */
   options: OptionsFunc;
-  // tooltip when hovering input
+  /** tooltip when hovering input */
   tooltip?: string;
-  // description to show below box
+  /** description to show below box */
   description?: string;
 }
 
 const props = defineProps<Props>();
 
 interface Emits {
-  // two-way binding value
+  /** two-way binding value */
   (event: "update:modelValue", value: Options): void;
-  // when value change "submitted"/"committed" by user
+  /** when value change "submitted"/"committed" by user */
   (event: "change"): void;
-  // when an option has been auto accepted (e.g. text pasted)
+  /** when an option has been auto accepted (e.g. text pasted) */
   (event: "autoAccept"): void;
-  // when an option's getOptions func has been called
+  /** when an option's getOptions func has been called */
   (event: "getOptions", option: Option, options: Options): void;
 }
 
 const emit = defineEmits<Emits>();
 
-// unique id for instance of component
+/** unique id for instance of component */
 const id = ref(uniqueId());
-// array of selected options
+/** array of selected options */
 const selected = ref<Options>([]);
-// currently searched text
+/** currently searched text */
 const search = ref("");
-// results for searched text
+/** results for searched text */
 const results = ref<Options>([]);
-// index of option that is highlighted
+/** index of option that is highlighted */
 const highlighted = ref(0);
-// whether input box focused
+/** whether input box focused */
 const focused = ref(false);
-// status of query
+/** status of query */
 const status = ref<Status | null>(null);
 
-// close results dropdown
+/** close results dropdown */
 function close() {
   search.value = "";
   results.value = [];
@@ -176,96 +176,96 @@ function close() {
   debouncedGetResults.cancel();
 }
 
-// when user presses key in input
+/** when user presses key in input */
 function onKeydown(event: KeyboardEvent) {
-  // arrow/home/end keys
+  /** arrow/home/end keys */
   if (["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
-    // prevent page scroll
+    /** prevent page scroll */
     event.preventDefault();
 
-    // move value up/down
+    /** move value up/down */
     let index = highlighted.value;
     if (event.key === "ArrowUp") index--;
     if (event.key === "ArrowDown") index++;
     if (event.key === "Home") index = 0;
     if (event.key === "End") index = availableResults.value.length - 1;
 
-    // update highlighted, wrapping beyond 0 or results length
+    /** update highlighted, wrapping beyond 0 or results length */
     highlighted.value = wrap(index, 0, availableResults.value.length);
   }
 
-  // backspace key to deselect last-selected option
+  /** backspace key to deselect last-selected option */
   if (event.key === "Backspace") {
     if (search.value === "") deselect();
   }
 
-  // enter key to de/select highlighted result
+  /** enter key to de/select highlighted result */
   if (event.key === "Enter") {
-    // prevent browser re-clicking open button
+    /** prevent browser re-clicking open button */
     event.preventDefault();
     if (availableResults.value[highlighted.value]) {
       select(availableResults.value[highlighted.value]);
-      // if highlighted beyond last option, clamp
+      /** if highlighted beyond last option, clamp */
       if (highlighted.value > availableResults.value.length - 1)
         highlighted.value = availableResults.value.length - 1;
     }
   }
 
-  // esc key to close dropdown
+  /** esc key to close dropdown */
   if (event.key === "Escape") close();
 }
 
-// when user pastes text
+/** when user pastes text */
 async function onPaste() {
-  // wait for pasted value to take effect but don't use nextTick because by then search.value will be reset
+  /** wait for pasted value to take effect but don't use nextTick because by then search.value will be reset */
   await sleep();
-  // immediately auto-accept results
+  /** immediately auto-accept results */
   getResults();
 }
 
-// select an option or array of options
+/** select an option or array of options */
 async function select(options: Option | Options) {
-  // make array if single option
+  /** make array if single option */
   if (!Array.isArray(options)) options = [options];
 
-  // array of options to select
+  /** array of options to select */
   const toSelect: Options = [];
 
   for (const option of options) {
-    // run func to get options to select
+    /** run func to get options to select */
     if (option.getOptions) {
       const options = await option.getOptions();
       toSelect.push(...options);
-      // notify parent that dynamic options were added. provide option selected and options added.
+      /** notify parent that dynamic options were added. provide option selected and options added. */
       emit("getOptions", option, options);
     }
-    // otherwise just select option
+    /** otherwise just select option */
     else toSelect.push(option);
   }
 
-  // select options
+  /** select options */
   selected.value.push(...toSelect);
 
-  // notify parent that user made change to selection
+  /** notify parent that user made change to selection */
   emit("change");
 }
 
-// deselect a specific option or last-selected option
+/** deselect a specific option or last-selected option */
 function deselect(option?: Option) {
   if (option)
     selected.value = selected.value.filter((model) => model.id !== option.id);
   else selected.value.pop();
 
-  // notify parent that user made change to selection
+  /** notify parent that user made change to selection */
   emit("change");
 }
 
-// clear all selected
+/** clear all selected */
 function clear() {
   selected.value = [];
 }
 
-// copy selected ids to clipboard
+/** copy selected ids to clipboard */
 async function copy() {
   await window.navigator.clipboard.writeText(
     selected.value.map(({ id }) => id).join(",")
@@ -273,93 +273,93 @@ async function copy() {
   snackbar(`Copied ${selected.value.length} values`);
 }
 
-// get list of results
+/** get list of results */
 async function getResults() {
-  // cancel any pending calls
+  /** cancel any pending calls */
   debouncedGetResults.cancel();
 
-  // loading...
+  /** loading... */
   status.value = { code: "loading", text: "Loading results" };
   results.value = [];
   highlighted.value = 0;
 
   try {
-    // get results
+    /** get results */
     const response = await props.options(search.value);
-    // if auto accept flag set, immediately accept/select passed options
+    /** if auto accept flag set, immediately accept/select passed options */
     if ("autoAccept" in response && "options" in response) {
       select(response.options);
       search.value = "";
       emit("autoAccept");
       snackbar(response.message);
     }
-    // otherwise, show list of results for user to select
+    /** otherwise, show list of results for user to select */
     else {
       results.value = response;
     }
 
-    // clear status
+    /** clear status */
     status.value = null;
   } catch (error) {
-    // error...
+    /** error... */
     status.value = error as ApiError;
   }
 }
 
-// list of unselected results to show
+/** list of unselected results to show */
 const availableResults = computed(() =>
   results.value.filter(
     (option) => !selected.value.find((model) => model.id === option.id)
   )
 );
 
-// when model changes
+/** when model changes */
 watch(
   () => props.modelValue,
   () => {
-    // avoid infinite rerenders
+    /** avoid infinite rerenders */
     if (!isEqual(selected.value, props.modelValue))
-      // update (de-duplicated) selected value
+      /** update (de-duplicated) selected value */
       selected.value = uniqBy(props.modelValue, "id");
   },
   { deep: true, immediate: true }
 );
 
-// when selected value changes
+/** when selected value changes */
 watch(
   selected,
   () => {
-    // emit (deduplicated) updated model
+    /** emit (deduplicated) updated model */
     emit("update:modelValue", uniqBy(selected.value, "id"));
   },
   { deep: true }
 );
 
-// run async get results func when search text changes
+/** run async get results func when search text changes */
 watch(search, async () => debouncedGetResults());
 
-// when focused state changes
+/** when focused state changes */
 watch(focused, () => {
   status.value = { code: "loading" };
-  // get results when first focused
+  /** get results when first focused */
   if (focused.value) getResults();
-  // clear search when input box blurred
+  /** clear search when input box blurred */
   else close();
 });
 
-// when highlighted index changes
+/** when highlighted index changes */
 watch(highlighted, () => {
-  // scroll to highlighted in dropdown
+  /** scroll to highlighted in dropdown */
   document
     .querySelector(`#option-${id.value}-${highlighted.value} > *`)
     ?.scrollIntoView({ block: "nearest" });
 });
 
-// make instance-unique debounced method of getting results (async options)
+/** make instance-unique debounced method of getting results (async options) */
 const debouncedGetResults = debounce(getResults, 500);
 
 onBeforeUnmount(() => {
-  // cancel any in-progress debounce
+  /** cancel any in-progress debounce */
   debouncedGetResults.cancel();
 });
 </script>

@@ -4,42 +4,42 @@ import { axe, toHaveNoViolations } from "jest-axe";
 import { mount, apiCall } from "../setup";
 import App from "@/App.vue";
 
-// add axe to jest
+/** add axe to jest */
 expect.extend(toHaveNoViolations);
 
-// get list of page paths to check
+/** get list of page paths to check */
 const exclude = ["NotFound"];
 const pages = routes
   .filter((route) => !exclude.includes(String(route.name || "")))
   .map((route) => route.path)
-  // specific node pages to check
+  /** specific node pages to check */
   .concat(["/disease/MONDO:012345"]);
 
 test(
   "Page accessibility checks",
   async () => {
-    // mount app
+    /** mount app */
     const wrapper = mount(App);
 
-    // go through each page/route
+    /** go through each page/route */
     for (const page of pages) {
-      // log progress
+      /** log progress */
       console.info(`\n========== Testing page ${page} ==========\n`);
 
-      // navigate to new page
+      /** navigate to new page */
       router.push(page);
       await router.isReady();
 
-      // wait until async rendering is done
+      /** wait until async rendering is done */
       await nextTick();
-      // wait for api calls to mock
+      /** wait for api calls to mock */
       await apiCall();
 
-      // analyze rendered html with axe
+      /** analyze rendered html with axe */
       const results = await axe(wrapper.element);
       expect(results).toHaveNoViolations();
     }
   },
-  // allow plenty of seconds per page
+  /** allow plenty of seconds per page */
   pages.length * 20 * 1000
 );

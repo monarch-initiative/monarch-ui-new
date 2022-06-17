@@ -1,11 +1,11 @@
 import { request, cleanError } from ".";
 import { Status } from "@/components/AppStatus";
 
-// uptimerobot api endpoint
+/** uptimerobot api endpoint */
 const uptimeRobot = "https://api.uptimerobot.com/v2/getMonitors";
-// read-only api key, safe to be distributed
+/** read-only api key, safe to be distributed */
 const key = "ur1488940-1c05ba09e0aef926989d6593";
-// uptimerobot.org page for statuses
+/** uptimerobot.org page for statuses */
 const page = "https://stats.uptimerobot.com/XPRo9s4BJ5";
 
 interface Response {
@@ -16,7 +16,7 @@ interface Response {
   }>;
 }
 
-// possible status codes https://uptimerobot.com/api/
+/** possible status codes https://uptimerobot.com/api/ */
 enum Code {
   paused = 0,
   unchecked = 1,
@@ -25,16 +25,16 @@ enum Code {
   down = 9,
 }
 
-// get list of uptimerobot monitors and their statuses, names, and other info
+/** get list of uptimerobot monitors and their statuses, names, and other info */
 export const getUptimes = async (): Promise<Result> => {
   try {
-    // get data from endpoint
+    /** get data from endpoint */
     const params = { api_key: key };
     const options = { method: "POST" };
     const response = await request<Response>(uptimeRobot, params, options);
     const { monitors = [] } = response;
 
-    // map uptimerobot status codes to our simplified status codes in status component
+    /** map uptimerobot status codes to our simplified status codes in status component */
     const codeMap = {
       [Code.paused]: "paused",
       [Code.unchecked]: "unknown",
@@ -43,7 +43,7 @@ export const getUptimes = async (): Promise<Result> => {
       [Code.down]: "error",
     };
 
-    // convert results to desired format
+    /** convert results to desired format */
     const results = monitors.map(
       (monitor): Status => ({
         code: (typeof monitor.status !== "undefined"

@@ -91,59 +91,59 @@ import {
 import { ApiError } from "@/api";
 
 interface Props {
-  // current node
+  /** current node */
   node: NodeResult;
-  // selected association category
+  /** selected association category */
   selectedCategory: string;
-  // selected association id
+  /** selected association id */
   selectedAssociation?: Association;
 }
 
 const props = defineProps<Props>();
 
 interface Emits {
-  // change selected association
+  /** change selected association */
   (event: "select", value?: Association): void;
 }
 
 const emit = defineEmits<Emits>();
 
-// association data
+/** association data */
 const associations = ref<AssociationsResult["associations"]>([]);
-// status of query
+/** status of query */
 const status = ref<Status | null>(null);
 
-// get summary association data
+/** get summary association data */
 async function getAssociations() {
   try {
-    // loading...
+    /** loading... */
     status.value = { code: "loading", text: "Loading association data" };
     associations.value = [];
 
-    // catch case where no association categories available
+    /** catch case where no association categories available */
     if (!props.node.associationCounts.length)
       throw new ApiError("No association info available", "warning");
 
-    // get association data
+    /** get association data */
     associations.value = await getTopAssociations(
       props.node.id,
       props.node.category,
       props.selectedCategory
     );
 
-    // clear status
+    /** clear status */
     status.value = null;
   } catch (error) {
-    // error...
+    /** error... */
     status.value = error as ApiError;
     associations.value = [];
   }
 }
 
-// get associations when category changes
+/** get associations when category changes */
 watch(() => props.selectedCategory, getAssociations);
 
-// get associations on load
+/** get associations on load */
 onMounted(getAssociations);
 </script>
 

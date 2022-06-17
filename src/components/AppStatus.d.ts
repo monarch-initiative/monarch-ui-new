@@ -1,4 +1,4 @@
-// possible properties of a status for status component
+/** possible properties of a status for status component */
 export const Codes = [
   "loading",
   "success",

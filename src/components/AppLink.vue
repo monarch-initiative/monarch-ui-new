@@ -35,9 +35,9 @@ import { computed, useSlots } from "vue";
 import { isExternal, isAbsolute } from "@/util/url";
 
 interface Props {
-  // location to link to
+  /** location to link to */
   to: string;
-  // whether to forcibly forgo external icon when link is external
+  /** whether to forcibly forgo external icon when link is external */
   noIcon?: boolean;
 }
 
@@ -45,13 +45,13 @@ const props = withDefaults(defineProps<Props>(), { noIcon: false });
 
 const slots = useSlots();
 
-// is "to" prop an external url
+/** is "to" prop an external url */
 const externalLink = computed(() => isExternal(props.to));
 
-// is "to" prop an absolute url
+/** is "to" prop an absolute url */
 const absoluteLink = computed(() => isAbsolute(props.to));
 
-// is provided slot just plain text
+/** is provided slot just plain text */
 const plainText = computed(
   () =>
     slots.default &&

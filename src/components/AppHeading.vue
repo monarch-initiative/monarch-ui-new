@@ -27,44 +27,44 @@ import { onMounted, onUpdated, ref } from "vue";
 import { kebabCase } from "lodash";
 
 interface Props {
-  // manually specified heading id
+  /** manually specified heading id */
   id?: string;
-  // manually specified heading level
+  /** manually specified heading level */
   level?: number;
-  // icon to show next to text
+  /** icon to show next to text */
   icon?: string;
-  // fall back icon
+  /** fall back icon */
   fallbackIcon?: string;
 }
 
 const props = defineProps<Props>();
 
-// tag of heading (default to blank to avoid conflict with automatic level)
+/** tag of heading (default to blank to avoid conflict with automatic level) */
 const tag = ref("");
-// hash link of heading
+/** hash link of heading */
 const link = ref("");
 
-// heading ref
+/** heading ref */
 const heading = ref<HTMLElement>();
 
-// get heading level/tag, i.e. h1, h2, h3, etc
+/** get heading level/tag, i.e. h1, h2, h3, etc */
 function getTag() {
-  // if level manually specified, just use that
+  /** if level manually specified, just use that */
   if (props.level) return "h" + props.level;
 
-  // otherwise, determine automatically based on heading's position in document https://dequeuniversity.com/rules/axe/4.1/page-has-heading-one
+  /** otherwise, determine automatically based on heading's position in document https://dequeuniversity.com/rules/axe/4.1/page-has-heading-one */
 
-  // heading element
+  /** heading element */
   const element = heading.value;
-  // section element
+  /** section element */
   const parent = element?.parentElement as HTMLElement;
 
-  // if heading is first in section
+  /** if heading is first in section */
   const firstHeading = element?.matches("*:first-child");
-  // if section is first in main
+  /** if section is first in main */
   const firstSection = parent?.matches("*:first-child");
 
-  // determine level
+  /** determine level */
   if (firstSection) {
     if (firstHeading) return "h1";
     else return "h2";
@@ -74,12 +74,12 @@ function getTag() {
   }
 }
 
-// determine link from text content of heading
+/** determine link from text content of heading */
 function getLink() {
   return kebabCase(props.id || heading.value?.textContent || "");
 }
 
-// update tag and link on mount and change
+/** update tag and link on mount and change */
 function update() {
   tag.value = getTag();
   link.value = getLink();

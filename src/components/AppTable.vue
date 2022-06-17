@@ -206,26 +206,26 @@ import { Status } from "./AppStatus";
 import { closeToc } from "./TheTableOfContents";
 
 interface Props {
-  // info for each column of table
+  /** info for each column of table */
   cols: Cols;
-  // list of table rows, i.e. the table data
+  /** list of table rows, i.e. the table data */
   rows: Rows;
-  // sort key and direction
+  /** sort key and direction */
   sort?: Sort;
-  // items per page
+  /** items per page */
   perPage?: number;
-  // starting item index
+  /** starting item index */
   start: number;
-  // total number of items
+  /** total number of items */
   total: number;
-  // text being searched
+  /** text being searched */
   search?: string;
-  // filters
+  /** filters */
   availableFilters?: Filters;
   activeFilters?: Filters;
-  // status to show on top of table (e.g. loading)
+  /** status to show on top of table (e.g. loading) */
   status?: Status | null;
-  // whether to show certain controls (temp solution, needed b/c this is a controlled component and cannot paginate/search/etc on its own where needed yet)
+  /** whether to show certain controls (temp solution, needed b/c this is a controlled component and cannot paginate/search/etc on its own where needed yet) */
   showControls?: boolean;
 }
 
@@ -240,31 +240,31 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 interface Emits {
-  // when sort changes
+  /** when sort changes */
   (event: "sort", sort: Sort): void;
-  // when filter changes
+  /** when filter changes */
   (event: "filter", colId: Col["id"], value: Options): void;
-  // when per page changes
+  /** when per page changes */
   (event: "perPage", value: number): void;
-  // when start row changes
+  /** when start row changes */
   (event: "start", row: number): void;
-  // when search changes
+  /** when search changes */
   (event: "search", value: string): void;
-  // when user requests download
+  /** when user requests download */
   (event: "download"): void;
 }
 
 const emit = defineEmits<Emits>();
 
-// whether table is expanded to be full width
+/** whether table is expanded to be full width */
 const expanded = ref(false);
-// table reference
+/** table reference */
 const table = ref<HTMLElement | null>(null);
 
-// table scroll state
+/** table scroll state */
 const { arrivedState } = useScroll(table, { offset: { left: 10, right: 10 } });
 
-// force table scroll to update
+/** force table scroll to update */
 function updateScroll() {
   table.value?.dispatchEvent(new Event("scroll"));
 }
@@ -272,36 +272,36 @@ onMounted(updateScroll);
 watch(expanded, updateScroll);
 useEventListener("resize", updateScroll);
 
-// close table of contents when expanding
+/** close table of contents when expanding */
 watch(expanded, () => {
   if (expanded.value) closeToc();
 });
 
-// when user clicks to first page
+/** when user clicks to first page */
 function clickFirst() {
   emit("start", 0);
 }
 
-// when user clicks to previous page
+/** when user clicks to previous page */
 function clickPrev() {
   emit("start", props.start - props.perPage);
 }
 
-// when user clicks to next page
+/** when user clicks to next page */
 function clickNext() {
   emit("start", props.start + props.perPage);
 }
 
-// when user clicks to last page
+/** when user clicks to last page */
 function clickLast() {
   emit("start", Math.floor(props.total / props.perPage) * props.perPage);
 }
 
-// when user clicks a sort button
+/** when user clicks a sort button */
 function emitSort(col: Col) {
   let newSort: Sort;
 
-  // toggle sort direction
+  /** toggle sort direction */
   if (props.sort?.id === col.id) {
     if (props.sort?.direction === "down")
       newSort = { id: col.id, direction: "up" };
@@ -317,37 +317,37 @@ function emitSort(col: Col) {
   emit("sort", newSort);
 }
 
-// when user changes a filter
+/** when user changes a filter */
 function emitFilter(colId: Col["id"], value: Options) {
   emit("filter", colId, value);
 }
 
-// when user changes rows per page
+/** when user changes rows per page */
 function emitPerPage(value: string) {
   emit("perPage", Number(value));
   emit("start", 0);
 }
 
-// when user types in search
+/** when user types in search */
 function emitSearch(value: string) {
   emit("search", value);
   emit("start", 0);
 }
 
-// when user clicks download
+/** when user clicks download */
 function emitDownload() {
   emit("download");
 }
 
-// ending item index
+/** ending item index */
 const end = computed((): number => props.start + props.rows.length);
 
-// grid column template widths
+/** grid column template widths */
 const widths = computed((): string =>
   props.cols.map((col) => col.width || "auto").join(" ")
 );
 
-// aria sort direction attribute
+/** aria sort direction attribute */
 const ariaSort = computed(() => {
   if (props.sort?.direction === "up") return "ascending";
   if (props.sort?.direction === "down") return "descending";
@@ -419,14 +419,14 @@ table {
   border-collapse: collapse;
 }
 
-// ignore top level semantic elements in grid layout
+/** ignore top level semantic elements in grid layout */
 thead,
 tbody,
 tr {
   display: contents;
 }
 
-// all cells
+/** all cells */
 th,
 td {
   display: flex;
@@ -462,7 +462,7 @@ td {
   }
 }
 
-// heading cells
+/** heading cells */
 th {
   padding-bottom: 10px;
   font-weight: 400;
@@ -473,7 +473,7 @@ th > span {
   font-weight: 600;
 }
 
-// body cells
+/** body cells */
 td {
   border-bottom: solid 2px $light-gray;
 }

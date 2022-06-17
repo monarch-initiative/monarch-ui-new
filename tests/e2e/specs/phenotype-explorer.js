@@ -1,4 +1,4 @@
-// https://github.com/cypress-io/cypress/issues/1123
+/** https://github.com/cypress-io/cypress/issues/1123 */
 Cypress.Commands.add(
   "paste",
   { prevSubject: true, element: true },
@@ -23,7 +23,7 @@ it("Mode switching works", () => {
   cy.get(".select-tags").should("have.length", 2);
 });
 
-// in these tests, test that phenogrid appears, but do not test phenogrid functionality itself, as that is in the scope of the phenogrid repo
+/** in these tests, test that phenogrid appears, but do not test phenogrid functionality itself, as that is in the scope of the phenogrid repo */
 
 it("Phenotype set vs gene/disease works", () => {
   cy.visit("/explore#phenotype-explorer");

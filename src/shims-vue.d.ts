@@ -1,5 +1,5 @@
 /* eslint-disable */
-// generic typescript types for files
+/** generic typescript types for files */
 
 declare module "*.vue" {
   import type { DefineComponent } from "vue";
@@ -13,7 +13,7 @@ declare module "phenogrid" {
   export default phenogrid;
 }
 
-// https://stackoverflow.com/questions/64206562/import-scss-variables-into-typescript-in-vue
+/** https://stackoverflow.com/questions/64206562/import-scss-variables-into-typescript-in-vue */
 declare module "*.scss" {
   const content: { [className: string]: string };
   export default content;

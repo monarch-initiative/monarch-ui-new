@@ -52,52 +52,52 @@ interface Response {
   }>;
 }
 
-// get supporting evidence for a certain association
+/** get supporting evidence for a certain association */
 export const getEvidence = async (id: string): Promise<Result> => {
   try {
-    // make query
+    /** make query */
     const url = `${biolink}/evidence/graph/${id}/table`;
     const { associations } = await request<Response>(url);
 
-    // get combined unique summary info
+    /** get combined unique summary info */
     const codes = uniqBy(flatMap(associations, "evidence_types"), "id");
     const publications = uniqBy(flatMap(associations, "publications"), "id");
     const sources = uniq(flatMap(associations, "provided_by"));
 
-    // convert evidence code into desired format
+    /** convert evidence code into desired format */
     const mapCode = (code: EvidenceType) => ({
       name: code.label || "",
       link: getXrefLink(code.id),
     });
 
-    // convert publication into desired format
+    /** convert publication into desired format */
     const mapPublication = (publication: Publication) => ({
       name: publication.label || publication.id || "",
       link: getXrefLink(publication.id),
     });
 
-    // convert "provided by" into desired format
+    /** convert "provided by" into desired format */
     const mapSource = (source = "") => ({
       name: source.split("/").pop() || source,
       link: source,
     });
 
-    // convert reference into desired format
+    /** convert reference into desired format */
     const mapReference = (reference = "") => ({
       name: reference,
       link: getXrefLink(reference),
     });
 
-    // convert summary data into desired result format
+    /** convert summary data into desired result format */
     const summary = {
       codes: codes?.map(mapCode) || [],
       publications: publications?.map(mapPublication) || [],
       sources: sources || [],
     };
 
-    // convert table data into desired result format
+    /** convert table data into desired result format */
     const table: Table = associations.map((association) => ({
-      // see result interface below...
+      /** see result interface below... */
       object: {
         id: association.object.id,
         name: association.object.label,
@@ -105,7 +105,7 @@ export const getEvidence = async (id: string): Promise<Result> => {
         category: mapCategory(association.object.category || []),
       },
 
-      // ...
+      /** ... */
       subject: {
         id: association.subject.id,
         name: association.subject.label,
@@ -113,7 +113,7 @@ export const getEvidence = async (id: string): Promise<Result> => {
         category: mapCategory(association.subject.category || []),
       },
 
-      // ...
+      /** ... */
       relation: {
         id: association.relation.id,
         name: association.relation.label,
@@ -122,16 +122,16 @@ export const getEvidence = async (id: string): Promise<Result> => {
         inverse: association.relation.inverse,
       },
 
-      // ...
+      /** ... */
       codes: association.evidence_types?.map(mapCode) || [],
 
-      // ...
+      /** ... */
       publications: association.publications?.map(mapPublication) || [],
 
-      // ...
+      /** ... */
       sources: association.provided_by?.map(mapSource) || [],
 
-      // ...
+      /** ... */
       references: [
         ...(association.object_eq || []),
         ...(association.subject_eq || []),
@@ -144,7 +144,7 @@ export const getEvidence = async (id: string): Promise<Result> => {
   }
 };
 
-// summary/overview of evidence
+/** summary/overview of evidence */
 interface Summary {
   codes: Array<{
     name: string;
@@ -157,9 +157,9 @@ interface Summary {
   sources: Array<string>;
 }
 
-// detailed data of evidence
+/** detailed data of evidence */
 type Table = Array<{
-  // subject of association
+  /** subject of association */
   subject: {
     id: string;
     name: string;
@@ -167,7 +167,7 @@ type Table = Array<{
     category: string;
   };
 
-  // object of association
+  /** object of association */
   object: {
     id: string;
     name: string;
@@ -175,7 +175,7 @@ type Table = Array<{
     category: string;
   };
 
-  // info about the association
+  /** info about the association */
   relation: {
     id: string;
     name: string;
@@ -184,25 +184,25 @@ type Table = Array<{
     inverse: boolean;
   };
 
-  // evidence codes (add explanation of meaning)
+  /** evidence codes (add explanation of meaning) */
   codes: Array<{
     name: string;
     link: string;
   }>;
 
-  // publications (add explanation of meaning)
+  /** publications (add explanation of meaning) */
   publications: Array<{
     name: string;
     link: string;
   }>;
 
-  // sources (add explanation of meaning)
+  /** sources (add explanation of meaning) */
   sources: Array<{
     name: string;
     link: string;
   }>;
 
-  // references (add explanation of meaning)
+  /** references (add explanation of meaning) */
   references: Array<{
     name: string;
     link: string;

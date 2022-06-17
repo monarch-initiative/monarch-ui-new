@@ -17,7 +17,7 @@ interface Response {
   }>;
 }
 
-// replace key words in fields with actual "expanded" value
+/** replace key words in fields with actual "expanded" value */
 const replaces = [
   ["MonarchArchive:", "https://archive.monarchinitiative.org/"],
   ["CoriellCollection:", "https://catalog.coriell.org/1/"],
@@ -30,22 +30,22 @@ const expand = (string = "") =>
     string
   );
 
-// get metadata of all datasets used in monarch from biolink, in format of source
+/** get metadata of all datasets used in monarch from biolink, in format of source */
 export const getDatasets = async (): Promise<Result> => {
   try {
-    // make query
+    /** make query */
     const url = `${biolink}/metadata/datasets`;
     const { nodes, edges } = await request<Response>(url);
 
     const filteredNodes = edges
-      // only get edges whose type is a dataset
+      /** only get edges whose type is a dataset */
       .filter((edge) => edge.pred === "dc:isVersionOf")
-      // find corresponding node by id
+      /** find corresponding node by id */
       .map((edge) => nodes.find((node) => node.id === edge.sub))
-      // filter out any un-found nodes
+      /** filter out any un-found nodes */
       .filter((node) => node) as Response["nodes"];
 
-    // convert results to desired format
+    /** convert results to desired format */
     let datasets = filteredNodes.map(
       (node): Source => ({
         id:
@@ -64,10 +64,10 @@ export const getDatasets = async (): Promise<Result> => {
       })
     );
 
-    // merge static (manually entered) data in with dynamic (fetched) data
+    /** merge static (manually entered) data in with dynamic (fetched) data */
     datasets = mergeArrays(staticData, datasets);
 
-    // tag as dataset type of source
+    /** tag as dataset type of source */
     datasets.forEach((dataset) => (dataset.type = "dataset"));
 
     return datasets;

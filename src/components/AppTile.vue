@@ -18,15 +18,15 @@
 
 <script setup lang="ts">
 interface Props {
-  // where to link to
+  /** where to link to */
   to: string;
-  // icon to show in button
+  /** icon to show in button */
   icon: string;
-  // main text
+  /** main text */
   title: string;
-  // secondary text
+  /** secondary text */
   subtitle?: string;
-  // visual design
+  /** visual design */
   design?: "small" | "big";
 }
 

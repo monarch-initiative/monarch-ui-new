@@ -17,17 +17,17 @@ interface Response {
   ];
 }
 
-// "part of" relationship type
+/** "part of" relationship type */
 const partOf = "BFO:0000050";
 
-// lookup hierarchy info for a node id
+/** lookup hierarchy info for a node id */
 export const getHierarchy = async (id = "", category = ""): Promise<Result> => {
   try {
     const superClasses: Array<Class> = [];
     const equivalentClasses: Array<Class> = [];
     const subClasses: Array<Class> = [];
 
-    // make query params
+    /** make query params */
     const params = {
       relationship_type: [
         "disease",
@@ -35,24 +35,24 @@ export const getHierarchy = async (id = "", category = ""): Promise<Result> => {
         "anatomy",
         "function",
       ].includes(category)
-        ? // only do subclass and "part of"for certain node types
+        ? /** only do subclass and "part of"for certain node types */
           ["equivalentClass", "subClassOf", partOf]
-        : // otherwise just look for equivalent classes
+        : /** otherwise just look for equivalent classes */
           "equivalentClass",
     };
 
-    // make query
+    /** make query */
     const url = `${biolink}/graph/edges/from/${id}`;
     const response = await request<Response>(url, params);
     const { nodes, edges } = response;
 
-    // take id of subject or object and find associated node label
+    /** take id of subject or object and find associated node label */
     const idToClass = (id = ""): Class => ({
       id,
       name: nodes.find((node) => node.id === id)?.lbl || "",
     });
 
-    // populate super/equivalent/sub classes
+    /** populate super/equivalent/sub classes */
     for (const { sub, pred, obj } of edges) {
       if (pred === "subClassOf" || pred === partOf) {
         if (sub === id) superClasses.push(idToClass(obj));

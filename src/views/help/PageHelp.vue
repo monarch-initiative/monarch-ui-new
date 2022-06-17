@@ -80,23 +80,23 @@ import { Status } from "@/components/AppStatus";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
 
-// list of status checks to display
+/** list of status checks to display */
 const uptimes = ref<Array<Status>>([]);
-// overall status of query
+/** overall status of query */
 const status = ref<Status | null>(null);
 
 onMounted(async () => {
-  // loading...
+  /** loading... */
   status.value = { code: "loading", text: "Loading service statuses" };
 
   try {
-    // get statuses from uptimerobot api
+    /** get statuses from uptimerobot api */
     uptimes.value = await getUptimes();
 
-    // clear status
+    /** clear status */
     status.value = null;
   } catch (error) {
-    // error...
+    /** error... */
     status.value = error as ApiError;
   }
 });

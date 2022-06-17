@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-// map nice human align names to css flex align names
+/** map nice human align names to css flex align names */
 const alignMap = {
   left: "flex-start",
   top: "flex-start",
@@ -29,13 +29,13 @@ const alignMap = {
 };
 
 interface Props {
-  // horizontal or vertical
+  /** horizontal or vertical */
   direction?: "row" | "col";
-  // spacing between items
+  /** spacing between items */
   gap?: "none" | "tiny" | "small" | "medium" | "big";
-  // horizontal alignment
+  /** horizontal alignment */
   hAlign?: "left" | "center" | "right" | "stretch";
-  // vertical alignment
+  /** vertical alignment */
   vAlign?: "top" | "center" | "bottom" | "stretch";
 }
 
@@ -46,7 +46,7 @@ const props = withDefaults(defineProps<Props>(), {
   vAlign: "center",
 });
 
-// css flex props
+/** css flex props */
 const justifyContent = computed(() =>
   props.direction === "col" ? alignMap[props.vAlign] : alignMap[props.hAlign]
 );

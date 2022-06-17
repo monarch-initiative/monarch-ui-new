@@ -81,23 +81,23 @@ import AssociationsSummary from "./AssociationsSummary.vue";
 import AssociationsTable from "./AssociationsTable.vue";
 import EvidenceViewer from "./EvidenceViewer.vue";
 
-// route info
+/** route info */
 const router = useRouter();
 const route = useRoute();
 
 interface Props {
-  // current node
+  /** current node */
   node: NodeResult;
 }
 
 const props = defineProps<Props>();
 
-// selected category of associations to show
+/** selected category of associations to show */
 const category = ref<Option>();
-// selected association id
+/** selected association id */
 const association = ref<Association>();
 
-// list of options for dropdown
+/** list of options for dropdown */
 const categoryOptions = computed(
   (): Options =>
     props.node.associationCounts.map((association) => ({
@@ -108,19 +108,19 @@ const categoryOptions = computed(
     }))
 );
 
-// deselect association when selected category changes
+/** deselect association when selected category changes */
 watch(category, () => (association.value = undefined));
 
-// update url from selected category
+/** update url from selected category */
 watch(category, (value, prev) =>
-  // if category changed because it was set to default on page load, don't create new history entry
+  /** if category changed because it was set to default on page load, don't create new history entry */
   (prev ? router.push : router.replace)({
     ...route,
     query: { associations: category.value?.id },
   })
 );
 
-// update selected category from url
+/** update selected category from url */
 function setCategoryFromUrl() {
   if (route.query.associations)
     category.value = categoryOptions.value.find(
@@ -130,11 +130,11 @@ function setCategoryFromUrl() {
 watch(() => route.query.associations, setCategoryFromUrl);
 onMounted(setCategoryFromUrl);
 
-// auto-select first category
+/** auto-select first category */
 watch(
   categoryOptions,
   () => {
-    // if no category selected, and no category about to be selected from url
+    /** if no category selected, and no category about to be selected from url */
     if (!category.value && !route.query.associations)
       category.value = categoryOptions.value[0];
   },

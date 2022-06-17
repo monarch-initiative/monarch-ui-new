@@ -25,35 +25,35 @@ import { ref, computed } from "vue";
 import { restartAnimations } from "@/util/dom";
 import { useEventListener, useTimeoutFn } from "@vueuse/core";
 
-// current notification text
+/** current notification text */
 const text = ref("");
-// notification element
+/** notification element */
 const element = ref<Element>();
 
-// make hide delay longer for longer messages https://ux.stackexchange.com/questions/22520/how-long-does-it-take-to-read-x-number-of-characters
+/** make hide delay longer for longer messages https://ux.stackexchange.com/questions/22520/how-long-does-it-take-to-read-x-number-of-characters */
 const delay = computed(() => 1500 + text.value.length * 100);
-// timer
+/** timer */
 const { start, stop } = useTimeoutFn(() => (text.value = ""), delay);
 
-// on push notification event
+/** on push notification event */
 function onPush(event: Event) {
-  // flash notification
+  /** flash notification */
   if (element.value) restartAnimations(element.value);
 
-  // set notification text
+  /** set notification text */
   text.value = (event as CustomEvent).detail;
 
-  // set timer to close
+  /** set timer to close */
   start();
 }
 
-// when user clicks notification
+/** when user clicks notification */
 function onClick() {
   stop();
   text.value = "";
 }
 
-// listen for push notification event
+/** listen for push notification event */
 useEventListener(window, "snackbar", onPush);
 </script>
 

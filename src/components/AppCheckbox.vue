@@ -13,11 +13,11 @@
 
 <script setup lang="ts">
 interface Props {
-  // checked state
+  /** checked state */
   modelValue?: boolean;
-  // text to show in label
+  /** text to show in label */
   text: string;
-  // icon to show in label
+  /** icon to show in label */
   icon?: string;
 }
 
@@ -29,7 +29,7 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 
-// when checkbox value changes
+/** when checkbox value changes */
 function onChange(event: Event) {
   emit("update:modelValue", (event?.target as HTMLInputElement).checked);
 }
