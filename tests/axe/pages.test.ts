@@ -11,8 +11,9 @@ expect.extend(toHaveNoViolations);
 const exclude = ["NotFound"];
 const pages = routes
   .filter((route) => !exclude.includes(String(route.name || "")))
-  .map((route) => route.path);
-// TODO: add some specific node page routes here, like disease/MONDO:012345
+  .map((route) => route.path)
+  // specific node pages to check
+  .concat(["/disease/MONDO:012345"]);
 
 test(
   "Page accessibility checks",

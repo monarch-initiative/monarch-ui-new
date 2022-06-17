@@ -163,10 +163,6 @@ function onKeydown(event: KeyboardEvent) {
 
   // esc key to close dropdown
   if (expanded.value && event.key === "Escape") close();
-
-  // TODO: type ahead
-  // not strictly necessary for now because this component only used with a
-  // small number of options
 }
 
 // get selected option index from model

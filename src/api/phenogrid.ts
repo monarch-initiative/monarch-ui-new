@@ -18,7 +18,6 @@ export const mountPhenogrid = async (
     (await waitFor("#phenogrid")).innerHTML = "";
 
     // map in particular way based on mode, per ui 2.0
-    // TODO: fix whatever phenogrid quirks make this necessary
     const modifiedXAxis = xAxis.map(({ id = "", name = "" }) =>
       mode === "compare" ? [id] : { groupId: id, groupName: name }
     );

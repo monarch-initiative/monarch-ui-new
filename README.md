@@ -86,6 +86,11 @@ Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-
 
 ### Guidelines and notes
 
+Use JSDoc style comments (`/** some comment */`) instead of regular JavaScript comments.
+This allows lint checking and auto-fixing/auto-formatting of long comments wrapping to new lines.
+More importantly, it allows for better editor integration, meaning that hovering over a function/parameter/object/etc. key will show its associated JSDoc comment.
+There are user snippets, shortcuts, and extensions you can use to make this as convenient as regular comments.
+
 Where possible and appropriate, use custom components like `AppHeading` and `AppLink` instead of native elements like `h1` and `a`.
 
 See `variables.scss` for a palette of acceptable colors/fonts/etc to use.
@@ -96,11 +101,8 @@ For example, avoid overriding default eslint rules as much as possible.
 Keep long lists, such as those in `/global`, sorted alphabetically for consistency and ease of lookup and comparison.
 Tip: use VS Code extension "Sort Lines".
 
-Use `// TODO` as a consistent in-code flag for pieces of code that should eventually be replaced with something better.
-Also link to a GitHub issue that tracks the issue.
-
 Use `console.log` for strictly for temporary debugging during local development that should be removed before merging PRs.
 Use `info`/`warn`/`debug`/`error` at your discretion, but only for major, infrequent events, as logging too frequently (say, multiple times per second, sustained) can impact page performance.
-Leaving select logging *in production* will be beneficial for in this particular app, for user and in-situ troubleshooting of complex, hard-to-replicate problems.
+Leaving select logging _in production_ will be beneficial for in this particular app, for user and in-situ troubleshooting of complex, hard-to-replicate problems.
 
 To analyze the size of the compiled bundle, uncomment the `stats-webpack-plugin` line in the `vue.config.js`, build the app, then try running `npx webpack-bundle-analyzer dist/stats.json` or `npx source-map-explorer dist/js/*`.
