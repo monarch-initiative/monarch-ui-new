@@ -10,15 +10,18 @@ export const biolink = "https://api.monarchinitiative.org/api";
 type Param = string | number | boolean | undefined | null;
 export type Params = Record<string, Param | Array<Param>>;
 
-/** generic fetch request wrapper */
+/**
+ * generic fetch request wrapper
+ *
+ * @param path request url
+ * @param params url params. comma-separated values expand to repeated keys
+ * @param options fetch() options
+ * @param parse parse response mode
+ */
 export const request = async <T>(
-  /** request url */
   path = "",
-  /** url params. comma-separated values expand to repeated keys. */
   params: Params = {},
-  /** fetch options */
   options: RequestInit = {},
-  /** parse response mode */
   parse: "text" | "json" = "json"
 ): Promise<T> => {
   /** get string of url parameters/options */

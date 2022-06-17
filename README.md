@@ -80,7 +80,7 @@ Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-
 - `package.json` - What third party packages are necessary for this app to run, and which versions.
   Also where the `yarn ___` shorthand commands are defined.
   `yarn.lock` - Detailed list of all dependencies and sub-dependencies, and their versions, providing a last known good configuration.
-- `.eslintrs.js`, `babel.config.js`, etc. - Separate configuration files for the various tools involved in the development pipeline.
+- `.eslintrc.js`, `babel.config.js`, etc. - Separate configuration files for the various tools involved in the development pipeline.
 - `.env` - Environment variable file.
   A convenient place to set static string values that need to be repeated throughout the app.
 
