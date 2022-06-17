@@ -63,17 +63,14 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
 
     /** convert into desired result format */
     const metadata: Result = {
-      /** see result interface below... */
       id: response.id,
       originalId: id,
       name: response.label,
       category: mapCategory(response.category || []),
 
-      /** ... */
       synonyms: (response.synonyms || []).map(({ val }) => val),
       description: response.description || "",
 
-      /** ... */
       iri: response.iri,
       inheritance: (response.inheritance || []).map(({ id, label, iri }) => ({
         id,
@@ -83,7 +80,6 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
       modifiers: (response.clinical_modifiers || []).map(({ label }) => label),
       xrefs: response.xrefs.map((id) => ({ id, link: getXrefLink(id) })),
 
-      /** ... */
       taxon: {
         id: response.taxon?.id || "",
         name: response.taxon?.label || "",
@@ -95,10 +91,8 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
           : "",
       },
 
-      /** ... */
       hierarchy: await getHierarchy(id, category),
 
-      /** ... */
       associationCounts: sortBy(
         Object.entries(response.association_counts || {})
           /** don't include other facets */
@@ -144,22 +138,29 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
 export interface Result {
   /** title section */
   id: string;
+  /** title section */
   originalId: string;
+  /** title section */
   name: string;
+  /** title section */
   category: string;
 
   /** overview section */
   synonyms: Array<string>;
+  /** overview section */
   description: string;
 
   /** details section */
   iri: string;
+  /** details section */
   inheritance: Array<{
     id: string;
     name: string;
     link: string;
   }>;
+  /** details section */
   modifiers: Array<string>;
+  /** details section */
   xrefs: Array<{
     id: string;
     link: string;
@@ -171,13 +172,18 @@ export interface Result {
     name?: string;
     link?: string;
   };
+  /** details section (gene specific) */
   symbol?: string;
+  /** details section (gene specific) */
   genome?: GeneResult["genome"];
 
   /** details section (publication specific) */
   authors?: Array<string>;
+  /** details section (publication specific) */
   date?: Date;
+  /** details section (publication specific) */
   doi?: string;
+  /** details section (publication specific) */
   journal?: string;
 
   /** hierarchy section */

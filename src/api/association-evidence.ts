@@ -96,47 +96,43 @@ export const getEvidence = async (id: string): Promise<Result> => {
     };
 
     /** convert table data into desired result format */
-    const table: Table = associations.map((association) => ({
-      /** see result interface below... */
-      object: {
-        id: association.object.id,
-        name: association.object.label,
-        iri: association.object.iri,
-        category: mapCategory(association.object.category || []),
-      },
+    const table: Table = associations.map(
+      (association) =>
+        ({
+          object: {
+            id: association.object.id,
+            name: association.object.label,
+            iri: association.object.iri,
+            category: mapCategory(association.object.category || []),
+          },
 
-      /** ... */
-      subject: {
-        id: association.subject.id,
-        name: association.subject.label,
-        iri: association.subject.iri,
-        category: mapCategory(association.subject.category || []),
-      },
+          subject: {
+            id: association.subject.id,
+            name: association.subject.label,
+            iri: association.subject.iri,
+            category: mapCategory(association.subject.category || []),
+          },
 
-      /** ... */
-      relation: {
-        id: association.relation.id,
-        name: association.relation.label,
-        iri: association.relation.iri,
-        category: (association.relation?.category || [])[0] || "",
-        inverse: association.relation.inverse,
-      },
+          relation: {
+            id: association.relation.id,
+            name: association.relation.label,
+            iri: association.relation.iri,
+            category: (association.relation?.category || [])[0] || "",
+            inverse: association.relation.inverse,
+          },
 
-      /** ... */
-      codes: association.evidence_types?.map(mapCode) || [],
+          codes: association.evidence_types?.map(mapCode) || [],
 
-      /** ... */
-      publications: association.publications?.map(mapPublication) || [],
+          publications: association.publications?.map(mapPublication) || [],
 
-      /** ... */
-      sources: association.provided_by?.map(mapSource) || [],
+          sources: association.provided_by?.map(mapSource) || [],
 
-      /** ... */
-      references: [
-        ...(association.object_eq || []),
-        ...(association.subject_eq || []),
-      ].map(mapReference),
-    }));
+          references: [
+            ...(association.object_eq || []),
+            ...(association.subject_eq || []),
+          ].map(mapReference),
+        } as Evidence)
+    );
 
     return { summary, table };
   } catch (error) {
@@ -158,7 +154,9 @@ interface Summary {
 }
 
 /** detailed data of evidence */
-type Table = Array<{
+type Table = Array<Evidence>;
+
+interface Evidence {
   /** subject of association */
   subject: {
     id: string;
@@ -207,7 +205,7 @@ type Table = Array<{
     name: string;
     link: string;
   }>;
-}>;
+}
 
 export interface Result {
   summary: Summary;

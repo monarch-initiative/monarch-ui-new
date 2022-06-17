@@ -97,71 +97,64 @@ export const getTabulatedAssociations = async (
 
     /** convert into desired result format */
     const associations: Result["associations"] = response.associations.map(
-      (association) => ({
-        /** see result interface below... */
-        id: association.id,
+      (association) =>
+        ({
+          id: association.id,
 
-        /** ... */
-        object: {
-          id: association.object.id,
-          name: association.object.label,
-          iri: association.object.iri,
-          category: mapCategory(association.object.category || []),
-        },
+          object: {
+            id: association.object.id,
+            name: association.object.label,
+            iri: association.object.iri,
+            category: mapCategory(association.object.category || []),
+          },
 
-        /** ... */
-        subject: {
-          id: association.subject.id,
-          name: association.subject.label,
-          iri: association.subject.iri,
-          category: mapCategory(association.subject.category || []),
-        },
+          subject: {
+            id: association.subject.id,
+            name: association.subject.label,
+            iri: association.subject.iri,
+            category: mapCategory(association.subject.category || []),
+          },
 
-        /** ... */
-        relation: {
-          id: association.relation.id,
-          name: association.relation.label,
-          iri: association.relation.iri,
-          category: (association.relation?.category || [])[0] || "",
-          inverse: association.relation.inverse,
-        },
+          relation: {
+            id: association.relation.id,
+            name: association.relation.label,
+            iri: association.relation.iri,
+            category: (association.relation?.category || [])[0] || "",
+            inverse: association.relation.inverse,
+          },
 
-        /** ... */
-        evidence: [],
+          evidence: [],
 
-        /** ... */
-        taxon:
-          association.object.taxon?.id || association.object.taxon?.label
-            ? {
-                id: association.object.taxon?.id || "",
-                name: association.object.taxon?.label || "",
-              }
-            : undefined,
+          taxon:
+            association.object.taxon?.id || association.object.taxon?.label
+              ? {
+                  id: association.object.taxon?.id || "",
+                  name: association.object.taxon?.label || "",
+                }
+              : undefined,
 
-        /** ... */
-        frequency:
-          association.frequency?.id || association.frequency?.label
-            ? {
-                name: association.frequency?.label || "",
-                link: getXrefLink(association.frequency?.id || ""),
-              }
-            : undefined,
-        onset:
-          association.onset?.id || association.onset?.label
-            ? {
-                name: association.onset?.label || "",
-                link: getXrefLink(association.onset?.id || ""),
-              }
-            : undefined,
+          frequency:
+            association.frequency?.id || association.frequency?.label
+              ? {
+                  name: association.frequency?.label || "",
+                  link: getXrefLink(association.frequency?.id || ""),
+                }
+              : undefined,
+          onset:
+            association.onset?.id || association.onset?.label
+              ? {
+                  name: association.onset?.label || "",
+                  link: getXrefLink(association.onset?.id || ""),
+                }
+              : undefined,
 
-        /** ... */
-        supportCount:
-          (association.evidence_types || []).length +
-          (association.publications || []).filter((publication) =>
-            publication.id.startsWith("PMID:")
-          ).length +
-          (association.provided_by || []).length,
-      })
+          supportCount:
+            (association.evidence_types || []).length +
+            (association.publications || []).filter((publication) =>
+              publication.id.startsWith("PMID:")
+            ).length +
+            (association.provided_by || []).length,
+        } as Association)
     );
 
     /** supplement publication with metadata from entrez */
