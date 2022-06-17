@@ -11,7 +11,9 @@ test("Submits correctly when filled out", async () => {
   await textarea.setValue(testMessage);
 
   /** try to submit */
-  await wrapper.find("button").element.focus(); /** focus submit button to simulate "explicit" submit, see form submit function */
+  await wrapper
+    .find("button")
+    .element.focus(); /** focus submit button to simulate "explicit" submit, see form submit function */
   await wrapper.find("form").trigger("submit.prevent");
   expect(wrapper.emitted()).toHaveProperty("submit");
 

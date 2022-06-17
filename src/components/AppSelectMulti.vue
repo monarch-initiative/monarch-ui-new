@@ -246,17 +246,15 @@ function toggleSelect(index = -1, shift = false) {
       selected.value = Array(props.options.length)
         .fill(0)
         .map((_, index) => index);
-  }
-  /** solo/un-solo one */
-  else if (shift) {
+  } else if (shift) {
+    /** solo/un-solo one */
     if (isEqual(selected.value, [index]))
       selected.value = Array(props.options.length)
         .fill(0)
         .map((_, index) => index);
     else selected.value = [index];
-  }
-  /** toggle one */
-  else {
+  } else {
+    /** toggle one */
     if (selected.value.includes(index))
       selected.value = selected.value.filter((value) => value !== index);
     else selected.value.push(index);

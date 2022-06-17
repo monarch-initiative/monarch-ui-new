@@ -7,12 +7,18 @@ import { handlers } from "../../fixtures";
 const worker = setupWorker(...handlers);
 before(() => worker.start());
 afterEach(() => worker.resetHandlers());
-/** leave this out so when running cypress gui you can still play around with mocked responses even after tests have finished running */
+/**
+ * leave this out so when running cypress gui you can still play around with
+ * mocked responses even after tests have finished running
+ */
 /*
 after(() => worker.stop());
 */
 
-/** make "contains()" case-insensitive by default. https://github.com/cypress-io/cypress/issues/6564 */
+/**
+ * make "contains()" case-insensitive by default.
+ * https://github.com/cypress-io/cypress/issues/6564
+ */
 Cypress.Commands.overwrite(
   "contains",
   (originalFn, subject, filter, text, options = {}) => {

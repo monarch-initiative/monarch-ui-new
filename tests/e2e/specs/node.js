@@ -28,7 +28,9 @@ it("Table of contents works", () => {
   cy.contains(".toc", "Associations");
 
   /** check if solo selection mode works */
-  cy.get(".toc .checkbox").click(); /** cypress click function needed here for some reason */
+  cy.get(
+    ".toc .checkbox"
+  ).click(); /** cypress click function needed here for some reason */
   cy.get("main").contains("Overview").should("be.visible");
   cy.get("main").contains("Hierarchy").should("not.be.visible");
   cy.get("main").contains("Associations").should("not.be.visible");

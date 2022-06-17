@@ -217,7 +217,10 @@ function onKeydown(event: KeyboardEvent) {
 
 /** when user pastes text */
 async function onPaste() {
-  /** wait for pasted value to take effect but don't use nextTick because by then search.value will be reset */
+  /**
+   * wait for pasted value to take effect but don't use nextTick because by then
+   * search.value will be reset
+   */
   await sleep();
   /** immediately auto-accept results */
   getResults();
@@ -236,11 +239,13 @@ async function select(options: Option | Options) {
     if (option.getOptions) {
       const options = await option.getOptions();
       toSelect.push(...options);
-      /** notify parent that dynamic options were added. provide option selected and options added. */
+      /**
+       * notify parent that dynamic options were added. provide option selected
+       * and options added.
+       */
       emit("getOptions", option, options);
-    }
+    } else toSelect.push(option);
     /** otherwise just select option */
-    else toSelect.push(option);
   }
 
   /** select options */
@@ -292,9 +297,8 @@ async function getResults() {
       search.value = "";
       emit("autoAccept");
       snackbar(response.message);
-    }
-    /** otherwise, show list of results for user to select */
-    else {
+    } else {
+      /** otherwise, show list of results for user to select */
       results.value = response;
     }
 
@@ -343,8 +347,7 @@ watch(focused, () => {
   status.value = { code: "loading" };
   /** get results when first focused */
   if (focused.value) getResults();
-  /** clear search when input box blurred */
-  else close();
+  /** clear search when input box blurred */ else close();
 });
 
 /** when highlighted index changes */

@@ -52,7 +52,8 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
       unselect_evidence: true,
       exclude_automatic_assertions: true,
       use_compact_associations: false,
-      get_association_counts: true, /** missing in biolink docs, but essential */
+      get_association_counts:
+        true /** missing in biolink docs, but essential */,
       rows: 1,
     };
 

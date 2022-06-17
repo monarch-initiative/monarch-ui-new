@@ -27,6 +27,10 @@ it("Feedback form can open and close", () => {
 
   /** reopen and make sure x button closes */
   cy.get("@open").trigger("click");
-  cy.get(".modal button").first().trigger("click"); /** close button should always be first button in dom order */
+  cy.get(".modal button")
+    .first()
+    .trigger(
+      "click"
+    ); /** close button should always be first button in dom order */
   cy.get(".modal").should("not.exist");
 });

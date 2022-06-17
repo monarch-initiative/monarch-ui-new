@@ -13,7 +13,10 @@ export const mountPhenogrid = async (
   mode = "compare"
 ): Promise<void> => {
   try {
-    /** wait for phenogrid container to render on mount, and clear any previous phenogrid instances from showing */
+    /**
+     * wait for phenogrid container to render on mount, and clear any previous
+     * phenogrid instances from showing
+     */
     (await waitFor("#phenogrid")).innerHTML = "";
 
     /** map in particular way based on mode, per ui 2.0 */

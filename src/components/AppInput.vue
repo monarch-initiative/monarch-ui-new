@@ -95,7 +95,10 @@ function onChange(event: Event) {
   /** cancel any pending calls */
   debouncedOnChange.cancel();
 
-  /** if you see this event fire unexpectedly, check this: https://bugs.chromium.org/p/chromium/issues/detail?id=1297334 */
+  /**
+   * if you see this event fire unexpectedly, check this:
+   * https://bugs.chromium.org/p/chromium/issues/detail?id=1297334
+   */
 
   /** if on change (for this value) has not already emitted */
   const value = (event.target as HTMLInputElement).value;

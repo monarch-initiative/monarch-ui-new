@@ -138,7 +138,10 @@ function onKeydown(event: KeyboardEvent) {
     /** prevent page scroll */
     event.preventDefault();
 
-    /** if dropdown open, control highlighted option. if dropdown closed, control selected option. */
+    /**
+     * if dropdown open, control highlighted option. if dropdown closed, control
+     * selected option.
+     */
     let index = expanded.value ? highlighted.value : selected.value;
 
     /** move value up/down */

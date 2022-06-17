@@ -209,7 +209,10 @@ function doExample(value: string) {
 
 /** get search results */
 async function getResults(
-  /** whether to perform "fresh" search, without filters. set to true when search changing, false when filters or page number changing. */
+  /**
+   * whether to perform "fresh" search, without filters. set to true when search
+   * changing, false when filters or page number changing.
+   */
   fresh: boolean,
   /** whether to push new entry to browser history */
   history: boolean

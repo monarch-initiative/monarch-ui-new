@@ -258,7 +258,10 @@ function onFilterChange(colId: Col["id"], value: Options) {
 
 /** get table association data */
 async function getAssociations(
-  /** whether to perform "fresh" search, without filters. set to true when category changing, false when filters changing. */
+  /**
+   * whether to perform "fresh" search, without filters. set to true when
+   * category changing, false when filters changing.
+   */
   fresh: boolean
 ) {
   try {

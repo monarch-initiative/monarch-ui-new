@@ -5,7 +5,10 @@ import { Options, OptionsFunc } from "@/components/AppSelectTags.d";
 /** search individual phenotypes or gene/disease phenotypes */
 export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
   try {
-    /** detect pasted list of phenotype ids. deliberately don't detect single id. handle that with regular search. */
+    /**
+     * detect pasted list of phenotype ids. deliberately don't detect single id.
+     * handle that with regular search.
+     */
     const ids = search.split(/\s*,\s*/);
     if (ids.length >= 2)
       return {
@@ -172,7 +175,10 @@ export type CompareResult = {
   maxScore?: number;
 };
 
-/** small hard-coded map of taxon id (NCBITaxon), "name" (human readable), and scientific name, just for phenotype explorer so no querying needed for conversion */
+/**
+ * small hard-coded map of taxon id (NCBITaxon), "name" (human readable), and
+ * scientific name, just for phenotype explorer so no querying needed for conversion
+ */
 const taxonMap: Array<{ id: string; name: string; scientific: string }> = [
   { id: "9606", name: "human", scientific: "Homo sapiens" },
   { id: "10090", name: "mouse", scientific: "Mus musculus" },

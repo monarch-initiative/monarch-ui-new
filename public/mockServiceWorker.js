@@ -3,8 +3,8 @@
 
 /**
  * Mock Service Worker (0.35.0).
- * @see https://github.com/mswjs/msw
- * - Please do NOT modify this file.
+ *
+ * @see https://github.com/mswjs/msw - Please do NOT modify this file.
  * - Please do NOT serve this file on production.
  */
 
@@ -278,7 +278,10 @@ self.addEventListener("fetch", function (event) {
         return;
       }
 
-      /** At this point, any exception indicates an issue with the original request/response. */
+      /**
+       * At this point, any exception indicates an issue with the original
+       * request/response.
+       */
       console.error(
         `\
 [MSW] Caught an exception from the "%s %s" request (%s). This is probably not a problem with Mock Service Worker. There is likely an additional logging output above.`,

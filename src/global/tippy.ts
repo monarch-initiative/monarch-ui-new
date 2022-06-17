@@ -13,7 +13,10 @@ const update = (instance: Instance): void => {
     /** set aria label from tooltip content as fallback */
     instance.reference.setAttribute("aria-label", instance.props.content);
 
-  /** if tooltip target/reference is plain text (not link, not button, etc), add styling to indicate it has tooltip */
+  /**
+   * if tooltip target/reference is plain text (not link, not button, etc), add
+   * styling to indicate it has tooltip
+   */
   if (instance.reference.tagName === "SPAN" && !!instance.props.content)
     instance.reference.setAttribute("data-tooltip", "true");
 };

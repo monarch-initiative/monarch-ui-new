@@ -7,7 +7,10 @@ export const restartAnimations = (element: Element): void => {
     }
 };
 
-/** wait for element matching selector to appear (checking several times per sec). when found, return found element and run callback with element */
+/**
+ * wait for element matching selector to appear (checking several times per
+ * sec). when found, return found element and run callback with element
+ */
 export const waitFor = async (
   selector = "",
   callback?: (element: Element) => void

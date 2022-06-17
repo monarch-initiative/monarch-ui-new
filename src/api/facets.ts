@@ -40,16 +40,16 @@ export const queryToParams = (
   activeFilters: Query
 ): Params => {
   const params: Params = {};
-  /** eslint-disable-next-line */
-  for (let [key, query] of Object.entries(activeFilters)) {
+  for (const [key, query] of Object.entries(activeFilters)) {
     /** do special mapping for certain keys */
-    if (key === "taxon") query = query.map(labelToId);
+    let newQuery = query;
+    if (key === "taxon") newQuery = newQuery.map(labelToId);
 
     /** ignore filter if value "empty" (none active) or "full" (all active) */
-    const noneActive = query.length === 0;
+    const noneActive = newQuery.length === 0;
     const allActive =
       activeFilters[key]?.length === availableFilters[key]?.length;
-    if (!noneActive && !allActive) params[key] = query;
+    if (!noneActive && !allActive) params[key] = newQuery;
   }
 
   return params;

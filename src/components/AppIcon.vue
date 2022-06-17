@@ -30,7 +30,10 @@ import InlineSvg from "vue-inline-svg";
 import { computed } from "vue";
 
 interface Props {
-  /** kebab-case name of icon to show. for font awesome, without fas/far/etc prefix. for custom icon, match filename, without extension. */
+  /**
+   * kebab-case name of icon to show. for font awesome, without fas/far/etc
+   * prefix. for custom icon, match filename, without extension.
+   */
   icon: string;
 }
 

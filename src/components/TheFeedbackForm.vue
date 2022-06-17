@@ -114,7 +114,7 @@ const link = ref("");
 
 /** list of automatic details to record */
 const details = computed(() => {
-  /** get browser/device/os/etc details from ua parser  library */
+  /** get browser/device/os/etc details from ua parser library */
   const { browser, device, os, engine, cpu } = parser();
 
   /** filter and join strings together */

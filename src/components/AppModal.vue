@@ -104,9 +104,8 @@ onBeforeUpdate(async () => {
   /** if modal about to be opened */
   if (props.modelValue) {
     originalFocus.value = document?.activeElement as HTMLElement;
-  }
-  /** if modal about to be closed */
-  else {
+  } else {
+    /** if modal about to be closed */
     /** show for screen readers */
     app?.removeAttribute("aria-hidden");
     /** enable focus */

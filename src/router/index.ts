@@ -259,7 +259,11 @@ router.beforeEach(() => {
 
 export default router;
 
-/** dirty way to allow passing arbitrary data with router.push. will no longer be needed once this vue-router RFC is implemented: https://github.com/vuejs/rfcs/discussions/400 */
+/**
+ * dirty way to allow passing arbitrary data with router.push. will no longer be
+ * needed once this vue-router RFC is implemented:
+ * https://github.com/vuejs/rfcs/discussions/400
+ */
 let routeData: unknown = null;
 export const setData = (data: unknown): void => {
   routeData = data;
