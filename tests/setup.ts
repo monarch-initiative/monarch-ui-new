@@ -55,7 +55,7 @@ afterAll(async () => {
 export const mount = <T>(
   component: T,
   // eslint-disable-next-line
-  { props, slots, ...rest }: MountingOptions<any> = {}
+  { props, ...rest }: MountingOptions<any> = {}
 ): VueWrapper<ComponentPublicInstance<T>> =>
   vueMount(component, {
     /** deep clone props so nested objects get new instance every mount */
@@ -64,7 +64,6 @@ export const mount = <T>(
       components,
       plugins,
     },
-    slots,
     ...rest,
   });
 

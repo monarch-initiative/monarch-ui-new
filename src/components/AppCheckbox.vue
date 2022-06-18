@@ -3,7 +3,7 @@
 -->
 
 <template>
-  <label class="checkbox" :aria-checked="modelValue">
+  <label class="checkbox">
     <input type="checkbox" :checked="modelValue" @change="onChange" />
     <AppIcon class="check" :icon="modelValue ? 'square-check' : 'square'" />
     <span v-if="text">{{ text }}</span>
