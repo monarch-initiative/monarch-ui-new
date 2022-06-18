@@ -41,6 +41,7 @@ const expanded = ref(false);
   width: 100%;
   padding: 10px;
   border-bottom: solid 2px $light-gray;
+  border-radius: $rounded;
   font-size: 1.1rem;
   transition: background $fast;
 

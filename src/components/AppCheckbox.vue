@@ -42,6 +42,7 @@ function onChange(event: Event) {
   align-items: center;
   gap: 10px;
   padding: 10px;
+  border-radius: $rounded;
   cursor: pointer;
   transition: background $fast;
 
