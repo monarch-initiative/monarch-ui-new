@@ -15,7 +15,6 @@ module.exports = {
       sass: {
         prependData: `
           @use "@/global/variables.scss" as *;
-          @use "@/global/mixins.scss" as *;
         `,
       },
     },

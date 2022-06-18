@@ -41,7 +41,7 @@ const normalized = computed(() => {
 
 /** arc svg path */
 const d = computed(() => {
-  let angle = 360 * normalized.value;
+  const angle = 360 * normalized.value;
   const x = sin(angle) * 50;
   const y = -cos(angle) * 50;
   return `M 0 -50 A 50 50 0 ${angle >= 180 ? 1 : 0} 1 ${x} ${y}`;

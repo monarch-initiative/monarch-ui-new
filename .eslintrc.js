@@ -41,7 +41,11 @@ module.exports = {
      * little risk of XSS.
      */
     "vue/no-v-html": ["off"],
+    "vue/no-v-text-v-html-on-component": ["off"],
   },
+
+  /** don't lint certain files */
+  ignorePatterns: ["mockServiceWorker.js"],
 
   /** is this needed? */
   overrides: [

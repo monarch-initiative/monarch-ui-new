@@ -8,7 +8,7 @@
     <TheNexus v-if="home" />
 
     <!-- title bar -->
-    <div class="title" :title="version">
+    <div class="title" :title="app.version">
       <!-- logo image and text -->
       <AppLink
         v-tippy="home ? '' : 'Homepage'"
@@ -69,7 +69,7 @@
 import { ref, computed, watch } from "vue";
 import TheNexus from "./TheNexus.vue";
 import TheLogo from "@/assets/TheLogo.vue";
-import { version } from "../../package.json";
+import app from "../../package.json";
 import { useRoute } from "vue-router";
 
 /** route info */
