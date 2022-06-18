@@ -1,4 +1,6 @@
 {
+  "plugins": ["./node_modules/prettier-plugin-jsdoc"],
+  "jsdocCapitalizeDescription": false,
   "overrides": [
     {
       "files": "*.svg",

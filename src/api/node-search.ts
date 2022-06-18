@@ -21,7 +21,7 @@ interface Response {
   >;
 }
 
-// get results from node search text and filters
+/** get results from node search text and filters */
 export const getSearchResults = async (
   search = "",
   availableFilters: Query = {},
@@ -29,10 +29,10 @@ export const getSearchResults = async (
   start = 0
 ): Promise<Result> => {
   try {
-    // if nothing searched, return empty
+    /** if nothing searched, return empty */
     if (!search.trim()) throw new ApiError("No results", "warning");
 
-    // other params
+    /** other params */
     const params = {
       ...queryToParams(availableFilters, activeFilters),
       boost_q: [
@@ -48,7 +48,7 @@ export const getSearchResults = async (
       start,
     };
 
-    // make query
+    /** make query */
     const url = `${biolink}/search/entity/${search}`;
     const response = await request<Response>(url, params);
     const {
@@ -58,7 +58,7 @@ export const getSearchResults = async (
       highlighting = {},
     } = response;
 
-    // convert into desired result format
+    /** convert into desired result format */
     const results = docs.map((doc) => ({
       id: doc.id || "",
       name: (doc.label || [])[0] || "",
@@ -71,10 +71,10 @@ export const getSearchResults = async (
       highlight: highlighting[doc.id].highlight,
     }));
 
-    // empty error status
+    /** empty error status */
     if (!results.length) throw new ApiError("No results", "warning");
 
-    // get facets for select options
+    /** get facets for select options */
     const facets = facetsToFilters(facet_counts);
 
     return { count, results, facets };

@@ -1,11 +1,11 @@
 import { waitFor } from "./../util/dom";
 import { cleanError } from "./index";
 import { biolink } from ".";
-// import "phenogrid/dist/phenogrid-bundle.css";
+/** import "phenogrid/dist/phenogrid-bundle.css"; */
 import "./phenogrid.css";
 import Phenogrid from "phenogrid";
 
-// mount phenogrid to dom element with options
+/** mount phenogrid to dom element with options */
 export const mountPhenogrid = async (
   selector: string,
   xAxis: Array<{ id?: string; name?: string }>,
@@ -13,12 +13,13 @@ export const mountPhenogrid = async (
   mode = "compare"
 ): Promise<void> => {
   try {
-    // wait for phenogrid container to render on mount, and clear any previous
-    // phenogrid instances from showing
+    /**
+     * wait for phenogrid container to render on mount, and clear any previous
+     * phenogrid instances from showing
+     */
     (await waitFor("#phenogrid")).innerHTML = "";
 
-    // map in particular way based on mode, per ui 2.0
-    // TODO: fix whatever phenogrid quirks make this necessary
+    /** map in particular way based on mode, per ui 2.0 */
     const modifiedXAxis = xAxis.map(({ id = "", name = "" }) =>
       mode === "compare" ? [id] : { groupId: id, groupName: name }
     );
@@ -44,10 +45,9 @@ export const mountPhenogrid = async (
   }
 };
 
-// BELOW ARE SHIMS FOR PHENOGRID
-// when (if) we rewrite phenogrid from scratch, these should no longer be needed
+/** SHIMS FOR PHENOGRID */
 
-// typescript definition
+/** typescript definition */
 export interface PhenogridDefinition {
   createPhenogridForElement: (
     element: HTMLElement | null,
@@ -68,10 +68,10 @@ export interface PhenogridDefinition {
   ) => void;
 }
 
-// fix incorrect svg sizing
+/** fix incorrect svg sizing */
 const patchSvg = (svg: Element, padding = 20) => {
   const { x, y, width, height } = (svg as SVGSVGElement).getBBox();
-  // set view box to bbox, essentially fitting view to content
+  /** set view box to bbox, essentially fitting view to content */
   const viewBox = [
     x - padding,
     y - padding,

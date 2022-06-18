@@ -1,7 +1,7 @@
 import { mount, emitted } from "../setup";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 
-// some example props for each test
+/** some example props for each test */
 const props = {
   name: "Multi select",
   options: [
@@ -34,7 +34,7 @@ test("Opens/closes on keyboard", async () => {
   await button.trigger("keydown", { key: "Escape" });
 });
 
-// expected type of emitted update:modelValue events
+/** expected type of emitted update:modelValue events */
 type T = Array<unknown>;
 
 test("Selects by click", async () => {

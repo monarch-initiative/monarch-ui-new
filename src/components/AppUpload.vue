@@ -35,36 +35,36 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 
-// dragging state
+/** dragging state */
 const drag = ref(false);
-// input element
+/** input element */
 const input = ref<HTMLInputElement>();
 
-// upload file
+/** upload file */
 async function upload(target: HTMLInputElement | DataTransfer | null) {
-  // get file name and contents from event
+  /** get file name and contents from event */
   const file = (target?.files || [])[0];
   const content = (await file.text()) || "";
   const filename = file?.name || "";
 
-  // signal upload to parent
+  /** signal upload to parent */
   emit("upload", content, filename);
 
-  // reset file input
+  /** reset file input */
   if (content && input.value) input.value.value = "";
 }
 
-// on file input change
+/** on file input change */
 function onChange(event: Event) {
   upload(event.target as HTMLInputElement);
 }
 
-// on button click, click hidden file input
+/** on button click, click hidden file input */
 function onClick() {
   input.value?.click();
 }
 
-// on button file drop
+/** on button file drop */
 function onDrop(event: DragEvent) {
   drag.value = false;
   upload(event.dataTransfer);
@@ -77,7 +77,7 @@ function onDrop(event: DragEvent) {
   box-shadow: none !important;
 }
 
-// prevent button children from messing with drag state
+/** prevent button children from messing with drag state */
 .button > :deep(*) {
   pointer-events: none;
 }

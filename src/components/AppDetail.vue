@@ -27,23 +27,25 @@
 </template>
 
 <script setup lang="ts">
-// for fields not relevant to current page (e.g. taxon on a disease node page),
-// hide with v-if
-
-// for relevant fields, show with v-if, to indicate that field exists, but pass
-// "blank" prop to indicate that no data available
+/**
+ * for fields not relevant to current page (e.g. taxon on a disease node page),
+ * hide with v-if. for relevant fields, show with v-if, to indicate that field
+ * exists, but pass "blank" prop to indicate that no data available
+ */
 
 interface Props {
-  // title of info block
+  /** title of info block */
   title: string;
-  // icon next to title
+  /** icon next to title */
   icon?: string;
-  // number next to title
+  /** number next to title */
   count?: number;
-  // whether or not to show "no info" placeholder. why? to show that this field
-  // exists, but doesn't have data this time.
+  /**
+   * whether or not to show "no info" placeholder. why? to show that this field
+   * exists, but doesn't have data this time.
+   */
   blank?: boolean;
-  // whether info block is full width or not
+  /** whether info block is full width or not */
   big?: boolean;
 }
 
@@ -66,7 +68,7 @@ withDefaults(defineProps<Props>(), {
   }
 
   &[data-big="false"] {
-    // keep in sync with AppDetails gap
+    /** keep in sync with AppDetails gap */
     width: calc((100% - 30px) / 2);
   }
 

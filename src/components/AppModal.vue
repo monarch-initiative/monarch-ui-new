@@ -43,9 +43,9 @@ import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { useEventListener } from "@vueuse/core";
 
 interface Props {
-  // open state
+  /** open state */
   modelValue?: boolean;
-  // modal aria label
+  /** modal aria label */
   label: string;
 }
 
@@ -57,63 +57,62 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 
-// element that had focus before modal was opened
+/** element that had focus before modal was opened */
 const originalFocus = ref<HTMLElement | null>(null);
 
-// update model value to close modal
+/** update model value to close modal */
 function close() {
   emit("update:modelValue", false);
 }
 
-// when user presses any key
+/** when user presses any key */
 function keyDown(event: KeyboardEvent) {
   if (event.key === "Escape") close();
 }
 
-// attach key down listener to window
+/** attach key down listener to window */
 useEventListener(window, "keydown", keyDown);
 
-// modal element
+/** modal element */
 const modal = ref<HTMLElement>();
 
-// after state change
+/** after state change */
 onUpdated(() => {
-  // rest of app besides modal
+  /** rest of app besides modal */
   const app = document?.querySelector("#app");
 
-  // if modal just opened
+  /** if modal just opened */
   if (props.modelValue) {
-    // hide for screen readers
+    /** hide for screen readers */
     app?.setAttribute("aria-hidden", "true");
-    // disable focus
+    /** disable focus */
     app?.setAttribute("inert", "true");
-    // disable body scroll
+    /** disable body scroll */
     if (modal.value) disableBodyScroll(modal.value);
-    // focus first focusable element in modal
+    /** focus first focusable element in modal */
     const query = "input, textarea, button, select";
     const focusable = modal.value?.querySelector(query) as HTMLElement;
     focusable?.focus();
   }
 });
 
-// before state change
+/** before state change */
 onBeforeUpdate(async () => {
-  // rest of app besides modal
+  /** rest of app besides modal */
   const app = document?.querySelector("#app");
 
-  // if modal about to be opened
+  /** if modal about to be opened */
   if (props.modelValue) {
     originalFocus.value = document?.activeElement as HTMLElement;
-  }
-  // if modal about to be closed
-  else {
-    // show for screen readers
+  } else {
+    /** if modal about to be closed */
+    /** show for screen readers */
     app?.removeAttribute("aria-hidden");
-    // enable focus
+    /** enable focus */
     app?.removeAttribute("inert");
-    // enable body scroll
+    /** enable body scroll */
     if (modal.value) enableBodyScroll(modal.value);
-    // restore focus to what had focus before modal opened
+    /** restore focus to what had focus before modal opened */
     await nextTick();
     originalFocus.value?.focus();
   }
@@ -148,7 +147,7 @@ onBeforeUpdate(async () => {
   z-index: 100;
 }
 
-// close button
+/** close button */
 .close {
   position: absolute;
   top: 10px;

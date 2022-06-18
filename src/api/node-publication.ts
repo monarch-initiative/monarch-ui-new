@@ -1,10 +1,10 @@
 import { mapKeys, mapValues } from "lodash";
 import { request, cleanError } from ".";
 
-// entrez endpoint for getting publication metadata
+/** entrez endpoint for getting publication metadata */
 const entrez = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils";
 
-// get metadata of publication from entrez
+/** get metadata of publication from entrez */
 export const getPublication = async (id = ""): Promise<Result> => {
   try {
     const summary = (await getSummaries([id]))[id];
@@ -43,12 +43,12 @@ interface SummaryResponse {
   };
 }
 
-// get summary information of publication(s) from entrez
+/** get summary information of publication(s) from entrez */
 export const getSummaries = async (
   ids: Array<string>
 ): Promise<SummariesResult> => {
   try {
-    // strip prefix as entrez expects
+    /** strip prefix as entrez expects */
     ids = ids
       .map((id) => id.replace("PMID:", ""))
       .map((id) => id.trim())
@@ -56,12 +56,12 @@ export const getSummaries = async (
 
     if (!ids.length) return {};
 
-    // make query
+    /** make query */
     const params = { db: "pubmed", retmode: "json", id: ids.join(",") };
     const url = `${entrez}/esummary.fcgi`;
     const { result } = await request<SummaryResponse>(url, params);
 
-    // convert into desired result format
+    /** convert into desired result format */
     let publications = mapValues(result, (publication) => ({
       id: publication.uid,
       title: publication.title,
@@ -81,13 +81,13 @@ export const getSummaries = async (
   }
 };
 
-// get abstract text of publication from entrez
+/** get abstract text of publication from entrez */
 export const getAbstract = async (id = ""): Promise<AbstractResult> => {
   try {
-    // strip prefix as entrez expects
+    /** strip prefix as entrez expects */
     id = id.replace("PMID:", "");
 
-    // make query
+    /** make query */
     const params = { db: "pubmed", retmode: "text", rettype: "abstract", id };
     const url = `${entrez}/efetch.fcgi`;
     return await request<string>(url, params, {}, "text");

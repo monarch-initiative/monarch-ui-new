@@ -72,16 +72,16 @@ import TheLogo from "@/assets/TheLogo.vue";
 import { version } from "../../package.json";
 import { useRoute } from "vue-router";
 
-// route info
+/** route info */
 const route = useRoute();
 
-// is nav menu expanded
+/** is nav menu expanded */
 const expanded = ref(false);
 
-// is home page (big) version
+/** is home page (big) version */
 const home = computed((): boolean => route.name === "Home");
 
-// close nav when page changes
+/** close nav when page changes */
 watch(
   () => route,
   () => {
@@ -93,7 +93,7 @@ watch(
 <style lang="scss" scoped>
 $wrap: 750px;
 
-// header
+/** header */
 
 header {
   display: flex;
@@ -125,13 +125,13 @@ header[data-home="true"] {
   }
 }
 
-// title bar (containing logo and nav toggle button)
+/** title bar (containing logo and nav toggle button) */
 
 .title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  // background: radial-gradient($theme-dark 40%, transparent 70%);
+  /** background: radial-gradient($theme-dark 40%, transparent 70%); */
 }
 
 .button {
@@ -151,7 +151,7 @@ header[data-home="true"] {
   }
 }
 
-// logo image and text
+/** logo image and text */
 
 .logo {
   display: flex;
@@ -192,7 +192,7 @@ header[data-home="true"] {
   }
 }
 
-// navigation bar
+/** navigation bar */
 
 nav {
   display: flex;

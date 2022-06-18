@@ -18,9 +18,9 @@ import { clamp } from "lodash";
 import { sin, cos } from "@/util/math";
 
 interface Props {
-  // value to show in center of ring
+  /** value to show in center of ring */
   score?: number;
-  // range of score for normalization
+  /** range of score for normalization */
   min?: number;
   max?: number;
 }
@@ -31,15 +31,15 @@ const props = withDefaults(defineProps<Props>(), {
   max: 100,
 });
 
-// normalized score value
+/** normalized score value */
 const normalized = computed(() => {
   let value = (props.score - props.min) / (props.max - props.min);
-  // if max === min (essentially, if only one ring result to show in list)
+  /** if max === min (essentially, if only one ring result to show in list) */
   if (Number.isNaN(value)) value = 0.5;
   return clamp(value, 0.05, 0.95);
 });
 
-// arc svg path
+/** arc svg path */
 const d = computed(() => {
   let angle = 360 * normalized.value;
   const x = sin(angle) * 50;

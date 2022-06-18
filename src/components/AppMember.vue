@@ -27,19 +27,19 @@ import { computed } from "vue";
 import { kebabCase, deburr } from "lodash";
 
 interface Props {
-  // member name
+  /** member name */
   name: string;
-  // their role
+  /** their role */
   role?: string;
-  // link to bio
+  /** link to bio */
   link?: string;
-  // whether or not member is a past contributor
+  /** whether or not member is a past contributor */
   alumni?: boolean;
 }
 
 const props = defineProps<Props>();
 
-// get member img src with fallback if not found
+/** get member img src with fallback if not found */
 const src = computed(() => {
   const image = kebabCase(deburr((props.name || "").toLowerCase()));
   try {
@@ -85,7 +85,7 @@ a.member:hover {
 
   .icon {
     position: absolute;
-    // align to 45 degree edge of circle (for aesthetics)
+    /** align to 45 degree edge of circle (for aesthetics) */
     left: 14%;
     top: 14%;
     width: 15px;
@@ -93,7 +93,7 @@ a.member:hover {
     padding: 7px;
     background: $white;
     border-radius: 999px;
-    // align center
+    /** align center */
     transform: translate(-50%, -50%);
   }
 }

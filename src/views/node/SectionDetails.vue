@@ -66,7 +66,7 @@ import AppDetail from "@/components/AppDetail.vue";
 import AppDetails from "@/components/AppDetails.vue";
 
 interface Props {
-  // current node
+  /** current node */
   node: Result;
 }
 

@@ -1,7 +1,7 @@
 import { mount, emitted } from "../setup";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
 
-// some example props for each test
+/** some example props for each test */
 const props = {
   name: "Single select",
   options: [{ id: "apple" }, { id: "banana" }, { id: "cherry" }],

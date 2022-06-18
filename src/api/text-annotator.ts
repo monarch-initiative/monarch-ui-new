@@ -15,18 +15,18 @@ interface Response {
   }>;
 }
 
-// get annotations from full text
+/** get annotations from full text */
 export const annotateText = async (content = ""): Promise<Result> => {
   try {
-    // if nothing searched, return empty
+    /** if nothing searched, return empty */
     if (!content.trim()) throw new ApiError("No results", "warning");
 
-    // request params
+    /** request params */
     const params = {
       longest_only: true,
     };
 
-    // make request options
+    /** make request options */
     const headers = new Headers();
     headers.append(
       "Content-Type",
@@ -35,15 +35,15 @@ export const annotateText = async (content = ""): Promise<Result> => {
     const body = "content=" + window.encodeURIComponent(content);
     const options = { method: "POST", headers, body };
 
-    // make query
+    /** make query */
     const url = `${biolink}/nlp/annotate/entities`;
     const response = await request<Response>(url, params, options);
     const { spans } = response;
 
-    // empty error status
+    /** empty error status */
     if (!spans.length) throw new ApiError("No results", "warning");
 
-    // get ordered, de-duped list of string indices, including start and end
+    /** get ordered, de-duped list of string indices, including start and end */
     const indices: Array<[number, number]> = [
       0,
       ...new Set(spans.map(({ start, end }) => [start, end]).flat()),
@@ -52,7 +52,7 @@ export const annotateText = async (content = ""): Promise<Result> => {
       .sort((a, b) => a - b)
       .map((index, i, array) => [index, array[i + 1] || index]);
 
-    // convert into desired result format
+    /** convert into desired result format */
     const annotations: Result = [];
     for (const [start, end] of indices) {
       annotations.push({

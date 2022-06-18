@@ -89,39 +89,39 @@ import AppStatus from "./AppStatus.vue";
 import { ApiError } from "@/api";
 import { truncate } from "lodash";
 
-// route info
+/** route info */
 const route = useRoute();
 
 interface Props {
-  // whether form is inside a modal
+  /** whether form is inside a modal */
   modal?: boolean;
 }
 
 withDefaults(defineProps<Props>(), { modal: false });
 
-// user's name
+/** user's name */
 const name = useLocalStorage("feedback-form-name", "");
-// user's email
+/** user's email */
 const email = useLocalStorage("feedback-form-email", "");
-// user's github name
+/** user's github name */
 const github = useLocalStorage("feedback-form-github", "");
-// user's freeform feedback
+/** user's freeform feedback */
 const feedback = useLocalStorage("feedback-form-feedback", "");
-// result of submitting form
+/** result of submitting form */
 const status = ref<Status | null>(null);
-// link to created issue
+/** link to created issue */
 const link = ref("");
 
-// list of automatic details to record
+/** list of automatic details to record */
 const details = computed(() => {
-  // get browser/device/os/etc details from ua parser  library
+  /** get browser/device/os/etc details from ua parser library */
   const { browser, device, os, engine, cpu } = parser();
 
-  // filter and join strings together
+  /** filter and join strings together */
   const concat = (...array: Array<string | undefined>) =>
     array.filter((e) => e && e !== "()").join(" ");
 
-  // make map of desired properties in desired stringified format
+  /** make map of desired properties in desired stringified format */
   return {
     Page: route.fullPath,
     Browser: concat(browser.name, browser.version),
@@ -132,18 +132,18 @@ const details = computed(() => {
 });
 
 async function onSubmit() {
-  // only proceed if submitted through button, not "implicitly" (enter press)
+  /** only proceed if submitted through button, not "implicitly" (enter press) */
   const active = document?.activeElement;
   if (active && active.getAttribute("type") !== "submit") return;
 
-  // make issue title (unclear what char limit is?)
+  /** make issue title (unclear what char limit is?) */
   const title = [
     "Feedback form",
     truncate(name.value, { length: 20 }),
     truncate(collapse(feedback.value), { length: 60 }),
   ].join(" - ");
 
-  // make issue body markdown
+  /** make issue body markdown */
   const body = [
     "**Name**",
     name.value,
@@ -162,23 +162,23 @@ async function onSubmit() {
     feedback.value,
   ].join("\n");
 
-  // loading...
+  /** loading... */
   status.value = { code: "loading", text: "Submitting feedback" };
 
   try {
-    // post feedback and get link of created issue
+    /** post feedback and get link of created issue */
     link.value = await postFeedback(title, body);
 
-    // success...
+    /** success... */
     status.value = { code: "success", text: "Feedback submitted successfully" };
 
-    // clear form data from storage after successful submit
+    /** clear form data from storage after successful submit */
     name.value = null;
     email.value = null;
     github.value = null;
     feedback.value = null;
   } catch (error) {
-    // error...
+    /** error... */
     status.value = error as ApiError;
   }
 }

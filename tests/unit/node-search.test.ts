@@ -1,6 +1,6 @@
 import { getSearchResults } from "./../../src/api/node-search";
 
-// expected results
+/** expected results */
 const result = {
   id: "MONDO:0017310",
   altIds: ["ORPHA:284993", "ORDO:284993", "Orphanet:284993", "UMLS:CN227112"],

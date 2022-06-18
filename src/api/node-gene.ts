@@ -1,8 +1,10 @@
 import { request, cleanError } from ".";
 
-// map our id prefixes to prefixes that mygene expects
-// http://docs.mygene.info/en/latest/doc/data.html#species
-// http://docs.mygene.info/en/latest/doc/query_service.html#available-fields
+/**
+ * map our id prefixes to prefixes that mygene expects
+ * http://docs.mygene.info/en/latest/doc/data.html#species
+ * http://docs.mygene.info/en/latest/doc/query_service.html#available-fields
+ */
 const map: Record<string, { replace: string; species: string }> = {
   "NCBIGene:": { replace: "", species: "all" },
   "OMIM:": { replace: "mim:", species: "9606" },
@@ -29,15 +31,15 @@ interface Response {
   }>;
 }
 
-// get metadata of gene from mygene
+/** get metadata of gene from mygene */
 export const getGene = async (id = ""): Promise<Result> => {
   try {
-    // format id for mygene
+    /** format id for mygene */
     const prefix = (id.split(":")[0] || "") + ":";
     const { replace = prefix, species = "all" } = map[prefix] || {};
     id = id.replace(prefix, replace);
 
-    // make query
+    /** make query */
     const params = {
       q: id,
       fields: "summary,genomic_pos,name,symbol,taxid",
@@ -46,10 +48,10 @@ export const getGene = async (id = ""): Promise<Result> => {
     const url = "https://mygene.info/v3/query";
     const { hits } = await request<Response>(url, params);
 
-    // take first result
+    /** take first result */
     const hit = hits[0] || {};
 
-    // convert into desired result format
+    /** convert into desired result format */
     return {
       name: hit.name || "",
       description: hit.summary || "",

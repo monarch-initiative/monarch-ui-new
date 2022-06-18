@@ -96,7 +96,7 @@ import { kebabCase } from "lodash";
 import AppMember from "@/components/AppMember.vue";
 import teamData from "./team.json";
 
-// define types manually because typescript can't infer them completely correctly
+/** define types manually because typescript can't infer them completely correctly */
 const team = teamData as Array<{
   name: string;
   image: string;
@@ -110,7 +110,7 @@ const team = teamData as Array<{
   }>;
 }>;
 
-// get group img src with fallback if not found
+/** get group img src with fallback if not found */
 function getSrc(image: string) {
   try {
     return require(`@/assets/team/groups/${image}`);

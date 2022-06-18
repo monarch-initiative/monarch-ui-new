@@ -1,8 +1,8 @@
 it("Document title updates on navigation", () => {
-  // pages to test
+  /** pages to test */
   const pages = ["home", "explore", "about", "help"];
 
-  // visit each page and check doc title
+  /** visit each page and check doc title */
   for (const page of pages) {
     cy.visit("/" + page);
     cy.title().should(($title) => {

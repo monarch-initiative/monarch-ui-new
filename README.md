@@ -80,11 +80,16 @@ Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-
 - `package.json` - What third party packages are necessary for this app to run, and which versions.
   Also where the `yarn ___` shorthand commands are defined.
   `yarn.lock` - Detailed list of all dependencies and sub-dependencies, and their versions, providing a last known good configuration.
-- `.eslintrs.js`, `babel.config.js`, etc. - Separate configuration files for the various tools involved in the development pipeline.
+- `.eslintrc.js`, `babel.config.js`, etc. - Separate configuration files for the various tools involved in the development pipeline.
 - `.env` - Environment variable file.
   A convenient place to set static string values that need to be repeated throughout the app.
 
 ### Guidelines and notes
+
+Use JSDoc style comments (`/** some comment */`) instead of regular JavaScript comments.
+This allows lint checking and auto-fixing/auto-formatting of long comments wrapping to new lines.
+More importantly, it allows for better editor integration, meaning that hovering over a function/parameter/object/etc. key will show its associated JSDoc comment.
+There are user snippets, shortcuts, and extensions you can use to make this as convenient as regular comments.
 
 Where possible and appropriate, use custom components like `AppHeading` and `AppLink` instead of native elements like `h1` and `a`.
 
@@ -96,11 +101,7 @@ For example, avoid overriding default eslint rules as much as possible.
 Keep long lists, such as those in `/global`, sorted alphabetically for consistency and ease of lookup and comparison.
 Tip: use VS Code extension "Sort Lines".
 
-Use `// TODO` as a consistent in-code flag for pieces of code that should eventually be replaced with something better.
-Also link to a GitHub issue that tracks the issue.
-
 Use `console.log` for strictly for temporary debugging during local development that should be removed before merging PRs.
-Use `info`/`warn`/`debug`/`error` at your discretion, but only for major, infrequent events, as logging too frequently (say, multiple times per second, sustained) can impact page performance.
-Leaving select logging *in production* will be beneficial for in this particular app, for user and in-situ troubleshooting of complex, hard-to-replicate problems.
-
-To analyze the size of the compiled bundle, uncomment the `stats-webpack-plugin` line in the `vue.config.js`, build the app, then try running `npx webpack-bundle-analyzer dist/stats.json` or `npx source-map-explorer dist/js/*`.
+Use `console.error` for in-production logging of _caught_ errors.
+Use `console.info` for generic in-production logging, but only use for major, infrequent events, as logging too frequently (say, multiple times per second, sustained) can impact page performance.
+Leaving select logging in production will be beneficial for in this particular app, for user and in-situ troubleshooting of complex, hard-to-replicate problems.

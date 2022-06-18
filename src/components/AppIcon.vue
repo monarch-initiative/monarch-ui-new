@@ -30,14 +30,16 @@ import InlineSvg from "vue-inline-svg";
 import { computed } from "vue";
 
 interface Props {
-  // kebab-case name of icon to show. for font awesome, without fas/far/etc
-  // prefix. for custom icon, match filename, without extension.
+  /**
+   * kebab-case name of icon to show. for font awesome, without fas/far/etc
+   * prefix. for custom icon, match filename, without extension.
+   */
   icon: string;
 }
 
 const props = defineProps<Props>();
 
-// find custom icon with matching name, if there is one
+/** find custom icon with matching name, if there is one */
 const custom = computed((): string => {
   try {
     return require(`@/assets/icons/${props.icon}.svg`);
@@ -48,7 +50,7 @@ const custom = computed((): string => {
   }
 });
 
-// find font awesome icon with matching name, if there is one
+/** find font awesome icon with matching name, if there is one */
 const fa = computed(() => {
   for (const prefix of ["fas", "far", "fab"]) {
     const match = findIconDefinition({
@@ -61,20 +63,20 @@ const fa = computed(() => {
   return null;
 });
 
-// when custom svg icon inlined/loaded
+/** when custom svg icon inlined/loaded */
 function loadedInline(element: HTMLElement) {
   if (!element?.style) return;
 
-  // get absolute display size of icon in px
+  /** get absolute display size of icon in px */
   const size = Number.parseFloat(window.getComputedStyle(element).fontSize);
 
-  // stroke inversely with size
+  /** stroke inversely with size */
   let stroke;
   if (size >= 32) stroke = 4;
   else if (size >= 24) stroke = 5;
   else stroke = 6;
 
-  // set stroke width css variable
+  /** set stroke width css variable */
   element?.style?.setProperty("--stroke", stroke + "px");
 }
 </script>
@@ -84,7 +86,7 @@ function loadedInline(element: HTMLElement) {
   height: 1em;
 }
 
-// common category icon styles
+/** common category icon styles */
 [data-icon^="category-"] {
   height: 1.2em;
   fill: none;

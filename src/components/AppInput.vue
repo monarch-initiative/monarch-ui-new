@@ -42,63 +42,65 @@ import { onBeforeUnmount, ref } from "vue";
 import { debounce } from "lodash";
 
 interface Props {
-  // state
+  /** state */
   modelValue?: string;
-  // placeholder string when nothing typed in
+  /** placeholder string when nothing typed in */
   placeholder?: string;
-  // type of text box
+  /** type of text box */
   type?: string;
-  // name of field, shown above box
+  /** name of field, shown above box */
   title?: string;
-  // description of field, shown below box
+  /** description of field, shown below box */
   description?: string;
-  // whether field is required
+  /** whether field is required */
   required?: boolean;
-  // whether field is multi-line
+  /** whether field is multi-line */
   multi?: boolean;
-  // optional side icon
+  /** optional side icon */
   icon?: string;
 }
 
 defineProps<Props>();
 
 interface Emits {
-  // two-way binding value
+  /** two-way binding value */
   (event: "update:modelValue", value: string): void;
-  // when input focused
+  /** when input focused */
   (event: "focus"): void;
-  // when input value changed
+  /** when input value changed */
   (event: "input"): void;
-  // when input value change "submitted"/"committed" by user
+  /** when input value change "submitted"/"committed" by user */
   (event: "change", value: string): void;
 }
 
 const emit = defineEmits<Emits>();
 
-// last on change value that was emitted
+/** last on change value that was emitted */
 const last = ref<string | undefined>(undefined);
 
-// when user focuses box
+/** when user focuses box */
 function onFocus() {
   emit("focus");
 }
 
-// when user types in box
+/** when user types in box */
 function onInput(event: Event) {
   emit("update:modelValue", (event.target as HTMLInputElement).value);
   emit("input");
   debouncedOnChange(event);
 }
 
-// when user "commits" change to value, e.g. pressing enter, de-focusing, etc
+/** when user "commits" change to value, e.g. pressing enter, de-focusing, etc */
 function onChange(event: Event) {
-  // cancel any pending calls
+  /** cancel any pending calls */
   debouncedOnChange.cancel();
 
-  // if you see this event fire unexpectedly, check this:
-  // https://bugs.chromium.org/p/chromium/issues/detail?id=1297334
+  /**
+   * if you see this event fire unexpectedly, check this:
+   * https://bugs.chromium.org/p/chromium/issues/detail?id=1297334
+   */
 
-  // if on change (for this value) has not already emitted
+  /** if on change (for this value) has not already emitted */
   const value = (event.target as HTMLInputElement).value;
   if (value !== last.value) {
     emit("change", value);
@@ -106,10 +108,10 @@ function onChange(event: Event) {
   }
 }
 
-// make instance-unique debounced version of on change func
+/** make instance-unique debounced version of on change func */
 const debouncedOnChange = debounce(onChange, 500);
 
-// cancel any in-progress debounce
+/** cancel any in-progress debounce */
 onBeforeUnmount(debouncedOnChange.cancel);
 </script>
 

@@ -1,6 +1,3 @@
-// TODO: GET RID OF THIS HARD-CODED MAPPING
-// SEE: https://github.com/biolink/biolink-api/issues/386
-
 const map: Record<string, string> = {
   "NCBITaxon:28377": "Anolis carolinensis",
   "NCBITaxon:3702": "Arabidopsis thaliana",
@@ -56,17 +53,6 @@ const map: Record<string, string> = {
   "NCBITaxon:9521": "Saimiri sciureus",
   "NCBITaxon:9523": "Plecturocebus moloch",
   "NCBITaxon:9888": "Muntiacus muntjak",
-
-  // 'NCBITaxon:57486': '',
-  // 'NCBITaxon:10091': '',
-  // 'NCBITaxon:477815': '',
-  // 'NCBITaxon:10102': '',
-  // 'NCBITaxon:10088': '',
-  // 'NCBITaxon:10096': '',
-  // 'NCBITaxon:35531': '',
-  // 'NCBITaxon:9615': '',
-  // 'NCBITaxon:9685': '',
-  // 'NCBITaxon:9940': '',
 
   "OBI:0100026": "Organism",
 };

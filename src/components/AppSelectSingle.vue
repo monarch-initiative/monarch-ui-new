@@ -76,137 +76,137 @@ import { Option, Options } from "./AppSelectSingle";
 import { wrap } from "@/util/math";
 
 interface Props {
-  // name of the field
+  /** name of the field */
   name: string;
-  // currently selected item
+  /** currently selected item */
   modelValue?: Option;
-  // list of options to show
+  /** list of options to show */
   options: Options;
 }
 
 const props = defineProps<Props>();
 
 interface Emits {
-  // two-way binding value
+  /** two-way binding value */
   (event: "update:modelValue", value: Option): void;
-  // when value changed
+  /** when value changed */
   (event: "input"): void;
-  // when value change "submitted"/"committed" by user
+  /** when value change "submitted"/"committed" by user */
   (event: "change"): void;
 }
 
 const emit = defineEmits<Emits>();
 
-// unique id for instance of component
+/** unique id for instance of component */
 const id = ref(uniqueId());
-// whether dropdown is open
+/** whether dropdown is open */
 const expanded = ref(false);
-// index of option that is selected
+/** index of option that is selected */
 const selected = ref(getSelected());
-// index of option that is highlighted
+/** index of option that is highlighted */
 const highlighted = ref(0);
 
-// open dropdown
+/** open dropdown */
 function open() {
   expanded.value = true;
-  // auto highlight selected option
+  /** auto highlight selected option */
   highlighted.value = selected.value;
 }
 
-// close dropdown
+/** close dropdown */
 function close() {
   expanded.value = false;
 }
 
-// when button clicked
+/** when button clicked */
 function onClick() {
-  // toggle dropdown
+  /** toggle dropdown */
   expanded.value ? close() : open();
-  // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#clicking_and_focus
+  /** https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#clicking_and_focus */
   (document.querySelector(`#select-${id.value}`) as HTMLElement)?.focus();
 }
 
-// when button blurred
+/** when button blurred */
 function onBlur() {
   close();
 }
 
-// when user presses key on button
+/** when user presses key on button */
 function onKeydown(event: KeyboardEvent) {
-  // arrow/home/end keys
+  /** arrow/home/end keys */
   if (["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
-    // prevent page scroll
+    /** prevent page scroll */
     event.preventDefault();
 
-    // if dropdown open, control highlighted option
-    // if dropdown closed, control selected option
+    /**
+     * if dropdown open, control highlighted option. if dropdown closed, control
+     * selected option.
+     */
     let index = expanded.value ? highlighted.value : selected.value;
 
-    // move value up/down
+    /** move value up/down */
     if (event.key === "ArrowUp") index--;
     if (event.key === "ArrowDown") index++;
     if (event.key === "Home") index = 0;
     if (event.key === "End") index = props.options.length - 1;
 
-    // update value, wrapping beyond 0 or options length
+    /** update value, wrapping beyond 0 or options length */
     index = wrap(index, 0, props.options.length);
     if (expanded.value) highlighted.value = index;
     else selected.value = index;
   }
 
-  // enter key to select highlighted option
+  /** enter key to select highlighted option */
   if (expanded.value && (event.key === "Enter" || event.key === " ")) {
-    // prevent browser re-clicking open button
+    /** prevent browser re-clicking open button */
     event.preventDefault();
     selected.value = highlighted.value;
   }
 
-  // esc key to close dropdown
+  /** esc key to close dropdown */
   if (expanded.value && event.key === "Escape") close();
-
-  // TODO: type ahead
-  // not strictly necessary for now because this component only used with a
-  // small number of options
 }
 
-// get selected option index from model
+/** get selected option index from model */
 function getSelected() {
   return props.options.findIndex(
     (option) => option?.id === props.modelValue?.id
   );
 }
 
-// when model changes
+/** when model changes */
 watch(
   () => props.modelValue,
   () =>
-    // update selected index
+    /** update selected index */
     (selected.value = getSelected())
 );
 
-// when selected index changes
+/** when selected index changes */
 watch(selected, () => {
-  // emit updated model
+  /** emit updated model */
   emit("update:modelValue", props.options[selected.value]);
   close();
 });
 
-// when highlighted index changes
+/** when highlighted index changes */
 watch(highlighted, () =>
-  // scroll to highlighted in dropdown
+  /** scroll to highlighted in dropdown */
   document
     .querySelector(`#option-${id.value}-${highlighted.value}`)
     ?.scrollIntoView({ block: "nearest" })
 );
 
-// auto-select first option as fallback
-// watch(
-//   () => props.options,
-//   () => {
-//     if (selected.value === -1 && props.options.length) selected.value = 0;
-//   },
-//   { immediate: true }
-// );
+/** auto-select first option as fallback */
+/*
+watch(
+  () => props.options,
+  () => {
+    if (selected.value === -1 && props.options.length) selected.value = 0;
+  },
+  { immediate: true }
+);
+*/
 </script>
 
 <style lang="scss" scoped>

@@ -4,15 +4,15 @@ import components from "@/global/components";
 import plugins from "@/global/plugins";
 import "wicg-inert";
 
-// create main app object
+/** create main app object */
 let app = createApp(App);
 
-// register plugins/middleware
+/** register plugins/middleware */
 for (const [plugin, options] of plugins) app = app.use(plugin, options);
 
-// register global components
+/** register global components */
 for (const [name, Component] of Object.entries(components))
   app = app.component(name, Component);
 
-// render app
+/** render app */
 app.mount("#app");

@@ -1,7 +1,7 @@
 import { mount, emitted } from "../setup";
 import AppSelectTags from "@/components/AppSelectTags.vue";
 
-// some example props for each test
+/** some example props for each test */
 const props = {
   name: "Tags select",
   options: (search: string) => {
@@ -19,7 +19,7 @@ const props = {
   modelValue: [{ id: "animals" }],
 };
 
-// expected type of emitted update:modelValue events
+/** expected type of emitted update:modelValue events */
 type T = Array<unknown>;
 
 test("Buttons click to deselect", async () => {

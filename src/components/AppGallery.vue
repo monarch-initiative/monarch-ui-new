@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 interface Props {
-  // size of items in gallery
+  /** size of items in gallery */
   size?: "small" | "medium" | "big";
 }
 
@@ -53,7 +53,7 @@ $cell: minmax(100px, 1fr);
   }
 }
 
-// force no margins for children since grid already provides gap
+/** force no margins for children since grid already provides gap */
 .gallery > :deep(*) {
   margin: 0 !important;
 }

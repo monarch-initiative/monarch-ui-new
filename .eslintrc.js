@@ -21,23 +21,29 @@ module.exports = {
     ecmaVersion: 2020,
   },
 
-  // rule overrides (KEEP THIS AS MINIMAL AS POSSIBLE)
+  /** rule overrides (KEEP THIS AS MINIMAL AS POSSIBLE) */
   rules: {
-    // count v-tippy (which adds an accessible aria-label attribute) as accessible
+    /** count v-tippy (which adds an accessible aria-label attribute) as accessible */
     "vuejs-accessibility/anchor-has-content": [
       "error",
       { accessibleDirectives: ["tippy"] },
     ],
-    // allow nesting a control in a label without a for attribute (perfectly fine practice)
+    /**
+     * allow nesting a control in a label without a for attribute (perfectly
+     * fine practice)
+     */
     "vuejs-accessibility/label-has-for": [
       "error",
       { required: { some: ["nesting", "id"] }, allowChildren: true },
     ],
-    // allow v-html. we are only using this from very controlled sources, so little risk of XSS.
+    /**
+     * allow v-html. we are only using this from very controlled sources, so
+     * little risk of XSS.
+     */
     "vue/no-v-html": ["off"],
   },
 
-  // is this needed?
+  /** is this needed? */
   overrides: [
     {
       files: [

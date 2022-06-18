@@ -116,40 +116,40 @@ import { Filters, filtersToQuery } from "@/api/facets";
 import { Options } from "@/components/AppSelectMulti";
 
 interface Props {
-  // current node
+  /** current node */
   node: NodeResult;
-  // selected association category
+  /** selected association category */
   selectedCategory: string;
-  // selected association id
+  /** selected association id */
   selectedAssociation?: Association;
 }
 
 const props = defineProps<Props>();
 
 interface Emits {
-  // change selected association
+  /** change selected association */
   (event: "select", value?: Association): void;
 }
 
 const emit = defineEmits<Emits>();
 
-// association data
+/** association data */
 const associations = ref<AssociationsResult["associations"]>([]);
-// total number of associations
+/** total number of associations */
 const count = ref(0);
-// table state
+/** table state */
 const sort = ref<Sort>();
 const perPage = ref(5);
 const start = ref(0);
 const search = ref("");
 const availableFilters = ref<Filters>({});
 const activeFilters = ref<Filters>({});
-// status of query
+/** status of query */
 const status = ref<Status | null>(null);
 
-// table columns
+/** table columns */
 const cols = computed((): Cols => {
-  // standard columns, always present
+  /** standard columns, always present */
   const baseCols: Cols = [
     {
       id: "subject",
@@ -181,11 +181,10 @@ const cols = computed((): Cols => {
     },
   ];
 
-  // extra, supplemental columns for certain association types
+  /** extra, supplemental columns for certain association types */
   let extraCols: Cols = [];
 
-  // taxon column
-  // exists for many categories, so just add if any row has taxon
+  /** taxon column. exists for many categories, so just add if any row has taxon. */
   if (associations.value.some((association) => association.taxon))
     extraCols.push({
       id: "taxon",
@@ -194,7 +193,7 @@ const cols = computed((): Cols => {
       width: "max-content",
     });
 
-  // phenotype specific columns
+  /** phenotype specific columns */
   if (props.selectedCategory === "phenotype") {
     extraCols.push(
       {
@@ -212,7 +211,7 @@ const cols = computed((): Cols => {
     );
   }
 
-  // publication specific columns
+  /** publication specific columns */
   if (props.selectedCategory === "publication")
     extraCols.push(
       {
@@ -236,18 +235,20 @@ const cols = computed((): Cols => {
       }
     );
 
-  // filter out extra columns with nothing in them (all rows for that col falsey)
-  // extraCols = extraCols.filter((col) =>
-  //   associations.value.some((association) => association[col.key || ""])
-  // );
+  /** filter out extra columns with nothing in them (all rows for that col falsey) */
+  /*
+  extraCols = extraCols.filter((col) =>
+    associations.value.some((association) => association[col.key || ""])
+  );
+  */
 
-  // put divider to separate base cols from extra cols
+  /** put divider to separate base cols from extra cols */
   if (extraCols[0]) extraCols.unshift({ id: "divider" });
 
   return [...baseCols, ...extraCols];
 });
 
-// when user changes active filters
+/** when user changes active filters */
 function onFilterChange(colId: Col["id"], value: Options) {
   if (activeFilters.value && activeFilters.value[colId]) {
     activeFilters.value[colId] = value;
@@ -255,21 +256,23 @@ function onFilterChange(colId: Col["id"], value: Options) {
   }
 }
 
-// get table association data
+/** get table association data */
 async function getAssociations(
-  // whether to perform "fresh" search, without filters. set to true when
-  // category changing, false when filters changing.
+  /**
+   * whether to perform "fresh" search, without filters. set to true when
+   * category changing, false when filters changing.
+   */
   fresh: boolean
 ) {
   try {
-    // loading...
+    /** loading... */
     status.value = { code: "loading", text: "Loading association data" };
 
-    // catch case where no association categories available
+    /** catch case where no association categories available */
     if (!props.node.associationCounts.length)
       throw new ApiError("No association info available", "warning");
 
-    // get association data
+    /** get association data */
     const response = await getTabulatedAssociations(
       props.node.id,
       props.node.category,
@@ -285,15 +288,15 @@ async function getAssociations(
     associations.value = response.associations;
 
     if (fresh) {
-      // update filters based on facets from api
+      /** update filters based on facets from api */
       availableFilters.value = { ...response.facets };
       activeFilters.value = { ...response.facets };
     }
 
-    // clear status
+    /** clear status */
     status.value = null;
   } catch (error) {
-    // error...
+    /** error... */
     status.value = error as ApiError;
     count.value = 0;
     associations.value = [];
@@ -304,18 +307,18 @@ async function getAssociations(
   }
 }
 
-// download table data
+/** download table data */
 async function download() {
-  // max rows to try to query
+  /** max rows to try to query */
   const max = 100000;
 
-  // warn user
+  /** warn user */
   snackbar(
     `Downloading data for ${Math.min(count.value, max)} table entries.` +
       (count.value >= 100 ? " This may take a minute." : "")
   );
 
-  // attempt to request all rows
+  /** attempt to request all rows */
   const response = await getTabulatedAssociations(
     props.node.id,
     props.node.category,
@@ -326,7 +329,7 @@ async function download() {
   downloadJson(response);
 }
 
-// get associations when category or table state changes
+/** get associations when category or table state changes */
 watch(
   () => props.selectedCategory,
   () => getAssociations(true)
@@ -335,7 +338,7 @@ watch([() => props.selectedCategory, perPage, start, search, sort], () =>
   getAssociations(false)
 );
 
-// get associations on load
+/** get associations on load */
 onMounted(() => getAssociations(true));
 </script>
 

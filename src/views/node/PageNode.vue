@@ -40,43 +40,43 @@ import SectionAssociations from "./SectionAssociations.vue";
 import { scrollToHash } from "@/router";
 import { useRoute } from "vue-router";
 
-// route info
+/** route info */
 const route = useRoute();
 
-// info/metadata about node
+/** info/metadata about node */
 const node = ref<Result | null>(null);
-// status of query
+/** status of query */
 const status = ref<Status | null>(null);
 
-// get new node data
+/** get new node data */
 async function getData() {
-  // get node from route params
+  /** get node from route params */
   const { id = "", category = "" } = route.params;
 
   try {
-    // loading...
+    /** loading... */
     status.value = { code: "loading", text: `Loading node info for ${id}` };
     node.value = null;
 
-    // get node information
+    /** get node information */
     node.value = await lookupNode(id as string, category as string);
 
-    // clear status
+    /** clear status */
     status.value = null;
 
-    // scroll to hash once data loaded
+    /** scroll to hash once data loaded */
     await nextTick();
     scrollToHash();
   } catch (error) {
-    // error...
+    /** error... */
     status.value = error as ApiError;
     node.value = null;
   }
 }
 
-// when path (not hash or query) changed, get new node data
+/** when path (not hash or query) changed, get new node data */
 watch(() => route.path, getData);
 
-// get new node data on load
+/** get new node data on load */
 onMounted(getData);
 </script>

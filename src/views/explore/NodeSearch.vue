@@ -140,95 +140,99 @@ import { Options } from "@/components/AppSelectMulti";
 import { useRoute, useRouter } from "vue-router";
 import { filtersToQuery } from "@/api/facets";
 
-// route info
+/** route info */
 const router = useRouter();
 const route = useRoute();
 
-// example searches
+/** example searches */
 const examples = ["Marfan Syndrome", "Multicystic Kidney Dysplasia", "SSH"];
 
-// default filters to show before anything typed in
-// const defaultFilters = {
-//   category: [
-//     { id: "gene" },
-//     { id: "disease" },
-//     { id: "phenotype" },
-//     { id: "genotype" },
-//     { id: "variant" },
-//   ],
-// };
+/** default filters to show before anything typed in */
+/*
+const defaultFilters = {
+  category: [
+    { id: "gene" },
+    { id: "disease" },
+    { id: "phenotype" },
+    { id: "genotype" },
+    { id: "variant" },
+  ],
+};
+*/
 
-// current search text
+/** current search text */
 const search = ref(String(route.query.search || ""));
-// original search text that yielded current results
+/** original search text that yielded current results */
 const originalSearch = ref("");
-// search results
+/** search results */
 const results = ref<Result["results"]>([]);
-// number of results
+/** number of results */
 const count = ref(0);
-// current page number
+/** current page number */
 const page = ref(0);
-// results per page
+/** results per page */
 const perPage = ref(10);
-// status of query
+/** status of query */
 const status = ref<Status | null>(null);
-// filters (facets) for search
+/** filters (facets) for search */
 const availableFilters = ref<Record<string, Options>>({});
 const activeFilters = ref<Record<string, Options>>({});
-// whether to show counts in filter dropdowns
+/** whether to show counts in filter dropdowns */
 const showCounts = ref(true);
 
-// when user focuses text box
+/** when user focuses text box */
 async function onFocus() {
-  // navigate to explore page
+  /** navigate to explore page */
   await router.push({ ...route, name: "Explore" });
-  // refocus box
+  /** refocus box */
   document?.querySelector("input")?.focus();
 }
 
-// when user "submits" text box
+/** when user "submits" text box */
 function onChange() {
   page.value = 0;
-  // prevent running query if results already match current search text
+  /** prevent running query if results already match current search text */
   if (search.value !== originalSearch.value) getResults(true, true);
 }
 
-// when user changes active filters
+/** when user changes active filters */
 function onFilterChange() {
   page.value = 0;
   getResults(false, false);
 }
 
-// enter in clicked example and search
+/** enter in clicked example and search */
 function doExample(value: string) {
   search.value = value;
   getResults(true, true);
 }
 
-// get search results
+/** get search results */
 async function getResults(
-  // whether to perform "fresh" search, without filters. set to true when
-  // search changing, false when filters or page number changing.
+  /**
+   * whether to perform "fresh" search, without filters. set to true when search
+   * changing, false when filters or page number changing.
+   */
   fresh: boolean,
-  // whether to push new entry to browser history
+  /** whether to push new entry to browser history */
   history: boolean
 ) {
-  // push permanent history entry
+  /** push permanent history entry */
   if (history) {
     const query: Record<string, string> = {};
     if (search.value) query.search = search.value;
     await router.push({ ...route, name: "Explore", query });
   }
 
-  // hide counts in filter dropdowns if any filtering being done
+  /** hide counts in filter dropdowns if any filtering being done */
   showCounts.value = isEqual(activeFilters.value, availableFilters.value);
 
-  // loading...
+  /** loading... */
   status.value = { code: "loading", text: "Loading results" };
   results.value = [];
 
   try {
-    // get results from api
+    /** get results from api */
     const response = await getSearchResults(
       search.value,
       fresh ? undefined : filtersToQuery(availableFilters.value),
@@ -240,18 +244,18 @@ async function getResults(
     count.value = response.count;
 
     if (fresh) {
-      // update filters based on facets from api
+      /** update filters based on facets from api */
       availableFilters.value = { ...response.facets };
       activeFilters.value = { ...response.facets };
     }
 
-    // clear status
+    /** clear status */
     status.value = null;
   } catch (error) {
-    // error...
+    /** error... */
     if (search.value.trim()) status.value = error as ApiError;
     else status.value = null;
-    // clear results and filters
+    /** clear results and filters */
     results.value = [];
     if (fresh) {
       availableFilters.value = {};
@@ -260,38 +264,38 @@ async function getResults(
   }
 }
 
-// "x of n" pages
+/** "x of n" pages */
 const from = computed((): number => page.value * perPage.value);
 const to = computed((): number => from.value + results.value.length - 1);
 
-// pages of results
+/** pages of results */
 const pages = computed((): Array<Array<number>> => {
-  // get full list of pages
+  /** get full list of pages */
   const pages = Array(Math.ceil(count.value / perPage.value))
     .fill(0)
     .map((_, i) => i);
 
-  // make shorter pages list
+  /** make shorter pages list */
   let list = [
-    // first few pages
+    /** first few pages */
     0,
     1,
     2,
-    // current few pages
+    /** current few pages */
     page.value - 1,
     page.value,
     page.value + 1,
-    // last few pages
+    /** last few pages */
     pages.length - 3,
     pages.length - 2,
     pages.length - 1,
   ];
 
-  // sort, deduplicate, and clamp list
+  /** sort, deduplicate, and clamp list */
   list.sort((a, b) => a - b);
   list = uniq(list).filter((page) => page >= 0 && page <= pages.length - 1);
 
-  // split into sub lists where page numbers are not sequential
+  /** split into sub lists where page numbers are not sequential */
   const splitList: Array<Array<number>> = [[]];
   for (let index = 0; index < list.length; index++) {
     if (list[index - 1] && list[index] - list[index - 1] > 1)
@@ -302,11 +306,11 @@ const pages = computed((): Array<Array<number>> => {
   return splitList;
 });
 
-// when route changes
+/** when route changes */
 watch(
   () => route,
   () => {
-    // update search text from route (if not already)
+    /** update search text from route (if not already) */
     const fromUrl = String(route.query.search || "");
     if (search.value !== fromUrl) {
       search.value = fromUrl;
@@ -315,7 +319,7 @@ watch(
   }
 );
 
-// when start page changes
+/** when start page changes */
 watch(from, () => getResults(false, false));
 
 onMounted(() => getResults(true, false));

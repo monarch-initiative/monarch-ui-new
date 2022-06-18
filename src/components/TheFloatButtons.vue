@@ -37,44 +37,44 @@ import { useEventListener, useMutationObserver } from "@vueuse/core";
 import AppModal from "@/components/AppModal.vue";
 import TheFeedbackForm from "@/components/TheFeedbackForm.vue";
 
-// route info
+/** route info */
 const route = useRoute();
 
-// whether to show jump button
+/** whether to show jump button */
 const showJump = ref(false);
-// whether to show feedback form button
+/** whether to show feedback form button */
 const showFeedback = ref(true);
-// whether to show feedback modal
+/** whether to show feedback modal */
 const showModal = ref(false);
-// how much to push buttons upward to make room for footer if in view
+/** how much to push buttons upward to make room for footer if in view */
 const nudge = ref(0);
 
-// update data state
+/** update data state */
 async function update() {
-  // wait for rendering to finish
+  /** wait for rendering to finish */
   await nextTick();
 
-  // get dimensions of footer
+  /** get dimensions of footer */
   const footerEl = document?.querySelector("footer");
   if (!footerEl) return;
   const footer = footerEl.getBoundingClientRect();
 
-  // show jump button if user has scrolled far down enough
+  /** show jump button if user has scrolled far down enough */
   showJump.value = window.scrollY > window.innerHeight * 0.1;
-  // show feedback button if user not already on dedicated feedback page
+  /** show feedback button if user not already on dedicated feedback page */
   showFeedback.value =
     ((route.name || "") as string).toLowerCase() !== "feedback";
 
-  // calculate nudge
+  /** calculate nudge */
   nudge.value = Math.max(0, footer.height + window.innerHeight - footer.bottom);
 }
 
-// jump to top of page
+/** jump to top of page */
 function jump() {
   window.scrollTo(0, 0);
 }
 
-// run update on: page load, route change, scroll, resize, reflow, etc.
+/** run update on: page load, route change, scroll, resize, reflow, etc. */
 onMounted(update);
 watch(() => route, update);
 useEventListener(window, "scroll", update);

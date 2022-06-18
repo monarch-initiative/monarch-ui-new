@@ -16,9 +16,9 @@ import nodeHierarchy from "./node-hierarchy.json";
 import nodeAssociations from "./node-associations.json";
 import associationEvidence from "./association-evidence.json";
 
-// api calls to be mocked with fixture data
+/** api calls to be mocked with fixture data */
 export const handlers = [
-  // dynamically fetched data on /sources
+  /** dynamically fetched data on /sources */
   rest.get(/metadata\/datasets/i, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(datasets))
   ),
@@ -26,27 +26,27 @@ export const handlers = [
     res(ctx.status(200), ctx.json(ontologies))
   ),
 
-  // api status monitoring on /help
+  /** api status monitoring on /help */
   rest.post(/api\.uptimerobot\.com/i, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(uptime))
   ),
 
-  // submit feedback form
+  /** submit feedback form */
   rest.post(/monarch-gh-issue-post/i, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(feedback))
   ),
 
-  // node search
+  /** node search */
   rest.get(/search\/entity/i, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(nodeSearch))
   ),
 
-  // text annotator
+  /** text annotator */
   rest.post(/nlp\/annotate/i, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(textAnnotator))
   ),
 
-  // phenotype explorer
+  /** phenotype explorer */
   rest.get(/sim\/search/i, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(phenotypeExplorerSearch))
   ),
@@ -54,30 +54,35 @@ export const handlers = [
     res(ctx.status(200), ctx.json(phenotypeExplorerCompare))
   ),
 
-  // raw node search (without provided category)
+  /** raw node search (without provided category) */
   rest.get(/\/bioentity\/[^/]+$/i, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(nodeLookup))
   ),
 
-  // node search
+  /** node search */
   rest.get(/\/bioentity\/\w+\/[^/]+$/i, (req, res, ctx) => {
-    // change category of fixture data based on request so we can see UI that
-    // is conditional on category
+    /**
+     * change category of fixture data based on request so we can see UI that is
+     * conditional on category
+     */
     const category =
       (req.url.pathname.match(/\/bioentity\/(.+)\//) || [])[1] || "";
     nodeLookup.category = [category];
-    // note that this will show (in yarn test:gui) silly things like
-    // "Marfan syndrome: gene", because only the category field is changed
+
+    /**
+     * note that this will show (in yarn test:gui) silly things like "Marfan
+     * syndrome: gene", because only the category field is changed
+     */
 
     return res(ctx.status(200), ctx.json(nodeLookup));
   }),
 
-  // node gene info
+  /** node gene info */
   rest.get(/mygene\.info/i, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(nodeGene))
   ),
 
-  // node publication info
+  /** node publication info */
   rest.get(/esummary\.fcgi/i, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(nodePublicationSummary))
   ),
@@ -85,17 +90,17 @@ export const handlers = [
     res(ctx.status(200), ctx.json(nodePublicationAbstract))
   ),
 
-  // node hierarchy info
+  /** node hierarchy info */
   rest.get(/graph\/edges\/from/i, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(nodeHierarchy))
   ),
 
-  // node associations data
+  /** node associations data */
   rest.get(/\/bioentity\/\w+\/[^/]+\/\w+.*$/i, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(nodeAssociations))
   ),
 
-  // association evidence data
+  /** association evidence data */
   rest.get(/evidence\/graph/, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(associationEvidence))
   ),

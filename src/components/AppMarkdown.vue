@@ -12,15 +12,15 @@ import { computed } from "vue";
 import { micromark } from "micromark";
 
 interface Props {
-  // markdown input source
+  /** markdown input source */
   source: string;
-  // what component to wrap source in
+  /** what component to wrap source in */
   component?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), { component: "div" });
 
-// html converted from markdown source code
+/** html converted from markdown source code */
 const html = computed(() =>
   micromark(props.source || "")
     .replaceAll("<p>", "")

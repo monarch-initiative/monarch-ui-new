@@ -24,16 +24,16 @@ import PageTestbed from "@/views/PageTestbed.vue";
 import { sleep } from "@/util/debug";
 import { lookupNode } from "@/api/node-lookup";
 
-// list of routes and corresponding components
-// CHECK PUBLIC/SITEMAP.XML AND KEEP IN SYNC
+/** list of routes and corresponding components. */
+/** KEEP IN SYNC WITH PUBLIC/SITEMAP.XML */
 export const routes: Array<RouteRecordRaw> = [
-  // home page
+  /** home page */
   {
     path: "/",
     name: "Home",
     component: PageHome,
     beforeEnter: (async () => {
-      // look for redirect in session storage (saved from public/404.html page)
+      /** look for redirect in session storage (saved from public/404.html page) */
       const redirect = window.sessionStorage.redirect;
       if (redirect) {
         console.info(`Redirecting to ${redirect}`);
@@ -47,7 +47,7 @@ export const routes: Array<RouteRecordRaw> = [
     redirect: "/",
   },
 
-  // top level pages
+  /** top level pages */
   {
     path: "/explore",
     name: "Explore",
@@ -64,7 +64,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: PageHelp,
   },
 
-  // about pages
+  /** about pages */
   {
     path: "/overview",
     name: "Overview",
@@ -96,14 +96,14 @@ export const routes: Array<RouteRecordRaw> = [
     component: PageTerms,
   },
 
-  // help pages
+  /** help pages */
   {
     path: "/feedback",
     name: "Feedback",
     component: PageFeedback,
   },
 
-  // node pages
+  /** node pages */
   {
     path: "/:category/:id",
     name: "Node",
@@ -114,7 +114,7 @@ export const routes: Array<RouteRecordRaw> = [
     name: "NodeRaw",
     component: PageHome,
     beforeEnter: (async (to) => {
-      // try to lookup node id and infer category
+      /** try to lookup node id and infer category */
       const id = to.path.slice(1) as string;
       if (id) {
         const node = await lookupNode(id);
@@ -123,14 +123,14 @@ export const routes: Array<RouteRecordRaw> = [
     }) as NavigationGuard,
   },
 
-  // test pages (comment this out when we release app)
+  /** test pages (comment this out when we release app) */
   {
     path: "/testbed",
     name: "Testbed",
     component: PageTestbed,
   },
 
-  // if no other route match found (404)
+  /** if no other route match found (404) */
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
@@ -138,39 +138,39 @@ export const routes: Array<RouteRecordRaw> = [
   },
 ];
 
-// vue-router's scroll behavior handler
+/** vue-router's scroll behavior handler */
 const scrollBehavior: RouterScrollBehavior = async (
   to,
   from,
   savedPosition
 ) => {
-  // https://github.com/vuejs/vue-router-next/issues/1147
+  /** https://github.com/vuejs/vue-router-next/issues/1147 */
   await sleep();
 
-  // scroll to previous position if exists
+  /** scroll to previous position if exists */
   if (savedPosition) return savedPosition;
 
-  // get hash
+  /** get hash */
   const hash = to.hash;
   if (!hash) return;
 
-  // get element corresponding to hash
+  /** get element corresponding to hash */
   const element = document?.getElementById(to.hash.slice(1));
   if (!element) return;
 
   return { el: getTarget(element), top: getOffset(), behavior: "smooth" };
 };
 
-// given element, get (possibly) modified target
+/** given element, get (possibly) modified target */
 const getTarget = (element: Element): Element => {
-  // move target to parent section element if first child
+  /** move target to parent section element if first child */
   if (
     element.parentElement?.tagName === "SECTION" &&
     element.matches(":first-child")
   )
     return element.parentElement;
 
-  // move target to previous horizontal rule
+  /** move target to previous horizontal rule */
   if (
     element.previousElementSibling instanceof HTMLElement &&
     element.previousElementSibling?.tagName === "HR"
@@ -180,10 +180,10 @@ const getTarget = (element: Element): Element => {
   return element;
 };
 
-// get offset to account for header
+/** get offset to account for header */
 const getOffset = () => document?.querySelector("header")?.clientHeight || 0;
 
-// scroll to element
+/** scroll to element */
 export const scrollToElement = (element?: Element | null): void => {
   if (!element) return;
 
@@ -196,51 +196,51 @@ export const scrollToElement = (element?: Element | null): void => {
   });
 };
 
-// scroll to hash
+/** scroll to hash */
 export const scrollToHash = (): void =>
   scrollToElement(document?.getElementById(window.location.hash.slice(1)));
 
-// navigation history object
+/** navigation history object */
 const history = createWebHistory(process.env.BASE_URL);
 
-// router object
+/** router object */
 const router = createRouter({
   history,
   routes,
   scrollBehavior,
 });
 
-// set document title after route
+/** set document title after route */
 router.afterEach(async ({ name, query, params, hash }) => {
-  // for test environments
+  /** for test environments */
   if (!document) return;
 
-  // https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
+  /** https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609 */
   await nextTick();
 
-  // separated parts of tab title
+  /** separated parts of tab title */
   const parts: Array<Array<string>> = [];
 
-  // title of app
+  /** title of app */
   parts.push([process.env.VUE_APP_TITLE_SHORT || ""]);
 
-  // name of page (route name prop)
+  /** name of page (route name prop) */
   if (name !== "Node") parts.push([String(name)]);
 
-  // url params (e.g. /disease/HP:12345)
+  /** url params (e.g. /disease/HP:12345) */
   parts.push(Object.values(params).map((value) => [value].flat().join(",")));
 
-  // url query's (e.g. ?search=marfan+syndrome)
+  /** url query's (e.g. ?search=marfan+syndrome) */
   parts.push(
     Object.entries(query).map(
       ([key, value]) => `${key}: ${[value].flat().join(",")}`
     )
   );
 
-  // url hash
+  /** url hash */
   if (hash) parts.push([startCase(hash.slice(1))]);
 
-  // combine into document title
+  /** combine into document title */
   document.title = parts
     .map((part) =>
       part
@@ -252,22 +252,24 @@ router.afterEach(async ({ name, query, params, hash }) => {
     .join(" · ");
 });
 
-// close any open tooltips on route change
+/** close any open tooltips on route change */
 router.beforeEach(() => {
   hideAll();
 });
 
 export default router;
 
-// dirty way to allow passing arbitrary data with router.push
-// will no longer be needed once this vue-router RFC is implemented:
-// https://github.com/vuejs/rfcs/discussions/400
+/**
+ * dirty way to allow passing arbitrary data with router.push. will no longer be
+ * needed once this vue-router RFC is implemented:
+ * https://github.com/vuejs/rfcs/discussions/400
+ */
 let routeData: unknown = null;
 export const setData = (data: unknown): void => {
   routeData = data;
 };
 export const getData = (): unknown => {
   const copy = clone(routeData);
-  routeData = null; // reset after data consumed once
+  routeData = null; /** reset after data consumed once */
   return copy;
 };
