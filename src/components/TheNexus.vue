@@ -73,7 +73,7 @@ let dots: Array<Dot> = [];
 let links: Array<Link> = [];
 
 /** resize canvas */
-const resize = () => {
+function resize() {
   if (!canvas || !ctx) return;
   const scale = window.devicePixelRatio;
   width = canvas.clientWidth;
@@ -81,7 +81,7 @@ const resize = () => {
   canvas.width = width * scale;
   canvas.height = height * scale;
   ctx.scale(scale, scale);
-};
+}
 
 /** generate field of dots and links */
 const generate = debounce(() => {
@@ -149,17 +149,17 @@ const generate = debounce(() => {
 }, 50);
 
 /** rotate 3d world */
-const rotate = (event: MouseEvent | TouchEvent) => {
+function rotate(event: MouseEvent | TouchEvent) {
   /** point touched */
   const x = "clientX" in event ? event.clientX : event.touches[0].clientX;
   const y = "clientY" in event ? event.clientY : event.touches[0].clientY;
   /** set destination 3d world rotation */
   rxTarget = (0.5 - y / window.innerHeight) * 90;
   ryTarget = -(0.5 - x / window.innerWidth) * 90;
-};
+}
 
 /** move physics simulation one step */
-const move = () => {
+function move() {
   /** move 3d world rotation toward target rotation smoothly */
   rx += (rxTarget - rx) / 100;
   ry += (ryTarget - ry) / 100;
@@ -175,16 +175,16 @@ const move = () => {
     for (let c = 0; c < 3; c++)
       /** move color toward target smoothly */
       entity.color[c] += (entity.colorTarget[c] - entity.color[c]) / 15;
-};
+}
 
 /** clear canvas for redrawing */
-const clear = () => {
+function clear() {
   if (!canvas || !ctx) return;
   ctx.clearRect(0, 0, width || 0, height || 0);
-};
+}
 
 /** draw dots and links to canvas */
-const draw = () => {
+function draw() {
   if (!ctx) return;
 
   /** draw links */
@@ -206,10 +206,10 @@ const draw = () => {
     ctx.arc(projected.x, projected.y, size, 0, 2 * Math.PI);
     ctx.fill();
   }
-};
+}
 
 /** pulse color of field of dots and links from inward to outward */
-const pulse = () => {
+function pulse() {
   for (const entity of [...dots, ...links]) {
     /** get center position of entity */
     const center =
@@ -225,14 +225,14 @@ const pulse = () => {
     window.setTimeout(() => (entity.colorTarget = [...pulseColor]), start);
     window.setTimeout(() => (entity.colorTarget = [...baseColor]), reset);
   }
-};
+}
 
 /** one step/tick/frame */
-const step = () => {
+function step() {
   move();
   clear();
   draw();
-};
+}
 
 onMounted(() => {
   /** setup canvas */

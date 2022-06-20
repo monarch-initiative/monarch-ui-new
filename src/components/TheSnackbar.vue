@@ -70,6 +70,7 @@ useEventListener(window, "snackbar", onPush);
   background: $off-black;
   color: $white;
   box-shadow: $shadow;
+  border-radius: $rounded;
   z-index: 99;
   animation: flash 0.25s linear forwards;
 }

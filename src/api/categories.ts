@@ -25,12 +25,12 @@ export const getAssociationEndpoint = (category = ""): string => {
 };
 
 /** from a category name, get how it should be labeled when viewing associations */
-export const getAssociationName = (category = ""): string => {
-  /** special */
+export const getAssociationLabel = (category = ""): string => {
+  if (category === "anatomy") return "Anatomies";
+
   if (category === "ortholog-phenotype") return "Ortholog Phenotypes";
   if (category === "ortholog-disease") return "Ortholog Diseases";
 
-  /** causal/correlated */
   if (category === "causal-disease") return "Causal Diseases";
   if (category === "correlated-disease") return "Correlated Diseases";
   if (category === "causal-gene") return "Causal Genes";
