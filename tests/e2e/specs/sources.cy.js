@@ -34,7 +34,7 @@ it("Datasets and ontologies populate", () => {
   cy.get("@content")
     .get("img")
     .invoke("attr", "src")
-    .should("include", "img/flybase.e8046c12.png");
+    .should("match", /flybase.*\.png/);
 
   /** check links */
   cy.get("@content").contains("fbrf_pmid_pmcid_doi_fb_2021_01.tsv.gz");

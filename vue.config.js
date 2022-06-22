@@ -13,9 +13,8 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        prependData: `
+        additionalData: `
           @use "@/global/variables.scss" as *;
-          @use "@/global/mixins.scss" as *;
         `,
       },
     },

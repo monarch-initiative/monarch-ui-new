@@ -182,7 +182,7 @@ const cols = computed((): Cols => {
   ];
 
   /** extra, supplemental columns for certain association types */
-  let extraCols: Cols = [];
+  const extraCols: Cols = [];
 
   /** taxon column. exists for many categories, so just add if any row has taxon. */
   if (associations.value.some((association) => association.taxon))

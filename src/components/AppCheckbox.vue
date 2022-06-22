@@ -3,7 +3,7 @@
 -->
 
 <template>
-  <label class="checkbox" :aria-checked="modelValue">
+  <label class="checkbox">
     <input type="checkbox" :checked="modelValue" @change="onChange" />
     <AppIcon class="check" :icon="modelValue ? 'square-check' : 'square'" />
     <span v-if="text">{{ text }}</span>
@@ -42,6 +42,7 @@ function onChange(event: Event) {
   align-items: center;
   gap: 10px;
   padding: 10px;
+  border-radius: $rounded;
   cursor: pointer;
   transition: background $fast;
 

@@ -62,8 +62,7 @@ async function update() {
   /** show jump button if user has scrolled far down enough */
   showJump.value = window.scrollY > window.innerHeight * 0.1;
   /** show feedback button if user not already on dedicated feedback page */
-  showFeedback.value =
-    ((route.name || "") as string).toLowerCase() !== "feedback";
+  showFeedback.value = String(route.name || "").toLowerCase() !== "feedback";
 
   /** calculate nudge */
   nudge.value = Math.max(0, footer.height + window.innerHeight - footer.bottom);

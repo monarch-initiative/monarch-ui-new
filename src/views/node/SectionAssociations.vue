@@ -75,7 +75,7 @@ import AppSelectSingle from "@/components/AppSelectSingle.vue";
 import { Option, Options } from "@/components/AppSelectSingle";
 import AppTabs from "@/components/AppTabs.vue";
 import { Result as NodeResult } from "@/api/node-lookup";
-import { getAssociationName } from "@/api/categories";
+import { getAssociationLabel } from "@/api/categories";
 import { Association } from "@/api/node-associations";
 import AssociationsSummary from "./AssociationsSummary.vue";
 import AssociationsTable from "./AssociationsTable.vue";
@@ -102,7 +102,7 @@ const categoryOptions = computed(
   (): Options =>
     props.node.associationCounts.map((association) => ({
       id: association.id,
-      name: getAssociationName(association.id),
+      name: getAssociationLabel(association.id),
       icon: `category-${association.id}`,
       count: association.count,
     }))

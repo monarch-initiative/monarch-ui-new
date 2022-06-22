@@ -3,12 +3,12 @@
 -->
 
 <template>
-  <header :data-home="home">
+  <header ref="header" :data-home="home">
     <!-- header background visualization -->
     <TheNexus v-if="home" />
 
     <!-- title bar -->
-    <div class="title" :title="version">
+    <div class="title" :title="app.version">
       <!-- logo image and text -->
       <AppLink
         v-tippy="home ? '' : 'Homepage'"
@@ -19,19 +19,15 @@
         <TheLogo class="image" />
         <!-- make logo text the h1 on homepage -->
         <component :is="home ? 'h1' : 'div'" class="text">
-          Monarch
-          <br />
-          Initiative
+          Monarch Initiative
         </component>
       </AppLink>
 
       <!-- nav toggle button -->
       <button
+        v-tippy="expanded ? 'Close navigation menu' : 'Expand navigation menu'"
         class="button"
         :aria-expanded="expanded"
-        :aria-label="
-          expanded ? 'Close navigation menu' : 'Expand navigation menu'
-        "
         @click="expanded = !expanded"
       >
         <AppIcon :icon="expanded ? 'times' : 'bars'" />
@@ -67,10 +63,11 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
+import { useRoute } from "vue-router";
+import { onClickOutside } from "@vueuse/core";
 import TheNexus from "./TheNexus.vue";
 import TheLogo from "@/assets/TheLogo.vue";
-import { version } from "../../package.json";
-import { useRoute } from "vue-router";
+import app from "../../package.json";
 
 /** route info */
 const route = useRoute();
@@ -78,20 +75,26 @@ const route = useRoute();
 /** is nav menu expanded */
 const expanded = ref(false);
 
+/** header element */
+const header = ref<HTMLElement>();
+
 /** is home page (big) version */
 const home = computed((): boolean => route.name === "Home");
 
+/** close nav */
+function close() {
+  expanded.value = false;
+}
+
 /** close nav when page changes */
-watch(
-  () => route,
-  () => {
-    expanded.value = false;
-  }
-);
+watch(() => route.name, close);
+
+/** close nav when clicking outside header */
+onClickOutside(header, close);
 </script>
 
 <style lang="scss" scoped>
-$wrap: 750px;
+$wrap: 600px;
 
 /** header */
 
@@ -106,22 +109,24 @@ header {
   z-index: 10;
 }
 
+header[data-home="true"] {
+  justify-content: center;
+}
+
 @media (max-width: $wrap) {
   header {
     flex-direction: column;
   }
+
+  header[data-home="true"] {
+    justify-content: space-between;
+  }
 }
 
-header[data-home="true"] {
-  justify-content: center;
-
-  @media (min-width: $wrap) {
+@media not all and (max-width: $wrap) {
+  header[data-home="true"] {
     position: relative;
     min-height: 300px;
-  }
-
-  @media (max-width: $wrap) {
-    justify-content: space-between;
   }
 }
 
@@ -131,7 +136,6 @@ header[data-home="true"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /** background: radial-gradient($theme-dark 40%, transparent 70%); */
 }
 
 .button {
@@ -139,7 +143,7 @@ header[data-home="true"] {
   height: 50px;
 }
 
-@media (min-width: $wrap) {
+@media not all and (max-width: $wrap) {
   .button {
     display: none;
   }
@@ -156,31 +160,44 @@ header[data-home="true"] {
 .logo {
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 10px;
   color: $white;
   text-decoration: none;
 }
 
 .image {
-  height: 50px;
+  height: 45px;
   padding: 5px;
 }
 
 .text {
-  margin: 0;
   padding: 5px;
-  font-size: 1rem;
-  font-weight: 400;
+  font-size: 1.1rem;
   text-align: center;
+  font-weight: 400;
   letter-spacing: 1px;
+  line-height: $spacing - 0.3;
   text-transform: uppercase;
 }
 
-.logo[data-home="true"] {
-  @media (min-width: $wrap) {
-    & {
-      flex-direction: column;
-    }
+@media (max-width: $wrap) {
+  .logo {
+    padding: 5px;
+  }
+
+  .image {
+    height: 40px;
+  }
+
+  .text {
+    font-size: 1rem;
+    text-align: left;
+  }
+}
+
+@media not all and (max-width: $wrap) {
+  .logo[data-home="true"] {
+    flex-direction: column;
 
     .image {
       height: 70px;
@@ -188,6 +205,7 @@ header[data-home="true"] {
 
     .text {
       font-size: 1.1rem;
+      width: min-content;
     }
   }
 }
@@ -196,13 +214,12 @@ header[data-home="true"] {
 
 nav {
   display: flex;
-  padding: 15px;
   gap: 10px;
+  padding: 15px;
 }
 
 .link {
   position: relative;
-  width: 100%;
   padding: 10px;
   color: $white;
   text-decoration: none;
@@ -227,10 +244,10 @@ nav {
 
 @media (max-width: $wrap) {
   nav {
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
     position: unset;
-    padding: 10px;
-    width: 100%;
+    margin-top: -10px;
   }
 
   nav[data-expanded="false"] {
@@ -238,11 +255,11 @@ nav {
   }
 
   .link {
-    margin: 0;
+    padding: 5px;
   }
 }
 
-@media (min-width: $wrap) {
+@media not all and (max-width: $wrap) {
   nav[data-home="true"] {
     position: absolute;
     top: 0;

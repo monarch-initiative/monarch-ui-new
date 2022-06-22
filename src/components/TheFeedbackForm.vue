@@ -13,7 +13,7 @@
   </p>
 
   <!-- form -->
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent="(event) => onSubmit(event as SubmitEvent)">
     <!-- fields for user to fill out -->
     <div class="fields">
       <AppInput
@@ -131,10 +131,17 @@ const details = computed(() => {
   };
 });
 
-async function onSubmit() {
+/**
+ * shim that shouldn't be needed. see
+ * https://github.com/vuejs/eslint-config-prettier/issues/7
+ */
+interface SubmitEvent extends Event {
+  submitter: HTMLElement | null;
+}
+
+async function onSubmit(event: SubmitEvent) {
   /** only proceed if submitted through button, not "implicitly" (enter press) */
-  const active = document?.activeElement;
-  if (active && active.getAttribute("type") !== "submit") return;
+  if (event.submitter === null) return;
 
   /** make issue title (unclear what char limit is?) */
   const title = [

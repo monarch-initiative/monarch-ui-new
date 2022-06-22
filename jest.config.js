@@ -6,7 +6,7 @@ module.exports = {
 
   /** jest needs its own loaders analogous to webpack loaders */
   transform: {
-    "\\.vue$": "vue-jest",
+    "\\.vue$": "@vue/vue3-jest",
   },
 
   /**
