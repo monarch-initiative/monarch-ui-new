@@ -164,8 +164,6 @@ import {
   compareSetToSet,
   getPhenotypes,
   Comparison,
-  getTaxonIdFromName,
-  getTaxonScientificFromName,
 } from "@/api/phenotype-explorer";
 import { Status } from "@/components/AppStatus";
 import AppStatus from "@/components/AppStatus.vue";
@@ -189,14 +187,23 @@ const bModeOptions = [
   { id: "these phenotypes ..." },
 ];
 
-/** taxon options for second set */
-const bTaxonOptions = [
-  { id: "mouse" },
-  { id: "zebrafish" },
-  { id: "fruitfly" },
-  { id: "nematode" },
-  { id: "frog" },
+/**
+ * small hard-coded list of taxon options, just for phenotype explorer, so no
+ * backend querying needed
+ */
+const taxons = [
+  { id: "9606", name: "human", scientific: "Homo sapiens" },
+  { id: "10090", name: "mouse", scientific: "Mus musculus" },
+  { id: "7955", name: "zebrafish", scientific: "Danio rerio" },
+  { id: "7227", name: "fruitfly", scientific: "Drosophila melanogaster" },
+  { id: "6239", name: "worm", scientific: "Caenorhabditis elegans" },
+  { id: "8353", name: "frog", scientific: "Xenopus" },
 ];
+
+const bTaxonHuman = taxons[0];
+
+/** taxon options for second set */
+const bTaxonOptions = taxons.slice(1);
 
 /** example data */
 const exampleAPhenotypes = [
@@ -255,7 +262,7 @@ async function runAnalysis() {
     else
       results.value = await compareSetToTaxon(
         aPhenotypes.value.map(({ id }) => id),
-        bMode.value.id.includes("diseases") ? "human" : bTaxon.value.id
+        bMode.value.id.includes("diseases") ? bTaxonHuman.id : bTaxon.value.id
       );
 
     /** run phenogrid, attach to div container */
@@ -296,14 +303,9 @@ function runPhenogrid() {
   if (mode === "compare") xAxis = bPhenotypes.value;
   else {
     const taxon = bMode.value.id.includes("diseases")
-      ? "human"
-      : bTaxon.value.id;
-    xAxis = [
-      {
-        id: getTaxonIdFromName(taxon),
-        name: getTaxonScientificFromName(taxon),
-      },
-    ];
+      ? bTaxonHuman
+      : bTaxon.value;
+    xAxis = [{ id: taxon.id, name: taxon.scientific }];
   }
   /** call phenogrid */
   mountPhenogrid("#phenogrid", xAxis, yAxis, mode);

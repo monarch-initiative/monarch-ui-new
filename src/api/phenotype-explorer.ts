@@ -132,7 +132,7 @@ export const compareSetToSet = async (
   }
 };
 
-/** compare a set of phenotypes to a gene or disease */
+/** compare a set of phenotypes to a gene or disease taxon id */
 export const compareSetToTaxon = async (
   phenotypes: Array<string>,
   taxon: string
@@ -140,7 +140,7 @@ export const compareSetToTaxon = async (
   /** endpoint settings */
   const params = {
     id: phenotypes,
-    taxon: getTaxonIdFromName(taxon),
+    taxon: taxon,
   };
 
   /** make query */
@@ -177,22 +177,3 @@ export interface Comparison {
   minScore?: number;
   maxScore?: number;
 }
-
-/**
- * small hard-coded map of taxon id (NCBITaxon), "name" (human readable), and
- * scientific name, just for phenotype explorer so no backend querying needed
- */
-const taxonMap: Array<{ id: string; name: string; scientific: string }> = [
-  { id: "9606", name: "human", scientific: "Homo sapiens" },
-  { id: "10090", name: "mouse", scientific: "Mus musculus" },
-  { id: "7955", name: "zebrafish", scientific: "Danio rerio" },
-  { id: "7227", name: "fruitfly", scientific: "Drosophila melanogaster" },
-  { id: "6239", name: "worm", scientific: "Caenorhabditis elegans" },
-  { id: "8353", name: "frog", scientific: "Xenopus" },
-];
-
-export const getTaxonIdFromName = (name = ""): string =>
-  taxonMap.find((t) => t.name === name)?.id || "";
-
-export const getTaxonScientificFromName = (name = ""): string =>
-  taxonMap.find((t) => t.name === name)?.scientific || "";
