@@ -1,7 +1,7 @@
 import { mapValues } from "lodash";
 import { Params } from ".";
 import { Options } from "@/components/AppSelectMulti.d";
-import { labelToId } from "./taxons";
+import { getIdsFromLabels } from "./taxons";
 import { renameKey } from "./../util/object";
 
 /** format of facet counts returned from biolink */
@@ -23,6 +23,9 @@ export const facetsToFilters = (facets: Facets): Filters => {
     }
   }
 
+  /** delete certain facets (explicitly, opt-out) that we dont' want to show */
+  delete filters["_taxon_map"];
+
   /** rename facet names to be consistent, and to be what biolink expects in future queries */
   renameKey(filters, "taxon_label", "taxon");
   renameKey(filters, "object_taxon_label", "taxon");
@@ -35,21 +38,24 @@ export const filtersToQuery = (filters: Filters): Query =>
   mapValues(filters, (array) => array.map(({ id }) => id)) as Query;
 
 /** convert query to params for passing to request func */
-export const queryToParams = (
+export const queryToParams = async (
   availableFilters: Query,
   activeFilters: Query
-): Params => {
+): Promise<Params> => {
   const params: Params = {};
   for (const [key, query] of Object.entries(activeFilters)) {
     /** do special mapping for certain keys */
     let newQuery = query;
-    if (key === "taxon") newQuery = newQuery.map(labelToId);
+    if (key === "taxon") newQuery = await getIdsFromLabels(newQuery);
 
     /** ignore filter if value "empty" (none active) or "full" (all active) */
     const noneActive = newQuery.length === 0;
     const allActive =
       activeFilters[key]?.length === availableFilters[key]?.length;
-    if (!noneActive && !allActive) params[key] = newQuery;
+    if (noneActive || allActive) continue;
+
+    /** set param */
+    params[key] = newQuery;
   }
 
   return params;

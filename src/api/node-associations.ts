@@ -86,7 +86,7 @@ export const getTabulatedAssociations = async (
       sort: sort
         ? `${sort.id} ${sort.direction === "up" ? "asc" : "desc"}`
         : null,
-      ...queryToParams(availableFilters, activeFilters),
+      ...(await queryToParams(availableFilters, activeFilters)),
     };
 
     /** make query */

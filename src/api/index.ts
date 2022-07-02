@@ -14,7 +14,7 @@ export type Params = Record<string, Param | Array<Param>>;
  * generic fetch request wrapper
  *
  * @param path request url
- * @param params url params. comma-separated values expand to repeated keys
+ * @param params url params
  * @param options fetch() options
  * @param parse parse response mode
  */

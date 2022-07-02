@@ -34,7 +34,7 @@ export const getSearchResults = async (
 
     /** other params */
     const params = {
-      ...queryToParams(availableFilters, activeFilters),
+      ...(await queryToParams(availableFilters, activeFilters)),
       boost_q: [
         "category:disease^5",
         "category:phenotype^5",
