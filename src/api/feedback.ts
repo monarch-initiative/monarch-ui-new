@@ -1,26 +1,32 @@
 import { request, cleanError } from ".";
 
-/** serverless endpoint */
+/** serverless endpoint to make post on helpdesk with github api */
 const api =
   "https://us-central1-monarch-initiative.cloudfunctions.net/monarch-gh-issue-post";
 
-interface SuccessResponse {
+interface _Success {
   html_url: string;
 }
-interface ErrorResponse {
+
+interface _Error {
   error: string;
   next_request: string;
 }
-type Response = SuccessResponse | ErrorResponse;
+
+/** status response (from backend) */
+type _Response = _Success | _Error;
 
 /** create issue on helpdesk on submit of feedback form */
-export const postFeedback = async (title = "", body = ""): Promise<Result> => {
+export const postFeedback = async (
+  title = "",
+  body = ""
+): Promise<IssueLink> => {
   try {
     /** check params */
     if (!title || !body) throw new Error("Title or body not specified");
 
     /** post to api endpoint which posts new github issue */
-    const data = await request<Response>(
+    const data = await request<_Response>(
       api,
       { title, body },
       { method: "POST" }
@@ -39,4 +45,5 @@ export const postFeedback = async (title = "", body = ""): Promise<Result> => {
   }
 };
 
-type Result = string;
+/** link to posted issue (for frontend) */
+type IssueLink = string;

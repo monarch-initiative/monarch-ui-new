@@ -82,17 +82,17 @@
 import { ref, watch, onMounted } from "vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { Status } from "@/components/AppStatus";
-import { Result as NodeResult } from "@/api/node-lookup";
+import { Node } from "@/api/node-lookup";
 import {
   getTopAssociations,
-  Result as AssociationsResult,
+  Associations,
   Association,
 } from "@/api/node-associations";
 import { ApiError } from "@/api";
 
 interface Props {
   /** current node */
-  node: NodeResult;
+  node: Node;
   /** selected association category */
   selectedCategory: string;
   /** selected association id */
@@ -109,7 +109,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 /** association data */
-const associations = ref<AssociationsResult["associations"]>([]);
+const associations = ref<Associations["associations"]>([]);
 /** status of query */
 const status = ref<Status | null>(null);
 

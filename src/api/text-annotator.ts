@@ -1,7 +1,8 @@
 import { mapCategory } from "./categories";
 import { biolink, ApiError, request, cleanError } from "./index";
 
-interface Response {
+/** annotations (from backend) */
+interface _Annotations {
   content: string;
   spans: Array<{
     start: number;
@@ -16,7 +17,7 @@ interface Response {
 }
 
 /** get annotations from full text */
-export const annotateText = async (content = ""): Promise<Result> => {
+export const annotateText = async (content = ""): Promise<Annotations> => {
   try {
     /** if nothing searched, return empty */
     if (!content.trim()) throw new ApiError("No results", "warning");
@@ -37,7 +38,7 @@ export const annotateText = async (content = ""): Promise<Result> => {
 
     /** make query */
     const url = `${biolink}/nlp/annotate/entities`;
-    const response = await request<Response>(url, params, options);
+    const response = await request<_Annotations>(url, params, options);
     const { spans } = response;
 
     /** empty error status */
@@ -53,7 +54,7 @@ export const annotateText = async (content = ""): Promise<Result> => {
       .map((index, i, array) => [index, array[i + 1] || index]);
 
     /** convert into desired result format */
-    const annotations: Result = [];
+    const annotations: Annotations = [];
     for (const [start, end] of indices) {
       annotations.push({
         text: content.slice(start, end),
@@ -75,7 +76,8 @@ export const annotateText = async (content = ""): Promise<Result> => {
   }
 };
 
-export type Result = Array<{
+/** annotations (for frontend) */
+export type Annotations = Array<{
   text: string;
   tokens: Array<{
     id: string;

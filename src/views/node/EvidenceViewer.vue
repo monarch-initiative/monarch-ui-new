@@ -221,10 +221,10 @@ import AppDetails from "@/components/AppDetails.vue";
 import AppDetail from "@/components/AppDetail.vue";
 import AppTable from "@/components/AppTable.vue";
 import AppStatus from "@/components/AppStatus.vue";
-import { Result as NodeResult } from "@/api/node-lookup";
+import { Node } from "@/api/node-lookup";
 import { Status } from "@/components/AppStatus";
 import { scrollToElement } from "@/router";
-import { getEvidence, Result } from "@/api/association-evidence";
+import { getAssociationEvidence, Evidences } from "@/api/association-evidence";
 import { ApiError } from "@/api";
 import { breakUrl } from "@/util/string";
 import { appendToBody } from "@/global/tippy";
@@ -233,7 +233,7 @@ import { Association } from "@/api/node-associations";
 
 interface Props {
   /** current node */
-  node: NodeResult;
+  node: Node;
   /** selected association id */
   selectedAssociation: Association;
 }
@@ -241,8 +241,8 @@ interface Props {
 const props = defineProps<Props>();
 
 /** evidence data */
-const summary = ref<Result["summary"]>();
-const table = ref<Result["table"]>();
+const summary = ref<Evidences["summary"]>();
+const table = ref<Evidences["table"]>();
 /** status of query */
 const status = ref<Status | null>(null);
 
@@ -297,7 +297,9 @@ async function getData() {
     status.value = { code: "loading", text: "Loading evidence data" };
 
     /** get evidence data */
-    const response = await getEvidence(props.selectedAssociation?.id);
+    const response = await getAssociationEvidence(
+      props.selectedAssociation?.id
+    );
     summary.value = response.summary;
     table.value = response.table;
 

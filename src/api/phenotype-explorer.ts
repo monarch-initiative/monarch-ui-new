@@ -45,7 +45,8 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
   }
 };
 
-interface PhenotypesResponse {
+/** phenotype associations with gene/disease (from backend) */
+interface _PhenotypeAssociations {
   associations: Array<{
     object: {
       id: string;
@@ -72,7 +73,7 @@ const getPhenotypeAssociations = async (
 
     /** make query */
     const url = `${biolink}/bioentity/${category}/${id}/phenotypes`;
-    const { associations } = await request<PhenotypesResponse>(url, params);
+    const { associations } = await request<_PhenotypeAssociations>(url, params);
 
     /** convert into desired result format */
     return associations.map(({ object }) => ({
@@ -84,7 +85,8 @@ const getPhenotypeAssociations = async (
   }
 };
 
-interface CompareResponse {
+/** results of phenotype comparison (from backend) */
+interface _Comparison {
   matches: Array<{
     id: string;
     label: string;
@@ -103,7 +105,7 @@ interface CompareResponse {
 export const compareSetToSet = async (
   aPhenotypes: Array<string>,
   bPhenotypes: Array<string>
-): Promise<CompareResult> => {
+): Promise<Comparison> => {
   try {
     /** make request options */
     const headers = new Headers();
@@ -122,7 +124,7 @@ export const compareSetToSet = async (
 
     /** make query */
     const url = `${biolink}/sim/compare`;
-    const response = await request<CompareResponse>(url, {}, options);
+    const response = await request<_Comparison>(url, {}, options);
 
     return mapMatches(response);
   } catch (error) {
@@ -134,7 +136,7 @@ export const compareSetToSet = async (
 export const compareSetToTaxon = async (
   phenotypes: Array<string>,
   taxon: string
-): Promise<CompareResult> => {
+): Promise<Comparison> => {
   /** endpoint settings */
   const params = {
     id: phenotypes,
@@ -143,13 +145,13 @@ export const compareSetToTaxon = async (
 
   /** make query */
   const url = `${biolink}/sim/search`;
-  const response = await request<CompareResponse>(url, params);
+  const response = await request<_Comparison>(url, params);
 
   return mapMatches(response);
 };
 
 /** convert into desired result format */
-const mapMatches = (response: CompareResponse) => {
+const mapMatches = (response: _Comparison) => {
   const matches = response.matches.map((match) => ({
     id: match.id,
     name: match.label,
@@ -163,7 +165,8 @@ const mapMatches = (response: CompareResponse) => {
   return { matches, minScore, maxScore };
 };
 
-export type CompareResult = {
+/** results of phenotype comparison (for frontend) */
+export interface Comparison {
   matches: Array<{
     id: string;
     name: string;
@@ -173,11 +176,11 @@ export type CompareResult = {
   }>;
   minScore?: number;
   maxScore?: number;
-};
+}
 
 /**
  * small hard-coded map of taxon id (NCBITaxon), "name" (human readable), and
- * scientific name, just for phenotype explorer so no querying needed for conversion
+ * scientific name, just for phenotype explorer so no backend querying needed
  */
 const taxonMap: Array<{ id: string; name: string; scientific: string }> = [
   { id: "9606", name: "human", scientific: "Homo sapiens" },

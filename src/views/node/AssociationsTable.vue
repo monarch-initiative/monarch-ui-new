@@ -103,10 +103,10 @@ import { startCase } from "lodash";
 import { Status } from "@/components/AppStatus";
 import AppTable from "@/components/AppTable.vue";
 import { Col, Cols, Sort } from "@/components/AppTable";
-import { Result as NodeResult } from "@/api/node-lookup";
+import { Node } from "@/api/node-lookup";
 import {
   getTabulatedAssociations,
-  Result as AssociationsResult,
+  Associations,
   Association,
 } from "@/api/node-associations";
 import { ApiError } from "@/api";
@@ -117,7 +117,7 @@ import { Options } from "@/components/AppSelectMulti";
 
 interface Props {
   /** current node */
-  node: NodeResult;
+  node: Node;
   /** selected association category */
   selectedCategory: string;
   /** selected association id */
@@ -134,7 +134,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 /** association data */
-const associations = ref<AssociationsResult["associations"]>([]);
+const associations = ref<Associations["associations"]>([]);
 /** total number of associations */
 const count = ref(0);
 /** table state */

@@ -89,7 +89,7 @@ import AppStatus from "@/components/AppStatus.vue";
 import example from "./text-annotator.json";
 import { annotateText } from "@/api/text-annotator";
 import { Status } from "@/components/AppStatus";
-import { Result } from "@/api/text-annotator";
+import { Annotations } from "@/api/text-annotator";
 import { ApiError } from "@/api";
 import { downloadJson } from "@/util/download";
 import { setData } from "@/router";
@@ -104,7 +104,7 @@ const content = useLocalStorage("annotations-content", "");
 /** file name of uploaded file (if applicable) */
 const filename = useLocalStorage("annotations-filename", "");
 /** annotation results */
-const annotations = ref<Result>([]);
+const annotations = ref<Annotations>([]);
 /** status of query */
 const status = ref<Status | null>(null);
 

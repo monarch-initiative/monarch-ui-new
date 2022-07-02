@@ -3,17 +3,18 @@ import { uniq, flatMap, uniqBy } from "lodash";
 import { getXrefLink } from "./xrefs";
 import { biolink, request, cleanError } from ".";
 
-interface EvidenceType {
+interface _EvidenceType {
   id: string;
   label?: string;
 }
 
-interface Publication {
+interface _Publication {
   id: string;
   label?: string;
 }
 
-interface Response {
+/** evidence associations (from backend) */
+interface _Evidences {
   associations: Array<{
     id: string;
     type?: string;
@@ -44,49 +45,51 @@ interface Response {
       category?: Array<string> | null;
       inverse: boolean;
     };
-    evidence_types?: Array<EvidenceType>;
+    evidence_types?: Array<_EvidenceType>;
     provided_by?: Array<string>;
-    publications?: Array<Publication>;
+    publications?: Array<_Publication>;
     object_eq?: Array<string>;
     subject_eq?: Array<string>;
   }>;
 }
 
+/** convert evidence code into desired format */
+const mapCode = (code: _EvidenceType) => ({
+  name: code.label || "",
+  link: getXrefLink(code.id),
+});
+
+/** convert publication into desired format */
+const mapPublication = (publication: _Publication) => ({
+  name: publication.label || publication.id || "",
+  link: getXrefLink(publication.id),
+});
+
+/** convert "provided by" into desired format */
+const mapSource = (source = "") => ({
+  name: source.split("/").pop() || source,
+  link: source,
+});
+
+/** convert reference into desired format */
+const mapReference = (reference = "") => ({
+  name: reference,
+  link: getXrefLink(reference),
+});
+
 /** get supporting evidence for a certain association */
-export const getEvidence = async (id: string): Promise<Result> => {
+export const getAssociationEvidence = async (
+  id: string
+): Promise<Evidences> => {
   try {
     /** make query */
     const url = `${biolink}/evidence/graph/${id}/table`;
-    const { associations } = await request<Response>(url);
+    const { associations } = await request<_Evidences>(url);
 
     /** get combined unique summary info */
     const codes = uniqBy(flatMap(associations, "evidence_types"), "id");
     const publications = uniqBy(flatMap(associations, "publications"), "id");
     const sources = uniq(flatMap(associations, "provided_by"));
-
-    /** convert evidence code into desired format */
-    const mapCode = (code: EvidenceType) => ({
-      name: code.label || "",
-      link: getXrefLink(code.id),
-    });
-
-    /** convert publication into desired format */
-    const mapPublication = (publication: Publication) => ({
-      name: publication.label || publication.id || "",
-      link: getXrefLink(publication.id),
-    });
-
-    /** convert "provided by" into desired format */
-    const mapSource = (source = "") => ({
-      name: source.split("/").pop() || source,
-      link: source,
-    });
-
-    /** convert reference into desired format */
-    const mapReference = (reference = "") => ({
-      name: reference,
-      link: getXrefLink(reference),
-    });
 
     /** convert summary data into desired result format */
     const summary = {
@@ -153,9 +156,7 @@ interface Summary {
   sources: Array<string>;
 }
 
-/** detailed data of evidence */
-type Table = Array<Evidence>;
-
+/** singular evidence */
 interface Evidence {
   /** subject of association */
   subject: {
@@ -207,7 +208,11 @@ interface Evidence {
   }>;
 }
 
-export interface Result {
+/** detailed data of evidence */
+type Table = Array<Evidence>;
+
+/** plural evidence (for frontend) */
+export interface Evidences {
   summary: Summary;
   table: Table;
 }

@@ -1,6 +1,6 @@
 import { startCase } from "lodash";
 
-/** temporary simplified version of function in comments above */
+/** from list of categories, get single category to label/display */
 export const mapCategory = (category: Array<string> = []): string =>
   category[0] || "unknown";
 

@@ -1,7 +1,8 @@
 import { uniqBy } from "lodash";
 import { biolink, request, cleanError } from ".";
 
-interface Response {
+/** graph info to construct hierarchy (from backend) */
+interface _Hierarchy {
   nodes: [
     {
       id: string;
@@ -21,7 +22,10 @@ interface Response {
 const partOf = "BFO:0000050";
 
 /** lookup hierarchy info for a node id */
-export const getHierarchy = async (id = "", category = ""): Promise<Result> => {
+export const getHierarchy = async (
+  id = "",
+  category = ""
+): Promise<Hierarchy> => {
   try {
     const superClasses: Array<Class> = [];
     const equivalentClasses: Array<Class> = [];
@@ -43,7 +47,7 @@ export const getHierarchy = async (id = "", category = ""): Promise<Result> => {
 
     /** make query */
     const url = `${biolink}/graph/edges/from/${id}`;
-    const response = await request<Response>(url, params);
+    const response = await request<_Hierarchy>(url, params);
     const { nodes, edges } = response;
 
     /** take id of subject or object and find associated node label */
@@ -75,7 +79,8 @@ export const getHierarchy = async (id = "", category = ""): Promise<Result> => {
 
 type Class = { id: string; name: string };
 
-export interface Result {
+/** hierarchy (for frontend) */
+export interface Hierarchy {
   superClasses: Array<Class>;
   equivalentClasses: Array<Class>;
   subClasses: Array<Class>;

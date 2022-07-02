@@ -5,7 +5,8 @@ import { getSummaries } from "./node-publication";
 import { mapCategory, getAssociationEndpoint } from "./categories";
 import { Sort } from "@/components/AppTable";
 
-interface Response {
+/** node associations (from backend) */
+interface _Associations {
   numFound: number;
   associations: Array<{
     id: string;
@@ -69,7 +70,7 @@ export const getTabulatedAssociations = async (
   sort: Sort = null,
   availableFilters: Query = {},
   activeFilters: Query = {}
-): Promise<Result> => {
+): Promise<Associations> => {
   try {
     /** get causal/correlated param */
     let type = "both";
@@ -93,69 +94,70 @@ export const getTabulatedAssociations = async (
     const url = `${biolink}/bioentity/${nodeCategory}/${nodeId}/${getAssociationEndpoint(
       assocationCategory
     )}`;
-    const response = await request<Response>(url, params);
+    const response = await request<_Associations>(url, params);
 
     /** convert into desired result format */
-    const associations: Result["associations"] = response.associations.map(
-      (association) =>
-        ({
-          id: association.id,
+    const associations: Associations["associations"] =
+      response.associations.map(
+        (association) =>
+          ({
+            id: association.id,
 
-          object: {
-            id: association.object.id,
-            name: association.object.label,
-            iri: association.object.iri,
-            category: mapCategory(association.object.category || []),
-          },
+            object: {
+              id: association.object.id,
+              name: association.object.label,
+              iri: association.object.iri,
+              category: mapCategory(association.object.category || []),
+            },
 
-          subject: {
-            id: association.subject.id,
-            name: association.subject.label,
-            iri: association.subject.iri,
-            category: mapCategory(association.subject.category || []),
-          },
+            subject: {
+              id: association.subject.id,
+              name: association.subject.label,
+              iri: association.subject.iri,
+              category: mapCategory(association.subject.category || []),
+            },
 
-          relation: {
-            id: association.relation.id,
-            name: association.relation.label,
-            iri: association.relation.iri,
-            category: (association.relation?.category || [])[0] || "",
-            inverse: association.relation.inverse,
-          },
+            relation: {
+              id: association.relation.id,
+              name: association.relation.label,
+              iri: association.relation.iri,
+              category: (association.relation?.category || [])[0] || "",
+              inverse: association.relation.inverse,
+            },
 
-          evidence: [],
+            evidence: [],
 
-          taxon:
-            association.object.taxon?.id || association.object.taxon?.label
-              ? {
-                  id: association.object.taxon?.id || "",
-                  name: association.object.taxon?.label || "",
-                }
-              : undefined,
+            taxon:
+              association.object.taxon?.id || association.object.taxon?.label
+                ? {
+                    id: association.object.taxon?.id || "",
+                    name: association.object.taxon?.label || "",
+                  }
+                : undefined,
 
-          frequency:
-            association.frequency?.id || association.frequency?.label
-              ? {
-                  name: association.frequency?.label || "",
-                  link: getXrefLink(association.frequency?.id || ""),
-                }
-              : undefined,
-          onset:
-            association.onset?.id || association.onset?.label
-              ? {
-                  name: association.onset?.label || "",
-                  link: getXrefLink(association.onset?.id || ""),
-                }
-              : undefined,
+            frequency:
+              association.frequency?.id || association.frequency?.label
+                ? {
+                    name: association.frequency?.label || "",
+                    link: getXrefLink(association.frequency?.id || ""),
+                  }
+                : undefined,
+            onset:
+              association.onset?.id || association.onset?.label
+                ? {
+                    name: association.onset?.label || "",
+                    link: getXrefLink(association.onset?.id || ""),
+                  }
+                : undefined,
 
-          supportCount:
-            (association.evidence_types || []).length +
-            (association.publications || []).filter((publication) =>
-              publication.id.startsWith("PMID:")
-            ).length +
-            (association.provided_by || []).length,
-        } as Association)
-    );
+            supportCount:
+              (association.evidence_types || []).length +
+              (association.publications || []).filter((publication) =>
+                publication.id.startsWith("PMID:")
+              ).length +
+              (association.provided_by || []).length,
+          } as Association)
+      );
 
     /** supplement publication with metadata from entrez */
     {
@@ -190,6 +192,7 @@ export const getTabulatedAssociations = async (
   }
 };
 
+/** single association */
 export interface Association {
   /** allow arbitrary key access */
   [key: string]: unknown;
@@ -228,29 +231,33 @@ export interface Association {
   /** mixed-type total of pieces of supporting evidence */
   supportCount: number;
 
-  /** taxon specific (gene/genotype/model/variant/homolog/ortholog) info */
+  /** taxon/species (gene/genotype/model/variant/homolog/ortholog) */
   taxon?: {
     id: string;
     name: string;
   };
 
-  /** phenotype specific info */
+  /** phenotype frequency */
   frequency?: {
     name: string;
     link: string;
   };
+  /** phenotype onset */
   onset?: {
     name: string;
     link: string;
   };
 
-  /** publication specific info */
+  /** publication author */
   author?: string;
+  /** publication year */
   year?: string;
+  /** publication publisher */
   publisher?: string;
 }
 
-export interface Result {
+/** node associations (for frontend) */
+export interface Associations {
   count: number;
   associations: Array<Association>;
 
@@ -262,6 +269,6 @@ export const getTopAssociations = async (
   nodeId = "",
   nodeCategory = "",
   assocationCategory = ""
-): Promise<Result["associations"]> =>
+): Promise<Associations["associations"]> =>
   (await getTabulatedAssociations(nodeId, nodeCategory, assocationCategory, 5))
     .associations;

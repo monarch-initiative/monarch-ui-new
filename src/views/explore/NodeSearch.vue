@@ -133,7 +133,7 @@ import { isEqual, kebabCase, startCase, uniq } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { ApiError } from "@/api";
-import { getSearchResults, Result } from "@/api/node-search";
+import { getSearchResults, Results } from "@/api/node-search";
 import { Status } from "@/components/AppStatus";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import { Options } from "@/components/AppSelectMulti";
@@ -165,7 +165,7 @@ const search = ref(String(route.query.search || ""));
 /** original search text that yielded current results */
 const originalSearch = ref("");
 /** search results */
-const results = ref<Result["results"]>([]);
+const results = ref<Results["results"]>([]);
 /** number of results */
 const count = ref(0);
 /** current page number */

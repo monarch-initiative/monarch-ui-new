@@ -15,7 +15,8 @@ const map: Record<string, { replace: string; species: string }> = {
   "RGD:": { replace: "rgd:", species: "10116" },
 };
 
-interface Response {
+/** gene (from backend) */
+interface _Gene {
   hits: Array<{
     name: string;
     summary: string;
@@ -32,7 +33,7 @@ interface Response {
 }
 
 /** get metadata of gene from mygene */
-export const getGene = async (id = ""): Promise<Result> => {
+export const getGene = async (id = ""): Promise<Gene> => {
   try {
     /** format id for mygene */
     const prefix = (id.split(":")[0] || "") + ":";
@@ -46,7 +47,7 @@ export const getGene = async (id = ""): Promise<Result> => {
       species,
     };
     const url = "https://mygene.info/v3/query";
-    const { hits } = await request<Response>(url, params);
+    const { hits } = await request<_Gene>(url, params);
 
     /** take first result */
     const hit = hits[0] || {};
@@ -63,7 +64,8 @@ export const getGene = async (id = ""): Promise<Result> => {
   }
 };
 
-export interface Result {
+/** gene (for frontend) */
+export interface Gene {
   name: string;
   description: string;
   symbol: string;

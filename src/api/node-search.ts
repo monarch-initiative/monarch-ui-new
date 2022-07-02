@@ -1,7 +1,8 @@
 import { biolink, request, cleanError, ApiError } from ".";
 import { Filters, Query, facetsToFilters, queryToParams } from "./facets";
 
-interface Response {
+/** search results (from backend) */
+interface _Results {
   numFound: number;
   docs: Array<{
     id: string;
@@ -21,13 +22,13 @@ interface Response {
   >;
 }
 
-/** get results from node search text and filters */
+/** search for node with text and filters */
 export const getSearchResults = async (
   search = "",
   availableFilters: Query = {},
   activeFilters: Query = {},
   start = 0
-): Promise<Result> => {
+): Promise<Results> => {
   try {
     /** if nothing searched, return empty */
     if (!search.trim()) throw new ApiError("No results", "warning");
@@ -50,7 +51,7 @@ export const getSearchResults = async (
 
     /** make query */
     const url = `${biolink}/search/entity/${search}`;
-    const response = await request<Response>(url, params);
+    const response = await request<_Results>(url, params);
     const {
       numFound: count = 0,
       docs = [],
@@ -83,7 +84,8 @@ export const getSearchResults = async (
   }
 };
 
-export interface Result {
+/** search results (for frontend) */
+export interface Results {
   count: number;
   results: Array<{
     id: string;

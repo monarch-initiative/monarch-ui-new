@@ -1,17 +1,18 @@
 import { values } from "lodash";
 import { biolink, request } from "./index";
 
-type Response = Record<string, Array<string>>;
+/** taxon ids (from backend) */
+type _Ids = Record<string, Array<string>>;
 
 /** from list of taxon labels, get list of matching taxon ids */
-export const getIdsFromLabels = async (ids: Array<string>): Promise<Result> => {
+export const getIdsFromLabels = async (ids: Array<string>): Promise<Ids> => {
   try {
-    const url = `${biolink}/ontol/identifier/`;
+    const url = `${biolink}/ontol/identifier`;
     const params = {
       label: ids,
     };
     const options = { method: "POST" };
-    const response = await request<Response>(url, params, options);
+    const response = await request<_Ids>(url, params, options);
     return (
       values(response)
         .map(
@@ -31,4 +32,5 @@ export const getIdsFromLabels = async (ids: Array<string>): Promise<Result> => {
   }
 };
 
-type Result = Array<string>;
+/** taxon ids (for frontend) */
+type Ids = Array<string>;

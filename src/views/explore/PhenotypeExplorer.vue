@@ -163,7 +163,7 @@ import {
   compareSetToTaxon,
   compareSetToSet,
   getPhenotypes,
-  CompareResult,
+  Comparison,
   getTaxonIdFromName,
   getTaxonScientificFromName,
 } from "@/api/phenotype-explorer";
@@ -230,7 +230,7 @@ const bGeneratedFrom = ref({} as GeneratedFrom);
 /** status of analysis */
 const status = ref(null as Status | null);
 /** analysis results */
-const results = ref({ matches: [] } as CompareResult);
+const results = ref({ matches: [] } as Comparison);
 
 /** example phenotype set comparison */
 function doExample() {

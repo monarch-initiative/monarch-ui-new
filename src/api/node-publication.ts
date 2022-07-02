@@ -5,7 +5,7 @@ import { request, cleanError } from ".";
 const entrez = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils";
 
 /** get metadata of publication from entrez */
-export const getPublication = async (id = ""): Promise<Result> => {
+export const getPublication = async (id = ""): Promise<Publication> => {
   try {
     const summary = (await getSummaries([id]))[id];
     const abstract = await getAbstract(id);
@@ -16,7 +16,8 @@ export const getPublication = async (id = ""): Promise<Result> => {
   }
 };
 
-interface SummaryResponse {
+/** publication summary info (from backend) */
+interface _Summary {
   result: {
     [key: string]: {
       uid: string;
@@ -44,9 +45,7 @@ interface SummaryResponse {
 }
 
 /** get summary information of publication(s) from entrez */
-export const getSummaries = async (
-  ids: Array<string>
-): Promise<SummariesResult> => {
+export const getSummaries = async (ids: Array<string>): Promise<Summaries> => {
   try {
     /** strip prefix as entrez expects */
     ids = ids
@@ -59,7 +58,7 @@ export const getSummaries = async (
     /** make query */
     const params = { db: "pubmed", retmode: "json", id: ids.join(",") };
     const url = `${entrez}/esummary.fcgi`;
-    const { result } = await request<SummaryResponse>(url, params);
+    const { result } = await request<_Summary>(url, params);
 
     /** convert into desired result format */
     let publications = mapValues(result, (publication) => ({
@@ -82,7 +81,7 @@ export const getSummaries = async (
 };
 
 /** get abstract text of publication from entrez */
-export const getAbstract = async (id = ""): Promise<AbstractResult> => {
+export const getAbstract = async (id = ""): Promise<Abstract> => {
   try {
     /** strip prefix as entrez expects */
     id = id.replace("PMID:", "");
@@ -96,7 +95,7 @@ export const getAbstract = async (id = ""): Promise<AbstractResult> => {
   }
 };
 
-interface SummariesResult {
+interface Summaries {
   [key: string]: {
     id: string;
     title: string;
@@ -107,9 +106,10 @@ interface SummariesResult {
   };
 }
 
-type AbstractResult = string;
+type Abstract = string;
 
-export interface Result {
+/** publication (for frontend) */
+interface Publication {
   id: string;
   title: string;
   authors: Array<string>;

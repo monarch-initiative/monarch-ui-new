@@ -2,11 +2,12 @@ import { sortBy } from "lodash";
 import { categories, mapCategory } from "./categories";
 import { biolink, request, cleanError } from ".";
 import { getXrefLink } from "./xrefs";
-import { getGene, Result as GeneResult } from "./node-gene";
+import { getGene, Gene } from "./node-gene";
 import { getPublication } from "./node-publication";
-import { getHierarchy, Result as HierarchyResult } from "./node-hierachy";
+import { getHierarchy, Hierarchy } from "./node-hierachy";
 
-interface Response {
+/** node lookup info (from backend) */
+interface _Node {
   id: string;
   label: string;
   iri: string;
@@ -44,7 +45,7 @@ interface Response {
 }
 
 /** lookup metadata for a node id */
-export const lookupNode = async (id = "", category = ""): Promise<Result> => {
+export const lookupNode = async (id = "", category = ""): Promise<Node> => {
   try {
     /** set flags */
     const params = {
@@ -59,10 +60,10 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
 
     /** make query */
     const url = `${biolink}/bioentity/${category ? category + "/" : ""}${id}`;
-    const response = await request<Response>(url, params);
+    const response = await request<_Node>(url, params);
 
     /** convert into desired result format */
-    const metadata: Result = {
+    const metadata: Node = {
       id: response.id,
       originalId: id,
       name: response.label,
@@ -134,8 +135,8 @@ export const lookupNode = async (id = "", category = ""): Promise<Result> => {
   }
 };
 
-/** structure mirrors sections on node page */
-export interface Result {
+/** node (for frontend). structure/order mirrors sections on node page. */
+export interface Node {
   /** title section */
   id: string;
   /** title section */
@@ -175,7 +176,7 @@ export interface Result {
   /** details section (gene specific) */
   symbol?: string;
   /** details section (gene specific) */
-  genome?: GeneResult["genome"];
+  genome?: Gene["genome"];
 
   /** details section (publication specific) */
   authors?: Array<string>;
@@ -187,7 +188,7 @@ export interface Result {
   journal?: string;
 
   /** hierarchy section */
-  hierarchy: HierarchyResult;
+  hierarchy: Hierarchy;
 
   /** associations section */
   associationCounts: Array<{

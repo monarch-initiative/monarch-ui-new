@@ -8,7 +8,8 @@ const key = "ur1488940-1c05ba09e0aef926989d6593";
 /** uptimerobot.org page for statuses */
 const page = "https://stats.uptimerobot.com/XPRo9s4BJ5";
 
-interface Response {
+/** uptime response (from backend) */
+interface _Uptime {
   monitors?: Array<{
     id?: string;
     friendly_name?: string;
@@ -26,12 +27,12 @@ enum Code {
 }
 
 /** get list of uptimerobot monitors and their statuses, names, and other info */
-export const getUptimes = async (): Promise<Result> => {
+export const getUptimes = async (): Promise<Uptime> => {
   try {
     /** get data from endpoint */
     const params = { api_key: key };
     const options = { method: "POST" };
-    const response = await request<Response>(uptimeRobot, params, options);
+    const response = await request<_Uptime>(uptimeRobot, params, options);
     const { monitors = [] } = response;
 
     /** map uptimerobot status codes to our simplified status codes in status component */
@@ -60,4 +61,5 @@ export const getUptimes = async (): Promise<Result> => {
   }
 };
 
-type Result = Array<Status>;
+/** uptime (for frontend) */
+type Uptime = Array<Status>;

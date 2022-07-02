@@ -21,7 +21,7 @@ export interface Col {
 }
 
 /** object with arbitrary keys */
-export type Row = Record<string, unknown>;
+export type Row = Record<unknown, unknown>;
 
 /** arrays of rows and cols */
 export type Cols = Array<Col>;

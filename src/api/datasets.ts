@@ -3,7 +3,8 @@ import staticData from "./datasets.json";
 import { mergeArrays } from "@/util/object";
 import { Source } from "./source";
 
-interface Response {
+/** knowledge graph datasets (from backend) */
+interface _Datasets {
   nodes: Array<{
     id: string;
     meta: {
@@ -31,11 +32,11 @@ const expand = (string = "") =>
   );
 
 /** get metadata of all datasets used in monarch from biolink, in format of source */
-export const getDatasets = async (): Promise<Result> => {
+export const getDatasets = async (): Promise<Datasets> => {
   try {
     /** make query */
     const url = `${biolink}/metadata/datasets`;
-    const { nodes, edges } = await request<Response>(url);
+    const { nodes, edges } = await request<_Datasets>(url);
 
     const filteredNodes = edges
       /** only get edges whose type is a dataset */
@@ -43,7 +44,7 @@ export const getDatasets = async (): Promise<Result> => {
       /** find corresponding node by id */
       .map((edge) => nodes.find((node) => node.id === edge.sub))
       /** filter out any un-found nodes */
-      .filter((node) => node) as Response["nodes"];
+      .filter((node) => node) as _Datasets["nodes"];
 
     /** convert results to desired format */
     let datasets = filteredNodes.map(
@@ -76,4 +77,5 @@ export const getDatasets = async (): Promise<Result> => {
   }
 };
 
-type Result = Array<Source>;
+/** knowledge graph datasets (for frontend) */
+type Datasets = Array<Source>;

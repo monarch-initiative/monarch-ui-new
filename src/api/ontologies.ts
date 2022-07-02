@@ -6,7 +6,8 @@ import { Source } from "./source";
 /** source for ontology metadata */
 const obo = "https://obofoundry.org/registry/ontologies.jsonld";
 
-interface Response {
+/** knowledge graph ontologies (from backend) */
+interface _Ontologies {
   ontologies: Array<{
     id: string;
     title?: string;
@@ -18,9 +19,9 @@ interface Response {
 }
 
 /** get metadata of all ontologies listed on obo */
-export const getOntologies = async (): Promise<Result> => {
+export const getOntologies = async (): Promise<Ontologies> => {
   try {
-    const response = await request<Response>(obo);
+    const response = await request<_Ontologies>(obo);
 
     /** convert results to desired format */
     let ontologies = response.ontologies.map(
@@ -49,4 +50,5 @@ export const getOntologies = async (): Promise<Result> => {
   }
 };
 
-type Result = Array<Source>;
+/** knowledge graph ontologies (for frontend) */
+type Ontologies = Array<Source>;

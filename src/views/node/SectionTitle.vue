@@ -39,11 +39,11 @@
 
 <script setup lang="ts">
 import { kebabCase } from "lodash";
-import { Result } from "@/api/node-lookup";
+import { Node } from "@/api/node-lookup";
 
 interface Props {
   /** current node */
-  node: Result;
+  node: Node;
 }
 
 defineProps<Props>();

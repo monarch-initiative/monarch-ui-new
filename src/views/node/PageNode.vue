@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted, nextTick } from "vue";
-import { lookupNode, Result } from "@/api/node-lookup";
+import { lookupNode, Node } from "@/api/node-lookup";
 import { Status } from "@/components/AppStatus";
 import { ApiError } from "@/api";
 import AppStatus from "@/components/AppStatus.vue";
@@ -44,7 +44,7 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 
 /** info/metadata about node */
-const node = ref<Result | null>(null);
+const node = ref<Node | null>(null);
 /** status of query */
 const status = ref<Status | null>(null);
 
