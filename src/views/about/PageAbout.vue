@@ -14,24 +14,6 @@
       connects phenotypes to genotypes across species and bridges basic and
       applied research with semantics-based analysis.
     </p>
-
-    <!-- mission statement -->
-    <AppHeading>Our Vision</AppHeading>
-    <ol>
-      <li>
-        Connect cross-species gene, genotype, variant, disease, and phenotype
-        data
-      </li>
-      <li>Provide a portal for exploration of phenotype-based similarity</li>
-      <li>
-        Facilitate identification of animal models of human disease through
-        phenotypic similarity
-      </li>
-      <li>Enable quantitative comparison of cross-species phenotypes</li>
-      <li>Develop embeddable widgets for data exploration</li>
-      <li>Influence genotype and phenotype reporting standards</li>
-      <li>Improve ontologies to better curate genotype-phenotype data</li>
-    </ol>
   </AppSection>
 
   <!-- main links to sub pages -->
@@ -80,6 +62,26 @@
         subtitle="Disclaimers and agreements"
       />
     </AppFlex>
+  </AppSection>
+
+  <!-- mission statement -->
+  <AppSection>
+    <AppHeading>Our Vision</AppHeading>
+    <ol>
+      <li>
+        Connect cross-species gene, genotype, variant, disease, and phenotype
+        data
+      </li>
+      <li>Provide a portal for exploration of phenotype-based similarity</li>
+      <li>
+        Facilitate identification of animal models of human disease through
+        phenotypic similarity
+      </li>
+      <li>Enable quantitative comparison of cross-species phenotypes</li>
+      <li>Develop embeddable widgets for data exploration</li>
+      <li>Influence genotype and phenotype reporting standards</li>
+      <li>Improve ontologies to better curate genotype-phenotype data</li>
+    </ol>
   </AppSection>
 
   <!-- social media -->
