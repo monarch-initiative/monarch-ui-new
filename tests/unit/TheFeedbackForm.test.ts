@@ -10,13 +10,15 @@ test("Submits correctly when filled out", async () => {
   const testMessage = "Test message";
   await textarea.setValue(testMessage);
 
-  /** submit form. pass fake submit event (see form submit code). */
-  await wrapper.find("form").trigger("submit", { submitter: "non-null value" });
+  /** https://github.com/vuejs/vue-test-utils/issues/1932 */
+  await wrapper.find("button").element.focus();
+  /** submit form */
+  await wrapper.find("form").trigger("submit");
 
   /** wait for api calls to mock */
   await apiCall();
 
   /** test status message and expect to be success */
   const link = wrapper.find(".status a");
-  expect(link.attributes("href")).toBeTruthy();
+  expect(link.exists()).toBeTruthy();
 });

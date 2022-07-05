@@ -13,7 +13,7 @@
   </p>
 
   <!-- form -->
-  <form @submit.prevent="(event) => onSubmit(event as SubmitEvent)">
+  <form @submit.prevent="onSubmit">
     <!-- fields for user to fill out -->
     <div class="fields">
       <AppInput
@@ -80,14 +80,14 @@
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useLocalStorage } from "@vueuse/core";
+import { truncate } from "lodash";
 import parser from "ua-parser-js";
 import AppInput from "@/components/AppInput.vue";
+import AppStatus from "./AppStatus.vue";
 import { Status } from "@/components/AppStatus";
 import { collapse } from "@/util/string";
 import { postFeedback } from "@/api/feedback";
-import AppStatus from "./AppStatus.vue";
 import { ApiError } from "@/api";
-import { truncate } from "lodash";
 
 /** route info */
 const route = useRoute();
@@ -131,18 +131,18 @@ const details = computed(() => {
   };
 });
 
-/**
- * shim that shouldn't be needed. see
- * https://github.com/vuejs/eslint-config-prettier/issues/7
- */
-interface SubmitEvent extends Event {
-  submitter: HTMLElement | null;
+/** when form submitted */
+function onSubmit() {
+  /**
+   * only proceed if submitted through button, not "implicitly" (enter press).
+   * https://stackoverflow.com/questions/895171/prevent-users-from-submitting-a-form-by-hitting-enter
+   */
+  if ((document.activeElement as Element).matches("button[type='submit']"))
+    submitFeedback();
 }
 
-async function onSubmit(event: SubmitEvent) {
-  /** only proceed if submitted through button, not "implicitly" (enter press) */
-  if (event.submitter === null) return;
-
+/** post feedback to backend */
+async function submitFeedback() {
   /** make issue title (unclear what char limit is?) */
   const title = [
     "Feedback form",
@@ -179,15 +179,19 @@ async function onSubmit(event: SubmitEvent) {
     /** success... */
     status.value = { code: "success", text: "Feedback submitted successfully" };
 
-    /** clear form data from storage after successful submit */
-    name.value = null;
-    email.value = null;
-    github.value = null;
-    feedback.value = null;
+    resetForm();
   } catch (error) {
     /** error... */
     status.value = error as ApiError;
   }
+}
+
+/** clear form data from storage after successful submit */
+function resetForm() {
+  name.value = null;
+  email.value = null;
+  github.value = null;
+  feedback.value = null;
 }
 </script>
 
