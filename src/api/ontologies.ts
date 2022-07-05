@@ -1,4 +1,4 @@
-import { request, cleanError } from ".";
+import { request } from ".";
 import staticData from "./ontologies.json";
 import { mergeArrays } from "@/util/object";
 import { Source } from "./source";
@@ -20,34 +20,30 @@ interface _Ontologies {
 
 /** get metadata of all ontologies listed on obo */
 export const getOntologies = async (): Promise<Ontologies> => {
-  try {
-    const response = await request<_Ontologies>(obo);
+  const response = await request<_Ontologies>(obo);
 
-    /** convert results to desired format */
-    let ontologies = response.ontologies.map(
-      (ontology): Source => ({
-        id: ontology.id,
-        name: ontology.title,
-        link: ontology.homepage,
-        license: ontology.license?.url,
-        image: ontology.depicted_by,
-        description: ontology.description,
-      })
-    );
+  /** convert results to desired format */
+  let ontologies = response.ontologies.map(
+    (ontology): Source => ({
+      id: ontology.id,
+      name: ontology.title,
+      link: ontology.homepage,
+      license: ontology.license?.url,
+      image: ontology.depicted_by,
+      description: ontology.description,
+    })
+  );
 
-    /**
-     * merge static (manually entered) data in with dynamic (fetched) data (but
-     * only including entries in static)
-     */
-    ontologies = mergeArrays(staticData, ontologies, true);
+  /**
+   * merge static (manually entered) data in with dynamic (fetched) data (but
+   * only including entries in static)
+   */
+  ontologies = mergeArrays(staticData, ontologies, true);
 
-    /** tag as ontology type of source */
-    ontologies.forEach((ontology) => (ontology.type = "ontology"));
+  /** tag as ontology type of source */
+  ontologies.forEach((ontology) => (ontology.type = "ontology"));
 
-    return ontologies;
-  } catch (error) {
-    throw cleanError(error);
-  }
+  return ontologies;
 };
 
 /** knowledge graph ontologies (for frontend) */

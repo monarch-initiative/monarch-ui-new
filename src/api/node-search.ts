@@ -1,4 +1,4 @@
-import { biolink, request, cleanError, ApiError } from ".";
+import { biolink, request } from ".";
 import { Filters, Query, facetsToFilters, queryToParams } from "./facets";
 
 /** search results (from backend) */
@@ -29,59 +29,55 @@ export const getSearchResults = async (
   activeFilters: Query = {},
   start = 0
 ): Promise<Results> => {
-  try {
-    /** if nothing searched, return empty */
-    if (!search.trim()) throw new ApiError("No results", "warning");
+  /** if nothing searched, return empty */
+  if (!search.trim()) throw new Error("No results");
 
-    /** other params */
-    const params = {
-      ...(await queryToParams(availableFilters, activeFilters)),
-      boost_q: [
-        "category:disease^5",
-        "category:phenotype^5",
-        "category:gene^0",
-        "category:genotype^-10",
-        "category:variant^-35",
-      ],
-      prefix: "-OMIA",
-      min_match: "67%",
-      rows: 10,
-      start,
-    };
+  /** other params */
+  const params = {
+    ...(await queryToParams(availableFilters, activeFilters)),
+    boost_q: [
+      "category:disease^5",
+      "category:phenotype^5",
+      "category:gene^0",
+      "category:genotype^-10",
+      "category:variant^-35",
+    ],
+    prefix: "-OMIA",
+    min_match: "67%",
+    rows: 10,
+    start,
+  };
 
-    /** make query */
-    const url = `${biolink}/search/entity/${search}`;
-    const response = await request<_Results>(url, params);
-    const {
-      numFound: count = 0,
-      docs = [],
-      facet_counts = {},
-      highlighting = {},
-    } = response;
+  /** make query */
+  const url = `${biolink}/search/entity/${search}`;
+  const response = await request<_Results>(url, params);
+  const {
+    numFound: count = 0,
+    docs = [],
+    facet_counts = {},
+    highlighting = {},
+  } = response;
 
-    /** convert into desired result format */
-    const results = docs.map((doc) => ({
-      id: doc.id || "",
-      name: (doc.label || [])[0] || "",
-      altIds: doc.equivalent_curie || [],
-      altNames: (doc.label || []).slice(1),
-      category: (doc.category || [])[0] || "unknown",
-      description: (doc.definition || [])[0] || "",
-      score: doc.score || 0,
-      prefix: doc.prefix || "",
-      highlight: highlighting[doc.id].highlight,
-    }));
+  /** convert into desired result format */
+  const results = docs.map((doc) => ({
+    id: doc.id || "",
+    name: (doc.label || [])[0] || "",
+    altIds: doc.equivalent_curie || [],
+    altNames: (doc.label || []).slice(1),
+    category: (doc.category || [])[0] || "unknown",
+    description: (doc.definition || [])[0] || "",
+    score: doc.score || 0,
+    prefix: doc.prefix || "",
+    highlight: highlighting[doc.id].highlight,
+  }));
 
-    /** empty error status */
-    if (!results.length) throw new ApiError("No results", "warning");
+  /** empty error status */
+  if (!results.length) throw new Error("No results");
 
-    /** get facets for select options */
-    const facets = facetsToFilters(facet_counts);
+  /** get facets for select options */
+  const facets = facetsToFilters(facet_counts);
 
-    return { count, results, facets };
-  } catch (error) {
-    throw cleanError(error);
-  }
+  return { count, results, facets };
 };
 
 /** search results (for frontend) */

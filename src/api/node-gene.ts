@@ -1,4 +1,4 @@
-import { request, cleanError } from ".";
+import { request } from ".";
 
 /**
  * map our id prefixes to prefixes that mygene expects
@@ -34,34 +34,30 @@ interface _Gene {
 
 /** get metadata of gene from mygene */
 export const getGene = async (id = ""): Promise<Gene> => {
-  try {
-    /** format id for mygene */
-    const prefix = (id.split(":")[0] || "") + ":";
-    const { replace = prefix, species = "all" } = map[prefix] || {};
-    id = id.replace(prefix, replace);
+  /** format id for mygene */
+  const prefix = (id.split(":")[0] || "") + ":";
+  const { replace = prefix, species = "all" } = map[prefix] || {};
+  id = id.replace(prefix, replace);
 
-    /** make query */
-    const params = {
-      q: id,
-      fields: "summary,genomic_pos,name,symbol,taxid",
-      species,
-    };
-    const url = "https://mygene.info/v3/query";
-    const { hits } = await request<_Gene>(url, params);
+  /** make query */
+  const params = {
+    q: id,
+    fields: "summary,genomic_pos,name,symbol,taxid",
+    species,
+  };
+  const url = "https://mygene.info/v3/query";
+  const { hits } = await request<_Gene>(url, params);
 
-    /** take first result */
-    const hit = hits[0] || {};
+  /** take first result */
+  const hit = hits[0] || {};
 
-    /** convert into desired result format */
-    return {
-      name: hit.name || "",
-      description: hit.summary || "",
-      symbol: hit.symbol || "",
-      genome: hit.genomic_pos || {},
-    };
-  } catch (error) {
-    throw cleanError(error);
-  }
+  /** convert into desired result format */
+  return {
+    name: hit.name || "",
+    description: hit.summary || "",
+    symbol: hit.symbol || "",
+    genome: hit.genomic_pos || {},
+  };
 };
 
 /** gene (for frontend) */

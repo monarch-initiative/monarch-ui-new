@@ -1,7 +1,7 @@
+import { biolink, request } from ".";
 import { mapCategory } from "./categories";
 import { uniq, flatMap, uniqBy } from "lodash";
 import { getXrefLink } from "./xrefs";
-import { biolink, request, cleanError } from ".";
 
 interface _EvidenceType {
   id: string;
@@ -81,66 +81,62 @@ const mapReference = (reference = "") => ({
 export const getAssociationEvidence = async (
   id: string
 ): Promise<Evidences> => {
-  try {
-    /** make query */
-    const url = `${biolink}/evidence/graph/${id}/table`;
-    const { associations } = await request<_Evidences>(url);
+  /** make query */
+  const url = `${biolink}/evidence/graph/${id}/table`;
+  const { associations } = await request<_Evidences>(url);
 
-    /** get combined unique summary info */
-    const codes = uniqBy(flatMap(associations, "evidence_types"), "id");
-    const publications = uniqBy(flatMap(associations, "publications"), "id");
-    const sources = uniq(flatMap(associations, "provided_by"));
+  /** get combined unique summary info */
+  const codes = uniqBy(flatMap(associations, "evidence_types"), "id");
+  const publications = uniqBy(flatMap(associations, "publications"), "id");
+  const sources = uniq(flatMap(associations, "provided_by"));
 
-    /** convert summary data into desired result format */
-    const summary = {
-      codes: codes?.map(mapCode) || [],
-      publications: publications?.map(mapPublication) || [],
-      sources: sources || [],
-    };
+  /** convert summary data into desired result format */
+  const summary = {
+    codes: codes?.map(mapCode) || [],
+    publications: publications?.map(mapPublication) || [],
+    sources: sources || [],
+  };
 
-    /** convert table data into desired result format */
-    const table: Table = associations.map(
-      (association) =>
-        ({
-          object: {
-            id: association.object.id,
-            name: association.object.label,
-            iri: association.object.iri,
-            category: mapCategory(association.object.category || []),
-          },
+  /** convert table data into desired result format */
+  const table: Table = associations.map(
+    (association) =>
+      ({
+        object: {
+          id: association.object.id,
+          name: association.object.label,
+          iri: association.object.iri,
+          category: mapCategory(association.object.category || []),
+        },
 
-          subject: {
-            id: association.subject.id,
-            name: association.subject.label,
-            iri: association.subject.iri,
-            category: mapCategory(association.subject.category || []),
-          },
+        subject: {
+          id: association.subject.id,
+          name: association.subject.label,
+          iri: association.subject.iri,
+          category: mapCategory(association.subject.category || []),
+        },
 
-          relation: {
-            id: association.relation.id,
-            name: association.relation.label,
-            iri: association.relation.iri,
-            category: (association.relation?.category || [])[0] || "",
-            inverse: association.relation.inverse,
-          },
+        relation: {
+          id: association.relation.id,
+          name: association.relation.label,
+          iri: association.relation.iri,
+          category: (association.relation?.category || [])[0] || "",
+          inverse: association.relation.inverse,
+        },
 
-          codes: association.evidence_types?.map(mapCode) || [],
+        codes: association.evidence_types?.map(mapCode) || [],
 
-          publications: association.publications?.map(mapPublication) || [],
+        publications: association.publications?.map(mapPublication) || [],
 
-          sources: association.provided_by?.map(mapSource) || [],
+        sources: association.provided_by?.map(mapSource) || [],
 
-          references: [
-            ...(association.object_eq || []),
-            ...(association.subject_eq || []),
-          ].map(mapReference),
-        } as Evidence)
-    );
+        references: [
+          ...(association.object_eq || []),
+          ...(association.subject_eq || []),
+        ].map(mapReference),
+      } as Evidence)
+  );
 
-    return { summary, table };
-  } catch (error) {
-    throw cleanError(error);
-  }
+  return { summary, table };
 };
 
 /** summary/overview of evidence */

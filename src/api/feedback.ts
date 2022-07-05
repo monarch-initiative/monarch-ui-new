@@ -1,4 +1,4 @@
-import { request, cleanError } from ".";
+import { request } from ".";
 
 /** serverless endpoint to make post on helpdesk with github api */
 const api =
@@ -21,28 +21,24 @@ export const postFeedback = async (
   title = "",
   body = ""
 ): Promise<IssueLink> => {
-  try {
-    /** check params */
-    if (!title || !body) throw new Error("Title or body not specified");
+  /** check params */
+  if (!title || !body) throw new Error("Title or body not specified");
 
-    /** post to api endpoint which posts new github issue */
-    const data = await request<_Response>(
-      api,
-      { title, body },
-      { method: "POST" }
-    );
+  /** post to api endpoint which posts new github issue */
+  const data = await request<_Response>(
+    api,
+    { title, body },
+    { method: "POST" }
+  );
 
-    /** if error */
-    if ("error" in data) throw new Error(data.error);
+  /** if error */
+  if ("error" in data) throw new Error(data.error);
 
-    /** if success */
-    if ("html_url" in data) return data.html_url;
+  /** if success */
+  if ("html_url" in data) return data.html_url;
 
-    /** last resort */
-    throw new Error("Unknown problem submitting feedback");
-  } catch (error) {
-    throw cleanError(error);
-  }
+  /** last resort */
+  throw new Error("Unknown problem submitting feedback");
 };
 
 /** link to posted issue (for frontend) */

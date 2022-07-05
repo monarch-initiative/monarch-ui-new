@@ -1,5 +1,3 @@
-import { Codes } from "@/components/AppStatus";
-
 /** base biolink url */
 export const biolink = "https://api.monarchinitiative.org/api";
 
@@ -46,49 +44,9 @@ export const request = async <T>(
     window.decodeURIComponent(url).replaceAll(" ", "%20")
   );
   const response = await fetch(url, options);
-  if (!response.ok) throw new ApiError(`Response not OK`);
+  if (!response.ok) throw new Error(`Response not OK`);
 
   /** parse response */
   if (parse === "text") return (await response.text()) as unknown as T;
   else return await response.json();
 };
-
-/** takes generic error and turns it into consistent api error */
-export const cleanError = (error: unknown): ApiError => {
-  /** if this error hasn't already been logged */
-  if (!(error as ApiError).logged) {
-    /**
-     * log error to console like normal for advanced debugging and stack trace
-     * but wrap in group to distinguish between unhandled errors
-     */
-    console.groupCollapsed((error as ApiError).text);
-    console.error(error);
-    console.groupEnd();
-    (error as ApiError).logged = true;
-  }
-
-  /** if not manually created error */
-  if (!(error instanceof ApiError))
-    /** turn it into one with user-readable error message */
-    error = new ApiError("Error: " + (error as Error).message);
-
-  return error as ApiError;
-};
-
-/** custom error type to throw with extra details to easily integrate into status */
-export class ApiError extends Error {
-  code: typeof Codes[number];
-  text: string;
-  /**
-   * flag to track if error already logged. prevents duplicate logs when kicking
-   * errors up multiple try/catch levels.
-   */
-  logged: boolean;
-  constructor(text = "", code: typeof Codes[number] = "error") {
-    super();
-    this.name = "ApiError";
-    this.text = String(text);
-    this.code = code;
-    this.logged = false;
-  }
-}

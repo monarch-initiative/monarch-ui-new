@@ -1,4 +1,4 @@
-import { request, cleanError } from ".";
+import { request } from ".";
 import { Code } from "@/components/AppStatus";
 
 /** https://uptimerobot.com/api/ */
@@ -30,33 +30,29 @@ enum _Code {
 
 /** get list of uptimerobot monitors and their statuses, names, and other info */
 export const getUptimes = async (): Promise<Uptimes> => {
-  try {
-    /** get data from endpoint */
-    const params = { api_key: key };
-    const options = { method: "POST" };
-    const response = await request<_Uptimes>(uptimeRobot, params, options);
-    const { monitors = [] } = response;
+  /** get data from endpoint */
+  const params = { api_key: key };
+  const options = { method: "POST" };
+  const response = await request<_Uptimes>(uptimeRobot, params, options);
+  const { monitors = [] } = response;
 
-    /** map uptimerobot status codes to our simplified status codes in status component */
-    const codeMap: Record<_Code, Code> = {
-      [_Code.paused]: "paused",
-      [_Code.unchecked]: "unknown",
-      [_Code.up]: "success",
-      [_Code.seems_down]: "error",
-      [_Code.down]: "error",
-    };
+  /** map uptimerobot status codes to our simplified status codes in status component */
+  const codeMap: Record<_Code, Code> = {
+    [_Code.paused]: "paused",
+    [_Code.unchecked]: "unknown",
+    [_Code.up]: "success",
+    [_Code.seems_down]: "error",
+    [_Code.down]: "error",
+  };
 
-    /** convert results to desired format */
-    const results = monitors.map((monitor) => ({
-      code: monitor.status ? codeMap[monitor.status] || "unknown" : "unknown",
-      text: monitor.friendly_name || "",
-      link: page + "/" + (monitor.id || ""),
-    }));
+  /** convert results to desired format */
+  const results = monitors.map((monitor) => ({
+    code: monitor.status ? codeMap[monitor.status] || "unknown" : "unknown",
+    text: monitor.friendly_name || "",
+    link: page + "/" + (monitor.id || ""),
+  }));
 
-    return results;
-  } catch (error) {
-    throw cleanError(error);
-  }
+  return results;
 };
 
 /** uptimes (for frontend) */
