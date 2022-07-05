@@ -29,8 +29,10 @@ export const getSearchResults = async (
   activeFilters: Query = {},
   start = 0
 ): Promise<Results> => {
+  const empty = { count: 0, results: [], facets: {} };
+
   /** if nothing searched, return empty */
-  if (!search.trim()) throw new Error("No results");
+  if (!search.trim()) return empty;
 
   /** other params */
   const params = {
@@ -72,7 +74,7 @@ export const getSearchResults = async (
   }));
 
   /** empty error status */
-  if (!results.length) throw new Error("No results");
+  if (!results.length) return empty;
 
   /** get facets for select options */
   const facets = facetsToFilters(facet_counts);

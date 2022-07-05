@@ -12,6 +12,7 @@ export const getIdsFromLabels = async (ids: Array<string>): Promise<Ids> => {
   };
   const options = { method: "POST" };
   const response = await request<_Ids>(url, params, options);
+
   return (
     values(response)
       .map(

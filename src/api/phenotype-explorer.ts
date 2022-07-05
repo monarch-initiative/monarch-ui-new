@@ -26,19 +26,21 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
   );
 
   /** convert into desired result format */
-  return results.map((result) => ({
-    id: result.id,
-    name: result.name,
-    getOptions:
-      /** if gene/disease, provide function to get associated phenotypes upon select */
-      result.category === "phenotype" || !result.category
-        ? undefined
-        : async () =>
-            await getPhenotypeAssociations(result.id, result.category),
-    highlight: result.highlight,
-    icon: "category-" + result.category,
-    info: result.id,
-  }));
+  return {
+    options: results.map((result) => ({
+      id: result.id,
+      name: result.name,
+      spreadOptions:
+        /** if gene/disease, provide function to get associated phenotypes upon select */
+        result.category === "phenotype" || !result.category
+          ? undefined
+          : async () =>
+              await getPhenotypeAssociations(result.id, result.category),
+      highlight: result.highlight,
+      icon: "category-" + result.category,
+      info: result.id,
+    })),
+  };
 };
 
 /** phenotype associations with gene/disease (from backend) */

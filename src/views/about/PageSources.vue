@@ -24,7 +24,8 @@
     </AppFlex>
 
     <!-- status -->
-    <AppStatus v-if="status" :status="status" />
+    <AppStatus v-if="isLoading" code="loading">Loading sources</AppStatus>
+    <AppStatus v-if="isError" code="error">Error loading sources</AppStatus>
 
     <!-- list of all sources -->
     <AppFlex direction="col">
@@ -132,24 +133,19 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import AppStatus from "@/components/AppStatus.vue";
 import AppCheckbox from "@/components/AppCheckbox.vue";
 import AppAccordion from "@/components/AppAccordion.vue";
 import { getDatasets } from "@/api/datasets";
 import { getOntologies } from "@/api/ontologies";
 import { Source } from "@/api/source";
-import AppStatus from "@/components/AppStatus.vue";
-import { Status } from "@/components/AppStatus";
-import { ApiError } from "@/api";
 import { breakUrl } from "@/util/string";
+import { useQuery } from "@/util/composables";
 
-/** sources data */
-const sources = ref<Array<Source>>([]);
 /** whether to show dataset sources */
 const showDatasets = ref(true);
 /** whether to show ontology sources */
 const showOntologies = ref(true);
-/** status of query */
-const status = ref<Status | null>(null);
 
 /** get source img src */
 function getSrc(image = "") {
@@ -168,6 +164,34 @@ function getFilename(path = "") {
     .filter((part) => part)
     .pop();
 }
+
+const {
+  query: getSources,
+  data: sources,
+  isLoading,
+  isError,
+} = useQuery(async function () {
+  /** get sources from apis */
+  const datasets = await getDatasets();
+  const ontologies = await getOntologies();
+
+  /** combine sources */
+  const sources = [...datasets, ...ontologies];
+
+  /** sort sources alphabetically by name or id */
+  sources.sort((a: Source, b: Source) => {
+    if (
+      (a?.name || a?.id || "").toLowerCase() <
+      (b?.name || b?.id || "").toLowerCase()
+    )
+      return -1;
+    else return 1;
+  });
+
+  return sources;
+}, []);
+
+onMounted(getSources);
 
 /** shown sources */
 const filteredSources = computed(
@@ -190,34 +214,6 @@ const ontologyCount = computed(
   (): number =>
     sources.value.filter((source) => source.type === "ontology").length
 );
-
-onMounted(async () => {
-  /** loading... */
-  status.value = { code: "loading", text: "Loading sources" };
-
-  try {
-    /** get sources from apis */
-    const datasets = await getDatasets();
-    const ontologies = await getOntologies();
-    sources.value = [...datasets, ...ontologies];
-
-    /** sort sources alphabetically by name or id */
-    sources.value.sort((a: Source, b: Source) => {
-      if (
-        (a?.name || a?.id || "").toLowerCase() <
-        (b?.name || b?.id || "").toLowerCase()
-      )
-        return -1;
-      else return 1;
-    });
-
-    /** clear status */
-    status.value = null;
-  } catch (error) {
-    /** error... */
-    status.value = error as ApiError;
-  }
-});
 </script>
 
 <style lang="scss" scoped>

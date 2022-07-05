@@ -8,11 +8,8 @@
 
 <template>
   <div class="container">
-    <!-- status -->
-    <AppStatus v-if="status" :status="status" />
-
     <!-- table data -->
-    <AppFlex direction="col" :data-disabled="!!status">
+    <AppFlex direction="col" :data-disabled="!!$slots.status">
       <div
         ref="table"
         class="table"
@@ -198,11 +195,9 @@ import { Col, Cols, Rows, Sort } from "./AppTable";
 import AppInput from "./AppInput.vue";
 import AppSelectMulti from "./AppSelectMulti.vue";
 import AppSelectSingle from "./AppSelectSingle.vue";
-import AppStatus from "./AppStatus.vue";
 import { Options } from "./AppSelectMulti";
 import { kebabify } from "@/util/object";
 import { Filters } from "@/api/facets";
-import { Status } from "./AppStatus";
 import { closeToc } from "./TheTableOfContents";
 
 interface Props {
@@ -223,8 +218,6 @@ interface Props {
   /** filters */
   availableFilters?: Filters;
   activeFilters?: Filters;
-  /** status to show on top of table (e.g. loading) */
-  status?: Status | null;
   /**
    * whether to show certain controls (temp solution, needed b/c this is a
    * controlled component and cannot paginate/search/etc on its own where needed yet)
@@ -360,16 +353,7 @@ const ariaSort = computed(() => {
 
 <style lang="scss" scoped>
 .container {
-  position: relative;
   width: 100%;
-
-  .status {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-  }
 }
 
 .table {

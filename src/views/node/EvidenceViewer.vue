@@ -39,7 +39,10 @@
     </AppFlex>
 
     <!-- status -->
-    <AppStatus v-if="status" :status="status" />
+    <AppStatus v-if="isLoading" code="loading">Loading evidence</AppStatus>
+    <AppStatus v-else-if="isError" code="error"
+      >Error loading evidence</AppStatus
+    >
 
     <!-- evidence tabs -->
     <AppTabs
@@ -62,15 +65,15 @@
       ]"
     >
       <!-- summary mode -->
-      <template v-if="summary" #summary>
+      <template v-if="evidence.summary" #summary>
         <AppDetails>
           <AppDetail
             :title="`Evidence Codes`"
-            :count="summary?.codes.length"
+            :count="evidence.summary?.codes.length"
             icon="flask"
           >
             <AppLink
-              v-for="(code, index) in summary?.codes"
+              v-for="(code, index) in evidence.summary?.codes"
               :key="index"
               :to="code.link"
               >{{ code.name }}</AppLink
@@ -79,11 +82,11 @@
 
           <AppDetail
             :title="`Sources`"
-            :count="summary?.sources.length"
+            :count="evidence.summary?.sources.length"
             icon="database"
           >
             <AppLink
-              v-for="(source, index) in summary?.sources"
+              v-for="(source, index) in evidence.summary?.sources"
               :key="index"
               :to="source"
               v-html="breakUrl(source)"
@@ -92,12 +95,12 @@
 
           <AppDetail
             :title="`Publications`"
-            :count="summary?.publications.length"
+            :count="evidence.summary?.publications.length"
             icon="book"
           >
             <AppFlex gap="small" h-align="left">
               <AppLink
-                v-for="(publication, index) in summary?.publications"
+                v-for="(publication, index) in evidence.summary?.publications"
                 :key="index"
                 :to="publication.link"
                 >{{ publication.name }}</AppLink
@@ -108,12 +111,12 @@
       </template>
 
       <!-- table mode -->
-      <template v-if="table?.length" #table>
+      <template v-if="evidence.table?.length" #table>
         <AppTable
           :cols="cols"
-          :rows="table || []"
+          :rows="evidence.table || []"
           :start="0"
-          :total="table?.length || 0"
+          :total="evidence.table?.length || 0"
           :show-controls="false"
         >
           <!-- "subject" -->
@@ -214,7 +217,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
+import { watch, onMounted } from "vue";
 import { startCase } from "lodash";
 import AppTabs from "@/components/AppTabs.vue";
 import AppDetails from "@/components/AppDetails.vue";
@@ -222,14 +225,13 @@ import AppDetail from "@/components/AppDetail.vue";
 import AppTable from "@/components/AppTable.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { Node } from "@/api/node-lookup";
-import { Status } from "@/components/AppStatus";
 import { scrollToElement } from "@/router";
-import { getAssociationEvidence, Evidences } from "@/api/association-evidence";
-import { ApiError } from "@/api";
+import { getAssociationEvidence } from "@/api/association-evidence";
 import { breakUrl } from "@/util/string";
 import { appendToBody } from "@/global/tippy";
 import { waitFor } from "@/util/dom";
 import { Association } from "@/api/node-associations";
+import { useQuery } from "@/util/composables";
 
 interface Props {
   /** current node */
@@ -239,12 +241,6 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
-/** evidence data */
-const summary = ref<Evidences["summary"]>();
-const table = ref<Evidences["table"]>();
-/** status of query */
-const status = ref<Status | null>(null);
 
 /** table columns */
 const cols = [
@@ -288,28 +284,27 @@ const cols = [
 ];
 
 /** get evidence data */
-async function getData() {
-  try {
+const {
+  query: getData,
+  data: evidence,
+  isLoading,
+  isError,
+} = useQuery(
+  async function () {
     /** scroll to evidence section */
     waitFor("#evidence", scrollToElement);
-
-    /** loading... */
-    status.value = { code: "loading", text: "Loading evidence data" };
 
     /** get evidence data */
     const response = await getAssociationEvidence(
       props.selectedAssociation?.id
     );
-    summary.value = response.summary;
-    table.value = response.table;
 
-    /** clear status */
-    status.value = null;
-  } catch (error) {
-    /** error... */
-    status.value = error as ApiError;
-  }
-}
+    return response;
+  },
+
+  /** default value */
+  { summary: { codes: [], publications: [], sources: [] }, table: [] }
+);
 
 onMounted(getData);
 watch(() => props.selectedAssociation, getData);

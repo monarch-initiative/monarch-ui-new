@@ -42,7 +42,7 @@ import { onBeforeUnmount, ref } from "vue";
 import { debounce } from "lodash";
 
 interface Props {
-  /** state */
+  /** two-way bound text state */
   modelValue?: string;
   /** placeholder string when nothing typed in */
   placeholder?: string;
@@ -63,7 +63,7 @@ interface Props {
 defineProps<Props>();
 
 interface Emits {
-  /** two-way binding value */
+  /** two-way bound text state */
   (event: "update:modelValue", value: string): void;
   /** when input focused */
   (event: "focus"): void;
@@ -100,7 +100,7 @@ function onChange(event: Event) {
    * https://bugs.chromium.org/p/chromium/issues/detail?id=1297334
    */
 
-  /** if on change (for this value) has not already emitted */
+  /** emit change, if this value not already emitted */
   const value = (event.target as HTMLInputElement).value;
   if (value !== last.value) {
     emit("change", value);
@@ -109,7 +109,7 @@ function onChange(event: Event) {
 }
 
 /** make instance-unique debounced version of on change func */
-const debouncedOnChange = debounce(onChange, 500);
+const debouncedOnChange = debounce(onChange, 1000);
 
 /** cancel any in-progress debounce */
 onBeforeUnmount(debouncedOnChange.cancel);

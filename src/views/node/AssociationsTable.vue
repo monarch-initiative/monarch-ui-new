@@ -3,18 +3,26 @@
 -->
 
 <template>
+  <!-- status -->
+  <AppStatus v-if="isLoading" code="loading"
+    >Loading tabulated association data</AppStatus
+  >
+  <AppStatus v-else-if="isError" code="error"
+    >Error loading tabulated association data</AppStatus
+  >
+
   <!-- results -->
   <AppTable
+    v-else
     :cols="cols"
-    :rows="associations"
+    :rows="associations.associations"
     :per-page="perPage"
     :start="start"
-    :total="count"
+    :total="associations.count"
     :search="search"
     :sort="sort"
     :available-filters="availableFilters"
     :active-filters="activeFilters"
-    :status="status"
     @per-page="(value) => (perPage = value)"
     @start="(value) => (start = value)"
     @search="(value) => (search = value)"
@@ -100,20 +108,16 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
 import { startCase } from "lodash";
-import { Status } from "@/components/AppStatus";
 import AppTable from "@/components/AppTable.vue";
+import AppStatus from "@/components/AppStatus.vue";
 import { Col, Cols, Sort } from "@/components/AppTable";
 import { Node } from "@/api/node-lookup";
-import {
-  getTabulatedAssociations,
-  Associations,
-  Association,
-} from "@/api/node-associations";
-import { ApiError } from "@/api";
+import { getTabulatedAssociations, Association } from "@/api/node-associations";
 import { downloadJson } from "@/util/download";
 import { snackbar } from "@/components/TheSnackbar";
 import { Filters, filtersToQuery } from "@/api/facets";
 import { Options } from "@/components/AppSelectMulti";
+import { useQuery } from "@/util/composables";
 
 interface Props {
   /** current node */
@@ -133,10 +137,6 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 
-/** association data */
-const associations = ref<Associations["associations"]>([]);
-/** total number of associations */
-const count = ref(0);
 /** table state */
 const sort = ref<Sort>();
 const perPage = ref(5);
@@ -144,8 +144,6 @@ const start = ref(0);
 const search = ref("");
 const availableFilters = ref<Filters>({});
 const activeFilters = ref<Filters>({});
-/** status of query */
-const status = ref<Status | null>(null);
 
 /** table columns */
 const cols = computed((): Cols => {
@@ -185,7 +183,7 @@ const cols = computed((): Cols => {
   const extraCols: Cols = [];
 
   /** taxon column. exists for many categories, so just add if any row has taxon. */
-  if (associations.value.some((association) => association.taxon))
+  if (associations.value.associations.some((association) => association.taxon))
     extraCols.push({
       id: "taxon",
       key: "taxon",
@@ -257,20 +255,22 @@ function onFilterChange(colId: Col["id"], value: Options) {
 }
 
 /** get table association data */
-async function getAssociations(
-  /**
-   * whether to perform "fresh" search, without filters. set to true when
-   * category changing, false when filters changing.
-   */
-  fresh: boolean
-) {
-  try {
-    /** loading... */
-    status.value = { code: "loading", text: "Loading association data" };
-
+const {
+  query: getAssociations,
+  data: associations,
+  isLoading,
+  isError,
+} = useQuery(
+  async function (
+    /**
+     * whether to perform "fresh" search, without filters/pagination/etc. true
+     * when search text changes, false when filters/pagination/etc change.
+     */
+    fresh: boolean
+  ) {
     /** catch case where no association categories available */
     if (!props.node.associationCounts.length)
-      throw new ApiError("No association info available", "warning");
+      throw new Error("No association info available");
 
     /** get association data */
     const response = await getTabulatedAssociations(
@@ -284,28 +284,22 @@ async function getAssociations(
       fresh ? undefined : filtersToQuery(availableFilters.value),
       fresh ? undefined : filtersToQuery(activeFilters.value)
     );
-    count.value = response.count;
-    associations.value = response.associations;
 
+    return response;
+  },
+
+  /** default value */
+  { count: 0, associations: [], facets: {} },
+
+  /** on success */
+  (response, [fresh]) => {
+    /** update filters from facets returned from api, if a "fresh" search */
     if (fresh) {
-      /** update filters based on facets from api */
       availableFilters.value = { ...response.facets };
       activeFilters.value = { ...response.facets };
     }
-
-    /** clear status */
-    status.value = null;
-  } catch (error) {
-    /** error... */
-    status.value = error as ApiError;
-    count.value = 0;
-    associations.value = [];
-    if (fresh) {
-      availableFilters.value = {};
-      activeFilters.value = {};
-    }
   }
-}
+);
 
 /** download table data */
 async function download() {
@@ -314,8 +308,11 @@ async function download() {
 
   /** warn user */
   snackbar(
-    `Downloading data for ${Math.min(count.value, max)} table entries.` +
-      (count.value >= 100 ? " This may take a minute." : "")
+    `Downloading data for ${Math.min(
+      associations.value.count,
+      max
+    )} table entries.` +
+      (associations.value.count >= 100 ? " This may take a minute." : "")
   );
 
   /** attempt to request all rows */
@@ -346,6 +343,7 @@ onMounted(() => getAssociations(true));
 .arrow {
   color: $gray;
 }
+
 .evidence-button {
   width: 100%;
   min-height: unset !important;

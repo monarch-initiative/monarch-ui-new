@@ -4,10 +4,22 @@
 
 <template>
   <!-- status -->
-  <template v-if="status">
+  <template v-if="isLoading || isError">
+    <AppSection design="fill" class="section">
+      <AppHeading
+        class="heading"
+        :icon="`category-${kebabCase(String($route.params.category))}`"
+      >
+        {{ $route.params.id }}
+      </AppHeading>
+    </AppSection>
     <AppSection>
-      <AppHeading>Node</AppHeading>
-      <AppStatus :status="status" />
+      <AppStatus v-if="isLoading" code="loading"
+        >Loading node information</AppStatus
+      >
+      <AppStatus v-if="isError" code="loading"
+        >Error loading node information</AppStatus
+      >
     </AppSection>
   </template>
 
@@ -26,10 +38,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, nextTick } from "vue";
-import { lookupNode, Node } from "@/api/node-lookup";
-import { Status } from "@/components/AppStatus";
-import { ApiError } from "@/api";
+import { watch, onMounted, nextTick } from "vue";
+import { kebabCase } from "lodash";
+import { lookupNode } from "@/api/node-lookup";
 import AppStatus from "@/components/AppStatus.vue";
 import TheTableOfContents from "@/components/TheTableOfContents.vue";
 import SectionTitle from "./SectionTitle.vue";
@@ -39,44 +50,46 @@ import SectionHierarchy from "./SectionHierarchy.vue";
 import SectionAssociations from "./SectionAssociations.vue";
 import { scrollToHash } from "@/router";
 import { useRoute } from "vue-router";
+import { useQuery } from "@/util/composables";
 
 /** route info */
 const route = useRoute();
 
-/** info/metadata about node */
-const node = ref<Node | null>(null);
-/** status of query */
-const status = ref<Status | null>(null);
-
 /** get new node data */
-async function getData() {
-  /** get node from route params */
-  const { id = "", category = "" } = route.params;
-
-  try {
-    /** loading... */
-    status.value = { code: "loading", text: `Loading node info for ${id}` };
-    node.value = null;
+const {
+  query: getNode,
+  data: node,
+  isLoading,
+  isError,
+} = useQuery(
+  async function getData() {
+    /** get node from route params */
+    const { id = "", category = "" } = route.params;
 
     /** get node information */
-    node.value = await lookupNode(id as string, category as string);
+    return await lookupNode(id as string, category as string);
+  },
 
-    /** clear status */
-    status.value = null;
+  /** default value */
+  null,
 
-    /** scroll to hash once data loaded */
+  /** on success, after data loaded */
+  async () => {
+    /** scroll to hash */
     await nextTick();
     scrollToHash();
-  } catch (error) {
-    /** error... */
-    status.value = error as ApiError;
-    node.value = null;
   }
-}
+);
 
 /** when path (not hash or query) changed, get new node data */
-watch(() => route.path, getData);
+watch(() => route.path, getNode);
 
 /** get new node data on load */
-onMounted(getData);
+onMounted(getNode);
 </script>
+
+<style lang="scss" scoped>
+.heading {
+  font-size: 1.2rem;
+}
+</style>

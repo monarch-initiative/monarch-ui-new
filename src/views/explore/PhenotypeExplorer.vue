@@ -26,7 +26,7 @@
     placeholder="Select phenotypes"
     :tooltip="multiTooltip"
     :description="description(aPhenotypes, aGeneratedFrom)"
-    @get-options="(option, length) => getOptions(option, length, 'a')"
+    @spread-options="(option, options) => spreadOptions(option, options, 'a')"
   />
 
   <!-- set B -->
@@ -53,7 +53,7 @@
     placeholder="Select phenotypes"
     :tooltip="multiTooltip"
     :description="description(bPhenotypes, bGeneratedFrom)"
-    @get-options="(option, options) => getOptions(option, options, 'b')"
+    @spread-options="(option, options) => spreadOptions(option, options, 'b')"
   />
 
   <AppFlex>
@@ -67,19 +67,20 @@
   <hr />
 
   <!-- analysis status -->
-  <AppStatus v-if="status" :status="status" />
+  <AppStatus v-if="isLoading" code="loading">Running analysis</AppStatus>
+  <AppStatus v-if="isError" code="error">Error running analysis</AppStatus>
 
   <!-- analysis top results -->
-  <AppFlex v-else-if="results.matches.length">
+  <AppFlex v-else-if="comparison.matches.length">
     <!-- heading -->
-    <strong v-if="results.matches.length === 1">Top match</strong>
+    <strong v-if="comparison.matches.length === 1">Top match</strong>
     <strong v-else
-      >Top {{ Math.min(results.matches.length, 10) }} matches</strong
+      >Top {{ Math.min(comparison.matches.length, 10) }} matches</strong
     >
 
-    <!-- list of results -->
+    <!-- list of comparison results -->
     <div
-      v-for="(match, matchIndex) in results.matches.slice(0, 10)"
+      v-for="(match, matchIndex) in comparison.matches.slice(0, 10)"
       :key="matchIndex"
       class="match"
     >
@@ -87,8 +88,8 @@
       <AppRing
         v-tippy="'Similarity score'"
         :score="match.score"
-        :min="results.minScore"
-        :max="results.maxScore"
+        :min="comparison.minScore"
+        :max="comparison.maxScore"
       />
 
       <AppFlex direction="col" h-align="stretch" gap="small" class="details">
@@ -146,7 +147,7 @@
   </template>
 
   <!-- phenogrid results -->
-  <template v-if="results.matches.length">
+  <template v-if="comparison.matches.length">
     <strong>Phenotype Similarity Comparison</strong>
     <div id="phenogrid"></div>
   </template>
@@ -163,14 +164,12 @@ import {
   compareSetToTaxon,
   compareSetToSet,
   getPhenotypes,
-  Comparison,
 } from "@/api/phenotype-explorer";
-import { Status } from "@/components/AppStatus";
 import AppStatus from "@/components/AppStatus.vue";
-import { ApiError } from "@/api";
 import { Option, Options } from "@/components/AppSelectTags";
 import { snackbar } from "@/components/TheSnackbar";
 import { mountPhenogrid } from "@/api/phenogrid";
+import { useQuery } from "@/util/composables";
 
 /** common tooltip explaining how to use multi-select component */
 const multiTooltip = `In this box, you can select phenotypes in 3 ways:<br>
@@ -234,10 +233,6 @@ const bTaxon = ref(bTaxonOptions[0]);
 const bPhenotypes = ref([] as Options);
 /** "generated from" helpers after selecting gene or disease */
 const bGeneratedFrom = ref({} as GeneratedFrom);
-/** status of analysis */
-const status = ref(null as Status | null);
-/** analysis results */
-const results = ref({ matches: [] } as Comparison);
 
 /** example phenotype set comparison */
 function doExample() {
@@ -246,39 +241,32 @@ function doExample() {
   bMode.value = bModeOptions[2];
 }
 
-/** run comparison analysis */
-async function runAnalysis() {
-  /** loading... */
-  status.value = { code: "loading", text: "Analyzing phenotypes" };
-  results.value = { matches: [] };
-
-  try {
+const {
+  /** run comparison analysis */
+  query: runAnalysis,
+  /** analysis results */
+  data: comparison,
+  isLoading,
+  isError,
+} = useQuery(
+  async function () {
     /** run appropriate analysis based on selected mode */
     if (bMode.value.id.includes("these phenotypes"))
-      results.value = await compareSetToSet(
+      return await compareSetToSet(
         aPhenotypes.value.map(({ id }) => id),
         bPhenotypes.value.map(({ id }) => id)
       );
     else
-      results.value = await compareSetToTaxon(
+      return await compareSetToTaxon(
         aPhenotypes.value.map(({ id }) => id),
         bMode.value.id.includes("diseases") ? bTaxonHuman.id : bTaxon.value.id
       );
+  },
+  { matches: [] }
+);
 
-    /** run phenogrid, attach to div container */
-    runPhenogrid();
-
-    /** clear status */
-    status.value = null;
-  } catch (error) {
-    /** error... */
-    status.value = error as ApiError;
-    results.value = { matches: [] };
-  }
-}
-
-/** when multi select component runs get options function */
-function getOptions(option: Option, options: Options, set: string) {
+/** when multi select component runs spread options function */
+function spreadOptions(option: Option, options: Options, set: string) {
   /** notify */
   if (options.length === 0) snackbar("No associated phenotypes found");
   else snackbar(`Selected ${options.length} phenotypes`);
@@ -311,9 +299,17 @@ function runPhenogrid() {
   mountPhenogrid("#phenogrid", xAxis, yAxis, mode);
 }
 
+/** run phenogrid, attach to div container */
+watch(
+  () => comparison.value,
+  () => {
+    if (comparison.value.matches.length) runPhenogrid();
+  }
+);
+
 /** clear/reset results */
 function clearResults() {
-  results.value = { matches: [] };
+  comparison.value = { matches: [] };
 }
 
 /** get description to show below phenotypes select box */

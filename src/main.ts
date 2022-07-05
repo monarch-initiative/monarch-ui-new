@@ -1,7 +1,9 @@
 import { createApp } from "vue";
+import { setupWorker } from "msw";
 import App from "@/App.vue";
 import components from "@/global/components";
 import plugins from "@/global/plugins";
+import { handlers } from "../tests/fixtures";
 import "wicg-inert";
 
 /** create main app object */
@@ -15,4 +17,15 @@ for (const [name, Component] of Object.entries(components))
   app = app.component(name, Component);
 
 /** render app */
-app.mount("#app");
+const startApp = () => app.mount("#app");
+
+/** mock api for local development */
+const mock = false;
+// const mock = process.env.NODE_ENV === "development";
+
+/** start app */
+if (mock)
+  setupWorker(...handlers)
+    .start()
+    .then(startApp);
+else startApp();

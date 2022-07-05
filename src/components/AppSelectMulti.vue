@@ -130,10 +130,10 @@ import { Options } from "./AppSelectMulti";
 import { wrap } from "@/util/math";
 
 interface Props {
+  /** two-way bound selected items state */
+  modelValue: Options;
   /** name of the field */
   name: string;
-  /** currently selected item */
-  modelValue: Options;
   /** list of options to show */
   options: Options;
   /** width style of button */
@@ -145,7 +145,7 @@ interface Props {
 const props = defineProps<Props>();
 
 interface Emits {
-  /** two-way binding value */
+  /** two-way bound selected items state */
   (event: "update:modelValue", value: Options): void;
   /** when value changed */
   (event: "input"): void;
@@ -161,6 +161,8 @@ const id = ref(uniqueId());
 const expanded = ref(false);
 /** array of indices of selected options */
 const selected = ref<Array<number>>([]);
+/** last on change value that was emitted */
+const last = ref<Array<number> | undefined>(undefined);
 /** index of option that is highlighted */
 const highlighted = ref(0);
 
@@ -174,8 +176,11 @@ function open() {
 function close() {
   /** close dropdown */
   expanded.value = false;
-  /** emit event that user has "committed" change */
-  emit("change", getModel());
+  /** emit change, if this value not already emitted */
+  if (!isEqual(selected.value, last.value)) {
+    emit("change", getModel());
+    last.value = [...selected.value];
+  }
 }
 
 /** when button clicked */

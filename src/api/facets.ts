@@ -8,7 +8,7 @@ import { renameKey } from "./../util/object";
 export type Facets = Record<string, Record<string, number>>;
 
 /** set of filters compatible with select options list */
-export type Filters = Record<string, Options> | null;
+export type Filters = Record<string, Options>;
 
 /** simplified filter format for passing to api funcs */
 export type Query = Record<string, Array<string>>;
@@ -44,18 +44,18 @@ export const queryToParams = async (
 ): Promise<Params> => {
   const params: Params = {};
   for (const [key, query] of Object.entries(activeFilters)) {
-    /** do special mapping for certain keys */
-    let newQuery = query;
-    if (key === "taxon") newQuery = await getIdsFromLabels(newQuery);
-
     /** ignore filter if value "empty" (none active) or "full" (all active) */
-    const noneActive = newQuery.length === 0;
+    const noneActive = query.length === 0;
     const allActive =
       activeFilters[key]?.length === availableFilters[key]?.length;
     if (noneActive || allActive) continue;
 
+    /** do special mapping for certain keys */
+    let mapped = query;
+    if (key === "taxon") mapped = await getIdsFromLabels(mapped);
+
     /** set param */
-    params[key] = newQuery;
+    params[key] = mapped;
   }
 
   return params;

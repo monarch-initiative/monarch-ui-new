@@ -4,13 +4,16 @@
 
 <template>
   <AppLink
+    v-tippy="code === 'error' ? 'See dev console for more details' : ''"
     :to="link || ''"
     class="status"
     :data-code="code || ''"
     :aria-label="code || ''"
   >
     <AppIcon class="icon" :icon="icon" />
-    <span class="text"><slot /></span>
+    <span class="text">
+      <slot />
+    </span>
   </AppLink>
 </template>
 
@@ -87,5 +90,9 @@ const icon = computed(() => icons[props.code || "unknown"]);
   text-align: left;
   color: $off-black;
   line-height: $spacing;
+}
+
+.note {
+  color: $gray;
 }
 </style>

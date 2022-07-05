@@ -5,7 +5,10 @@
 <template>
   <AppSection design="fill" class="section">
     <AppFlex dir="column" gap="small">
-      <AppHeading :icon="`category-${kebabCase(node.category)}`">
+      <AppHeading
+        class="heading"
+        :icon="`category-${kebabCase(node.category)}`"
+      >
         {{ node.name }}
       </AppHeading>
       <AppFlex>
@@ -59,7 +62,7 @@ defineProps<Props>();
   color: $off-black !important;
 }
 
-h1 {
+.heading {
   font-size: 1.2rem;
 }
 

@@ -64,8 +64,12 @@
       the discussion once it's created.
     </p>
 
-    <!-- result status -->
-    <AppStatus v-if="status" :status="status">
+    <!-- status -->
+    <AppStatus v-if="isLoading" code="loading">Submitting feedback</AppStatus>
+    <AppStatus v-if="isError" code="loading"
+      >Error submitting feedback</AppStatus
+    >
+    <AppStatus v-if="isSuccess" code="success">
       <AppLink v-if="link" :to="link"
         >View your submitted feedback here.</AppLink
       >
@@ -77,17 +81,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { useLocalStorage } from "@vueuse/core";
 import { truncate } from "lodash";
 import parser from "ua-parser-js";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "./AppStatus.vue";
-import { Status } from "@/components/AppStatus";
 import { collapse } from "@/util/string";
 import { postFeedback } from "@/api/feedback";
-import { ApiError } from "@/api";
+import { useQuery } from "@/util/composables";
 
 /** route info */
 const route = useRoute();
@@ -107,10 +110,6 @@ const email = useLocalStorage("feedback-form-email", "");
 const github = useLocalStorage("feedback-form-github", "");
 /** user's freeform feedback */
 const feedback = useLocalStorage("feedback-form-feedback", "");
-/** result of submitting form */
-const status = ref<Status | null>(null);
-/** link to created issue */
-const link = ref("");
 
 /** list of automatic details to record */
 const details = computed(() => {
@@ -142,7 +141,13 @@ function onSubmit() {
 }
 
 /** post feedback to backend */
-async function submitFeedback() {
+const {
+  query: submitFeedback,
+  data: link,
+  isLoading,
+  isError,
+  isSuccess,
+} = useQuery(async function () {
   /** make issue title (unclear what char limit is?) */
   const title = [
     "Feedback form",
@@ -169,22 +174,13 @@ async function submitFeedback() {
     feedback.value,
   ].join("\n");
 
-  /** loading... */
-  status.value = { code: "loading", text: "Submitting feedback" };
+  /** post feedback and get link of created issue */
+  const link = await postFeedback(title, body);
 
-  try {
-    /** post feedback and get link of created issue */
-    link.value = await postFeedback(title, body);
+  resetForm();
 
-    /** success... */
-    status.value = { code: "success", text: "Feedback submitted successfully" };
-
-    resetForm();
-  } catch (error) {
-    /** error... */
-    status.value = error as ApiError;
-  }
-}
+  return link;
+}, "");
 
 /** clear form data from storage after successful submit */
 function resetForm() {

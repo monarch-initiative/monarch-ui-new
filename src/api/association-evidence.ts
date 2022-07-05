@@ -103,21 +103,21 @@ export const getAssociationEvidence = async (
       ({
         object: {
           id: association.object.id,
-          name: association.object.label,
+          name: association.object.label || association.object.id,
           iri: association.object.iri,
           category: mapCategory(association.object.category || []),
         },
 
         subject: {
           id: association.subject.id,
-          name: association.subject.label,
+          name: association.subject.label || association.subject.id,
           iri: association.subject.iri,
           category: mapCategory(association.subject.category || []),
         },
 
         relation: {
           id: association.relation.id,
-          name: association.relation.label,
+          name: association.relation.label || association.relation.id,
           iri: association.relation.iri,
           category: (association.relation?.category || [])[0] || "",
           inverse: association.relation.inverse,

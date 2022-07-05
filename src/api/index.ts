@@ -22,6 +22,9 @@ export const request = async <T>(
   options: RequestInit = {},
   parse: "text" | "json" = "json"
 ): Promise<T> => {
+  /** start cache if not already started */
+  if (!cache) await initCache();
+
   /** get string of url parameters/options */
   const paramsObject = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
@@ -36,17 +39,66 @@ export const request = async <T>(
 
   /** assemble url to query */
   const paramsString = "?" + paramsObject.toString();
-  const url = path + paramsString;
+  const url = window
+    .decodeURIComponent(path + paramsString)
+    .replaceAll(" ", "%20");
+  const endpoint = path.replace(biolink, "");
 
-  /** make request */
-  console.info(
-    "Making request",
-    window.decodeURIComponent(url).replaceAll(" ", "%20")
-  );
-  const response = await fetch(url, options);
-  if (!response.ok) throw new Error(`Response not OK`);
+  /** make request object */
+  const request = new Request(url, options);
+
+  /** first check if request is cached */
+  let response = await cache.match(request);
+
+  if (response) {
+    console.groupCollapsed("Using cached request", endpoint);
+    console.info(url);
+    console.info(request);
+    console.groupEnd();
+  }
+
+  /** if request not cached */
+  if (!response) {
+    console.groupCollapsed("Making new request", endpoint);
+    console.info(url);
+    console.info(request);
+    console.groupEnd();
+
+    /** make new request */
+    response = await fetch(request);
+
+    /** check response code */
+    if (!response.ok) throw new Error(`Response not OK`);
+
+    /**
+     * add response to cache (if not GET,
+     * https://w3c.github.io/ServiceWorker/#cache-put step 4)
+     */
+    if (request.method === "GET") await cache.put(request, response.clone());
+  }
 
   /** parse response */
-  if (parse === "text") return (await response.text()) as unknown as T;
-  else return await response.json();
+  const parsed =
+    parse === "text"
+      ? ((await response.text()) as unknown as T)
+      : await response.json();
+
+  console.groupCollapsed("Response", endpoint);
+  console.info(parsed);
+  console.info(response);
+  console.groupEnd();
+
+  return parsed;
+};
+
+/** cache interface */
+let cache: Cache;
+const name = "monarch-cache";
+
+/** start cache */
+const initCache = async () => {
+  /** start fresh each session (as if using sessionStorage) */
+  await window.caches.delete(name);
+  /** set cache interface */
+  cache = await window.caches.open(name);
 };

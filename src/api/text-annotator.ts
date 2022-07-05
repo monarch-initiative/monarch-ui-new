@@ -19,7 +19,7 @@ interface _Annotations {
 /** get annotations from full text */
 export const annotateText = async (content = ""): Promise<Annotations> => {
   /** if nothing searched, return empty */
-  if (!content.trim()) throw new Error("No results");
+  if (!content.trim()) return [];
 
   /** request params */
   const params = {
@@ -40,8 +40,8 @@ export const annotateText = async (content = ""): Promise<Annotations> => {
   const response = await request<_Annotations>(url, params, options);
   const { spans } = response;
 
-  /** empty error status */
-  if (!spans.length) throw new Error("No results");
+  /** empty */
+  if (!spans.length) return [];
 
   /** get ordered, de-duped list of string indices, including start and end */
   const indices: Array<[number, number]> = [

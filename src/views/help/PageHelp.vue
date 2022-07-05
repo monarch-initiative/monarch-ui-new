@@ -44,7 +44,8 @@
     <AppHeading>Status</AppHeading>
 
     <!-- main status of all checks -->
-    <!-- <AppStatus v-if="status" :status="status" /> -->
+    <AppStatus v-if="isLoading" code="loading">Loading checks</AppStatus>
+    <AppStatus v-if="isError" code="error">Error loading checks</AppStatus>
 
     <!-- indiviual statuses -->
     <AppGallery size="small">
@@ -76,21 +77,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import { getUptimes } from "@/api/uptime";
 import AppStatus from "@/components/AppStatus.vue";
+import { useQuery } from "@/util/composables";
 
 /** list of status checks to display */
-const uptimes = ref<Awaited<ReturnType<typeof getUptimes>>>([]);
+const { query, data: uptimes, isLoading, isError } = useQuery(getUptimes, []);
 
-onMounted(async () => {
-  try {
-    /** get statuses from uptimerobot api */
-    uptimes.value = await getUptimes();
-  } catch (error) {
-    console.error(error);
-  }
-});
+onMounted(query);
 </script>
 
 <style lang="scss" scoped>
