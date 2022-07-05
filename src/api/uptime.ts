@@ -1,5 +1,7 @@
 import { request, cleanError } from ".";
-import { Status } from "@/components/AppStatus";
+import { Code } from "@/components/AppStatus";
+
+/** https://uptimerobot.com/api/ */
 
 /** uptimerobot api endpoint */
 const uptimeRobot = "https://api.uptimerobot.com/v2/getMonitors";
@@ -8,17 +10,17 @@ const key = "ur1488940-1c05ba09e0aef926989d6593";
 /** uptimerobot.org page for statuses */
 const page = "https://stats.uptimerobot.com/XPRo9s4BJ5";
 
-/** uptime response (from backend) */
-interface _Uptime {
+/** uptime responses (from backend) */
+interface _Uptimes {
   monitors?: Array<{
     id?: string;
     friendly_name?: string;
-    status?: Code;
+    status?: _Code;
   }>;
 }
 
-/** possible status codes https://uptimerobot.com/api/ */
-enum Code {
+/** possible status codes (from backend) */
+enum _Code {
   paused = 0,
   unchecked = 1,
   up = 2,
@@ -27,33 +29,29 @@ enum Code {
 }
 
 /** get list of uptimerobot monitors and their statuses, names, and other info */
-export const getUptimes = async (): Promise<Uptime> => {
+export const getUptimes = async (): Promise<Uptimes> => {
   try {
     /** get data from endpoint */
     const params = { api_key: key };
     const options = { method: "POST" };
-    const response = await request<_Uptime>(uptimeRobot, params, options);
+    const response = await request<_Uptimes>(uptimeRobot, params, options);
     const { monitors = [] } = response;
 
     /** map uptimerobot status codes to our simplified status codes in status component */
-    const codeMap = {
-      [Code.paused]: "paused",
-      [Code.unchecked]: "unknown",
-      [Code.up]: "success",
-      [Code.seems_down]: "error",
-      [Code.down]: "error",
+    const codeMap: Record<_Code, Code> = {
+      [_Code.paused]: "paused",
+      [_Code.unchecked]: "unknown",
+      [_Code.up]: "success",
+      [_Code.seems_down]: "error",
+      [_Code.down]: "error",
     };
 
     /** convert results to desired format */
-    const results = monitors.map(
-      (monitor): Status => ({
-        code: (typeof monitor.status !== "undefined"
-          ? codeMap[monitor.status]
-          : "unknown") as Status["code"],
-        text: monitor.friendly_name,
-        link: page + "/" + (monitor.id || ""),
-      })
-    );
+    const results = monitors.map((monitor) => ({
+      code: monitor.status ? codeMap[monitor.status] || "unknown" : "unknown",
+      text: monitor.friendly_name || "",
+      link: page + "/" + (monitor.id || ""),
+    }));
 
     return results;
   } catch (error) {
@@ -61,5 +59,9 @@ export const getUptimes = async (): Promise<Uptime> => {
   }
 };
 
-/** uptime (for frontend) */
-type Uptime = Array<Status>;
+/** uptimes (for frontend) */
+export type Uptimes = Array<{
+  code: Code;
+  text: string;
+  link: string;
+}>;
