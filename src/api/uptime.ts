@@ -52,8 +52,6 @@ export const getUptimes = async (): Promise<Uptimes> => {
     link: page + "/" + (monitor.id || ""),
   }));
 
-  console.log(monitors, results);
-
   return results;
 };
 

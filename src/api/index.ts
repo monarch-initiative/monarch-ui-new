@@ -44,7 +44,6 @@ export const request = async <T>(
 
   /** make request object */
   const request = new Request(url, options);
-  console.log(url);
 
   /** first check if request is cached */
   let response = await cache.match(request);

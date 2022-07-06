@@ -241,10 +241,9 @@ function doExample() {
   bMode.value = bModeOptions[2];
 }
 
+/** comparison analysis */
 const {
-  /** run comparison analysis */
   query: runAnalysis,
-  /** analysis results */
   data: comparison,
   isLoading,
   isError,
@@ -262,6 +261,8 @@ const {
         bMode.value.id.includes("diseases") ? bTaxonHuman.id : bTaxon.value.id
       );
   },
+
+  /** default value */
   { matches: [] }
 );
 

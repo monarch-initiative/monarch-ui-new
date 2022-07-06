@@ -7,7 +7,7 @@ import {
   mount as vueMount,
 } from "@vue/test-utils";
 import { setupServer } from "msw/node";
-import fetch, { Request } from "node-fetch";
+import fetch from "node-fetch";
 import { cloneDeep } from "lodash";
 import router from "@/router";
 import components from "@/global/components";
@@ -23,7 +23,7 @@ window.ResizeObserver = jest
   .fn()
   .mockImplementation(() => ({ observe: jest.fn() }));
 window.fetch = jest.fn().mockImplementation(fetch);
-window.Request = jest.fn().mockImplementation(() => Request);
+window.Request = jest.fn().mockImplementation();
 window.caches = {
   delete: jest.fn(),
   open: jest.fn().mockImplementation(() => ({

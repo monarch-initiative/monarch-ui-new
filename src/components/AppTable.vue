@@ -9,7 +9,7 @@
 <template>
   <div class="container">
     <!-- table data -->
-    <AppFlex direction="col" :data-disabled="!!$slots.status">
+    <AppFlex direction="col">
       <div
         ref="table"
         class="table"
@@ -490,13 +490,5 @@ td {
     --height: 30px;
     max-width: 150px;
   }
-}
-
-[data-disabled] {
-  transition: opacity $fast;
-}
-
-[data-disabled="true"] {
-  opacity: 0.2;
 }
 </style>
