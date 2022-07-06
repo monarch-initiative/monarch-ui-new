@@ -14,18 +14,15 @@
   <!-- results -->
   <AppTable
     v-else
+    v-model:per-page="perPage"
+    v-model:start="start"
+    v-model:search="search"
     :cols="cols"
     :rows="associations.associations"
-    :per-page="perPage"
-    :start="start"
     :total="associations.count"
-    :search="search"
     :sort="sort"
     :available-filters="availableFilters"
     :active-filters="activeFilters"
-    @per-page="(value) => (perPage = value)"
-    @start="(value) => (start = value)"
-    @search="(value) => (search = value)"
     @download="download"
     @sort="(value) => (sort = value)"
     @filter="onFilterChange"

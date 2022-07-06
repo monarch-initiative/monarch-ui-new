@@ -118,6 +118,7 @@
           :start="0"
           :total="evidence.table?.length || 0"
           :show-controls="false"
+          @download="download"
         >
           <!-- "subject" -->
           <template #subject="{ cell }">
@@ -232,6 +233,8 @@ import { appendToBody } from "@/global/tippy";
 import { waitFor } from "@/util/dom";
 import { Association } from "@/api/node-associations";
 import { useQuery } from "@/util/composables";
+import { snackbar } from "@/components/TheSnackbar";
+import { downloadJson } from "@/util/download";
 
 interface Props {
   /** current node */
@@ -305,6 +308,16 @@ const {
   /** default value */
   { summary: { codes: [], publications: [], sources: [] }, table: [] }
 );
+
+/** download table data */
+async function download() {
+  /** warn user */
+  snackbar(
+    `Downloading data for ${evidence.value.table.length} table entries.`
+  );
+
+  downloadJson(evidence.value.table);
+}
 
 onMounted(getData);
 watch(() => props.selectedAssociation, getData);

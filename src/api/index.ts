@@ -52,7 +52,8 @@ export const request = async <T>(
 
   if (response) {
     console.groupCollapsed("Using cached request", endpoint);
-    console.info(url);
+    console.info(params);
+    console.info(options);
     console.info(request);
     console.groupEnd();
   }
@@ -60,7 +61,8 @@ export const request = async <T>(
   /** if request not cached */
   if (!response) {
     console.groupCollapsed("Making new request", endpoint);
-    console.info(url);
+    console.info(params);
+    console.info(options);
     console.info(request);
     console.groupEnd();
 
