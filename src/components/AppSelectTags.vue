@@ -32,7 +32,7 @@
           :placeholder="placeholder"
           role="combobox"
           :aria-label="name"
-          :aria-expanded="!!results.length"
+          :aria-expanded="!!results.options.length"
           :aria-controls="`list-${id}`"
           aria-haspopup="listbox"
           :aria-activedescendant="
@@ -78,7 +78,7 @@
       <AppStatus v-if="isError" code="error">Error loading results</AppStatus>
 
       <!-- list of results -->
-      <div v-if="results.length" class="grid">
+      <div v-if="results.options.length" class="grid">
         <div
           v-for="(option, index) in availableResults"
           :id="`option-${id}-${index}`"
@@ -163,7 +163,7 @@ const focused = ref(false);
 /** close results dropdown */
 function close() {
   search.value = "";
-  results.value = [];
+  results.value = { options: [] };
   highlighted.value = 0;
   debouncedGetResults.cancel();
 }
@@ -215,7 +215,7 @@ async function onPaste() {
    */
   await sleep();
   /** immediately auto-accept results */
-  getResults();
+  await getResults();
 }
 
 /** select an option or array of options */
@@ -279,29 +279,34 @@ const {
     highlighted.value = 0;
 
     /** get results */
-    const response = await props.options(search.value);
-
-    /** show message */
-    if (response.message) snackbar(response.message);
-
-    /** auto-accept list of options */
-    if (response.autoAccept) {
-      select(response.options);
-      search.value = "";
-      return [];
-    } else {
-      /** show list of results for user to select */
-      return response.options;
-    }
+    return await props.options(search.value);
   },
-  []
+
+  /** default value */
+  { options: [] },
+
+  /** on success */
+  (result) => {
+    if (result.autoAccept) {
+      /** auto select */
+      select(result.options);
+
+      /** display message */
+      if (result.message) snackbar(result.message);
+
+      /** reset */
+      close();
+    }
+  }
 );
 
 /** list of unselected results to show */
 const availableResults = computed(() =>
-  results.value.filter(
-    (option) => !selected.value.find((model) => model.id === option.id)
-  )
+  results.value.autoAccept
+    ? []
+    : results.value.options.filter(
+        (option) => !selected.value.find((model) => model.id === option.id)
+      )
 );
 
 /** when model changes */
@@ -330,9 +335,9 @@ watch(
 watch(search, async () => debouncedGetResults());
 
 /** when focused state changes */
-watch(focused, () => {
+watch(focused, async () => {
   /** get results when first focused */
-  if (focused.value) getResults();
+  if (focused.value) await getResults();
   /** clear search when input box blurred */ else close();
 });
 

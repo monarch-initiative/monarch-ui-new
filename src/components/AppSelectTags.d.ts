@@ -8,7 +8,7 @@ export type OptionsFunc = (search: string) => Promise<{
   options: Options;
   /** whether to auto-select these options, or display to user for selection */
   autoAccept?: boolean;
-  /** snackbar message to show */
+  /** snackbar message to show when auto-accepting */
   message?: string;
 }>;
 

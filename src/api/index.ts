@@ -39,35 +39,30 @@ export const request = async <T>(
 
   /** assemble url to query */
   const paramsString = "?" + paramsObject.toString();
-  const url = window
-    .decodeURIComponent(path + paramsString)
-    .replaceAll(" ", "%20");
+  const url = path + paramsString;
   const endpoint = path.replace(biolink, "");
 
   /** make request object */
   const request = new Request(url, options);
+  console.log(url);
 
   /** first check if request is cached */
   let response = await cache.match(request);
 
   if (response) {
     console.groupCollapsed("Using cached request", endpoint);
-    console.info(params);
-    console.info(options);
-    console.info(request);
+    console.info({ params, options, request });
     console.groupEnd();
   }
 
   /** if request not cached */
   if (!response) {
     console.groupCollapsed("Making new request", endpoint);
-    console.info(params);
-    console.info(options);
-    console.info(request);
+    console.info({ params, options, request });
     console.groupEnd();
 
     /** make new request */
-    response = await fetch(request);
+    response = await fetch(url, options);
 
     /** check response code */
     if (!response.ok) throw new Error(`Response not OK`);
@@ -86,8 +81,7 @@ export const request = async <T>(
       : await response.json();
 
   console.groupCollapsed("Response", endpoint);
-  console.info(parsed);
-  console.info(response);
+  console.info({ parsed, response });
   console.groupEnd();
 
   return parsed;

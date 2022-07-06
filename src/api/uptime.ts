@@ -37,7 +37,7 @@ export const getUptimes = async (): Promise<Uptimes> => {
   const { monitors = [] } = response;
 
   /** map uptimerobot status codes to our simplified status codes in status component */
-  const codeMap: Record<_Code, Code> = {
+  const codeMap: Record<_Code | number, Code> = {
     [_Code.paused]: "paused",
     [_Code.unchecked]: "unknown",
     [_Code.up]: "success",
@@ -47,10 +47,12 @@ export const getUptimes = async (): Promise<Uptimes> => {
 
   /** convert results to desired format */
   const results = monitors.map((monitor) => ({
-    code: monitor.status ? codeMap[monitor.status] || "unknown" : "unknown",
+    code: codeMap[Number(monitor.status)] || "unknown",
     text: monitor.friendly_name || "",
     link: page + "/" + (monitor.id || ""),
   }));
+
+  console.log(monitors, results);
 
   return results;
 };

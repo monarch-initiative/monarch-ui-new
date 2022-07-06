@@ -14,7 +14,7 @@ test("Help page renders uptimerobot statuses", async () => {
    * displayed as appropriate status components.
    */
   expect(wrapper.find("[data-code='success']").exists()).toBeTruthy();
-  expect(wrapper.find("[data-code='paused']").exists()).toBeTruthy();
   expect(wrapper.find("[data-code='error']").exists()).toBeTruthy();
+  expect(wrapper.find("[data-code='paused']").exists()).toBeTruthy();
   expect(wrapper.find("[data-code='unknown']").exists()).toBeTruthy();
 });

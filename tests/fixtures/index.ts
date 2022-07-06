@@ -1,5 +1,7 @@
 import { rest } from "msw";
 
+import { biolink } from "@/api";
+
 import datasets from "./datasets.json";
 import ontologies from "./ontologies.json";
 import uptime from "./uptime.json";
@@ -104,4 +106,10 @@ export const handlers = [
   rest.get(/evidence\/graph/, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(associationEvidence))
   ),
+
+  /**
+   * any other request that's not biolink, pass through (ignore) without warning
+   * https://stackoverflow.com/questions/406230/regular-expression-to-match-a-line-that-doesnt-contain-a-word
+   */
+  rest.get(new RegExp(`^(?!${biolink}).*$`), (req) => req.passthrough()),
 ];

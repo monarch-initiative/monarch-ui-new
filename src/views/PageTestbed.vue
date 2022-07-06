@@ -44,13 +44,13 @@
     <span>{{ omit(table, ["cols", "rows"]) }}</span>
     <AppTable
       v-bind="table"
-      @start="(value) => (table.start = value)"
+      v-model:per-page="table.perPage"
+      v-model:start="table.start"
+      v-model:search="table.search"
       @sort="(value) => (table.sort = value)"
       @filter="
         (colId, value) => ((table.activeFilters || {})[colId] = [...value])
       "
-      @per-page="(value) => (table.perPage = value)"
-      @search="(value) => (table.search = value)"
     >
       <template #arbitrary>Arbitrary slot content</template>
     </AppTable>
@@ -270,7 +270,7 @@ const multiSelectValue = ref([{ id: "vegetables" }]);
 
 /** tags select */
 const tagsSelectOptions = ref(async (search = "") => {
-  await sleep(200);
+  await sleep(500); /** test loading spinner */
   return {
     options: [
       { id: "ice cream", icon: "home" },

@@ -67,7 +67,7 @@
         "
         class="evidence"
         text="Evidence"
-        :aria-selected="association.id === selectedAssociation?.id"
+        :aria-pressed="association.id === selectedAssociation?.id"
         :icon="association.id === selectedAssociation?.id ? 'check' : 'flask'"
         :color="
           association.id === selectedAssociation?.id ? 'primary' : 'secondary'

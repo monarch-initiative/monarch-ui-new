@@ -12,6 +12,7 @@
   >
     <AppIcon class="icon" :icon="icon" />
     <span class="text">
+      {{ code }}
       <slot />
     </span>
   </AppLink>
@@ -41,7 +42,7 @@ interface Props {
 const props = defineProps<Props>();
 
 /** icon to show, associated with a status */
-const icon = computed(() => icons[props.code || "unknown"]);
+const icon = computed(() => icons[props.code]);
 </script>
 
 <style lang="scss" scoped>

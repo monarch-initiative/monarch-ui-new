@@ -64,9 +64,9 @@
             ? 'Viewing supporting evidence. Click again to hide.'
             : 'View supporting evidence for this association'
         "
-        class="evidence-button"
+        class="evidence"
         :text="String(cell)"
-        :aria-selected="row.id === selectedAssociation?.id"
+        :aria-pressed="row.id === selectedAssociation?.id"
         :icon="row.id === selectedAssociation?.id ? 'check' : 'flask'"
         :color="row.id === selectedAssociation?.id ? 'primary' : 'secondary'"
         @click="
@@ -341,7 +341,7 @@ onMounted(() => getAssociations(true));
   color: $gray;
 }
 
-.evidence-button {
+.evidence {
   width: 100%;
   min-height: unset !important;
 }
