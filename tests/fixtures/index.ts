@@ -13,7 +13,7 @@ import phenotypeExplorerCompare from "./phenotype-explorer-compare.json";
 import nodeLookup from "./node-lookup.json";
 import nodeGene from "./node-gene.json";
 import nodePublicationSummary from "./node-publication-summary.json";
-import { text as nodePublicationAbstract } from "./node-publication-abstract.json";
+import nodePublicationAbstract from "./node-publication-abstract.json";
 import nodeHierarchy from "./node-hierarchy.json";
 import nodeAssociations from "./node-associations.json";
 import associationEvidence from "./association-evidence.json";
@@ -89,7 +89,7 @@ export const handlers = [
     res(ctx.status(200), ctx.json(nodePublicationSummary))
   ),
   rest.get(/efetch\.fcgi/i, (req, res, ctx) =>
-    res(ctx.status(200), ctx.json(nodePublicationAbstract))
+    res(ctx.status(200), ctx.json(nodePublicationAbstract.abstract))
   ),
 
   /** node hierarchy info */

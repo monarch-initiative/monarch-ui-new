@@ -64,12 +64,18 @@ export const request = async <T>(
     response = await fetch(url, options);
 
     /** check response code */
-    if (!response.ok) throw new Error(`Response not OK`);
+    if (!response.ok) {
+      /** get biolink error message, if there is one */
+      let message;
+      try {
+        message = ((await response.json()) as _Error).error.message;
+      } catch (error) {
+        message = "";
+      }
+      throw new Error(message || `Response not OK`);
+    }
 
-    /**
-     * add response to cache (if not GET,
-     * https://w3c.github.io/ServiceWorker/#cache-put step 4)
-     */
+    /** add response to cache (if GET, https://w3c.github.io/ServiceWorker/#cache-put) */
     if (request.method === "GET") await cache.put(request, response.clone());
   }
 
@@ -97,3 +103,10 @@ const initCache = async () => {
   /** set cache interface */
   cache = await window.caches.open(name);
 };
+
+/** possible biolink error */
+interface _Error {
+  error: {
+    message: string;
+  };
+}

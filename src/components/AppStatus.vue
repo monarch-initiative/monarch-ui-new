@@ -12,7 +12,6 @@
   >
     <AppIcon class="icon" :icon="icon" />
     <span class="text">
-      {{ code }}
       <slot />
     </span>
   </AppLink>
