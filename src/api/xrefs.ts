@@ -3,7 +3,7 @@ import { isAbsolute } from "@/util/url";
 /** external references */
 
 /** get url/link from identifier */
-export const getXrefLink = (identifier = ""): string => {
+export const getXrefLink = (identifier: string): string => {
   /** if already a url, just return it */
   if (isAbsolute(identifier)) return identifier;
 

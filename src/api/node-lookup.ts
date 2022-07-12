@@ -81,7 +81,7 @@ export const lookupNode = async (id = "", category = ""): Promise<Node> => {
     taxon: {
       id: response.taxon?.id || "",
       name: response.taxon?.label || "",
-      link: getXrefLink(response.taxon?.id),
+      link: getXrefLink(response.taxon?.id || ""),
     },
 
     associationCounts: sortBy(

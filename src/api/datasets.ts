@@ -43,7 +43,7 @@ export const getDatasets = async (): Promise<Datasets> => {
       distribution: getXrefLink(
         edges.find(
           (edge) => edge.sub === node.id && edge.pred === "dcat:distribution"
-        )?.obj
+        )?.obj || ""
       ),
       files: edges
         .filter((edge) => edge.sub === node.id && edge.pred === "dc:source")
