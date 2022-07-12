@@ -2,6 +2,7 @@ import { biolink, request } from ".";
 import staticData from "./datasets.json";
 import { mergeArrays } from "@/util/object";
 import { Source } from "./source";
+import { getXrefLink } from "./xrefs";
 
 /** knowledge graph datasets (from backend) */
 interface _Datasets {
@@ -17,19 +18,6 @@ interface _Datasets {
     pred: string;
   }>;
 }
-
-/** replace key words in fields with actual "expanded" value */
-const replaces = [
-  ["MonarchArchive:", "https://archive.monarchinitiative.org/"],
-  ["CoriellCollection:", "https://catalog.coriell.org/1/"],
-  ["OBO:", "http://purl.obolibrary.org/obo/"],
-  ["ZFIN:", "http://zfin.org/"],
-];
-const expand = (string = "") =>
-  replaces.reduce(
-    (string, [search, replace]) => string.replaceAll(search, replace),
-    string
-  );
 
 /** get metadata of all datasets used in monarch from biolink, in format of source */
 export const getDatasets = async (): Promise<Datasets> => {
@@ -52,14 +40,14 @@ export const getDatasets = async (): Promise<Datasets> => {
         edges.find((edge) => edge.obj === node.id && edge.pred === "versionIRI")
           ?.sub || "",
       date: node.meta["http://purl.org/dc/terms/created"][0],
-      distribution: expand(
+      distribution: getXrefLink(
         edges.find(
           (edge) => edge.sub === node.id && edge.pred === "dcat:distribution"
         )?.obj
       ),
       files: edges
         .filter((edge) => edge.sub === node.id && edge.pred === "dc:source")
-        .map((edge) => expand(edge.obj)),
+        .map((edge) => getXrefLink(edge.obj)),
     })
   );
 

@@ -4,7 +4,6 @@ import { categories, mapCategory } from "./categories";
 import { getXrefLink } from "./xrefs";
 import { getGene, Gene } from "./node-gene";
 import { getPublication } from "./node-publication";
-import { getHierarchy, Hierarchy } from "./node-hierachy";
 
 /** node lookup info (from backend) */
 interface _Node {
@@ -82,12 +81,7 @@ export const lookupNode = async (id = "", category = ""): Promise<Node> => {
     taxon: {
       id: response.taxon?.id || "",
       name: response.taxon?.label || "",
-      link: response.taxon?.id?.startsWith("NCBITaxon:")
-        ? `https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=info&id=${response.taxon?.id.replace(
-            "NCBITaxon:",
-            ""
-          )}`
-        : "",
+      link: getXrefLink(response.taxon?.id),
     },
 
     associationCounts: sortBy(
