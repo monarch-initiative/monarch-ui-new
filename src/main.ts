@@ -20,8 +20,8 @@ for (const [name, Component] of Object.entries(components))
 const startApp = () => app.mount("#app");
 
 /** mock api for local development */
-// const mock = false;
-const mock = process.env.NODE_ENV === "development";
+const mock = false;
+// const mock = process.env.NODE_ENV === "development";
 
 /** start app */
 if (mock)

@@ -90,8 +90,6 @@ export const lookupNode = async (id = "", category = ""): Promise<Node> => {
         : "",
     },
 
-    hierarchy: await getHierarchy(id, category),
-
     associationCounts: sortBy(
       Object.entries(response.association_counts || {})
         /** don't include other facets */
@@ -110,21 +108,29 @@ export const lookupNode = async (id = "", category = ""): Promise<Node> => {
 
   /** supplement gene with metadata from mygene */
   if (category === "gene" || category === "variant") {
-    const gene = await getGene(id);
-    metadata.description = gene.description;
-    metadata.symbol = gene.symbol;
-    metadata.genome = gene.genome;
+    try {
+      const gene = await getGene(id);
+      metadata.description = gene.description;
+      metadata.symbol = gene.symbol;
+      metadata.genome = gene.genome;
+    } catch (error) {
+      console.warn("Couldn't load gene-sepecific metadata");
+    }
   }
 
   /** supplement publication with metadata from entrez */
   if (category === "publication") {
-    const publication = await getPublication(id);
-    metadata.name = publication.title;
-    metadata.description = publication.abstract;
-    metadata.authors = publication.authors;
-    metadata.date = publication.date;
-    metadata.doi = publication.doi;
-    metadata.journal = publication.journal;
+    try {
+      const publication = await getPublication(id);
+      metadata.name = publication.title;
+      metadata.description = publication.abstract;
+      metadata.authors = publication.authors;
+      metadata.date = publication.date;
+      metadata.doi = publication.doi;
+      metadata.journal = publication.journal;
+    } catch (error) {
+      console.warn("Couldn't load publication-specific metadata");
+    }
   }
 
   return metadata;
@@ -181,9 +187,6 @@ export interface Node {
   doi?: string;
   /** details section (publication specific) */
   journal?: string;
-
-  /** hierarchy section */
-  hierarchy: Hierarchy;
 
   /** associations section */
   associationCounts: Array<{
