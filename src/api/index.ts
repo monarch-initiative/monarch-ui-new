@@ -48,18 +48,18 @@ export const request = async <T>(
   /** first check if request is cached */
   let response = await cache.match(request);
 
-  if (response) {
-    console.groupCollapsed("Using cached request", endpoint);
+  /** log details for debugging (except don't clutter logs when running tests) */
+  if (process.env.NODE_ENV !== "test") {
+    console.groupCollapsed(
+      response ? "Using cached request" : "Making new request",
+      endpoint
+    );
     console.info({ params, options, request });
     console.groupEnd();
   }
 
   /** if request not cached */
   if (!response) {
-    console.groupCollapsed("Making new request", endpoint);
-    console.info({ params, options, request });
-    console.groupEnd();
-
     /** make new request */
     response = await fetch(url, options);
 
