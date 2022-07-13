@@ -21,7 +21,7 @@
     :multi="true"
     icon="file-lines"
     placeholder="Paste full text"
-    @change="annotate()"
+    @change="onChange"
   />
 
   <!-- other options -->
@@ -35,7 +35,8 @@
   <hr />
 
   <!-- status -->
-  <AppStatus v-if="content && status" :status="status" />
+  <AppStatus v-if="isLoading" code="loading">Loading annotations</AppStatus>
+  <AppStatus v-if="isError" code="error">Error loading annotations</AppStatus>
 
   <!-- filename -->
   <strong v-if="annotations.length"
@@ -80,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useLocalStorage } from "@vueuse/core";
 import { kebabCase, uniqBy } from "lodash";
 import AppInput from "@/components/AppInput.vue";
@@ -88,13 +89,11 @@ import AppUpload from "@/components/AppUpload.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import example from "./text-annotator.json";
 import { annotateText } from "@/api/text-annotator";
-import { Status } from "@/components/AppStatus";
-import { Result } from "@/api/text-annotator";
-import { ApiError } from "@/api";
 import { downloadJson } from "@/util/download";
 import { setData } from "@/router";
 import { useRouter } from "vue-router";
 import { appendToBody } from "@/global/tippy";
+import { useQuery } from "@/util/composables";
 
 /** route info */
 const router = useRouter();
@@ -103,43 +102,35 @@ const router = useRouter();
 const content = useLocalStorage("annotations-content", "");
 /** file name of uploaded file (if applicable) */
 const filename = useLocalStorage("annotations-filename", "");
+
 /** annotation results */
-const annotations = ref<Result>([]);
-/** status of query */
-const status = ref<Status | null>(null);
+const {
+  query: annotate,
+  data: annotations,
+  isLoading,
+  isError,
+} = useQuery(async function () {
+  return await annotateText(content.value);
+}, []);
 
 /** get text content and filename from upload button */
 function onUpload(data = "", file = "") {
   content.value = data;
-  annotate(file);
+  filename.value = file;
+  annotate();
+}
+
+/** on textbox change */
+function onChange() {
+  filename.value = "";
+  annotate();
 }
 
 /** example full text */
 function doExample() {
   content.value = example.content;
+  filename.value = "Example";
   annotate();
-}
-
-/** run annotation */
-async function annotate(file = "") {
-  /** reset filename depending on search method */
-  filename.value = file;
-
-  /** loading... */
-  status.value = { code: "loading", text: "Computing annotations" };
-  annotations.value = [];
-
-  try {
-    /** get results from api */
-    annotations.value = await annotateText(content.value);
-
-    /** clear status */
-    status.value = null;
-  } catch (error) {
-    /** error... */
-    if (content.value.trim()) status.value = error as ApiError;
-    else status.value = null;
-  }
 }
 
 /** download annotations */
@@ -165,7 +156,7 @@ function analyze() {
 
 /** run annotations on mount if content loaded from storage */
 onMounted(() => {
-  if (content.value) annotate(filename.value || "");
+  if (content.value) annotate();
 });
 </script>
 

@@ -36,7 +36,7 @@
         :blank="!node.taxon?.id"
         title="Taxon"
       >
-        <AppLink v-tippy="node?.taxon?.id" :to="node.taxon?.link">{{
+        <AppLink v-tippy="node?.taxon?.id" :to="node.taxon?.link || ''">{{
           node.taxon?.name
         }}</AppLink>
       </AppDetail>
@@ -61,13 +61,13 @@
 </template>
 
 <script setup lang="ts">
-import { Result } from "@/api/node-lookup";
+import { Node } from "@/api/node-lookup";
 import AppDetail from "@/components/AppDetail.vue";
 import AppDetails from "@/components/AppDetails.vue";
 
 interface Props {
   /** current node */
-  node: Result;
+  node: Node;
 }
 
 defineProps<Props>();

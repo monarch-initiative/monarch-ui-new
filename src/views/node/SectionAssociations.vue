@@ -74,7 +74,7 @@ import { useRouter, useRoute } from "vue-router";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
 import { Option, Options } from "@/components/AppSelectSingle";
 import AppTabs from "@/components/AppTabs.vue";
-import { Result as NodeResult } from "@/api/node-lookup";
+import { Node } from "@/api/node-lookup";
 import { getAssociationLabel } from "@/api/categories";
 import { Association } from "@/api/node-associations";
 import AssociationsSummary from "./AssociationsSummary.vue";
@@ -87,7 +87,7 @@ const route = useRoute();
 
 interface Props {
   /** current node */
-  node: NodeResult;
+  node: Node;
 }
 
 const props = defineProps<Props>();

@@ -8,11 +8,8 @@
 
 <template>
   <div class="container">
-    <!-- status -->
-    <AppStatus v-if="status" :status="status" />
-
     <!-- table data -->
-    <AppFlex direction="col" :data-disabled="!!status">
+    <AppFlex direction="col">
       <div
         ref="table"
         class="table"
@@ -106,60 +103,65 @@
       <div class="controls">
         <!-- left side controls -->
         <div>
-          <span v-if="showControls">Per page</span>
-          <AppSelectSingle
-            v-if="showControls"
-            name="Rows per page"
-            :options="[
-              { id: '5' },
-              { id: '10' },
-              { id: '20' },
-              { id: '50' },
-              { id: '100' },
-              { id: '500' },
-            ]"
-            :model-value="{ id: String(perPage || 5) }"
-            @update:model-value="(value) => emitPerPage(value.id)"
-          />
+          <template v-if="showControls">
+            <span>Per page</span>
+            <AppSelectSingle
+              name="Rows per page"
+              :options="[
+                { id: '5' },
+                { id: '10' },
+                { id: '20' },
+                { id: '50' },
+                { id: '100' },
+                { id: '500' },
+              ]"
+              :model-value="{ id: String(perPage || 5) }"
+              @update:model-value="(value) => emitPerPage(value.id)"
+            />
+          </template>
         </div>
 
         <!-- center controls -->
         <div>
-          <AppButton
-            v-if="showControls"
-            v-tippy="'Go to first page'"
-            :disabled="start <= 0"
-            icon="angle-double-left"
-            design="small"
-            @click="clickFirst"
-          />
-          <AppButton
-            v-if="showControls"
-            v-tippy="'Go to previous page'"
-            :disabled="start - perPage < 0"
-            icon="angle-left"
-            design="small"
-            @click="clickPrev"
-          />
-          <span v-if="showControls"
-            >{{ start + 1 }} &mdash; {{ end }} of {{ total }}</span
-          >
-          <AppButton
-            v-if="showControls"
-            v-tippy="'Go to next page'"
-            :disabled="start + perPage > total"
-            icon="angle-right"
-            design="small"
-            @click="clickNext"
-          />
-          <AppButton
-            v-if="showControls"
-            v-tippy="'Go to last page'"
-            :disabled="start + perPage > total"
-            icon="angle-double-right"
-            design="small"
-            @click="clickLast"
-          />
+          <template v-if="showControls">
+            <AppButton
+              v-tippy="'Go to first page'"
+              :disabled="start <= 0"
+              icon="angle-double-left"
+              design="small"
+              @click="clickFirst"
+            />
+            <AppButton
+              v-tippy="'Go to previous page'"
+              :disabled="start - perPage < 0"
+              icon="angle-left"
+              design="small"
+              @click="clickPrev"
+            />
+          </template>
+          <template v-if="total > 0">
+            <span v-if="showControls"
+              >{{ start + 1 }} &mdash; {{ end }} of {{ total }}</span
+            >
+            <span v-else>{{ total }} row(s)</span>
+          </template>
+          <span v-else>no data</span>
+          <template v-if="showControls">
+            <AppButton
+              v-tippy="'Go to next page'"
+              :disabled="start + perPage > total"
+              icon="angle-right"
+              design="small"
+              @click="clickNext"
+            />
+            <AppButton
+              v-tippy="'Go to last page'"
+              :disabled="start + perPage > total"
+              icon="angle-double-right"
+              design="small"
+              @click="clickLast"
+            />
+          </template>
         </div>
 
         <!-- right side controls -->
@@ -173,7 +175,6 @@
             @change="emitSearch"
           />
           <AppButton
-            v-if="showControls"
             v-tippy="'Download table data'"
             icon="download"
             design="small"
@@ -198,11 +199,9 @@ import { Col, Cols, Rows, Sort } from "./AppTable";
 import AppInput from "./AppInput.vue";
 import AppSelectMulti from "./AppSelectMulti.vue";
 import AppSelectSingle from "./AppSelectSingle.vue";
-import AppStatus from "./AppStatus.vue";
 import { Options } from "./AppSelectMulti";
 import { kebabify } from "@/util/object";
 import { Filters } from "@/api/facets";
-import { Status } from "./AppStatus";
 import { closeToc } from "./TheTableOfContents";
 
 interface Props {
@@ -212,19 +211,17 @@ interface Props {
   rows: Rows;
   /** sort key and direction */
   sort?: Sort;
-  /** items per page */
-  perPage?: number;
-  /** starting item index */
-  start: number;
-  /** total number of items */
-  total: number;
-  /** text being searched */
-  search?: string;
   /** filters */
   availableFilters?: Filters;
   activeFilters?: Filters;
-  /** status to show on top of table (e.g. loading) */
-  status?: Status | null;
+  /** items per page (two-way bound) */
+  perPage?: number;
+  /** starting item index (two-way bound) */
+  start: number;
+  /** total number of items */
+  total: number;
+  /** text being searched (two-way bound) */
+  search?: string;
   /**
    * whether to show certain controls (temp solution, needed b/c this is a
    * controlled component and cannot paginate/search/etc on its own where needed yet)
@@ -247,12 +244,12 @@ interface Emits {
   (event: "sort", sort: Sort): void;
   /** when filter changes */
   (event: "filter", colId: Col["id"], value: Options): void;
-  /** when per page changes */
-  (event: "perPage", value: number): void;
-  /** when start row changes */
-  (event: "start", row: number): void;
-  /** when search changes */
-  (event: "search", value: string): void;
+  /** when per page changes (two-way bound) */
+  (event: "update:perPage", value: number): void;
+  /** when start row changes (two-way bound) */
+  (event: "update:start", row: number): void;
+  /** when search changes (two-way bound) */
+  (event: "update:search", value: string): void;
   /** when user requests download */
   (event: "download"): void;
 }
@@ -282,22 +279,22 @@ watch(expanded, () => {
 
 /** when user clicks to first page */
 function clickFirst() {
-  emit("start", 0);
+  emit("update:start", 0);
 }
 
 /** when user clicks to previous page */
 function clickPrev() {
-  emit("start", props.start - props.perPage);
+  emit("update:start", props.start - props.perPage);
 }
 
 /** when user clicks to next page */
 function clickNext() {
-  emit("start", props.start + props.perPage);
+  emit("update:start", props.start + props.perPage);
 }
 
 /** when user clicks to last page */
 function clickLast() {
-  emit("start", Math.floor(props.total / props.perPage) * props.perPage);
+  emit("update:start", Math.floor(props.total / props.perPage) * props.perPage);
 }
 
 /** when user clicks a sort button */
@@ -327,14 +324,14 @@ function emitFilter(colId: Col["id"], value: Options) {
 
 /** when user changes rows per page */
 function emitPerPage(value: string) {
-  emit("perPage", Number(value));
-  emit("start", 0);
+  emit("update:perPage", Number(value));
+  emit("update:start", 0);
 }
 
 /** when user types in search */
 function emitSearch(value: string) {
-  emit("search", value);
-  emit("start", 0);
+  emit("update:search", value);
+  emit("update:start", 0);
 }
 
 /** when user clicks download */
@@ -360,16 +357,7 @@ const ariaSort = computed(() => {
 
 <style lang="scss" scoped>
 .container {
-  position: relative;
   width: 100%;
-
-  .status {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-  }
 }
 
 .table {
@@ -502,13 +490,5 @@ td {
     --height: 30px;
     max-width: 150px;
   }
-}
-
-[data-disabled] {
-  transition: opacity $fast;
-}
-
-[data-disabled="true"] {
-  opacity: 0.2;
 }
 </style>

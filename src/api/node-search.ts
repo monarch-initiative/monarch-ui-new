@@ -1,7 +1,8 @@
-import { biolink, request, cleanError, ApiError } from ".";
+import { biolink, request } from ".";
 import { Filters, Query, facetsToFilters, queryToParams } from "./facets";
 
-interface Response {
+/** search results (from backend) */
+interface _Results {
   numFound: number;
   docs: Array<{
     id: string;
@@ -21,69 +22,68 @@ interface Response {
   >;
 }
 
-/** get results from node search text and filters */
+/** search for node with text and filters */
 export const getSearchResults = async (
   search = "",
   availableFilters: Query = {},
   activeFilters: Query = {},
   start = 0
-): Promise<Result> => {
-  try {
-    /** if nothing searched, return empty */
-    if (!search.trim()) throw new ApiError("No results", "warning");
+): Promise<Results> => {
+  const empty = { count: 0, results: [], facets: {} };
 
-    /** other params */
-    const params = {
-      ...queryToParams(availableFilters, activeFilters),
-      boost_q: [
-        "category:disease^5",
-        "category:phenotype^5",
-        "category:gene^0",
-        "category:genotype^-10",
-        "category:variant^-35",
-      ],
-      prefix: "-OMIA",
-      min_match: "67%",
-      rows: 10,
-      start,
-    };
+  /** if nothing searched, return empty */
+  if (!search.trim()) return empty;
 
-    /** make query */
-    const url = `${biolink}/search/entity/${search}`;
-    const response = await request<Response>(url, params);
-    const {
-      numFound: count = 0,
-      docs = [],
-      facet_counts = {},
-      highlighting = {},
-    } = response;
+  /** other params */
+  const params = {
+    ...(await queryToParams(availableFilters, activeFilters)),
+    boost_q: [
+      "category:disease^5",
+      "category:phenotype^5",
+      "category:gene^0",
+      "category:genotype^-10",
+      "category:variant^-35",
+    ],
+    prefix: "-OMIA",
+    min_match: "67%",
+    rows: 10,
+    start,
+  };
 
-    /** convert into desired result format */
-    const results = docs.map((doc) => ({
-      id: doc.id || "",
-      name: (doc.label || [])[0] || "",
-      altIds: doc.equivalent_curie || [],
-      altNames: (doc.label || []).slice(1),
-      category: (doc.category || [])[0] || "unknown",
-      description: (doc.definition || [])[0] || "",
-      score: doc.score || 0,
-      prefix: doc.prefix || "",
-      highlight: highlighting[doc.id].highlight,
-    }));
+  /** make query */
+  const url = `${biolink}/search/entity/${search}`;
+  const response = await request<_Results>(url, params);
+  const {
+    numFound: count = 0,
+    docs = [],
+    facet_counts = {},
+    highlighting = {},
+  } = response;
 
-    /** empty error status */
-    if (!results.length) throw new ApiError("No results", "warning");
+  /** convert into desired result format */
+  const results = docs.map((doc) => ({
+    id: doc.id || "",
+    name: (doc.label || [])[0] || "",
+    altIds: doc.equivalent_curie || [],
+    altNames: (doc.label || []).slice(1),
+    category: (doc.category || [])[0] || "unknown",
+    description: (doc.definition || [])[0] || "",
+    score: doc.score || 0,
+    prefix: doc.prefix || "",
+    highlight: highlighting[doc.id].highlight,
+  }));
 
-    /** get facets for select options */
-    const facets = facetsToFilters(facet_counts);
+  /** empty error status */
+  if (!results.length) return empty;
 
-    return { count, results, facets };
-  } catch (error) {
-    throw cleanError(error);
-  }
+  /** get facets for select options */
+  const facets = facetsToFilters(facet_counts);
+
+  return { count, results, facets };
 };
 
-export interface Result {
+/** search results (for frontend) */
+export interface Results {
   count: number;
   results: Array<{
     id: string;

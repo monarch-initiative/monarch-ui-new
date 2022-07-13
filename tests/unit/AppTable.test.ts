@@ -72,26 +72,26 @@ test("Changes per page", async () => {
   const wrapper = mount(AppTable, { props });
   await wrapper.find(".controls div:nth-child(1) button").trigger("click");
   await wrapper.find("[role='option']").trigger("click");
-  expect(emitted(wrapper, "perPage")).toEqual([5]);
+  expect(emitted(wrapper, "update:perPage")).toEqual([5]);
 });
 
 test("Changes pages", async () => {
   const wrapper = mount(AppTable, { props });
   const nav = wrapper.findAll(".controls div:nth-child(2) button");
   await nav.at(1)?.trigger("click");
-  expect(emitted(wrapper, "start"));
+  expect(emitted(wrapper, "update:start"));
   await nav.at(2)?.trigger("click");
-  expect(emitted(wrapper, "start"));
+  expect(emitted(wrapper, "update:start"));
   await nav.at(3)?.trigger("click");
-  expect(emitted(wrapper, "start"));
+  expect(emitted(wrapper, "update:start"));
   await nav.at(4)?.trigger("click");
-  expect(emitted(wrapper, "start"));
+  expect(emitted(wrapper, "update:start"));
 });
 
 test("Changes search", async () => {
   const wrapper = mount(AppTable, { props });
   await wrapper.find("input").setValue("test search");
-  expect(emitted(wrapper, "search")).toEqual(["test search"]);
+  expect(emitted(wrapper, "update:search")).toEqual(["test search"]);
 });
 
 test("Downloads", async () => {

@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 interface Props {
-  /** checked state */
+  /** two-way bound checked state */
   modelValue?: boolean;
   /** text to show in label */
   text: string;
@@ -24,6 +24,7 @@ interface Props {
 defineProps<Props>();
 
 interface Emits {
+  /** two-way bound checked state */
   (event: "update:modelValue", checked: boolean): void;
 }
 

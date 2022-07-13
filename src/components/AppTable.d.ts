@@ -21,7 +21,8 @@ export interface Col {
 }
 
 /** object with arbitrary keys */
-export type Row = Record<string, unknown>;
+// eslint-disable-next-line
+export type Row = Record<string | number, any>;
 
 /** arrays of rows and cols */
 export type Cols = Array<Col>;

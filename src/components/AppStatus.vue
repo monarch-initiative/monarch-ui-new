@@ -4,22 +4,25 @@
 
 <template>
   <AppLink
-    :to="status?.link || ''"
+    v-tippy="code === 'error' ? 'See dev console for more details' : ''"
+    :to="link || ''"
     class="status"
-    :data-code="status?.code || ''"
-    :aria-label="status?.code || ''"
+    :data-code="code || ''"
+    :aria-label="code || ''"
   >
     <AppIcon class="icon" :icon="icon" />
-    <span class="text">{{ status?.text || "" }} <slot /></span>
+    <span class="text">
+      <slot />
+    </span>
   </AppLink>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { Status } from "./AppStatus";
+import { Code } from "./AppStatus";
 
 /** icons for status codes */
-const icons: Record<string, string> = {
+const icons: Record<Code, string> = {
   loading: "loading",
   paused: "pause-circle",
   success: "check-circle",
@@ -29,14 +32,16 @@ const icons: Record<string, string> = {
 };
 
 interface Props {
-  /** status object */
-  status: Status;
+  /** status code */
+  code: Code;
+  /** link */
+  link?: string;
 }
 
 const props = defineProps<Props>();
 
 /** icon to show, associated with a status */
-const icon = computed(() => icons[props.status?.code || "unknown"]);
+const icon = computed(() => icons[props.code]);
 </script>
 
 <style lang="scss" scoped>
@@ -85,5 +90,9 @@ const icon = computed(() => icons[props.status?.code || "unknown"]);
   text-align: left;
   color: $off-black;
   line-height: $spacing;
+}
+
+.note {
+  color: $gray;
 }
 </style>

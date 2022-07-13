@@ -13,6 +13,7 @@ const result = {
   highlight:
     '<em class="hilite">Marfan</em> and <em class="hilite">Marfan</em>-related disorder',
 };
+
 const category = [
   {
     id: "disease",

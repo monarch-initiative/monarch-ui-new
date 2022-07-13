@@ -1,5 +1,4 @@
 import { waitFor } from "./../util/dom";
-import { cleanError } from "./index";
 import { biolink } from ".";
 /** import "phenogrid/dist/phenogrid-bundle.css"; */
 import "./phenogrid.css";
@@ -12,37 +11,33 @@ export const mountPhenogrid = async (
   yAxis: Array<{ id?: string; name?: string }>,
   mode = "compare"
 ): Promise<void> => {
-  try {
-    /**
-     * wait for phenogrid container to render on mount, and clear any previous
-     * phenogrid instances from showing
-     */
-    (await waitFor("#phenogrid")).innerHTML = "";
+  /**
+   * wait for phenogrid container to render on mount, and clear any previous
+   * phenogrid instances from showing
+   */
+  (await waitFor("#phenogrid")).innerHTML = "";
 
-    /** map in particular way based on mode, per ui 2.0 */
-    const modifiedXAxis = xAxis.map(({ id = "", name = "" }) =>
-      mode === "compare" ? [id] : { groupId: id, groupName: name }
-    );
+  /** map in particular way based on mode, per ui 2.0 */
+  const modifiedXAxis = xAxis.map(({ id = "", name = "" }) =>
+    mode === "compare" ? [id] : { groupId: id, groupName: name }
+  );
 
-    Phenogrid.createPhenogridForElement(document?.querySelector(selector), {
-      serverURL: biolink + "/",
-      forceBiolink: true,
-      appURL: window.location.origin,
-      gridSkeletonData: {
-        title: " ",
-        xAxis: modifiedXAxis,
-        yAxis: yAxis.map(({ id = "", name = "" }) => ({ id, term: name })),
-      },
-      selectedCalculation: 0,
-      selectedSort: "Frequency",
-      geneList: modifiedXAxis,
-      owlSimFunction: mode,
-    });
+  Phenogrid.createPhenogridForElement(document?.querySelector(selector), {
+    serverURL: biolink + "/",
+    forceBiolink: true,
+    appURL: window.location.origin,
+    gridSkeletonData: {
+      title: " ",
+      xAxis: modifiedXAxis,
+      yAxis: yAxis.map(({ id = "", name = "" }) => ({ id, term: name })),
+    },
+    selectedCalculation: 0,
+    selectedSort: "Frequency",
+    geneList: modifiedXAxis,
+    owlSimFunction: mode,
+  });
 
-    patchSvg(await waitFor("#phenogrid_svg"));
-  } catch (error) {
-    throw cleanError(error);
-  }
+  patchSvg(await waitFor("#phenogrid_svg"));
 };
 
 /** SHIMS FOR PHENOGRID */

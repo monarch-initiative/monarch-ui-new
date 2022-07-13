@@ -4,7 +4,12 @@
 
 <template>
   <!-- status -->
-  <AppStatus v-if="status" :status="status" />
+  <AppStatus v-if="isLoading" code="loading"
+    >Loading association summary data</AppStatus
+  >
+  <AppStatus v-else-if="isError" code="error"
+    >Error loading association summary data</AppStatus
+  >
 
   <!-- results -->
   <template v-else>
@@ -62,7 +67,7 @@
         "
         class="evidence"
         text="Evidence"
-        :aria-selected="association.id === selectedAssociation?.id"
+        :aria-pressed="association.id === selectedAssociation?.id"
         :icon="association.id === selectedAssociation?.id ? 'check' : 'flask'"
         :color="
           association.id === selectedAssociation?.id ? 'primary' : 'secondary'
@@ -79,20 +84,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
+import { watch, onMounted } from "vue";
 import AppStatus from "@/components/AppStatus.vue";
-import { Status } from "@/components/AppStatus";
-import { Result as NodeResult } from "@/api/node-lookup";
-import {
-  getTopAssociations,
-  Result as AssociationsResult,
-  Association,
-} from "@/api/node-associations";
-import { ApiError } from "@/api";
+import { Node } from "@/api/node-lookup";
+import { getTopAssociations, Association } from "@/api/node-associations";
+import { useQuery } from "@/util/composables";
 
 interface Props {
   /** current node */
-  node: NodeResult;
+  node: Node;
   /** selected association category */
   selectedCategory: string;
   /** selected association id */
@@ -108,37 +108,29 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 
-/** association data */
-const associations = ref<AssociationsResult["associations"]>([]);
-/** status of query */
-const status = ref<Status | null>(null);
-
 /** get summary association data */
-async function getAssociations() {
-  try {
-    /** loading... */
-    status.value = { code: "loading", text: "Loading association data" };
-    associations.value = [];
-
+const {
+  query: getAssociations,
+  data: associations,
+  isLoading,
+  isError,
+} = useQuery(
+  async function () {
     /** catch case where no association categories available */
     if (!props.node.associationCounts.length)
-      throw new ApiError("No association info available", "warning");
+      throw new Error("No association info available");
 
     /** get association data */
-    associations.value = await getTopAssociations(
+    return await getTopAssociations(
       props.node.id,
       props.node.category,
       props.selectedCategory
     );
+  },
 
-    /** clear status */
-    status.value = null;
-  } catch (error) {
-    /** error... */
-    status.value = error as ApiError;
-    associations.value = [];
-  }
-}
+  /** default value */
+  []
+);
 
 /** get associations when category changes */
 watch(() => props.selectedCategory, getAssociations);

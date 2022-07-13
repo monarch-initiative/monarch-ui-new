@@ -19,7 +19,7 @@
   <!-- search box -->
   <AppInput
     ref="searchBox"
-    v-model="search"
+    :model-value="search"
     placeholder="Search for a gene, disease, phenotype, etc."
     icon="search"
     @change="onChange"
@@ -27,7 +27,7 @@
   />
 
   <!-- examples -->
-  <template v-if="!results.length && !status">
+  <template v-if="!results.results.length">
     <AppFlex>
       <span>Try:</span>
       <AppButton
@@ -59,11 +59,17 @@
     <hr />
 
     <!-- status -->
-    <AppStatus v-if="status && search" :status="status" />
+    <AppStatus v-if="isLoading" code="loading">Loading results</AppStatus>
+    <AppStatus v-else-if="isError" code="error"
+      >Error loading results</AppStatus
+    >
+    <AppStatus v-else-if="!results.results.length" code="warning"
+      >No results</AppStatus
+    >
 
     <!-- results -->
     <AppFlex
-      v-for="(result, index) in results"
+      v-for="(result, index) in results.results"
       :key="index"
       direction="col"
       gap="small"
@@ -103,10 +109,10 @@
     </AppFlex>
 
     <!-- results nav -->
-    <AppFlex v-if="results.length" direction="col">
+    <AppFlex v-if="results.results.length" direction="col">
       <div>
         <strong>{{ from + 1 }}</strong> to <strong>{{ to + 1 }}</strong> of
-        <strong>{{ count }}</strong> results
+        <strong>{{ results.count }}</strong> results
       </div>
       <AppFlex gap="small">
         <template v-for="(list, index) of pages" :key="index">
@@ -132,13 +138,12 @@ import { ref, computed, watch, onMounted } from "vue";
 import { isEqual, kebabCase, startCase, uniq } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
-import { ApiError } from "@/api";
-import { getSearchResults, Result } from "@/api/node-search";
-import { Status } from "@/components/AppStatus";
+import { getSearchResults, Results } from "@/api/node-search";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import { Options } from "@/components/AppSelectMulti";
 import { useRoute, useRouter } from "vue-router";
 import { filtersToQuery } from "@/api/facets";
+import { useQuery } from "@/util/composables";
 
 /** route info */
 const router = useRouter();
@@ -160,25 +165,15 @@ const defaultFilters = {
 };
 */
 
-/** current search text */
+/** submitted search text */
 const search = ref(String(route.query.search || ""));
-/** original search text that yielded current results */
-const originalSearch = ref("");
-/** search results */
-const results = ref<Result["results"]>([]);
-/** number of results */
-const count = ref(0);
 /** current page number */
 const page = ref(0);
 /** results per page */
 const perPage = ref(10);
-/** status of query */
-const status = ref<Status | null>(null);
 /** filters (facets) for search */
 const availableFilters = ref<Record<string, Options>>({});
 const activeFilters = ref<Record<string, Options>>({});
-/** whether to show counts in filter dropdowns */
-const showCounts = ref(true);
 
 /** when user focuses text box */
 async function onFocus() {
@@ -189,49 +184,38 @@ async function onFocus() {
 }
 
 /** when user "submits" text box */
-function onChange() {
+function onChange(value: string) {
+  search.value = value;
   page.value = 0;
-  /** prevent running query if results already match current search text */
-  if (search.value !== originalSearch.value) getResults(true, true);
+  getResults(true);
 }
 
 /** when user changes active filters */
 function onFilterChange() {
   page.value = 0;
-  getResults(false, false);
+  getResults(false);
 }
 
 /** enter in clicked example and search */
 function doExample(value: string) {
   search.value = value;
-  getResults(true, true);
+  getResults(true);
 }
 
 /** get search results */
-async function getResults(
-  /**
-   * whether to perform "fresh" search, without filters. set to true when search
-   * changing, false when filters or page number changing.
-   */
-  fresh: boolean,
-  /** whether to push new entry to browser history */
-  history: boolean
-) {
-  /** push permanent history entry */
-  if (history) {
-    const query: Record<string, string> = {};
-    if (search.value) query.search = search.value;
-    await router.push({ ...route, name: "Explore", query });
-  }
-
-  /** hide counts in filter dropdowns if any filtering being done */
-  showCounts.value = isEqual(activeFilters.value, availableFilters.value);
-
-  /** loading... */
-  status.value = { code: "loading", text: "Loading results" };
-  results.value = [];
-
-  try {
+const {
+  query: getResults,
+  data: results,
+  isLoading,
+  isError,
+} = useQuery(
+  async function (
+    /**
+     * whether to perform "fresh" search, without filters/pagination/etc. true
+     * when search text changes, false when filters/pagination/etc change.
+     */
+    fresh: boolean
+  ): Promise<Results> {
     /** get results from api */
     const response = await getSearchResults(
       search.value,
@@ -239,39 +223,33 @@ async function getResults(
       fresh ? undefined : filtersToQuery(activeFilters.value),
       fresh ? undefined : from.value
     );
-    results.value = response.results;
-    originalSearch.value = search.value;
-    count.value = response.count;
 
+    return response;
+  },
+
+  /** default value */
+  { count: 0, results: [], facets: {} },
+
+  /** on success */
+  (response, [fresh]) => {
+    /** update filters from facets returned from api, if a "fresh" search */
     if (fresh) {
-      /** update filters based on facets from api */
       availableFilters.value = { ...response.facets };
       activeFilters.value = { ...response.facets };
     }
-
-    /** clear status */
-    status.value = null;
-  } catch (error) {
-    /** error... */
-    if (search.value.trim()) status.value = error as ApiError;
-    else status.value = null;
-    /** clear results and filters */
-    results.value = [];
-    if (fresh) {
-      availableFilters.value = {};
-      activeFilters.value = {};
-    }
   }
-}
+);
 
 /** "x of n" pages */
 const from = computed((): number => page.value * perPage.value);
-const to = computed((): number => from.value + results.value.length - 1);
+const to = computed(
+  (): number => from.value + results.value.results.length - 1
+);
 
 /** pages of results */
 const pages = computed((): Array<Array<number>> => {
   /** get full list of pages */
-  const pages = Array(Math.ceil(count.value / perPage.value))
+  const pages = Array(Math.ceil(results.value.count / perPage.value))
     .fill(0)
     .map((_, i) => i);
 
@@ -314,15 +292,29 @@ watch(
     const fromUrl = String(route.query.search || "");
     if (search.value !== fromUrl) {
       search.value = fromUrl;
-      getResults(true, false);
+      getResults(true);
     }
   }
 );
 
-/** when start page changes */
-watch(from, () => getResults(false, false));
+/** when search changes */
+watch(search, async () => {
+  /** update url */
+  const query: Record<string, string> = {};
+  if (search.value) query.search = search.value;
+  await router.push({ ...route, name: "Explore", query });
+});
 
-onMounted(() => getResults(true, false));
+/** when start page changes */
+watch(from, () => getResults(false));
+
+/** hide counts in filter dropdowns if any filtering being done */
+const showCounts = computed(() =>
+  isEqual(activeFilters.value, availableFilters.value)
+);
+
+/** search on page load */
+onMounted(() => getResults(true));
 </script>
 
 <style lang="scss" scoped>

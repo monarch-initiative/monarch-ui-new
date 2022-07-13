@@ -1,5 +1,7 @@
 import { rest } from "msw";
 
+import { biolink } from "@/api";
+
 import datasets from "./datasets.json";
 import ontologies from "./ontologies.json";
 import uptime from "./uptime.json";
@@ -11,7 +13,7 @@ import phenotypeExplorerCompare from "./phenotype-explorer-compare.json";
 import nodeLookup from "./node-lookup.json";
 import nodeGene from "./node-gene.json";
 import nodePublicationSummary from "./node-publication-summary.json";
-import { text as nodePublicationAbstract } from "./node-publication-abstract.json";
+import nodePublicationAbstract from "./node-publication-abstract.json";
 import nodeHierarchy from "./node-hierarchy.json";
 import nodeAssociations from "./node-associations.json";
 import associationEvidence from "./association-evidence.json";
@@ -87,7 +89,7 @@ export const handlers = [
     res(ctx.status(200), ctx.json(nodePublicationSummary))
   ),
   rest.get(/efetch\.fcgi/i, (req, res, ctx) =>
-    res(ctx.status(200), ctx.json(nodePublicationAbstract))
+    res(ctx.status(200), ctx.json(nodePublicationAbstract.abstract))
   ),
 
   /** node hierarchy info */
@@ -104,4 +106,10 @@ export const handlers = [
   rest.get(/evidence\/graph/, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(associationEvidence))
   ),
+
+  /**
+   * any other request that's not biolink, pass through (ignore) without warning
+   * https://stackoverflow.com/questions/406230/regular-expression-to-match-a-line-that-doesnt-contain-a-word
+   */
+  rest.get(new RegExp(`^(?!${biolink}).*$`), (req) => req.passthrough()),
 ];

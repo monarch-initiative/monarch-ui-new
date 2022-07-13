@@ -43,7 +43,7 @@ import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { useEventListener } from "@vueuse/core";
 
 interface Props {
-  /** open state */
+  /** two-way bound open state */
   modelValue?: boolean;
   /** modal aria label */
   label: string;
@@ -52,6 +52,7 @@ interface Props {
 const props = defineProps<Props>();
 
 interface Emits {
+  /** two-way bound open state */
   (event: "update:modelValue", value: boolean): void;
 }
 

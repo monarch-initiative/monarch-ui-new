@@ -76,10 +76,10 @@ import { Option, Options } from "./AppSelectSingle";
 import { wrap } from "@/util/math";
 
 interface Props {
+  /** two-way bound selected item state */
+  modelValue?: Option;
   /** name of the field */
   name: string;
-  /** currently selected item */
-  modelValue?: Option;
   /** list of options to show */
   options: Options;
 }
@@ -87,12 +87,10 @@ interface Props {
 const props = defineProps<Props>();
 
 interface Emits {
-  /** two-way binding value */
+  /** two-way bound selected item state */
   (event: "update:modelValue", value: Option): void;
   /** when value changed */
   (event: "input"): void;
-  /** when value change "submitted"/"committed" by user */
-  (event: "change"): void;
 }
 
 const emit = defineEmits<Emits>();

@@ -44,16 +44,19 @@
     <AppHeading>Status</AppHeading>
 
     <!-- main status of all checks -->
-    <AppStatus v-if="status" :status="status" />
+    <AppStatus v-if="isLoading" code="loading">Loading checks</AppStatus>
+    <AppStatus v-if="isError" code="error">Error loading checks</AppStatus>
 
     <!-- indiviual statuses -->
-    <AppGallery v-else size="small">
+    <AppGallery size="small">
       <AppStatus
         v-for="(uptime, index) in uptimes"
         :key="index"
         class="status"
-        :status="uptime"
-      />
+        :code="uptime.code"
+        :link="uptime.link"
+        >{{ uptime.text }}</AppStatus
+      >
     </AppGallery>
     <!-- link to uptime bot site for full details -->
     <AppButton
@@ -61,6 +64,8 @@
       text="More Details"
       icon="arrow-right"
     />
+
+    {{ uptimes }}
   </AppSection>
 
   <!-- last resort contact methods -->
@@ -74,32 +79,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import { getUptimes } from "@/api/uptime";
-import { Status } from "@/components/AppStatus";
 import AppStatus from "@/components/AppStatus.vue";
-import { ApiError } from "@/api";
+import { useQuery } from "@/util/composables";
 
 /** list of status checks to display */
-const uptimes = ref<Array<Status>>([]);
-/** overall status of query */
-const status = ref<Status | null>(null);
+const { query, data: uptimes, isLoading, isError } = useQuery(getUptimes, []);
 
-onMounted(async () => {
-  /** loading... */
-  status.value = { code: "loading", text: "Loading service statuses" };
-
-  try {
-    /** get statuses from uptimerobot api */
-    uptimes.value = await getUptimes();
-
-    /** clear status */
-    status.value = null;
-  } catch (error) {
-    /** error... */
-    status.value = error as ApiError;
-  }
-});
+onMounted(query);
 </script>
 
 <style lang="scss" scoped>

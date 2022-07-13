@@ -53,7 +53,7 @@ const props = withDefaults(defineProps<Props>(), {
   color: "primary",
   notification: false,
   copy: false,
-  type: "",
+  type: "button",
 });
 
 /** copy text prop to clipboard */

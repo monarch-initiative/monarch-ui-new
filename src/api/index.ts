@@ -1,5 +1,3 @@
-import { Codes } from "@/components/AppStatus";
-
 /** base biolink url */
 export const biolink = "https://api.monarchinitiative.org/api";
 
@@ -14,7 +12,7 @@ export type Params = Record<string, Param | Array<Param>>;
  * generic fetch request wrapper
  *
  * @param path request url
- * @param params url params. comma-separated values expand to repeated keys
+ * @param params url params
  * @param options fetch() options
  * @param parse parse response mode
  */
@@ -24,6 +22,9 @@ export const request = async <T>(
   options: RequestInit = {},
   parse: "text" | "json" = "json"
 ): Promise<T> => {
+  /** start cache if not already started */
+  if (!cache) await initCache();
+
   /** get string of url parameters/options */
   const paramsObject = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
@@ -39,56 +40,73 @@ export const request = async <T>(
   /** assemble url to query */
   const paramsString = "?" + paramsObject.toString();
   const url = path + paramsString;
+  const endpoint = path.replace(biolink, "");
 
-  /** make request */
-  console.info(
-    "Making request",
-    window.decodeURIComponent(url).replaceAll(" ", "%20")
-  );
-  const response = await fetch(url, options);
-  if (!response.ok) throw new ApiError(`Response not OK`);
+  /** make request object */
+  const request = new Request(url, options);
+
+  /** first check if request is cached */
+  let response = await cache.match(request);
+
+  /** log details for debugging (except don't clutter logs when running tests) */
+  if (process.env.NODE_ENV !== "test") {
+    console.groupCollapsed(
+      response ? "Using cached request" : "Making new request",
+      endpoint
+    );
+    console.info({ params, options, request });
+    console.groupEnd();
+  }
+
+  /** if request not cached */
+  if (!response) {
+    /** make new request */
+    response = await fetch(url, options);
+
+    /** check response code */
+    if (!response.ok) {
+      /** get biolink error message, if there is one */
+      let message;
+      try {
+        message = ((await response.json()) as _Error).error.message;
+      } catch (error) {
+        message = "";
+      }
+      throw new Error(message || `Response not OK`);
+    }
+
+    /** add response to cache (if GET, https://w3c.github.io/ServiceWorker/#cache-put) */
+    if (request.method === "GET") await cache.put(request, response.clone());
+  }
 
   /** parse response */
-  if (parse === "text") return (await response.text()) as unknown as T;
-  else return await response.json();
+  const parsed =
+    parse === "text"
+      ? ((await response.text()) as unknown as T)
+      : await response.json();
+
+  console.groupCollapsed("Response", endpoint);
+  console.info({ parsed, response });
+  console.groupEnd();
+
+  return parsed;
 };
 
-/** takes generic error and turns it into consistent api error */
-export const cleanError = (error: unknown): ApiError => {
-  /** if this error hasn't already been logged */
-  if (!(error as ApiError).logged) {
-    /**
-     * log error to console like normal for advanced debugging and stack trace
-     * but wrap in group to distinguish between unhandled errors
-     */
-    console.groupCollapsed((error as ApiError).text);
-    console.error(error);
-    console.groupEnd();
-    (error as ApiError).logged = true;
-  }
+/** cache interface */
+let cache: Cache;
+const name = "monarch-cache";
 
-  /** if not manually created error */
-  if (!(error instanceof ApiError))
-    /** turn it into one with user-readable error message */
-    error = new ApiError("Error: " + (error as Error).message);
-
-  return error as ApiError;
+/** start cache */
+const initCache = async () => {
+  /** start fresh each session (as if using sessionStorage) */
+  await window.caches.delete(name);
+  /** set cache interface */
+  cache = await window.caches.open(name);
 };
 
-/** custom error type to throw with extra details to easily integrate into status */
-export class ApiError extends Error {
-  code: typeof Codes[number];
-  text: string;
-  /**
-   * flag to track if error already logged. prevents duplicate logs when kicking
-   * errors up multiple try/catch levels.
-   */
-  logged: boolean;
-  constructor(text = "", code: typeof Codes[number] = "error") {
-    super();
-    this.name = "ApiError";
-    this.text = String(text);
-    this.code = code;
-    this.logged = false;
-  }
+/** possible biolink error */
+interface _Error {
+  error: {
+    message: string;
+  };
 }

@@ -23,6 +23,14 @@ window.ResizeObserver = jest
   .fn()
   .mockImplementation(() => ({ observe: jest.fn() }));
 window.fetch = jest.fn().mockImplementation(fetch);
+window.Request = jest.fn().mockImplementation();
+window.caches = {
+  delete: jest.fn(),
+  open: jest.fn().mockImplementation(() => ({
+    match: jest.fn(),
+    put: jest.fn(),
+  })),
+} as unknown as CacheStorage;
 
 /**
  * "fast-forward" lodash debounce calls

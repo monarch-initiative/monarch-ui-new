@@ -44,13 +44,13 @@
 </template>
 
 <script setup lang="ts">
-import { Result } from "@/api/node-lookup";
+import { Node } from "@/api/node-lookup";
 import AppDetails from "@/components/AppDetails.vue";
 import AppDetail from "@/components/AppDetail.vue";
 
 interface Props {
   /** current node */
-  node: Result;
+  node: Node;
 }
 
 defineProps<Props>();

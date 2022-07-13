@@ -44,13 +44,13 @@
     <span>{{ omit(table, ["cols", "rows"]) }}</span>
     <AppTable
       v-bind="table"
-      @start="(value) => (table.start = value)"
+      v-model:per-page="table.perPage"
+      v-model:start="table.start"
+      v-model:search="table.search"
       @sort="(value) => (table.sort = value)"
       @filter="
         (colId, value) => ((table.activeFilters || {})[colId] = [...value])
       "
-      @per-page="(value) => (table.perPage = value)"
-      @search="(value) => (table.search = value)"
     >
       <template #arbitrary>Arbitrary slot content</template>
     </AppTable>
@@ -151,15 +151,12 @@
   <AppSection>
     <AppHeading>Status</AppHeading>
     <AppGallery>
-      <AppStatus :status="{ code: 'loading', text: 'Loading some results' }" />
-      <AppStatus :status="{ code: 'success', text: 'Action was a success' }" />
-      <AppStatus :status="{ code: 'warning', text: 'Be careful' }" />
-      <AppStatus :status="{ code: 'error', text: 'There was an error' }" />
-      <AppStatus :status="{ code: 'paused', text: 'Action is paused' }" />
-      <AppStatus :status="{ code: 'unknown', text: 'Unexpected result' }" />
-      <AppStatus :status="{ code: 'success' }">
-        <strong>Atribtrary content using slot</strong>
-      </AppStatus>
+      <AppStatus code="loading">Loading some results</AppStatus>
+      <AppStatus code="success">Action was a success</AppStatus>
+      <AppStatus code="warning">Be careful</AppStatus>
+      <AppStatus code="error">There was an error</AppStatus>
+      <AppStatus code="paused">Action is paused</AppStatus>
+      <AppStatus code="unknown">Unexpected result</AppStatus>
     </AppGallery>
   </AppSection>
 </template>
@@ -273,14 +270,17 @@ const multiSelectValue = ref([{ id: "vegetables" }]);
 
 /** tags select */
 const tagsSelectOptions = ref(async (search = "") => {
-  await sleep(200);
-  return [
-    { id: "ice cream", icon: "home" },
-    { id: "candy", icon: "database", count: "8 phenotypes" },
-    { id: "gummies", icon: "download", count: "4 phenotypes" },
-    { id: "brownies", icon: "puzzle-piece", count: "1 phenotype" },
-    { id: "cookies", icon: "comment" },
-  ].filter(({ id }) => id.includes(search));
+  await sleep(500); /** test loading spinner */
+  return {
+    options: [
+      { id: "ice cream", icon: "home" },
+      { id: "candy", icon: "database", count: "8 phenotypes" },
+      { id: "gummies", icon: "download", count: "4 phenotypes" },
+      { id: "brownies", icon: "puzzle-piece", count: "1 phenotype" },
+      { id: "cookies", icon: "comment" },
+    ].filter(({ id }) => id.includes(search)),
+    message: "Selected item!",
+  };
 });
 const tagsSelectValue = ref([
   { id: "candy", icon: "database", count: "8 phenotypes" },
