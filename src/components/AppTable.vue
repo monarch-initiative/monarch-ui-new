@@ -193,8 +193,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
-import { useEventListener, useScroll } from "@vueuse/core";
+import { ref, computed, watch, onMounted, nextTick } from "vue";
+import { useResizeObserver, useScroll } from "@vueuse/core";
 import { Col, Cols, Rows, Sort } from "./AppTable";
 import AppInput from "./AppInput.vue";
 import AppSelectMulti from "./AppSelectMulti.vue";
@@ -265,12 +265,13 @@ const table = ref<HTMLElement | null>(null);
 const { arrivedState } = useScroll(table, { offset: { left: 10, right: 10 } });
 
 /** force table scroll to update */
-function updateScroll() {
+async function updateScroll() {
+  await nextTick();
   table.value?.dispatchEvent(new Event("scroll"));
 }
 onMounted(updateScroll);
 watch(expanded, updateScroll);
-useEventListener("resize", updateScroll);
+useResizeObserver(table, updateScroll);
 
 /** close table of contents when expanding */
 watch(expanded, () => {
