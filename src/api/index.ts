@@ -85,9 +85,12 @@ export const request = async <T>(
       ? ((await response.text()) as unknown as T)
       : await response.json();
 
-  console.groupCollapsed("Response", endpoint);
-  console.info({ parsed, response });
-  console.groupEnd();
+  /** log details for debugging (except don't clutter logs when running tests) */
+  if (process.env.NODE_ENV !== "test") {
+    console.groupCollapsed("Response", endpoint);
+    console.info({ parsed, response });
+    console.groupEnd();
+  }
 
   return parsed;
 };

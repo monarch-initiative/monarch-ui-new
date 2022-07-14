@@ -21,7 +21,7 @@ window.scrollTo = jest.fn();
 HTMLCanvasElement.prototype.getContext = jest.fn();
 window.ResizeObserver = jest
   .fn()
-  .mockImplementation(() => ({ observe: jest.fn() }));
+  .mockImplementation(() => ({ observe: jest.fn(), disconnect: jest.fn() }));
 window.fetch = jest.fn().mockImplementation(fetch);
 window.Request = jest.fn().mockImplementation();
 window.caches = {
