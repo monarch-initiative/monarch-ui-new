@@ -161,8 +161,8 @@ const id = ref(uniqueId());
 const expanded = ref(false);
 /** array of indices of selected options */
 const selected = ref<Array<number>>([]);
-/** last on change value that was emitted */
-const last = ref<Array<number> | undefined>(undefined);
+/** selected state when dropdown was opened */
+const last = ref<Array<number>>([]);
 /** index of option that is highlighted */
 const highlighted = ref(0);
 
@@ -171,16 +171,15 @@ function open() {
   expanded.value = true;
   /** auto highlight first selected option */
   highlighted.value = selected.value[0] || 0;
+  /** remember selected state when opened */
+  last.value = [...selected.value];
 }
 
 function close() {
   /** close dropdown */
   expanded.value = false;
-  /** emit change, if this value not already emitted */
-  if (!isEqual(selected.value, last.value)) {
-    emit("change", getModel());
-    last.value = [...selected.value];
-  }
+  /** emit change, if value is different from when dropdown first opened */
+  if (!isEqual(selected.value, last.value)) emit("change", getModel());
 }
 
 /** when button clicked */

@@ -47,151 +47,100 @@
     <!-- evidence tabs -->
     <AppTabs
       v-else
+      v-model="tab"
+      :tabs="tabs"
       name="Evidence viewing mode"
       :url="false"
-      :tabs="[
-        {
-          id: 'summary',
-          text: 'Summary',
-          icon: 'clipboard',
-          tooltip: 'High-level overview of evidence',
-        },
-        {
-          id: 'table',
-          text: 'Table',
-          icon: 'table',
-          tooltip: 'All evidence data, in tabular form',
-        },
-      ]"
-    >
-      <!-- summary mode -->
-      <template v-if="evidence.summary" #summary>
-        <AppDetails>
-          <AppDetail
-            :title="`Evidence Codes`"
-            :count="evidence.summary?.codes.length"
-            icon="flask"
-          >
-            <AppLink
-              v-for="(code, index) in evidence.summary?.codes"
-              :key="index"
-              :to="code.link"
-              >{{ code.name }}</AppLink
-            >
-          </AppDetail>
+    />
 
-          <AppDetail
-            :title="`Sources`"
-            :count="evidence.summary?.sources.length"
-            icon="database"
-          >
-            <AppLink
-              v-for="(source, index) in evidence.summary?.sources"
-              :key="index"
-              :to="source"
-              v-html="breakUrl(source)"
-            />
-          </AppDetail>
-
-          <AppDetail
-            :title="`Publications`"
-            :count="evidence.summary?.publications.length"
-            icon="book"
-          >
-            <AppFlex gap="small" h-align="left">
-              <AppLink
-                v-for="(publication, index) in evidence.summary?.publications"
-                :key="index"
-                :to="publication.link"
-                >{{ publication.name }}</AppLink
-              >
-            </AppFlex>
-          </AppDetail>
-        </AppDetails>
-      </template>
-
-      <!-- table mode -->
-      <template v-if="evidence.table?.length" #table>
-        <AppTable
-          :cols="cols"
-          :rows="evidence.table || []"
-          :start="0"
-          :total="evidence.table?.length || 0"
-          :show-controls="false"
-          @download="download"
+    <!-- summary mode -->
+    <template v-if="tab === 'summary' && evidence.summary">
+      <AppDetails>
+        <AppDetail
+          :title="`Evidence Codes`"
+          :count="evidence.summary?.codes.length"
+          icon="flask"
         >
-          <!-- "subject" -->
-          <template #subject="{ cell }">
-            <AppLink class="truncate" :to="`/${cell.category}/${cell.id}`">{{
-              cell.name
-            }}</AppLink>
-          </template>
+          <AppLink
+            v-for="(code, index) in evidence.summary?.codes"
+            :key="index"
+            :to="code.link"
+            >{{ code.name }}</AppLink
+          >
+        </AppDetail>
 
-          <!-- relation -->
-          <template #relation="{ cell }">
-            <AppIcon
-              class="arrow"
-              :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
-            />
-            <AppLink class="truncate" :to="cell.iri" :no-icon="true">{{
-              startCase(cell.name)
-            }}</AppLink>
-            <AppIcon
-              class="arrow"
-              :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
-            />
-          </template>
+        <AppDetail
+          :title="`Sources`"
+          :count="evidence.summary?.sources.length"
+          icon="database"
+        >
+          <AppLink
+            v-for="(source, index) in evidence.summary?.sources"
+            :key="index"
+            :to="source"
+            v-html="breakUrl(source)"
+          />
+        </AppDetail>
 
-          <!-- "object" -->
-          <template #object="{ cell }">
-            <AppLink class="truncate" :to="`/${cell.category}/${cell.id}`">{{
-              cell.name
-            }}</AppLink>
-          </template>
+        <AppDetail
+          :title="`Publications`"
+          :count="evidence.summary?.publications.length"
+          icon="book"
+        >
+          <AppFlex gap="small" h-align="left">
+            <AppLink
+              v-for="(publication, index) in evidence.summary?.publications"
+              :key="index"
+              :to="publication.link"
+              >{{ publication.name }}</AppLink
+            >
+          </AppFlex>
+        </AppDetail>
+      </AppDetails>
+    </template>
 
-          <!-- evidence codes -->
-          <template #codes="{ cell }">
-            <AppFlex direction="col" gap="small" h-align="left">
-              <AppLink
-                v-for="(code, index) in cell"
-                :key="index"
-                :to="code.link"
-                :no-icon="true"
-                >{{ code.name }}</AppLink
-              >
-            </AppFlex>
-          </template>
+    <!-- table mode -->
+    <template v-if="tab === 'table' && evidence.table?.length">
+      <AppTable
+        :cols="cols"
+        :rows="evidence.table || []"
+        :start="0"
+        :total="evidence.table?.length || 0"
+        :show-controls="false"
+        @download="download"
+      >
+        <!-- "subject" -->
+        <template #subject="{ cell }">
+          <AppLink class="truncate" :to="`/${cell.category}/${cell.id}`">{{
+            cell.name
+          }}</AppLink>
+        </template>
 
-          <!-- publications -->
-          <template #publications="{ cell }">
-            <AppFlex direction="col" gap="small" h-align="left">
-              <AppLink
-                v-for="(publication, index) in cell.slice(0, 1)"
-                :key="index"
-                :to="publication.link"
-                :no-icon="true"
-                >{{ publication.name }}</AppLink
-              >
-              <template v-if="cell.length > 1">
-                <tippy :interactive="true" :append-to="appendToBody">
-                  <span>and {{ cell.length - 1 }} more...</span>
-                  <template #content>
-                    <AppFlex h-align="left" gap="tiny">
-                      <AppLink
-                        v-for="(publication, index) in cell.slice(1)"
-                        :key="index"
-                        :to="publication.link"
-                        >{{ publication.name }}</AppLink
-                      >
-                    </AppFlex>
-                  </template>
-                </tippy>
-              </template>
-            </AppFlex>
-          </template>
+        <!-- relation -->
+        <template #relation="{ cell }">
+          <AppIcon
+            class="arrow"
+            :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
+          />
+          <AppLink class="truncate" :to="cell.iri" :no-icon="true">{{
+            startCase(cell.name)
+          }}</AppLink>
+          <AppIcon
+            class="arrow"
+            :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
+          />
+        </template>
 
-          <!-- sources -->
-          <template #sources="{ cell }">
+        <!-- "object" -->
+        <template #object="{ cell }">
+          <AppLink class="truncate" :to="`/${cell.category}/${cell.id}`">{{
+            cell.name
+          }}</AppLink>
+        </template>
+
+        <!-- evidence codes -->
+        <template #codes="{ cell }">
+          <AppFlex direction="col" gap="small" h-align="left">
             <AppLink
               v-for="(code, index) in cell"
               :key="index"
@@ -199,26 +148,65 @@
               :no-icon="true"
               >{{ code.name }}</AppLink
             >
-          </template>
+          </AppFlex>
+        </template>
 
-          <!-- references -->
-          <template #references="{ cell }">
+        <!-- publications -->
+        <template #publications="{ cell }">
+          <AppFlex direction="col" gap="small" h-align="left">
             <AppLink
-              v-for="(code, index) in cell"
+              v-for="(publication, index) in cell.slice(0, 1)"
               :key="index"
-              :to="code.link"
+              :to="publication.link"
               :no-icon="true"
-              >{{ code.name }}</AppLink
+              >{{ publication.name }}</AppLink
             >
-          </template>
-        </AppTable>
-      </template>
-    </AppTabs>
+            <template v-if="cell.length > 1">
+              <tippy :interactive="true" :append-to="appendToBody">
+                <span>and {{ cell.length - 1 }} more...</span>
+                <template #content>
+                  <AppFlex h-align="left" gap="tiny">
+                    <AppLink
+                      v-for="(publication, index) in cell.slice(1)"
+                      :key="index"
+                      :to="publication.link"
+                      >{{ publication.name }}</AppLink
+                    >
+                  </AppFlex>
+                </template>
+              </tippy>
+            </template>
+          </AppFlex>
+        </template>
+
+        <!-- sources -->
+        <template #sources="{ cell }">
+          <AppLink
+            v-for="(code, index) in cell"
+            :key="index"
+            :to="code.link"
+            :no-icon="true"
+            >{{ code.name }}</AppLink
+          >
+        </template>
+
+        <!-- references -->
+        <template #references="{ cell }">
+          <AppLink
+            v-for="(code, index) in cell"
+            :key="index"
+            :to="code.link"
+            :no-icon="true"
+            >{{ code.name }}</AppLink
+          >
+        </template>
+      </AppTable>
+    </template>
   </AppSection>
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted } from "vue";
+import { watch, onMounted, ref } from "vue";
 import { startCase } from "lodash";
 import AppTabs from "@/components/AppTabs.vue";
 import AppDetails from "@/components/AppDetails.vue";
@@ -244,6 +232,23 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+
+/** mode tabs */
+const tabs = [
+  {
+    id: "summary",
+    text: "Summary",
+    icon: "clipboard",
+    tooltip: "High-level overview of evidence",
+  },
+  {
+    id: "table",
+    text: "Table",
+    icon: "table",
+    tooltip: "All evidence data, in tabular form",
+  },
+];
+const tab = ref(tabs[0].id);
 
 /** table columns */
 const cols = [

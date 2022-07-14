@@ -1,15 +1,6 @@
-/** https://github.com/cypress-io/cypress/issues/1123 */
-Cypress.Commands.add(
-  "paste",
-  { prevSubject: true, element: true },
-  ($element, text) => {
-    cy.get($element).invoke("val", text).trigger("input").type(" ");
-  }
-);
-
 it("Populating example works", () => {
   cy.visit("/explore#phenotype-explorer");
-  cy.contains("try an example").trigger("click");
+  cy.contains("example 1").trigger("click");
   cy.get(".select-tags > .box > button").should("have.length.gt", 0);
 });
 

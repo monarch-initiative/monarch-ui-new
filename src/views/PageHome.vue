@@ -4,7 +4,13 @@
 
 <template>
   <AppSection design="fill">
-    <ExploreTabs />
+    <AppTabs
+      v-model="tab"
+      name="Explore Mode"
+      :tabs="tabs"
+      :route="{ name: 'Explore' }"
+    />
+    <NodeSearch />
   </AppSection>
   <AppSection>
     <AppHeading>What is Monarch</AppHeading>
@@ -18,5 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import ExploreTabs from "./explore/ExploreTabs.vue";
+import { ref } from "vue";
+import AppTabs from "@/components/AppTabs.vue";
+import tabs from "./explore/tabs.json";
+import NodeSearch from "./explore/NodeSearch.vue";
+
+const tab = ref(tabs[0].id);
 </script>

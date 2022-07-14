@@ -15,35 +15,32 @@
       :text="tab.text"
       :icon="tab.icon"
       design="circle"
-      :color="selected === tab.id ? 'primary' : 'none'"
+      :color="modelValue === tab.id ? 'primary' : 'none'"
       :aria-label="tab.text"
-      :aria-selected="selected === tab.id"
+      :aria-selected="modelValue === tab.id"
       :aria-controls="`panel-${id}-${tab.id}`"
-      :tabindex="selected === tab.id ? 0 : undefined"
+      :tabindex="modelValue === tab.id ? 0 : undefined"
       role="tab"
-      @click="selected = tab.id"
+      @click="onClick(tab.id)"
       @keydown="onKeydown"
     />
   </AppFlex>
 
   <!-- hidden element to serve as aria panel -->
   <div
-    :id="`panel-${id}-${selected}`"
-    :aria-labelledby="`tab-${id}-${selected}`"
+    :id="`panel-${id}-${modelValue}`"
+    :aria-labelledby="`tab-${id}-${modelValue}`"
     role="tabpanel"
     :aria-label="'Tab content below'"
     :style="{ display: 'contents' }"
   ></div>
-
-  <!-- tab panel content -->
-  <slot :name="selected"></slot>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { uniqueId } from "lodash";
+import { useRouter, useRoute, RouteLocation } from "vue-router";
 import { wrap } from "@/util/math";
-import { useRouter, useRoute } from "vue-router";
 
 /** route info */
 const router = useRouter();
@@ -61,47 +58,53 @@ interface Tab {
 type Tabs = Array<Tab>;
 
 interface Props {
+  /** two-way bound selected tab state */
+  modelValue: string;
   /** list of tabs with info */
   tabs: Tabs;
-  /** default selected tab id */
-  default?: string;
   /** name of tab group */
   name: string;
   /** whether to sync active tab with url hash */
   url?: boolean;
+  /** route to navigate to on change */
+  route?: RouteLocation;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  default: "",
   url: true,
+  route: undefined,
 });
 
 interface Emits {
-  (event: "change", selected: string): void;
+  /** two-way bound selected tab state */
+  (event: "update:modelValue", selected: string): void;
 }
 
 const emit = defineEmits<Emits>();
 
 /** unique id for instance of component */
 const id = ref(uniqueId());
-/** id of selected tab */
-const selected = ref(getHash() || props.default || props.tabs[0].id || "");
+
+/** when user clicks on button */
+async function onClick(id: string) {
+  emit("update:modelValue", id);
+}
 
 /** when user presses key on button */
-function onKeydown(event: KeyboardEvent) {
+async function onKeydown(event: KeyboardEvent) {
   if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
     /** prevent page scroll */
     event.preventDefault();
 
     /** move selected tab */
-    let index = props.tabs.findIndex((tab) => tab.id === selected.value);
+    let index = props.tabs.findIndex((tab) => tab.id === props.modelValue);
     if (event.key === "ArrowLeft") index--;
     if (event.key === "ArrowRight") index++;
     if (event.key === "Home") index = 0;
     if (event.key === "End") index = props.tabs.length - 1;
 
     /** update selected, wrapping beyond -1 or options length */
-    selected.value = props.tabs[wrap(index, 0, props.tabs.length)].id;
+    emit("update:modelValue", props.tabs[wrap(index, 0, props.tabs.length)].id);
   }
 }
 
@@ -115,24 +118,28 @@ function getHash() {
 }
 
 /** when selected tab changes */
-watch(selected, async () => {
-  /** focus the selected tab */
-  const selector = `#tab-${id.value}-${selected.value}`;
-  const button = document?.querySelector(selector) as HTMLButtonElement;
-  button?.focus();
-
-  /** update hash in url */
-  if (props.url) await router.replace({ ...route, hash: "#" + selected.value });
-
-  /** emit event to parent that tab changed */
-  emit("change", selected.value);
-});
-
-/** when url hash changes */
 watch(
-  () => route.hash,
-  () => {
-    if (props.url && getHash()) selected.value = getHash();
+  () => props.modelValue,
+  async () => {
+    /** focus the selected tab */
+    const selector = `#tab-${id.value}-${props.modelValue}`;
+    const button = document?.querySelector(selector) as HTMLButtonElement;
+    button?.focus();
+
+    /** update hash in url */
+    if (props.url)
+      await router.replace({
+        ...(props.route || route),
+        hash: "#" + props.modelValue,
+      });
   }
 );
+
+/** update state */
+function updateState() {
+  if (props.url && getHash()) emit("update:modelValue", getHash());
+}
+
+onMounted(updateState);
+watch(() => route.hash, updateState);
 </script>

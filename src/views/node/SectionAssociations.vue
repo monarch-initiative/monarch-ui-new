@@ -18,28 +18,17 @@
       />
     </AppFlex>
 
-    <AppTabs
-      v-if="category"
-      name="Association viewing mode"
-      :url="false"
-      :tabs="[
-        {
-          id: 'summary',
-          text: 'Summary',
-          icon: 'clipboard',
-          tooltip: 'Top few associations and high level details',
-        },
-        {
-          id: 'table',
-          text: 'Table',
-          icon: 'table',
-          tooltip: 'All association data, in tabular form',
-        },
-      ]"
-      @change="association = undefined"
-    >
+    <template v-if="category">
+      <!-- mode tab -->
+      <AppTabs
+        v-model="tab"
+        :tabs="tabs"
+        name="Association viewing mode"
+        :url="false"
+        @change="association = undefined" />
+
       <!-- summary view of associations -->
-      <template #summary>
+      <template v-if="tab === 'summary'">
         <AssociationsSummary
           :node="node"
           :selected-category="category.id"
@@ -49,15 +38,14 @@
       </template>
 
       <!-- table view of associations -->
-      <template #table>
+      <template v-if="tab === 'table'">
         <AssociationsTable
           :node="node"
           :selected-category="category.id"
           :selected-association="association"
           @select="(value) => (association = value)"
-        />
-      </template>
-    </AppTabs>
+        /> </template
+    ></template>
   </AppSection>
 
   <!-- evidence viewer of association -->
@@ -91,6 +79,23 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+
+/** mode tabs */
+const tabs = [
+  {
+    id: "summary",
+    text: "Summary",
+    icon: "clipboard",
+    tooltip: "Top few associations and high level details",
+  },
+  {
+    id: "table",
+    text: "Table",
+    icon: "table",
+    tooltip: "All association data, in tabular form",
+  },
+];
+const tab = ref(tabs[0].id);
 
 /** selected category of associations to show */
 const category = ref<Option>();

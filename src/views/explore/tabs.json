@@ -1,0 +1,23 @@
+[
+  {
+    "id": "node-search",
+    "text": "Node Search",
+    "icon": "search",
+    "tooltip": "Search our knowledge graph for genes, diseases, phenotypes, etc.",
+    "description": "Search our extensive knowledge graphs to find particular nodes — such as genes, diseases, phenotypes, genotypes, variants, and more — and see rich information about them — such as related nodes, publications, and more."
+  },
+  {
+    "id": "text-annotator",
+    "text": "Text Annotator",
+    "icon": "subscript",
+    "tooltip": "Search full text for references to things in our knowledge graph",
+    "description": "Same as the node search, but searches full text and finds references to nodes that are in our knowledge graph."
+  },
+  {
+    "id": "phenotype-explorer",
+    "text": "Phenotype Explorer",
+    "icon": "bars-progress",
+    "tooltip": "Compare two sets of phenotypes, and more",
+    "description": "Construct two sets of phenotypes and see various comparisons between them. You can use this to find phenotypically similar diseases or genes in a variety of organisms and visualize their overlap."
+  }
+]

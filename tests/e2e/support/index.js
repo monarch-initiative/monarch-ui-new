@@ -26,3 +26,12 @@ Cypress.Commands.overwrite(
     return originalFn(subject, filter, text, options);
   }
 );
+
+/** https://github.com/cypress-io/cypress/issues/1123 */
+Cypress.Commands.add(
+  "paste",
+  { prevSubject: true, element: true },
+  ($element, text) => {
+    cy.get($element).invoke("val", text).trigger("input").type(" ");
+  }
+);

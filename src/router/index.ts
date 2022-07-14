@@ -168,6 +168,8 @@ const scrollBehavior: RouterScrollBehavior = async (
   const element = document?.getElementById(to.hash.slice(1));
   if (!element) return;
 
+  console.log("hi");
+
   return { el: getTarget(element), top: getOffset(), behavior: "smooth" };
 };
 
@@ -194,8 +196,11 @@ const getTarget = (element: Element): Element => {
 const getOffset = () => document?.querySelector("header")?.clientHeight || 0;
 
 /** scroll to element */
-export const scrollToElement = (element?: Element | null): void => {
+export const scrollToElement = async (element?: Element | null) => {
   if (!element) return;
+
+  /** wait for everything to render fully and page to expand to full height */
+  await sleep(500);
 
   window.scrollTo({
     top:
@@ -207,7 +212,7 @@ export const scrollToElement = (element?: Element | null): void => {
 };
 
 /** scroll to hash */
-export const scrollToHash = (): void =>
+export const scrollToHash = () =>
   scrollToElement(document?.getElementById(window.location.hash.slice(1)));
 
 /** navigation history object */
