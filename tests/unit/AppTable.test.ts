@@ -47,7 +47,7 @@ const props = {
 };
 
 test("Changes sort", async () => {
-  const wrapper = mount(AppTable, { props });
+  const wrapper = mount(AppTable, props);
   await wrapper.findAll("thead button").at(0)?.trigger("click");
   expect(emitted(wrapper, "sort")[0]).toEqual({
     id: "name",
@@ -56,7 +56,7 @@ test("Changes sort", async () => {
 });
 
 test("Changes filter", async () => {
-  const wrapper = mount(AppTable, { props });
+  const wrapper = mount(AppTable, props);
   const button = wrapper.findAll("thead button").at(2);
   await button?.trigger("click");
   await wrapper.find("[role='option']").trigger("click");
@@ -69,14 +69,14 @@ test("Changes filter", async () => {
 });
 
 test("Changes per page", async () => {
-  const wrapper = mount(AppTable, { props });
+  const wrapper = mount(AppTable, props);
   await wrapper.find(".controls div:nth-child(1) button").trigger("click");
   await wrapper.find("[role='option']").trigger("click");
   expect(emitted(wrapper, "update:perPage")).toEqual([5]);
 });
 
 test("Changes pages", async () => {
-  const wrapper = mount(AppTable, { props });
+  const wrapper = mount(AppTable, props);
   const nav = wrapper.findAll(".controls div:nth-child(2) button");
   await nav.at(1)?.trigger("click");
   expect(emitted(wrapper, "update:start"));
@@ -89,13 +89,13 @@ test("Changes pages", async () => {
 });
 
 test("Changes search", async () => {
-  const wrapper = mount(AppTable, { props });
+  const wrapper = mount(AppTable, props);
   await wrapper.find("input").setValue("test search");
   expect(emitted(wrapper, "update:search")).toEqual(["test search"]);
 });
 
 test("Downloads", async () => {
-  const wrapper = mount(AppTable, { props });
+  const wrapper = mount(AppTable, props);
   await wrapper.find(".controls div:nth-child(3) button").trigger("click");
   expect(emitted(wrapper, "download")).toEqual([]);
 });

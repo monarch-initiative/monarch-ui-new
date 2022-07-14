@@ -19,8 +19,10 @@ const props = {
         ].filter((entry) => entry.id.includes(search)),
       };
   },
-  modelValue: [{ id: "animals" }],
 };
+
+/** two-way bound state */
+const vModel = { modelValue: [{ id: "animals" }] };
 
 /** expected type of emitted update:modelValue events */
 type T = Array<unknown>;
@@ -28,19 +30,19 @@ type T = Array<unknown>;
 /** nextTick used occasionally here due to useQuery */
 
 test("Buttons click to deselect", async () => {
-  const wrapper = mount(AppSelectTags, { props });
+  const wrapper = mount(AppSelectTags, props, vModel);
   await wrapper.find("button").trigger("click");
   expect(emitted<T>(wrapper)[0].length).toEqual(0);
 });
 
 test("Click button click to deselect", async () => {
-  const wrapper = mount(AppSelectTags, { props });
+  const wrapper = mount(AppSelectTags, props, vModel);
   await wrapper.findAll("button")[2].trigger("click");
   expect(emitted<T>(wrapper)[0].length).toEqual(0);
 });
 
 test("Types to search", async () => {
-  const wrapper = mount(AppSelectTags, { props });
+  const wrapper = mount(AppSelectTags, props, vModel);
   await wrapper.find("input").trigger("focus");
   await nextTick();
   expect(wrapper.findAll("[role='option']").length).toBe(3);
@@ -50,7 +52,7 @@ test("Types to search", async () => {
 });
 
 test("Pastes to auto select", async () => {
-  const wrapper = mount(AppSelectTags, { props });
+  const wrapper = mount(AppSelectTags, props, vModel);
   await wrapper.find("input").setValue("HP:0000322,HP:0001166,HP:0001238");
   await nextTick();
   const buttons = wrapper.findAll("button");
@@ -60,7 +62,7 @@ test("Pastes to auto select", async () => {
 });
 
 test("Clicks to select", async () => {
-  const wrapper = mount(AppSelectTags, { props });
+  const wrapper = mount(AppSelectTags, props, vModel);
   await wrapper.find("input").trigger("focus");
   await nextTick();
   await wrapper.findAll("[role='option']").at(0)?.trigger("click");
@@ -72,7 +74,7 @@ test("Clicks to select", async () => {
 });
 
 test("Selects by keyboard", async () => {
-  const wrapper = mount(AppSelectTags, { props });
+  const wrapper = mount(AppSelectTags, props, vModel);
   const input = wrapper.find("input");
   await input.trigger("focus");
   await input.trigger("keydown", { key: "ArrowUp" });

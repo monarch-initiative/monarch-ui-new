@@ -1,6 +1,6 @@
-/** jest setup and util funcsÏ */
+/** jest setup and util funcs */
 
-import { ComponentPublicInstance } from "vue";
+import { ComponentPublicInstance, nextTick } from "vue";
 import {
   MountingOptions,
   VueWrapper,
@@ -59,22 +59,6 @@ afterAll(async () => {
   await sleep();
 });
 
-/** mount wrapper with standard options */
-export const mount = <T>(
-  component: T,
-  // eslint-disable-next-line
-  { props, ...rest }: MountingOptions<any> = {}
-): VueWrapper<ComponentPublicInstance<T>> =>
-  vueMount(component, {
-    /** deep clone props so nested objects get new instance every mount */
-    props: cloneDeep(props),
-    global: {
-      components,
-      plugins,
-    },
-    ...rest,
-  });
-
 /** setup mock-service-worker for node.js (jest) */
 const server = setupServer(...handlers);
 beforeAll(() => server.listen());
@@ -90,6 +74,42 @@ export const apiCall = async (): Promise<void> => {
    */
   await sleep();
   await sleep();
+};
+
+/** generic props type */
+type Props = Record<string | number, unknown>;
+
+/** generic vModel type */
+type VModel = Record<string | number, unknown>;
+
+/** mount wrapper with standard options */
+export const mount = <Component>(
+  component: Component,
+  props: Props = {},
+  vModel: VModel = {},
+  options: MountingOptions<Props> = {}
+) => {
+  type Wrapper = VueWrapper<ComponentPublicInstance<Component>>;
+
+  /** implement v-model */
+  for (const [prop, value] of Object.entries(vModel)) {
+    props[prop] = value;
+    /** https://github.com/vuejs/test-utils/discussions/279 */
+    props["onUpdate:" + prop] = async (modelValue: unknown) => {
+      await nextTick();
+      await wrapper.setProps({ modelValue });
+    };
+  }
+
+  /** deep clone props so nested objects get new instance every mount */
+  options.props = cloneDeep(props);
+
+  /** standard globals */
+  options.global = { components, plugins };
+
+  // eslint-disable-next-line
+  const wrapper: Wrapper = vueMount(component, options as MountingOptions<any>);
+  return wrapper;
 };
 
 /**

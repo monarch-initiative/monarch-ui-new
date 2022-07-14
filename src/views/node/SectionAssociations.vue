@@ -25,7 +25,7 @@
         :tabs="tabs"
         name="Association viewing mode"
         :url="false"
-        @change="association = undefined" />
+        @update:model-value="association = undefined" />
 
       <!-- summary view of associations -->
       <template v-if="tab === 'summary'">
@@ -153,8 +153,5 @@ watch(
 <style lang="scss" scoped>
 .arrow {
   color: $gray;
-}
-.evidence-button {
-  min-height: unset !important;
 }
 </style>

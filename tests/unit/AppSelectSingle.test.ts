@@ -5,11 +5,13 @@ import AppSelectSingle from "@/components/AppSelectSingle.vue";
 const props = {
   name: "Single select",
   options: [{ id: "apple" }, { id: "banana" }, { id: "cherry" }],
-  modelValue: { id: "banana" },
 };
 
+/** two-way bound state */
+const vModel = { modelValue: { id: "banana" } };
+
 test("Opens/closes on click", async () => {
-  const wrapper = mount(AppSelectSingle, { props });
+  const wrapper = mount(AppSelectSingle, props, vModel);
   const button = wrapper.find("button");
   await button.trigger("click");
   expect(wrapper.find("[role='listbox']").exists()).toBe(true);
@@ -22,7 +24,7 @@ test("Opens/closes on click", async () => {
 });
 
 test("Selects by click", async () => {
-  const wrapper = mount(AppSelectSingle, { props });
+  const wrapper = mount(AppSelectSingle, props, vModel);
   const button = wrapper.find("button");
   await button.trigger("click");
   const option = wrapper.find("[role='option']");
@@ -32,7 +34,7 @@ test("Selects by click", async () => {
 });
 
 test("Selects by keyboard", async () => {
-  const wrapper = mount(AppSelectSingle, { props });
+  const wrapper = mount(AppSelectSingle, props, vModel);
   const button = wrapper.find("button");
   await button.trigger("focus");
   await button.trigger("keydown", { key: "ArrowDown" });
