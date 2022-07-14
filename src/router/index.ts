@@ -168,8 +168,6 @@ const scrollBehavior: RouterScrollBehavior = async (
   const element = document?.getElementById(to.hash.slice(1));
   if (!element) return;
 
-  console.log("hi");
-
   return { el: getTarget(element), top: getOffset(), behavior: "smooth" };
 };
 
