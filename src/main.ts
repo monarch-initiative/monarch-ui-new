@@ -1,10 +1,11 @@
 import { createApp } from "vue";
 import { setupWorker } from "msw";
+import "wicg-inert";
 import App from "@/App.vue";
 import components from "@/global/components";
 import plugins from "@/global/plugins";
 import { handlers } from "../tests/fixtures";
-import "wicg-inert";
+import "@/global/meta";
 
 /** create main app object */
 let app = createApp(App);

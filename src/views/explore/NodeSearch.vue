@@ -16,6 +16,18 @@
     <hr />
   </template>
 
+  <!-- examples -->
+  <AppFlex>
+    <span>Try:</span>
+    <AppButton
+      v-for="(text, index) of examples"
+      :key="index"
+      :text="text"
+      design="small"
+      @click="doExample(text)"
+    />
+  </AppFlex>
+
   <!-- search box -->
   <AppInput
     ref="searchBox"
@@ -25,20 +37,6 @@
     @change="onChange"
     @focus="onFocus"
   />
-
-  <!-- examples -->
-  <template v-if="!results.results.length">
-    <AppFlex>
-      <span>Try:</span>
-      <AppButton
-        v-for="(text, index) of examples"
-        :key="index"
-        :text="text"
-        design="small"
-        @click="doExample(text)"
-      />
-    </AppFlex>
-  </template>
 
   <template v-if="$route.name !== 'Home'">
     <!-- filters -->

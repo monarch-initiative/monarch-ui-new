@@ -51,6 +51,7 @@ import SectionAssociations from "./SectionAssociations.vue";
 import { scrollToHash } from "@/router";
 import { useRoute } from "vue-router";
 import { useQuery } from "@/util/composables";
+import { appDescription } from "@/global/meta";
 
 /** route info */
 const route = useRoute();
@@ -74,10 +75,19 @@ const {
   null,
 
   /** on success, after data loaded */
-  async () => {
+  async (results) => {
     /** scroll to hash */
     await nextTick();
     scrollToHash();
+
+    /**
+     * set page description from node meta data. no need to include category and
+     * id, as those should already be in the document title. see https://metatags.io/
+     */
+    const { name = "", description = "" } = results || {};
+    appDescription.value = [name, description]
+      .filter((part) => part)
+      .join(" | ");
   }
 );
 
