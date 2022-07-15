@@ -10,11 +10,13 @@ const props = {
     { id: "colors", count: 42 },
     { id: "animals", count: 999 },
   ],
-  modelValue: [{ id: "vegetables" }],
 };
 
+/** two-way bound state */
+const vModel = { modelValue: [{ id: "vegetables" }] };
+
 test("Opens/closes on click", async () => {
-  const wrapper = mount(AppSelectMulti, { props });
+  const wrapper = mount(AppSelectMulti, props, vModel);
   const button = wrapper.find("button");
   await button.trigger("click");
   expect(wrapper.find("[role='listbox']").exists()).toBe(true);
@@ -27,7 +29,7 @@ test("Opens/closes on click", async () => {
 });
 
 test("Opens/closes on keyboard", async () => {
-  const wrapper = mount(AppSelectMulti, { props });
+  const wrapper = mount(AppSelectMulti, props, vModel);
   const button = wrapper.find("button");
   await button.trigger("click");
   expect(wrapper.find("[role='listbox']").exists()).toBe(true);
@@ -38,7 +40,7 @@ test("Opens/closes on keyboard", async () => {
 type T = Array<unknown>;
 
 test("Selects by click", async () => {
-  const wrapper = mount(AppSelectMulti, { props });
+  const wrapper = mount(AppSelectMulti, props, vModel);
   const button = wrapper.find("button");
   await button.trigger("click");
   await wrapper.findAll("[role='option']").at(0)?.trigger("click");
@@ -50,7 +52,7 @@ test("Selects by click", async () => {
 });
 
 test("Selects by keyboard", async () => {
-  const wrapper = mount(AppSelectMulti, { props });
+  const wrapper = mount(AppSelectMulti, props, vModel);
   const button = wrapper.find("button");
   await button.trigger("click");
   await button.trigger("keydown", { key: "ArrowUp" });
@@ -66,7 +68,7 @@ test("Selects by keyboard", async () => {
 });
 
 test("Selects all by click", async () => {
-  const wrapper = mount(AppSelectMulti, { props });
+  const wrapper = mount(AppSelectMulti, props, vModel);
   const button = wrapper.find("button");
   await button.trigger("click");
   const option = wrapper.find("[role='menuitem']");

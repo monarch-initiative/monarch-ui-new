@@ -128,23 +128,8 @@
   <!-- tabs component -->
   <AppSection>
     <AppHeading>Tabs</AppHeading>
-    <AppTabs
-      name="Tab group"
-      :tabs="[
-        { id: 'apple', text: 'Apple', icon: 'asterisk' },
-        { id: 'banana', text: 'Banana', icon: 'cogs' },
-        { id: 'cherry', text: 'Cherry', icon: 'home' },
-        { id: 'durian', text: 'Durian', icon: 'puzzle-piece' },
-        { id: 'elderberry', text: 'Elderberry', icon: 'tools' },
-      ]"
-      default="apple"
-    >
-      <template #apple>I'm a little apple</template>
-      <template #banana>I'm a little banana</template>
-      <template #cherry>I'm a little cherry</template>
-      <template #durian>I'm a little durian</template>
-      <template #elderberry>I'm a little elderberry</template>
-    </AppTabs>
+    <AppTabs v-model="tab" :tabs="tabs" name="Tab group" />
+    {{ tab }}
   </AppSection>
 
   <!-- status component -->
@@ -285,6 +270,18 @@ const tagsSelectOptions = ref(async (search = "") => {
 const tagsSelectValue = ref([
   { id: "candy", icon: "database", count: "8 phenotypes" },
 ]);
+
+/** tabs */
+const tabs = [
+  { id: "apple", text: "Apple", icon: "asterisk" },
+  { id: "banana", text: "Banana", icon: "cogs" },
+  { id: "cherry", text: "Cherry", icon: "home" },
+  { id: "durian", text: "Durian", icon: "puzzle-piece" },
+  { id: "elderberry", text: "Elderberry", icon: "tools" },
+];
+
+/** selected tab */
+const tab = ref(tabs[0].id);
 
 /** util */
 const log = console.info;

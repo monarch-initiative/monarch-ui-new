@@ -5,79 +5,71 @@
 -->
 
 <template>
-  <!-- description -->
-  <template v-if="$route.name !== 'Home'">
-    <p>
-      Same as the node search, but searches full text and finds references to
-      nodes that are in our knowledge graph.
+  <AppSection>
+    <!-- search box -->
+    <AppInput
+      v-model="content"
+      :multi="true"
+      icon="file-lines"
+      placeholder="Paste full text"
+      @change="onChange"
+    />
+
+    <!-- other options -->
+    <AppFlex>
+      <span>or</span>
+      <AppUpload @upload="onUpload" />
+      <span>or</span>
+      <AppButton text="Try an example" design="small" @click="doExample()" />
+    </AppFlex>
+  </AppSection>
+
+  <AppSection>
+    <!-- status -->
+    <AppStatus v-if="isLoading" code="loading">Loading annotations</AppStatus>
+    <AppStatus v-if="isError" code="error">Error loading annotations</AppStatus>
+
+    <!-- filename -->
+    <strong v-if="annotations.length"
+      >Annotations for {{ filename || "pasted text" }}</strong
+    >
+
+    <!-- results -->
+    <p v-if="annotations.length">
+      <tippy
+        v-for="({ text, tokens }, annotationIndex) in annotations"
+        :key="annotationIndex"
+        :interactive="true"
+        :append-to="appendToBody"
+      >
+        <span :tabindex="tokens.length ? 0 : -1">{{ text }}</span>
+        <template v-if="!!tokens.length" #content>
+          <div class="table">
+            <template v-for="(token, tokenIndex) in tokens" :key="tokenIndex">
+              <AppIcon :icon="`category-${kebabCase(token.category)}`" />
+              <AppLink :to="`/${kebabCase(token.category)}/${token.id}`">{{
+                token.id
+              }}</AppLink>
+              <div class="truncate">{{ token.name }}</div>
+            </template>
+          </div>
+        </template>
+      </tippy>
     </p>
 
-    <hr />
-  </template>
-
-  <!-- search box -->
-  <AppInput
-    v-model="content"
-    :multi="true"
-    icon="file-lines"
-    placeholder="Paste full text"
-    @change="onChange"
-  />
-
-  <!-- other options -->
-  <AppFlex>
-    <span>or</span>
-    <AppUpload @upload="onUpload" />
-    <span>or</span>
-    <AppButton text="try an example" design="small" @click="doExample()" />
-  </AppFlex>
-
-  <hr />
-
-  <!-- status -->
-  <AppStatus v-if="isLoading" code="loading">Loading annotations</AppStatus>
-  <AppStatus v-if="isError" code="error">Error loading annotations</AppStatus>
-
-  <!-- filename -->
-  <strong v-if="annotations.length"
-    >Annotations for {{ filename || "pasted text" }}</strong
-  >
-
-  <!-- results -->
-  <p v-if="annotations.length">
-    <tippy
-      v-for="({ text, tokens }, annotationIndex) in annotations"
-      :key="annotationIndex"
-      :interactive="true"
-      :append-to="appendToBody"
-    >
-      <span :tabindex="tokens.length ? 0 : -1">{{ text }}</span>
-      <template v-if="!!tokens.length" #content>
-        <div class="table">
-          <template v-for="(token, tokenIndex) in tokens" :key="tokenIndex">
-            <AppIcon :icon="`category-${kebabCase(token.category)}`" />
-            <AppLink :to="`/${kebabCase(token.category)}/${token.id}`">{{
-              token.id
-            }}</AppLink>
-            <div class="truncate">{{ token.name }}</div>
-          </template>
-        </div>
-      </template>
-    </tippy>
-  </p>
-
-  <!-- actions -->
-  <AppFlex v-if="annotations.length">
-    <AppButton text="Download" icon="download" @click="download" />
-    <AppButton
-      v-tippy="
-        'Send any annotations above that are phenotypes to Phenotype Explorer'
-      "
-      text="Analyze Phenotypes"
-      icon="bars-progress"
-      @click="analyze"
-    />
-  </AppFlex>
+    <!-- actions -->
+    <AppFlex v-if="annotations.length">
+      <AppButton text="Download" icon="download" @click="download" />
+      <AppButton
+        v-tippy="
+          'Send any annotations above that are phenotypes to Phenotype Explorer'
+        "
+        text="Analyze Phenotypes"
+        icon="bars-progress"
+        @click="analyze"
+      />
+    </AppFlex>
+  </AppSection>
 </template>
 
 <script setup lang="ts">

@@ -5,29 +5,8 @@
 -->
 
 <template>
-  <!-- description -->
-  <template v-if="$route.name !== 'Home'">
-    <p>
-      Search our extensive knowledge graphs to find particular nodes — such as
-      genes, diseases, phenotypes, genotypes, variants, and more — and see rich
-      information about them — such as related nodes, publications, and more.
-    </p>
-
-    <hr />
-  </template>
-
-  <!-- search box -->
-  <AppInput
-    ref="searchBox"
-    :model-value="search"
-    placeholder="Search for a gene, disease, phenotype, etc."
-    icon="search"
-    @change="onChange"
-    @focus="onFocus"
-  />
-
-  <!-- examples -->
-  <template v-if="!results.results.length">
+  <AppWrapper tag="AppSection" :wrap="$route.name !== 'Home'">
+    <!-- examples -->
     <AppFlex>
       <span>Try:</span>
       <AppButton
@@ -38,9 +17,17 @@
         @click="doExample(text)"
       />
     </AppFlex>
-  </template>
 
-  <template v-if="$route.name !== 'Home'">
+    <!-- search box -->
+    <AppInput
+      ref="searchBox"
+      :model-value="search"
+      placeholder="Search for a gene, disease, phenotype, etc."
+      icon="search"
+      @change="onChange"
+      @focus="onFocus"
+    />
+
     <!-- filters -->
     <AppFlex v-if="Object.keys(availableFilters).length">
       <template v-for="(filter, name, index) in availableFilters" :key="index">
@@ -55,9 +42,9 @@
         />
       </template>
     </AppFlex>
+  </AppWrapper>
 
-    <hr />
-
+  <AppSection v-if="$route.name !== 'Home'">
     <!-- status -->
     <AppStatus v-if="isLoading" code="loading">Loading results</AppStatus>
     <AppStatus v-else-if="isError" code="error"
@@ -130,7 +117,7 @@
         </template>
       </AppFlex>
     </AppFlex>
-  </template>
+  </AppSection>
 </template>
 
 <script setup lang="ts">
@@ -138,6 +125,7 @@ import { ref, computed, watch, onMounted } from "vue";
 import { isEqual, kebabCase, startCase, uniq } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
+import AppWrapper from "@/components/AppWrapper.vue";
 import { getSearchResults, Results } from "@/api/node-search";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import { Options } from "@/components/AppSelectMulti";

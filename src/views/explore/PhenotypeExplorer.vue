@@ -5,152 +5,143 @@
 -->
 
 <template>
-  <!-- description -->
-  <template v-if="$route.name !== 'Home'">
-    <p>
-      Construct two sets of phenotypes and see various comparisons between them.
-      You can use this to find phenotypically similar diseases or genes in a
-      variety of organisms and visualize their overlap.
-    </p>
+  <AppSection>
+    <!-- examples -->
+    <AppFlex>
+      <span>Try:</span>
+      <AppButton text="example 1" design="small" @click="doExample1()" />
+    </AppFlex>
 
-    <hr />
-  </template>
+    <strong>Compare these phenotypes ...</strong>
 
-  <strong>Compare these phenotypes ...</strong>
-
-  <!-- set A -->
-  <AppSelectTags
-    v-model="aPhenotypes"
-    name="First set of phenotypes"
-    :options="getPhenotypes"
-    placeholder="Select phenotypes"
-    :tooltip="multiTooltip"
-    :description="description(aPhenotypes, aGeneratedFrom)"
-    @spread-options="(option, options) => spreadOptions(option, options, 'a')"
-  />
-
-  <!-- set B -->
-  <AppFlex gap="small">
-    <strong>... to</strong>
-    <AppSelectSingle
-      v-model="bMode"
-      name="Second set mode"
-      :options="bModeOptions"
+    <!-- set A -->
+    <AppSelectTags
+      v-model="aPhenotypes"
+      name="First set of phenotypes"
+      :options="getPhenotypes"
+      placeholder="Select phenotypes"
+      :tooltip="multiTooltip"
+      :description="description(aPhenotypes, aGeneratedFrom)"
+      @spread-options="(option, options) => spreadOptions(option, options, 'a')"
     />
-    <AppSelectSingle
-      v-if="bMode.id.includes('genes')"
-      v-model="bTaxon"
-      name="Second set taxon"
-      :options="bTaxonOptions"
+
+    <!-- set B -->
+    <AppFlex gap="small">
+      <strong>... to</strong>
+      <AppSelectSingle
+        v-model="bMode"
+        name="Second set mode"
+        :options="bModeOptions"
+      />
+      <AppSelectSingle
+        v-if="bMode.id.includes('genes')"
+        v-model="bTaxon"
+        name="Second set taxon"
+        :options="bTaxonOptions"
+      />
+    </AppFlex>
+
+    <AppSelectTags
+      v-if="bMode.id.includes('these phenotypes')"
+      v-model="bPhenotypes"
+      name="Second set of phenotypes"
+      :options="getPhenotypes"
+      placeholder="Select phenotypes"
+      :tooltip="multiTooltip"
+      :description="description(bPhenotypes, bGeneratedFrom)"
+      @spread-options="(option, options) => spreadOptions(option, options, 'b')"
     />
-  </AppFlex>
-
-  <AppSelectTags
-    v-if="bMode.id.includes('these phenotypes')"
-    v-model="bPhenotypes"
-    name="Second set of phenotypes"
-    :options="getPhenotypes"
-    placeholder="Select phenotypes"
-    :tooltip="multiTooltip"
-    :description="description(bPhenotypes, bGeneratedFrom)"
-    @spread-options="(option, options) => spreadOptions(option, options, 'b')"
-  />
-
-  <AppFlex>
-    <!-- example button -->
-    <AppButton text="try an example" design="small" @click="doExample()" />
 
     <!-- run analysis -->
     <AppButton text="Analyze" icon="bars-progress" @click="runAnalysis" />
-  </AppFlex>
+  </AppSection>
 
-  <hr />
+  <AppSection>
+    <!-- analysis status -->
+    <AppStatus v-if="isLoading" code="loading">Running analysis</AppStatus>
+    <AppStatus v-if="isError" code="error">Error running analysis</AppStatus>
 
-  <!-- analysis status -->
-  <AppStatus v-if="isLoading" code="loading">Running analysis</AppStatus>
-  <AppStatus v-if="isError" code="error">Error running analysis</AppStatus>
+    <!-- analysis top results -->
+    <AppFlex v-else-if="comparison.matches.length">
+      <!-- heading -->
+      <strong
+        >Top {{ Math.min(comparison.matches.length, 10) }} match(es)</strong
+      >
 
-  <!-- analysis top results -->
-  <AppFlex v-else-if="comparison.matches.length">
-    <!-- heading -->
-    <strong v-if="comparison.matches.length === 1">Top match</strong>
-    <strong v-else
-      >Top {{ Math.min(comparison.matches.length, 10) }} matches</strong
-    >
+      <!-- list of comparison results -->
+      <div
+        v-for="(match, matchIndex) in comparison.matches.slice(0, 10)"
+        :key="matchIndex"
+        class="match"
+      >
+        <!-- ring score -->
+        <AppRing
+          v-tippy="'Similarity score'"
+          :score="match.score"
+          :min="comparison.minScore"
+          :max="comparison.maxScore"
+        />
 
-    <!-- list of comparison results -->
-    <div
-      v-for="(match, matchIndex) in comparison.matches.slice(0, 10)"
-      :key="matchIndex"
-      class="match"
-    >
-      <!-- ring score -->
-      <AppRing
-        v-tippy="'Similarity score'"
-        :score="match.score"
-        :min="comparison.minScore"
-        :max="comparison.maxScore"
-      />
+        <AppFlex direction="col" h-align="stretch" gap="small" class="details">
+          <!-- primary match info -->
+          <div class="primary truncate">
+            <AppIcon
+              v-tippy="startCase(match.category)"
+              :icon="`category-${match.category}`"
+            />
 
-      <AppFlex direction="col" h-align="stretch" gap="small" class="details">
-        <!-- primary match info -->
-        <div class="primary truncate">
-          <AppIcon
-            v-tippy="startCase(match.category)"
-            :icon="`category-${match.category}`"
-          />
-
-          <!-- if name of match is + separated list of phenotype ids, link to each one separately -->
-          <template v-if="match.name.includes(' + ')">
-            <template
-              v-for="(id, idIndex) of match.name.split(' + ')"
-              :key="idIndex"
-            >
-              <AppLink :to="`/${kebabCase(match.category)}/${id}`">
-                {{ id }}
-              </AppLink>
-              <span v-if="idIndex !== match.name.split(' + ').length - 1">
-                +
-              </span>
+            <!-- if name of match is + separated list of phenotype ids, link to each one separately -->
+            <template v-if="match.name.includes(' + ')">
+              <template
+                v-for="(id, idIndex) of match.name.split(' + ')"
+                :key="idIndex"
+              >
+                <AppLink :to="`/${kebabCase(match.category)}/${id}`">
+                  {{ id }}
+                </AppLink>
+                <span v-if="idIndex !== match.name.split(' + ').length - 1">
+                  +
+                </span>
+              </template>
             </template>
-          </template>
 
-          <!-- otherwise, just show details as normal -->
-          <template v-else>
-            <AppLink :to="`/${kebabCase(match.category)}/${match.id}`">
-              {{ match.name }}
-            </AppLink>
-          </template>
-        </div>
+            <!-- otherwise, just show details as normal -->
+            <template v-else>
+              <AppLink :to="`/${kebabCase(match.category)}/${match.id}`">
+                {{ match.name }}
+              </AppLink>
+            </template>
+          </div>
 
-        <!-- secondary match info -->
-        <div class="secondary truncate">
-          <span>{{ match.id }}</span>
-          <span v-if="match.taxon">&nbsp; | &nbsp;{{ match.taxon }}</span>
-        </div>
-      </AppFlex>
-    </div>
-  </AppFlex>
+          <!-- secondary match info -->
+          <div class="secondary truncate">
+            <span>{{ match.id }}</span>
+            <span v-if="match.taxon">&nbsp; | &nbsp;{{ match.taxon }}</span>
+          </div>
+        </AppFlex>
+      </div>
+    </AppFlex>
 
-  <!-- spacing for dropdown when no results -->
-  <template v-else>
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-  </template>
+    <!-- spacing for dropdown when no results -->
+    <template v-else>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+    </template>
 
-  <!-- phenogrid results -->
-  <template v-if="comparison.matches.length">
-    <strong>Phenotype Similarity Comparison</strong>
-    <div id="phenogrid"></div>
-  </template>
+    <!-- phenogrid results -->
+    <template v-if="comparison.matches.length">
+      <strong>Phenotype Similarity Comparison</strong>
+      <div id="phenogrid"></div>
+    </template>
+  </AppSection>
 </template>
 
 <script setup lang="ts">
@@ -235,7 +226,7 @@ const bPhenotypes = ref([] as Options);
 const bGeneratedFrom = ref({} as GeneratedFrom);
 
 /** example phenotype set comparison */
-function doExample() {
+function doExample1() {
   aPhenotypes.value = exampleAPhenotypes;
   bPhenotypes.value = exampleBPhenotypes;
   bMode.value = bModeOptions[2];

@@ -64,8 +64,6 @@
       text="More Details"
       icon="arrow-right"
     />
-
-    {{ uptimes }}
   </AppSection>
 
   <!-- last resort contact methods -->

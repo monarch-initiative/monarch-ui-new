@@ -1,4 +1,3 @@
-import { nextTick } from "vue";
 import {
   createRouter,
   createWebHistory,
@@ -6,7 +5,7 @@ import {
   RouterScrollBehavior,
   NavigationGuard,
 } from "vue-router";
-import { startCase, clone } from "lodash";
+import { clone } from "lodash";
 import { hideAll } from "tippy.js";
 import PageHome from "@/views/PageHome.vue";
 import PageExplore from "@/views/explore/PageExplore.vue";
@@ -23,6 +22,7 @@ import PageNode from "@/views/node/PageNode.vue";
 import PageTestbed from "@/views/PageTestbed.vue";
 import { sleep } from "@/util/debug";
 import { lookupNode } from "@/api/node-lookup";
+import descriptions from "@/router/descriptions.json";
 
 /** list of routes and corresponding components. */
 /** KEEP IN SYNC WITH PUBLIC/SITEMAP.XML */
@@ -138,6 +138,16 @@ export const routes: Array<RouteRecordRaw> = [
   },
 ];
 
+/** merge in route descriptions */
+routes.forEach(
+  (route) =>
+    (route.meta = {
+      description: (descriptions as Record<string, string>)[
+        String(route.name || "")
+      ],
+    })
+);
+
 /** vue-router's scroll behavior handler */
 const scrollBehavior: RouterScrollBehavior = async (
   to,
@@ -184,8 +194,11 @@ const getTarget = (element: Element): Element => {
 const getOffset = () => document?.querySelector("header")?.clientHeight || 0;
 
 /** scroll to element */
-export const scrollToElement = (element?: Element | null): void => {
+export const scrollToElement = async (element?: Element | null) => {
   if (!element) return;
+
+  /** wait for everything to render fully and page to expand to full height */
+  await sleep(500);
 
   window.scrollTo({
     top:
@@ -197,7 +210,7 @@ export const scrollToElement = (element?: Element | null): void => {
 };
 
 /** scroll to hash */
-export const scrollToHash = (): void =>
+export const scrollToHash = () =>
   scrollToElement(document?.getElementById(window.location.hash.slice(1)));
 
 /** navigation history object */
@@ -208,48 +221,6 @@ const router = createRouter({
   history,
   routes,
   scrollBehavior,
-});
-
-/** set document title after route */
-router.afterEach(async ({ name, query, params, hash }) => {
-  /** for test environments */
-  if (!document) return;
-
-  /** https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609 */
-  await nextTick();
-
-  /** separated parts of tab title */
-  const parts: Array<Array<string>> = [];
-
-  /** title of app */
-  parts.push([process.env.VUE_APP_TITLE_SHORT || ""]);
-
-  /** name of page (route name prop) */
-  if (name !== "Node") parts.push([String(name)]);
-
-  /** url params (e.g. /disease/HP:12345) */
-  parts.push(Object.values(params).map((value) => [value].flat().join(",")));
-
-  /** url query's (e.g. ?search=marfan+syndrome) */
-  parts.push(
-    Object.entries(query).map(
-      ([key, value]) => `${key}: ${[value].flat().join(",")}`
-    )
-  );
-
-  /** url hash */
-  if (hash) parts.push([startCase(hash.slice(1))]);
-
-  /** combine into document title */
-  document.title = parts
-    .map((part) =>
-      part
-        .map((subpart) => subpart.trim())
-        .filter((subpart) => subpart)
-        .join(" ")
-    )
-    .filter((part) => part)
-    .join(" · ");
 });
 
 /** close any open tooltips on route change */
@@ -265,9 +236,13 @@ export default router;
  * https://github.com/vuejs/rfcs/discussions/400
  */
 let routeData: unknown = null;
+
+/** attach data to be consumed after route change */
 export const setData = (data: unknown): void => {
   routeData = data;
 };
+
+/** consume data set before route change */
 export const getData = (): unknown => {
   const copy = clone(routeData);
   routeData = null; /** reset after data consumed once */

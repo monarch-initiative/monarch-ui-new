@@ -3,7 +3,7 @@ import TheFeedbackForm from "@/components/TheFeedbackForm.vue";
 
 test("Submits correctly when filled out", async () => {
   /** mount */
-  const wrapper = mount(TheFeedbackForm, { attachTo: document.body });
+  const wrapper = mount(TheFeedbackForm, {}, {}, { attachTo: document.body });
 
   /** fill out feedback textarea */
   const textarea = wrapper.find("textarea");
