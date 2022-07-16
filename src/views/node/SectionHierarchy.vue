@@ -93,7 +93,7 @@ const props = defineProps<Props>();
 
 /** get node hierarchy data */
 const {
-  query: getHier,
+  query: getData,
   data: hierarchy,
   isLoading,
   isError,
@@ -109,11 +109,11 @@ const {
 /** when path (not hash or query) changed, get new node data */
 watch(
   [() => route.path, () => props.node.id, () => props.node.category],
-  getHier
+  getData
 );
 
 /** get new node data on load */
-onMounted(getHier);
+onMounted(getData);
 </script>
 
 <style lang="scss" scoped>

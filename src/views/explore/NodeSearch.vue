@@ -275,12 +275,12 @@ const pages = computed((): Array<Array<number>> => {
 /** when route changes */
 watch(
   () => route,
-  () => {
+  async () => {
     /** update search text from route (if not already) */
     const fromUrl = String(route.query.search || "");
     if (search.value !== fromUrl) {
       search.value = fromUrl;
-      getResults(true);
+      await getResults(true);
     }
   }
 );

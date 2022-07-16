@@ -131,13 +131,13 @@ const details = computed(() => {
 });
 
 /** when form submitted */
-function onSubmit() {
+async function onSubmit() {
   /**
    * only proceed if submitted through button, not "implicitly" (enter press).
    * https://stackoverflow.com/questions/895171/prevent-users-from-submitting-a-form-by-hitting-enter
    */
   if ((document.activeElement as Element).matches("button[type='submit']"))
-    submitFeedback();
+    await submitFeedback();
 }
 
 /** post feedback to backend */

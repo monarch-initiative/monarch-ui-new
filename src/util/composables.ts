@@ -3,14 +3,20 @@ import { ref, shallowRef } from "vue";
 /**
  * inspired by react-query. simple query manager/wrapper for making queries in
  * components. reduces repetitive boilerplate code for loading/error states,
- * try/catch blocks, de-staling/de-duplicating requests, etc.
+ * try/catch blocks, de-duplicating requests, etc.
  */
 export const useQuery = <Data, Args extends Array<unknown>>(
-  /** async func that returns data. should be side-effect free. */
+  /**
+   * main async func that returns data. should be side-effect free to avoid race
+   * conditions, because multiple can be running at same time.
+   */
   func: (...args: Args) => Promise<Data>,
   /** default value used for data before done loading and on error. */
   defaultValue: Data,
-  /** function to run on success. use for side effects that only need to run on success. */
+  /**
+   * func to run on success. use for side effects. only gets called on latest of
+   * concurrent runs.
+   */
   onSuccess?: (
     /** response data */
     response: Data,
@@ -31,14 +37,16 @@ export const useQuery = <Data, Args extends Array<unknown>>(
   let latest;
 
   /** wrapped query function */
-  async function query(...args: Args): Promise<Data> {
+  async function query(...args: Args): Promise<void> {
     try {
       /** unique id for current run */
       const current = Symbol();
       latest = current;
 
-      /** update state */
+      /** reset state */
       isLoading.value = true;
+      isError.value = false;
+      isSuccess.value = false;
       data.value = defaultValue;
 
       /** run provided function */
@@ -55,29 +63,17 @@ export const useQuery = <Data, Args extends Array<unknown>>(
 
         /** on success callback */
         if (onSuccess) onSuccess(result, args);
-
-        /** return results */
-        return result;
       } else {
-        /** otherwise, throw special "stale" error */
-        throw new Error("Stale query");
+        /** otherwise, log special "stale" error */
+        console.error("Stale query");
       }
     } catch (error) {
-      /** stale */
-      if ((error as Error).message.match(/stale/i)) {
-        console.groupCollapsed("Stale query");
-        console.error(error);
-        console.groupEnd();
-      } else {
-        /** log error */
-        console.error(error);
+      /** log error */
+      console.error(error);
 
-        /** update state */
-        isError.value = true;
-        isLoading.value = false;
-      }
-
-      return defaultValue;
+      /** update state */
+      isError.value = true;
+      isLoading.value = false;
     }
   }
 
