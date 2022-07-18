@@ -1,13 +1,13 @@
 import { kebabCase, mapKeys, merge } from "lodash";
 
-/**
- * merge two arrays of objects by id. if exclusive, only include entries that
- * are in array A.
- */
+/** object with id field */
 type Obj = { id?: string };
+
+/** merge two arrays of objects by id */
 export const mergeArrays = (
   arrayA: Array<Obj>,
   arrayB: Array<Obj>,
+  /** only include entries that are in array A */
   exclusive = false
 ): Array<Obj> => {
   /** store to keep id-deduped list of entries */
@@ -18,10 +18,10 @@ export const mergeArrays = (
     (add = true) =>
     (object: Obj) => {
       const { id = "" } = object;
-      /** entry not already in store, and add option off, don't add to store */
-      if (!result[id] && !add) return;
-      /** deep merge array entry with store entry using lodash */
-      result[id] = merge(result[id] || {}, object);
+      /** if add flag true, or entry already in store, add to store */
+      if (add || result[id])
+        /** deep merge array entry with store entry using lodash */
+        result[id] = merge(result[id] || {}, object);
     };
 
   /** run merge func for each array */
