@@ -10,10 +10,11 @@
 
 <template>
   <div class="select-single">
-    <!-- select button -->
+    <!-- select button box -->
     <button
       :id="`select-${id}`"
-      class="button"
+      ref="target"
+      class="box"
       :aria-label="name"
       :aria-expanded="expanded"
       :aria-controls="`list-${id}`"
@@ -24,56 +25,58 @@
       @blur="onBlur"
     >
       <AppIcon v-if="modelValue?.icon" :icon="modelValue?.icon" />
-      <span class="button-label">{{ modelValue?.name || modelValue?.id }}</span>
-      <AppIcon
-        class="button-icon"
-        :icon="expanded ? 'angle-up' : 'angle-down'"
-      />
+      <span class="box-label">{{ modelValue?.name || modelValue?.id }}</span>
+      <AppIcon :icon="expanded ? 'angle-up' : 'angle-down'" />
     </button>
 
     <!-- options list -->
-    <div
-      v-if="expanded"
-      :id="`list-${id}`"
-      class="list"
-      role="listbox"
-      :aria-labelledby="`select-${id}`"
-      :aria-activedescendant="`option-${id}-${highlighted}`"
-      tabindex="0"
-    >
-      <div class="grid">
-        <div
-          v-for="(option, index) in options"
-          :id="`option-${id}-${index}`"
-          :key="index"
-          class="option"
-          role="option"
-          :aria-selected="selected === index"
-          :data-selected="selected === index"
-          :data-highlighted="index === highlighted"
-          tabindex="0"
-          @click="selected = index"
-          @mouseenter="highlighted = index"
-          @mousedown.prevent=""
-          @focusin="() => null"
-          @keydown="() => null"
-        >
-          <span class="option-icon">
-            <AppIcon v-if="option.icon" :icon="option.icon" />
-          </span>
-          <span class="option-label">{{ option.name || option.id }}</span>
-          <span class="option-count">{{ option.count }}</span>
+    <Teleport to="body">
+      <div
+        v-if="expanded"
+        :id="`list-${id}`"
+        ref="dropdown"
+        class="list"
+        role="listbox"
+        :aria-labelledby="`select-${id}`"
+        :aria-activedescendant="`option-${id}-${highlighted}`"
+        tabindex="0"
+        :style="style"
+      >
+        <div class="grid">
+          <div
+            v-for="(option, index) in options"
+            :id="`option-${id}-${index}`"
+            :key="index"
+            class="option"
+            role="option"
+            :aria-selected="selected === index"
+            :data-selected="selected === index"
+            :data-highlighted="index === highlighted"
+            tabindex="0"
+            @click="selected = index"
+            @mouseenter="highlighted = index"
+            @mousedown.prevent=""
+            @focusin="() => null"
+            @keydown="() => null"
+          >
+            <span class="option-icon">
+              <AppIcon v-if="option.icon" :icon="option.icon" />
+            </span>
+            <span class="option-label">{{ option.name || option.id }}</span>
+            <span class="option-count">{{ option.count }}</span>
+          </div>
         </div>
       </div>
-    </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { nextTick, ref, watch } from "vue";
 import { uniqueId } from "lodash";
 import { Option, Options } from "./AppSelectSingle";
 import { wrap } from "@/util/math";
+import { useFloating } from "@/util/composables";
 
 interface Props {
   /** two-way bound selected item state */
@@ -103,6 +106,18 @@ const expanded = ref(false);
 const selected = ref(getSelected());
 /** index of option that is highlighted */
 const highlighted = ref(0);
+
+/** target element */
+const target = ref();
+/** dropdown element */
+const dropdown = ref();
+/** get dropdown position */
+const { calculate, style } = useFloating();
+/** recompute position after opened */
+watch(expanded, async () => {
+  await nextTick();
+  if (expanded.value) calculate(target.value, dropdown.value);
+});
 
 /** open dropdown */
 function open() {
@@ -213,7 +228,7 @@ watch(
   max-width: 100%;
 }
 
-.button {
+.box {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -224,16 +239,13 @@ watch(
   background: $light-gray;
 }
 
-.button-label {
+.box-label {
   flex-grow: 1;
   text-align: left;
 }
 
 .list {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  min-width: 100%;
+  position: fixed;
   max-width: 90vw;
   max-height: 300px;
   overflow-x: hidden;

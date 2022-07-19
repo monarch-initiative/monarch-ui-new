@@ -54,19 +54,13 @@
                     activeFilters[col.id] &&
                     availableFilters[col.id]?.length
                   "
-                  v-slot="slotProps"
+                  v-tooltip="'Filter by ' + col.heading"
                   :name="'Filter by ' + col.heading"
                   :options="availableFilters[col.id]"
                   :model-value="activeFilters[col.id]"
+                  design="small"
                   @change="(value) => emitFilter(col.id, value)"
-                >
-                  <AppButton
-                    v-tooltip="'Filter by ' + col.heading"
-                    icon="filter"
-                    design="small"
-                    v-bind="kebabify(slotProps)"
-                  />
-                </AppSelectMulti>
+                />
               </th>
             </tr>
           </thead>
@@ -202,7 +196,6 @@ import AppInput from "./AppInput.vue";
 import AppSelectMulti from "./AppSelectMulti.vue";
 import AppSelectSingle from "./AppSelectSingle.vue";
 import { Options } from "./AppSelectMulti";
-import { kebabify } from "@/util/object";
 import { Filters } from "@/api/facets";
 import { closeToc } from "./TheTableOfContents";
 

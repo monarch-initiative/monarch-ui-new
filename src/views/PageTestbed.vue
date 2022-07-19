@@ -87,6 +87,7 @@
       v-slot="props"
       v-model="multiSelectValue"
       name="Category"
+      design="small"
       :options="multiSelectOptions"
     >
       <AppButton

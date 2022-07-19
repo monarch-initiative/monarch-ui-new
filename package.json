@@ -14,6 +14,7 @@
     "test:lint": "vue-cli-service lint --no-fix && prettier --check \"**/*.{scss,js,ts,json,vue,svg,yaml}\" --no-error-on-unmatched-pattern"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
@@ -32,7 +33,7 @@
     "vue": "^3.2.37",
     "vue-inline-svg": "^3.1.0",
     "vue-router": "^4.0.16",
-    "vue-tippy": "^6.0.0-alpha.52",
+    "vue-tippy": "^6.0.0-alpha.62",
     "vuex": "^4.0.2",
     "wicg-inert": "^3.1.2"
   },
