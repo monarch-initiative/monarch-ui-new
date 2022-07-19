@@ -9,7 +9,7 @@
 
 <template>
   <div class="select-tags">
-    <!-- box -->
+    <!-- select box -->
     <div class="box" :data-focused="focused">
       <!-- deselect button -->
       <AppButton

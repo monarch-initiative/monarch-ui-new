@@ -1022,6 +1022,18 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
+"@floating-ui/core@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.0.0.tgz#ec1d31f54c72dd0460276e2149e59bd13c0f01f6"
+  integrity sha512-sm3nW0hHAxTv3gRDdCH8rNVQxijF+qPFo5gAeXCErRjKC7Qc28lIQ3R9Vd7Gw+KgwfA7RhRydDFuGeI0peGq7A==
+
+"@floating-ui/dom@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.0.0.tgz#66923a56755b6cb7a5958ecf25fe293912672d65"
+  integrity sha512-PMqJvY5Fae8HVQgUqM+lidprS6p9LSvB0AUhCdYKqr3YCaV+WaWCeVNBtXPRY2YIdrgcsL2+vd5F07FxgihHUw==
+  dependencies:
+    "@floating-ui/core" "^1.0.0"
+
 "@fortawesome/fontawesome-common-types@6.1.1":
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-6.1.1.tgz#7dc996042d21fc1ae850e3173b5c67b0549f9105"
@@ -9473,10 +9485,10 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue-tippy@^6.0.0-alpha.52:
-  version "6.0.0-alpha.60"
-  resolved "https://registry.yarnpkg.com/vue-tippy/-/vue-tippy-6.0.0-alpha.60.tgz#8137eb6ae36cf9c1755d15b938b6f20f4baf812f"
-  integrity sha512-tORQ7/jOfrkhsJDBpgi9v7JERIen2GulkZekjNK9hSFWdwQFxxtnCjbGdjATbgxcyG3eckvjlWoh0bCk9ZoEhA==
+vue-tippy@^6.0.0-alpha.62:
+  version "6.0.0-alpha.62"
+  resolved "https://registry.yarnpkg.com/vue-tippy/-/vue-tippy-6.0.0-alpha.62.tgz#1bd6d70ee8b07fb11cb816d92b6cc72db61834b1"
+  integrity sha512-Q+Dn7D3tJq0w9HSWbxAexZ9LaP96Kg0dK8ridBKNsgcRBtYHJcaP4TqA/qSl5HbEv7bcD7dqQ4Q9zndMKkE4mw==
   dependencies:
     tippy.js "^6.3.7"
 

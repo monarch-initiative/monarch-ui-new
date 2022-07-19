@@ -5,13 +5,13 @@
 <template>
   <component
     :is="component"
+    ref="button"
     class="button"
     :to="to"
     :type="type"
     :data-design="design"
     :data-color="color"
     :data-text="!!text"
-    :data-notification="notification"
     @click="copy ? copyToClipboard() : click"
   >
     <span v-if="text">{{ text }}</span>
@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { snackbar } from "./TheSnackbar";
 
 interface Props {
@@ -36,8 +36,6 @@ interface Props {
   design?: "normal" | "circle" | "small";
   /** color */
   color?: "primary" | "secondary" | "none";
-  /** whether to show little notification dot */
-  notification?: boolean;
   /** whether to copy text prop to clipboard on click */
   copy?: boolean;
   /** html button type attribute */
@@ -51,10 +49,12 @@ const props = withDefaults(defineProps<Props>(), {
   click: undefined,
   design: "normal",
   color: "primary",
-  notification: false,
   copy: false,
   type: "button",
 });
+
+/** element ref */
+const button = ref();
 
 /** copy text prop to clipboard */
 async function copyToClipboard() {
@@ -64,6 +64,8 @@ async function copyToClipboard() {
 
 /** type of component to render */
 const component = computed(() => (props.to ? "AppLink" : "button"));
+
+defineExpose({ button });
 </script>
 
 <style lang="scss" scoped>
@@ -149,17 +151,6 @@ const component = computed(() => (props.to ? "AppLink" : "button"));
     &:focus {
       color: $black;
     }
-  }
-
-  &[data-notification="true"]:after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 5px;
-    height: 5px;
-    border-radius: 999px;
-    background: $error;
   }
 }
 </style>

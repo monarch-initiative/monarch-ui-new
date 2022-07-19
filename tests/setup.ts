@@ -105,7 +105,7 @@ export const mount = <Component>(
   options.props = cloneDeep(props);
 
   /** standard globals */
-  options.global = { components, plugins };
+  options.global = { components, plugins, stubs: { teleport: true } };
 
   // eslint-disable-next-line
   const wrapper: Wrapper = vueMount(component, options as MountingOptions<any>);
