@@ -18,7 +18,7 @@
           <AppLink
             v-for="(inheritance, index) of node.inheritance"
             :key="index"
-            v-tippy="inheritance.id"
+            v-tooltip="inheritance.id"
             :to="inheritance.link"
             >{{ inheritance.name }}</AppLink
           >
@@ -36,7 +36,7 @@
         :blank="!node.taxon?.id"
         title="Taxon"
       >
-        <AppLink v-tippy="node?.taxon?.id" :to="node.taxon?.link || ''">{{
+        <AppLink v-tooltip="node?.taxon?.id" :to="node.taxon?.link || ''">{{
           node.taxon?.name
         }}</AppLink>
       </AppDetail>

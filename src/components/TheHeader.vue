@@ -11,7 +11,7 @@
     <div class="title" :title="app.version">
       <!-- logo image and text -->
       <AppLink
-        v-tippy="home ? '' : 'Homepage'"
+        v-tooltip="home ? '' : 'Homepage'"
         :to="home ? '' : '/'"
         class="logo"
         :data-home="home"
@@ -25,7 +25,9 @@
 
       <!-- nav toggle button -->
       <button
-        v-tippy="expanded ? 'Close navigation menu' : 'Expand navigation menu'"
+        v-tooltip="
+          expanded ? 'Close navigation menu' : 'Expand navigation menu'
+        "
         class="button"
         :aria-expanded="expanded"
         @click="expanded = !expanded"
@@ -37,21 +39,21 @@
     <!-- navigation bar -->
     <nav :data-home="home" :data-expanded="expanded">
       <AppLink
-        v-tippy="'Dive right in and use Monarch'"
+        v-tooltip="'Dive right in and use Monarch'"
         class="link"
         to="/explore"
       >
         Explore
       </AppLink>
       <AppLink
-        v-tippy="'Citing, licensing, sources, and other info'"
+        v-tooltip="'Citing, licensing, sources, and other info'"
         class="link"
         to="/about"
       >
         About
       </AppLink>
       <AppLink
-        v-tippy="'Feedback, docs, guides, contact, and more'"
+        v-tooltip="'Feedback, docs, guides, contact, and more'"
         class="link"
         to="/help"
       >

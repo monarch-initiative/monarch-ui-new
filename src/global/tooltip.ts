@@ -29,8 +29,8 @@ const onShow = (instance: Instance): boolean =>
 const onHide = (): boolean => true;
 
 export const options = {
-  directive: "tippy",
-  component: "tippy",
+  directive: "tooltip",
+  component: "tooltip",
   defaultProps: {
     delay: 100,
     duration: 200,

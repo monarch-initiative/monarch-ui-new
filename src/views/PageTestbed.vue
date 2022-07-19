@@ -90,7 +90,7 @@
       :options="multiSelectOptions"
     >
       <AppButton
-        v-tippy="'Test button'"
+        v-tooltip="'Test button'"
         icon="filter"
         v-bind="props"
         design="small"
@@ -117,7 +117,7 @@
       <AppButton
         v-for="(props, colIndex) of row"
         :key="colIndex"
-        v-tippy="'Test button'"
+        v-tooltip="'Test button'"
         to="/"
         v-bind="props"
         @click="log"

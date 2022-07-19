@@ -14,7 +14,7 @@
     <!-- toggle button -->
     <div class="title">
       <button
-        v-tippy="
+        v-tooltip="
           expanded ? 'Close table of contents' : 'Expand table of contents'
         "
         class="title-button"
@@ -48,7 +48,7 @@
       <!-- options -->
       <AppCheckbox
         v-model="oneAtATime"
-        v-tippy="'Only show one section at a time'"
+        v-tooltip="'Only show one section at a time'"
         text="Show single section"
       />
     </template>

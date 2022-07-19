@@ -39,7 +39,7 @@
         <AppFlex>
           <AppButton
             v-if="source.link"
-            v-tippy="'Homepage or repository for this source'"
+            v-tooltip="'Homepage or repository for this source'"
             design="small"
             icon="home"
             text="Home"
@@ -47,7 +47,7 @@
           />
           <AppButton
             v-if="source.license"
-            v-tippy="'Link to licensing information for this source'"
+            v-tooltip="'Link to licensing information for this source'"
             design="small"
             icon="balance-scale"
             text="License"
@@ -55,7 +55,7 @@
           />
           <AppButton
             v-if="source.distribution"
-            v-tippy="'Download Resource Description Framework file'"
+            v-tooltip="'Download Resource Description Framework file'"
             design="small"
             icon="download"
             text="RDF"
@@ -63,7 +63,7 @@
           />
           <AppButton
             v-if="source.date"
-            v-tippy="'Date when this source was ingested into Monarch'"
+            v-tooltip="'Date when this source was ingested into Monarch'"
             design="small"
             color="secondary"
             icon="calendar-alt"
@@ -89,7 +89,7 @@
           <AppLink
             v-for="(file, fileIndex) in source.files"
             :key="fileIndex"
-            v-tippy="breakUrl(file)"
+            v-tooltip="breakUrl(file)"
             :to="file"
             class="truncate"
           >

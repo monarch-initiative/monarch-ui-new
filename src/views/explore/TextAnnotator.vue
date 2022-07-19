@@ -36,7 +36,7 @@
 
     <!-- results -->
     <p v-if="annotations.length">
-      <tippy
+      <tooltip
         v-for="({ text, tokens }, annotationIndex) in annotations"
         :key="annotationIndex"
         :interactive="true"
@@ -54,14 +54,14 @@
             </template>
           </div>
         </template>
-      </tippy>
+      </tooltip>
     </p>
 
     <!-- actions -->
     <AppFlex v-if="annotations.length">
       <AppButton text="Download" icon="download" @click="download" />
       <AppButton
-        v-tippy="
+        v-tooltip="
           'Send any annotations above that are phenotypes to Phenotype Explorer'
         "
         text="Analyze Phenotypes"
@@ -84,7 +84,7 @@ import { annotateText } from "@/api/text-annotator";
 import { downloadJson } from "@/util/download";
 import { setData } from "@/router";
 import { useRouter } from "vue-router";
-import { appendToBody } from "@/global/tippy";
+import { appendToBody } from "@/global/tooltip";
 import { useQuery } from "@/util/composables";
 
 /** route info */

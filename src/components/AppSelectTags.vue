@@ -15,7 +15,7 @@
       <AppButton
         v-for="(option, index) in selected"
         :key="index"
-        v-tippy="`Deselect ${option.id}`"
+        v-tooltip="`Deselect ${option.id}`"
         design="circle"
         :text="option.name || option.id"
         icon="xmark"
@@ -28,7 +28,7 @@
         <!-- input box -->
         <input
           v-model="search"
-          v-tippy="{ content: tooltip, offset: [20, 20] }"
+          v-tooltip="{ content: tooltip, offset: [20, 20] }"
           :placeholder="placeholder"
           role="combobox"
           :aria-label="name"
@@ -48,7 +48,7 @@
         <span class="meta">
           <!-- copy ids -->
           <AppButton
-            v-tippy="`Copy selected values`"
+            v-tooltip="`Copy selected values`"
             design="small"
             icon="copy"
             @click="copy"
@@ -56,7 +56,7 @@
           {{ " " }}
           <!-- clear box -->
           <AppButton
-            v-tippy="`Clear selected values`"
+            v-tooltip="`Clear selected values`"
             design="small"
             icon="times"
             @click="clear"
