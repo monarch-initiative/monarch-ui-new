@@ -17,6 +17,7 @@ import nodePublicationAbstract from "./node-publication-abstract.json";
 import nodeHierarchy from "./node-hierarchy.json";
 import nodeAssociations from "./node-associations.json";
 import associationEvidence from "./association-evidence.json";
+import ontolIdentifier from "./ontol-identifier.json";
 
 /** api calls to be mocked with fixture data */
 export const handlers = [
@@ -105,6 +106,11 @@ export const handlers = [
   /** association evidence data */
   rest.get(/evidence\/graph/, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(associationEvidence))
+  ),
+
+  /** ontol get id from label */
+  rest.get(/ontol\/identifier/, (req, res, ctx) =>
+    res(ctx.status(200), ctx.json(ontolIdentifier))
   ),
 
   /**
