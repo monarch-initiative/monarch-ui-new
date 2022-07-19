@@ -1,4 +1,4 @@
-import { mergeArrays } from "./../../src/util/object";
+import { mergeArrays } from "@/util/object";
 
 const arrayA = [
   { id: "abc", animal: "cat" },

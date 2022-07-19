@@ -1,4 +1,4 @@
-import { useQuery } from "./../../src/util/composables";
+import { useQuery } from "@/util/composables";
 import { sleep } from "@/util/debug";
 
 /** useQuery tests */

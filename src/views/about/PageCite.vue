@@ -13,7 +13,7 @@
   <AppSection>
     <AppHeading>Acknowledgement</AppHeading>
     <p>
-      If you use Monarch, please acknolwedge us with a paragraph like the
+      If you use Monarch, please acknowledge us with a paragraph like the
       following:
     </p>
     <blockquote>

@@ -1,4 +1,4 @@
-import { wrap } from "./../../src/util/math";
+import { wrap } from "@/util/math";
 
 test("Wrap works", () => {
   expect(wrap(3, 0, 10)).toBe(3);

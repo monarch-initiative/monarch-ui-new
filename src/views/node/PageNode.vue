@@ -17,7 +17,7 @@
       <AppStatus v-if="isLoading" code="loading"
         >Loading node information</AppStatus
       >
-      <AppStatus v-if="isError" code="loading"
+      <AppStatus v-if="isError" code="error"
         >Error loading node information</AppStatus
       >
     </AppSection>

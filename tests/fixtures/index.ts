@@ -109,7 +109,7 @@ export const handlers = [
   ),
 
   /** ontol get id from label */
-  rest.get(/ontol\/identifier/, (req, res, ctx) =>
+  rest.post(/ontol\/identifier/, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(ontolIdentifier))
   ),
 

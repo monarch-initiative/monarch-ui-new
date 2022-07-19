@@ -66,9 +66,7 @@
 
     <!-- status -->
     <AppStatus v-if="isLoading" code="loading">Submitting feedback</AppStatus>
-    <AppStatus v-if="isError" code="loading"
-      >Error submitting feedback</AppStatus
-    >
+    <AppStatus v-if="isError" code="error">Error submitting feedback</AppStatus>
     <AppStatus v-if="isSuccess" code="success">
       <AppLink v-if="link" :to="link"
         >View your submitted feedback here.</AppLink

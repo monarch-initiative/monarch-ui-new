@@ -1,4 +1,4 @@
-import { isExternal } from "./../../src/util/url";
+import { isExternal } from "@/util/url";
 
 test("Url funcs work", () => {
   expect(isExternal("mailto:jane@smith.org")).toBe(true);
