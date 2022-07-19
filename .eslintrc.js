@@ -23,10 +23,10 @@ module.exports = {
 
   /** rule overrides (KEEP THIS AS MINIMAL AS POSSIBLE) */
   rules: {
-    /** count v-tippy (which adds an accessible aria-label attribute) as accessible */
+    /** count v-tooltip (which adds an accessible aria-label attribute) as accessible */
     "vuejs-accessibility/anchor-has-content": [
       "error",
-      { accessibleDirectives: ["tippy"] },
+      { accessibleDirectives: ["tooltip"] },
     ],
     /**
      * allow nesting a control in a label without a for attribute (perfectly

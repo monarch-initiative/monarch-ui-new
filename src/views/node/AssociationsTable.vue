@@ -59,7 +59,7 @@
     <!-- button to show evidence -->
     <template #evidence="{ cell, row }">
       <AppButton
-        v-tippy="
+        v-tooltip="
           row.id === selectedAssociation?.id
             ? 'Viewing supporting evidence. Click again to hide.'
             : 'View supporting evidence for this association'

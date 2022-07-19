@@ -27,7 +27,7 @@
       {{ group.name }}
       <AppIcon
         v-if="group.alumni"
-        v-tippy="'Alumni group'"
+        v-tooltip="'Alumni group'"
         class="icon"
         icon="history"
       />

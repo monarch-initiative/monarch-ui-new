@@ -13,13 +13,13 @@
       </AppHeading>
       <AppFlex>
         <AppButton
-          v-tippy="'The category/type of this node'"
+          v-tooltip="'The category/type of this node'"
           design="small"
           color="secondary"
           :text="node.category"
         />
         <AppButton
-          v-tippy="'The ID of this node. Click to copy.'"
+          v-tooltip="'The ID of this node. Click to copy.'"
           design="small"
           color="secondary"
           icon="hashtag"
@@ -28,7 +28,7 @@
         />
         <span
           v-if="node.id !== node.originalId"
-          v-tippy="
+          v-tooltip="
             'The original ID you visited, which resolved to a different ID.'
           "
           class="original-id"
