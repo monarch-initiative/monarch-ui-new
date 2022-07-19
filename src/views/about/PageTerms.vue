@@ -47,7 +47,7 @@
     <p>
       The first-party software and resources used and referenced on this website
       &mdash; including but not limited to the Monarch Website (this website
-      itself), BioLink, and Exomiser &mdash; are hereby refered to as the
+      itself), BioLink, and Exomiser &mdash; are hereby referred to as the
       "Monarch Tools". The associated
       <AppLink to="/team">Universities, Institutions, and other groups</AppLink>
       that develop and maintain the Monarch Tools are hereby collectively

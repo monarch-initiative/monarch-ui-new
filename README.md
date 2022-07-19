@@ -104,3 +104,7 @@ Use `console.log` for strictly for temporary debugging during local development 
 Use `console.error` for in-production logging of _caught_ errors.
 Use `console.info` for generic in-production logging, but only use for major, infrequent events, as logging too frequently (say, multiple times per second, sustained) can impact page performance.
 Leaving select logging in production will be beneficial for in this particular app, for user and in-situ troubleshooting of complex, hard-to-replicate problems.
+
+To analyze the size of the compiled bundle, dev-install `stats-webpack-plugin`, uncomment the `stats-webpack-plugin` line in `vue.config.js`, build the app, then run either `npx webpack-bundle-analyzer dist/stats.json` or `npx source-map-explorer dist/js/*`.
+
+To spell check the entire repo (aside from `node_modules`), run `npx cspell "**/*.{scss,js,ts,json,vue,svg,yaml}"`.

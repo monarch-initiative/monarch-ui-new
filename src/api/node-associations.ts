@@ -63,7 +63,7 @@ interface _Associations {
 export const getTabulatedAssociations = async (
   nodeId = "",
   nodeCategory = "",
-  assocationCategory = "",
+  associationCategory = "",
   rows = 10,
   start = 0,
   search = "",
@@ -73,8 +73,8 @@ export const getTabulatedAssociations = async (
 ): Promise<Associations> => {
   /** get causal/correlated param */
   let type = "both";
-  if (assocationCategory.startsWith("causal-")) type = "causal";
-  if (assocationCategory.startsWith("correlated-")) type = "non_causal";
+  if (associationCategory.startsWith("causal-")) type = "causal";
+  if (associationCategory.startsWith("correlated-")) type = "non_causal";
 
   /** make query params */
   const params = {
@@ -91,7 +91,7 @@ export const getTabulatedAssociations = async (
 
   /** make query */
   const url = `${biolink}/bioentity/${nodeCategory}/${nodeId}/${getAssociationEndpoint(
-    assocationCategory
+    associationCategory
   )}`;
   const response = await request<_Associations>(url, params);
 
@@ -158,7 +158,7 @@ export const getTabulatedAssociations = async (
   );
 
   /** supplement publication with metadata from entrez */
-  {
+  try {
     /** get list of publication ids */
     const ids = associations
       .filter((association) => association.object.category === "publication")
@@ -179,6 +179,8 @@ export const getTabulatedAssociations = async (
       association.year = String(publication.date?.getFullYear() || "");
       association.publisher = publication.journal;
     }
+  } catch (error) {
+    console.warn("Couldn't get publication-specific metadata");
   }
 
   /** get facets for filters */
@@ -263,7 +265,7 @@ export interface Associations {
 export const getTopAssociations = async (
   nodeId = "",
   nodeCategory = "",
-  assocationCategory = ""
+  associationCategory = ""
 ): Promise<Associations["associations"]> =>
-  (await getTabulatedAssociations(nodeId, nodeCategory, assocationCategory, 5))
+  (await getTabulatedAssociations(nodeId, nodeCategory, associationCategory, 5))
     .associations;

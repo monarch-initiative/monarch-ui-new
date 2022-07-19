@@ -106,23 +106,23 @@ const {
 }, []);
 
 /** get text content and filename from upload button */
-function onUpload(data = "", file = "") {
+async function onUpload(data = "", file = "") {
   content.value = data;
   filename.value = file;
-  annotate();
+  await annotate();
 }
 
 /** on textbox change */
-function onChange() {
+async function onChange() {
   filename.value = "";
-  annotate();
+  await annotate();
 }
 
 /** example full text */
-function doExample() {
+async function doExample() {
   content.value = example.content;
   filename.value = "Example";
-  annotate();
+  await annotate();
 }
 
 /** download annotations */
@@ -147,8 +147,8 @@ function analyze() {
 }
 
 /** run annotations on mount if content loaded from storage */
-onMounted(() => {
-  if (content.value) annotate();
+onMounted(async () => {
+  if (content.value) await annotate();
 });
 </script>
 

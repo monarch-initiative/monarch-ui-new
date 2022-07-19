@@ -35,7 +35,7 @@ export const getHierarchy = async (
     relationship_type: ["disease", "phenotype", "anatomy", "function"].includes(
       category
     )
-      ? /** only do subclass and "part of"for certain node types */
+      ? /** only do subclass and "part of" for certain node types */
         ["equivalentClass", "subClassOf", partOf]
       : /** otherwise just look for equivalent classes */
         "equivalentClass",

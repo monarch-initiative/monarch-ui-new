@@ -8,11 +8,15 @@ import App from "@/App.vue";
 expect.extend(toHaveNoViolations);
 
 /** get list of page paths to check */
-const exclude = ["NotFound"];
 const pages = routes
-  .filter((route) => !exclude.includes(String(route.name || "")))
+  /** exclude fuzzy-matched paths and other specific pages */
+  .filter(
+    (route) =>
+      !["Node", "NodeRaw", "NotFound", "Testbed"].includes(String(route.name))
+  )
+  /** paths to navigate to */
   .map((route) => route.path)
-  /** specific node pages to check */
+  /** specific paths to check */
   .concat(["/disease/MONDO:012345"]);
 
 test(

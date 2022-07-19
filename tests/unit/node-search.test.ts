@@ -1,4 +1,4 @@
-import { getSearchResults } from "./../../src/api/node-search";
+import { getSearchResults } from "@/api/node-search";
 
 /** expected results */
 const result = {

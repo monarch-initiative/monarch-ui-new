@@ -12,7 +12,7 @@ import { cloneDeep } from "lodash";
 import router from "@/router";
 import components from "@/global/components";
 import plugins from "@/global/plugins";
-import { sleep } from "./../src/util/debug";
+import { sleep } from "@/util/debug";
 import { handlers } from "./fixtures";
 import "@/global/icons";
 

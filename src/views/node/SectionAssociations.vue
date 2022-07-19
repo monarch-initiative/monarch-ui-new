@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
 import { Option, Options } from "@/components/AppSelectSingle";
@@ -135,8 +135,7 @@ function setCategoryFromUrl() {
       (option) => option.id === route.query.associations
     );
 }
-watch(() => route.query.associations, setCategoryFromUrl);
-onMounted(setCategoryFromUrl);
+watch(() => route.query.associations, setCategoryFromUrl, { immediate: true });
 
 /** auto-select first category */
 watch(

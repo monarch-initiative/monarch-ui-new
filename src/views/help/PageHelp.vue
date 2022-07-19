@@ -47,7 +47,7 @@
     <AppStatus v-if="isLoading" code="loading">Loading checks</AppStatus>
     <AppStatus v-if="isError" code="error">Error loading checks</AppStatus>
 
-    <!-- indiviual statuses -->
+    <!-- individual statuses -->
     <AppGallery size="small">
       <AppStatus
         v-for="(uptime, index) in uptimes"

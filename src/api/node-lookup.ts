@@ -108,7 +108,7 @@ export const lookupNode = async (id = "", category = ""): Promise<Node> => {
       metadata.symbol = gene.symbol;
       metadata.genome = gene.genome;
     } catch (error) {
-      console.warn("Couldn't load gene-sepecific metadata");
+      console.warn("Couldn't load gene-specific metadata");
     }
   }
 

@@ -8,16 +8,21 @@ import { ref, watch } from "vue";
  */
 
 /** variables */
-export const appTitle = ref(process.env.VUE_APP_TITLE);
+export const appTitle = ref([process.env.VUE_APP_TITLE]);
 export const appDescription = ref(process.env.VUE_APP_DESCRIPTION);
 export const appUrl = ref(process.env.VUE_APP_DESCRIPTION);
 
 /** update document title meta tags */
 watch(appTitle, () => {
-  document.title = appTitle.value || "";
-  setTag("title", appTitle.value);
-  setTag("og:title", appTitle.value);
-  setTag("twitter:title", appTitle.value);
+  const title = appTitle.value
+    .concat([process.env.VUE_APP_TITLE])
+    .filter((part) => part)
+    .join(" | ");
+
+  document.title = title || "";
+  setTag("title", title);
+  setTag("og:title", title);
+  setTag("twitter:title", title);
 });
 
 /** update document description meta tags */

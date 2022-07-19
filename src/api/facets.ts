@@ -23,7 +23,7 @@ export const facetsToFilters = (facets: Facets): Filters => {
     }
   }
 
-  /** delete certain facets (explicitly, opt-out) that we dont' want to show */
+  /** delete certain facets (explicitly, opt-out) that we don't want to show */
   delete filters["_taxon_map"];
 
   /** rename facet names to be consistent, and to be what biolink expects in future queries */
@@ -35,7 +35,7 @@ export const facetsToFilters = (facets: Facets): Filters => {
 
 /** convert filters to query for passing to api funcs */
 export const filtersToQuery = (filters: Filters): Query =>
-  mapValues(filters, (array) => array.map(({ id }) => id)) as Query;
+  mapValues(filters, (array) => array.map(({ id }) => id));
 
 /** convert query to params for passing to request func */
 export const queryToParams = async (
@@ -43,6 +43,7 @@ export const queryToParams = async (
   activeFilters: Query
 ): Promise<Params> => {
   const params: Params = {};
+
   for (const [key, query] of Object.entries(activeFilters)) {
     /** ignore filter if value "empty" (none active) or "full" (all active) */
     const noneActive = query.length === 0;
@@ -52,7 +53,13 @@ export const queryToParams = async (
 
     /** do special mapping for certain keys */
     let mapped = query;
-    if (key === "taxon") mapped = await getIdsFromLabels(mapped);
+    if (key === "taxon") {
+      try {
+        mapped = await getIdsFromLabels(mapped);
+      } catch (error) {
+        console.warn("Couldn't map taxon label to id");
+      }
+    }
 
     /** set param */
     params[key] = mapped;

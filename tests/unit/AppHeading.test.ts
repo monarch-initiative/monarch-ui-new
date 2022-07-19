@@ -1,12 +1,12 @@
 import { nextTick } from "vue";
 import { mount } from "../setup";
-import AppHeadings from "./AppHeadings.vue";
+import AppHeadingsTest from "./AppHeadings.test.vue";
 
 const tags = "h1, h2, h3";
 
 test("Chooses heading levels correctly", async () => {
   /** mount test component */
-  const wrapper = mount(AppHeadings);
+  const wrapper = mount(AppHeadingsTest);
   await nextTick();
 
   /** find all heading components */
@@ -20,7 +20,7 @@ test("Chooses heading levels correctly", async () => {
 
 test("Creates heading links correctly", async () => {
   /** mount hoc */
-  const wrapper = mount(AppHeadings);
+  const wrapper = mount(AppHeadingsTest);
   await nextTick();
 
   /** find all heading components */
