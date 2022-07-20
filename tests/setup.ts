@@ -6,6 +6,7 @@ import {
   VueWrapper,
   mount as vueMount,
 } from "@vue/test-utils";
+import { toHaveNoViolations } from "jest-axe";
 import { setupServer } from "msw/node";
 import fetch from "node-fetch";
 import { cloneDeep } from "lodash";
@@ -58,6 +59,9 @@ beforeEach(async () => {
 afterAll(async () => {
   await sleep();
 });
+
+/** add axe to jest */
+expect.extend(toHaveNoViolations);
 
 /** setup mock-service-worker for node.js (jest) */
 const server = setupServer(...handlers);

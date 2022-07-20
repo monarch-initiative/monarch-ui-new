@@ -59,11 +59,11 @@ test("Changes filter", async () => {
   const wrapper = mount(AppTable, props);
   const button = wrapper.findAll("thead button").at(2);
   await button?.trigger("click");
-  await wrapper.find("[role='option']").trigger("click");
+  await wrapper.findAll("[role='option']").at(1)?.trigger("click");
   await button?.trigger("keydown", { key: "Escape" });
   expect(emitted(wrapper, "filter")).toEqual(["score", []]);
   await button?.trigger("click");
-  await wrapper.findAll("[role='option']").at(1)?.trigger("click");
+  await wrapper.findAll("[role='option']").at(2)?.trigger("click");
   await button?.trigger("keydown", { key: "Escape" });
   expect(emitted(wrapper, "filter")).toEqual(["score", [{ id: "nulls" }]]);
 });

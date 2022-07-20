@@ -10,7 +10,7 @@
 <template>
   <div class="select-tags">
     <!-- select box -->
-    <div class="box" :data-focused="focused">
+    <div :id="`select-${id}`" class="box" :data-expanded="expanded">
       <!-- deselect button -->
       <AppButton
         v-for="(option, index) in selected"
@@ -35,12 +35,9 @@
           :aria-expanded="!!results.options.length"
           :aria-controls="`list-${id}`"
           aria-haspopup="listbox"
-          :aria-activedescendant="
-            focused ? `option-${id}-${highlighted}` : undefined
-          "
           aria-autocomplete="list"
-          @focus="focused = true"
-          @blur="focused = false"
+          @focus="expanded = true"
+          @blur="expanded = false"
           @keydown="onKeydown"
           @paste="onPaste"
         />
@@ -67,15 +64,23 @@
 
     <!-- dropdown -->
     <div
-      v-if="focused"
+      v-if="expanded"
       :id="`list-${id}`"
       class="list"
       role="listbox"
       tabindex="0"
+      :aria-labelledby="`select-${id}`"
+      :aria-activedescendant="
+        results.options.length ? `option-${id}-${highlighted}` : undefined
+      "
     >
       <!-- status -->
-      <AppStatus v-if="isLoading" code="loading">Loading results</AppStatus>
-      <AppStatus v-if="isError" code="error">Error loading results</AppStatus>
+      <AppStatus v-if="isLoading" code="loading" role="option"
+        >Loading results</AppStatus
+      >
+      <AppStatus v-if="isError" code="error" role="option"
+        >Error loading results</AppStatus
+      >
 
       <!-- list of results -->
       <div v-if="results.options.length" class="grid">
@@ -157,8 +162,8 @@ const selected = ref<Options>([]);
 const search = ref("");
 /** index of option that is highlighted */
 const highlighted = ref(0);
-/** whether input box focused */
-const focused = ref(false);
+/** whether input box focused and dropdown expanded */
+const expanded = ref(false);
 
 /** close results dropdown */
 function close() {
@@ -258,7 +263,7 @@ function clear() {
 
 /** copy selected ids to clipboard */
 async function copy() {
-  await window.navigator.clipboard.writeText(
+  await window.navigator.clipboard?.writeText(
     selected.value.map(({ id }) => id).join(",")
   );
   snackbar(`Copied ${selected.value.length} values`);
@@ -334,10 +339,10 @@ watch(
 /** run async get results func when search text changes */
 watch(search, async () => debouncedGetResults());
 
-/** when focused state changes */
-watch(focused, async () => {
-  /** get results when first focused */
-  if (focused.value) await getResults();
+/** when expanded state changes */
+watch(expanded, async () => {
+  /** get results when first expanded */
+  if (expanded.value) await getResults();
   /** clear search when input box blurred */ else close();
 });
 
@@ -380,7 +385,7 @@ onBeforeUnmount(() => {
 }
 
 .box:hover,
-.box[data-focused="true"] {
+.box[data-expanded="true"] {
   box-shadow: $outline;
 }
 
