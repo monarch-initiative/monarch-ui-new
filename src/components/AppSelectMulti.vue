@@ -57,6 +57,7 @@
         ref="dropdown"
         class="list"
         role="listbox"
+        :aria-labelledby="`select-${id}`"
         :aria-activedescendant="
           expanded ? `option-${id}-${highlighted}` : undefined
         "
@@ -68,8 +69,9 @@
           <div
             :id="`option-${id}--1`"
             class="option"
-            role="menuitem"
+            role="option"
             :aria-label="allSelected ? 'Deselect all' : 'Select all'"
+            :aria-selected="allSelected"
             :data-selected="allSelected"
             :data-highlighted="highlighted === -1"
             tabindex="0"
