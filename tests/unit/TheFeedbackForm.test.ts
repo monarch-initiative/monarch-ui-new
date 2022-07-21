@@ -11,7 +11,9 @@ test("Submits correctly when filled out", async () => {
   await textarea.setValue(testMessage);
 
   /** https://github.com/vuejs/vue-test-utils/issues/1932 */
-  await wrapper.find("button").element.focus();
+  (
+    (await wrapper.find("button[type='submit']")).element as HTMLButtonElement
+  ).focus();
   /** submit form */
   await wrapper.find("form").trigger("submit");
 

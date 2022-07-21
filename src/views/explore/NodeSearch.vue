@@ -6,26 +6,14 @@
 
 <template>
   <AppWrapper tag="AppSection" :wrap="$route.name !== 'Home'">
-    <!-- examples -->
-    <AppFlex>
-      <span>Try:</span>
-      <AppButton
-        v-for="(text, index) of examples"
-        :key="index"
-        :text="text"
-        design="small"
-        @click="doExample(text)"
-      />
-    </AppFlex>
-
     <!-- search box -->
-    <AppInput
-      ref="searchBox"
-      :model-value="search"
+    <AppSelectAutocomplete
+      v-model="searchRaw"
+      name="Node search"
       placeholder="Search for a gene, disease, phenotype, etc."
-      icon="search"
-      @change="onChange"
+      :options="getAutocomplete"
       @focus="onFocus"
+      @change="onChange"
     />
 
     <!-- filters -->
@@ -123,10 +111,15 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import { isEqual, kebabCase, startCase, uniq } from "lodash";
-import AppInput from "@/components/AppInput.vue";
+import { useLocalStorage } from "@vueuse/core";
+import AppSelectAutocomplete from "@/components/AppSelectAutocomplete.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import AppWrapper from "@/components/AppWrapper.vue";
-import { getSearchResults, Results } from "@/api/node-search";
+import {
+  getAutocompleteResults,
+  getSearchResults,
+  SearchResults,
+} from "@/api/node-search";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import { Options } from "@/components/AppSelectMulti";
 import { useRoute, useRouter } from "vue-router";
@@ -138,24 +131,10 @@ import { appTitle } from "@/global/meta";
 const router = useRouter();
 const route = useRoute();
 
-/** example searches */
-const examples = ["Marfan Syndrome", "Multicystic Kidney Dysplasia", "SSH"];
-
-/** default filters to show before anything typed in */
-/*
-const defaultFilters = {
-  category: [
-    { id: "gene" },
-    { id: "disease" },
-    { id: "phenotype" },
-    { id: "genotype" },
-    { id: "variant" },
-  ],
-};
-*/
-
 /** submitted search text */
 const search = ref(String(route.query.search || ""));
+/** live/raw search text, just to sync with input component */
+const searchRaw = ref(search.value);
 /** current page number */
 const page = ref(0);
 /** results per page */
@@ -163,6 +142,9 @@ const perPage = ref(10);
 /** filters (facets) for search */
 const availableFilters = ref<Record<string, Options>>({});
 const activeFilters = ref<Record<string, Options>>({});
+
+/** raw, in-order history of searches */
+const history = useLocalStorage<Array<string>>("node-search-history", []);
 
 /** when user focuses text box */
 async function onFocus() {
@@ -176,7 +158,6 @@ async function onFocus() {
 function onChange(value: string) {
   search.value = value;
   page.value = 0;
-  getResults(true);
 }
 
 /** when user changes active filters */
@@ -185,10 +166,9 @@ function onFilterChange() {
   getResults(false);
 }
 
-/** enter in clicked example and search */
-function doExample(value: string) {
-  search.value = value;
-  getResults(true);
+/** get autocomplete results */
+async function getAutocomplete(search: string) {
+  return await getAutocompleteResults(search);
 }
 
 /** get search results */
@@ -204,7 +184,7 @@ const {
      * when search text changes, false when filters/pagination/etc change.
      */
     fresh: boolean
-  ): Promise<Results> {
+  ): Promise<SearchResults> {
     /** get results from api */
     const response = await getSearchResults(
       search.value,
@@ -226,6 +206,9 @@ const {
       availableFilters.value = { ...response.facets };
       activeFilters.value = { ...response.facets };
     }
+
+    /** add search to history */
+    if (search.value) history.value.push(search.value);
   }
 );
 
@@ -320,6 +303,7 @@ const showCounts = computed(() =>
   flex-shrink: 0;
   flex-grow: 0;
 }
+
 .name {
   flex-grow: 1;
 }

@@ -3,7 +3,7 @@
 -->
 
 <template>
-  <div class="gallery" :data-size="size">
+  <div :class="'gallery ' + $style.gallery" :data-size="size">
     <slot />
   </div>
 </template>
@@ -17,7 +17,7 @@ interface Props {
 withDefaults(defineProps<Props>(), { size: "medium" });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 $two: 900px;
 $one: 600px;
 $cell: minmax(100px, 1fr);
@@ -52,7 +52,9 @@ $cell: minmax(100px, 1fr);
     grid-template-columns: $cell;
   }
 }
+</style>
 
+<style lang="scss" scoped>
 /** force no margins for children since grid already provides gap */
 .gallery > :deep(*) {
   margin: 0 !important;

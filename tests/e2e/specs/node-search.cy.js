@@ -10,7 +10,9 @@ it("Redirects to explore page from home page", () => {
 
 it("Basic search results show", () => {
   cy.visit("/explore");
+  cy.get("input").trigger("focus");
   cy.get("input").type("Marfan");
+  cy.get("input").trigger("blur");
 
   cy.contains("neonatal Marfan syndrome").as("result");
   cy.get("@result")
@@ -20,7 +22,9 @@ it("Basic search results show", () => {
 
 it("Pagination works", () => {
   cy.visit("/explore");
+  cy.get("input").trigger("focus");
   cy.get("input").type("Marfan");
+  cy.get("input").trigger("blur");
 
   cy.contains("1 to 10 of 61 results");
   cy.contains("button", /^2$/).trigger("click");
@@ -29,7 +33,9 @@ it("Pagination works", () => {
 
 it("Filters show", () => {
   cy.visit("/explore");
+  cy.get("input").trigger("focus");
   cy.get("input").type("Marfan");
+  cy.get("input").trigger("blur");
 
   cy.contains("Category").trigger("click");
   cy.contains(/Disease*.25/).should("exist");

@@ -7,7 +7,7 @@
 <template>
   <AppSection>
     <!-- search box -->
-    <AppInput
+    <AppTextbox
       v-model="content"
       :multi="true"
       icon="file-lines"
@@ -76,7 +76,7 @@
 import { onMounted } from "vue";
 import { useLocalStorage } from "@vueuse/core";
 import { kebabCase, uniqBy } from "lodash";
-import AppInput from "@/components/AppInput.vue";
+import AppTextbox from "@/components/AppTextbox.vue";
 import AppUpload from "@/components/AppUpload.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import example from "./text-annotator.json";

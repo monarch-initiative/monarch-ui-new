@@ -349,7 +349,7 @@ const allSelected = computed(
   overflow-y: auto;
   background: $white;
   box-shadow: $shadow;
-  z-index: 2;
+  z-index: 12;
 }
 
 .grid {

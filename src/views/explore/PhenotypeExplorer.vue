@@ -122,20 +122,6 @@
       </div>
     </AppFlex>
 
-    <!-- spacing for dropdown when no results -->
-    <template v-else>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-    </template>
-
     <!-- phenogrid results -->
     <template v-if="comparison.matches.length">
       <strong>Phenotype Similarity Comparison</strong>
@@ -172,9 +158,9 @@ const multiTooltip = `In this box, you can select phenotypes in 3 ways:<br>
 
 /** options for mode of second set */
 const bModeOptions = [
+  { id: "these phenotypes ..." },
   { id: "phenotypes from all genes of ..." },
   { id: "phenotypes from all human diseases" },
-  { id: "these phenotypes ..." },
 ];
 
 /**
@@ -227,9 +213,9 @@ const bGeneratedFrom = ref({} as GeneratedFrom);
 
 /** example phenotype set comparison */
 function doExample1() {
+  bMode.value = bModeOptions[0];
   aPhenotypes.value = exampleAPhenotypes;
   bPhenotypes.value = exampleBPhenotypes;
-  bMode.value = bModeOptions[2];
 }
 
 /** comparison analysis */

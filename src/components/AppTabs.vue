@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { uniqueId } from "lodash";
-import { useRouter, useRoute, RouteLocation } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { wrap } from "@/util/math";
 
 /** route info */
@@ -66,8 +66,8 @@ interface Props {
   name: string;
   /** whether to sync active tab with url hash */
   url?: boolean;
-  /** route to navigate to on change */
-  route?: RouteLocation;
+  /** route name to navigate to on change */
+  route?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -126,12 +126,12 @@ watch(
     const button = document?.querySelector(selector) as HTMLButtonElement;
     button?.focus();
 
-    /** update hash in url */
-    if (props.url)
-      await router.replace({
-        ...(props.route || route),
-        hash: "#" + props.modelValue,
-      });
+    /** update hash in url and nav if applicable */
+    await router.push({
+      name: props.route || undefined,
+      hash: props.url ? "#" + props.modelValue : undefined,
+      replace: !props.route,
+    });
   }
 );
 

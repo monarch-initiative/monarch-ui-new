@@ -16,26 +16,26 @@
   <form @submit.prevent="onSubmit">
     <!-- fields for user to fill out -->
     <div class="fields">
-      <AppInput
+      <AppTextbox
         v-model.trim="name"
         title="Name"
         description="So we can address you"
         placeholder="Jane Smith"
       />
-      <AppInput
+      <AppTextbox
         v-model.trim="email"
         title="Email"
         description="So we can follow up with you"
         placeholder="jane.smith@gmail.com"
         type="email"
       />
-      <AppInput
+      <AppTextbox
         v-model.trim="github"
         title="GitHub username"
         description="So we can tag you"
         placeholder="@janesmith"
       />
-      <AppInput
+      <AppTextbox
         v-model="feedback"
         class="feedback"
         title="Feedback"
@@ -84,7 +84,7 @@ import { useRoute } from "vue-router";
 import { useLocalStorage } from "@vueuse/core";
 import { truncate } from "lodash";
 import parser from "ua-parser-js";
-import AppInput from "@/components/AppInput.vue";
+import AppTextbox from "@/components/AppTextbox.vue";
 import AppStatus from "./AppStatus.vue";
 import { collapse } from "@/util/string";
 import { postFeedback } from "@/api/feedback";

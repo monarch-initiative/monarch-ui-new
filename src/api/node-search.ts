@@ -2,7 +2,7 @@ import { biolink, request } from ".";
 import { Filters, Query, facetsToFilters, queryToParams } from "./facets";
 
 /** search results (from backend) */
-interface _Results {
+interface _SearchResults {
   numFound: number;
   docs: Array<{
     id: string;
@@ -28,7 +28,7 @@ export const getSearchResults = async (
   availableFilters: Query = {},
   activeFilters: Query = {},
   start = 0
-): Promise<Results> => {
+): Promise<SearchResults> => {
   const empty = { count: 0, results: [], facets: {} };
 
   /** if nothing searched, return empty */
@@ -52,7 +52,7 @@ export const getSearchResults = async (
 
   /** make query */
   const url = `${biolink}/search/entity/${search}`;
-  const response = await request<_Results>(url, params);
+  const response = await request<_SearchResults>(url, params);
   const {
     numFound: count = 0,
     docs = [],
@@ -83,7 +83,7 @@ export const getSearchResults = async (
 };
 
 /** search results (for frontend) */
-export interface Results {
+export interface SearchResults {
   count: number;
   results: Array<{
     id: string;
@@ -98,3 +98,33 @@ export interface Results {
   }>;
   facets: Filters;
 }
+
+/** autocomplete results (from backend) */
+interface _Autocomplete {
+  docs: [
+    {
+      match?: string;
+      highlight?: string;
+    }
+  ];
+}
+
+/** search for quick autocomplete matches to query string */
+export const getAutocompleteResults = async (
+  search = ""
+): Promise<Autocomplete> => {
+  const url = `${biolink}/search/entity/autocomplete/${search}`;
+  const response = await request<_Autocomplete>(url);
+
+  /** transform into desired format */
+  return response.docs.map((result) => ({
+    name: result.match || "",
+    highlight: result.highlight || "",
+  }));
+};
+
+/** autocomplete results (for frontend) */
+type Autocomplete = Array<{
+  name: string;
+  highlight: string;
+}>;

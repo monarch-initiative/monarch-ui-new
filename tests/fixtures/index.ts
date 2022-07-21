@@ -6,6 +6,7 @@ import datasets from "./datasets.json";
 import ontologies from "./ontologies.json";
 import uptime from "./uptime.json";
 import feedback from "./feedback.json";
+import nodeAutocomplete from "./node-autocomplete.json";
 import nodeSearch from "./node-search.json";
 import textAnnotator from "./text-annotator.json";
 import phenotypeExplorerSearch from "./phenotype-explorer-search.json";
@@ -37,6 +38,11 @@ export const handlers = [
   /** submit feedback form */
   rest.post(/monarch-gh-issue-post/i, (req, res, ctx) =>
     res(ctx.status(200), ctx.json(feedback))
+  ),
+
+  /** node autocomplete */
+  rest.get(/search\/entity\/autocomplete/i, (req, res, ctx) =>
+    res(ctx.status(200), ctx.json(nodeAutocomplete))
   ),
 
   /** node search */
