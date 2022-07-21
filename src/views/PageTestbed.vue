@@ -38,29 +38,16 @@
     <AppRing />
   </AppSection>
 
-  <!-- table component -->
-  <AppSection>
-    <AppHeading>Table</AppHeading>
-    <span>{{ omit(table, ["cols", "rows"]) }}</span>
-    <AppTable
-      v-bind="table"
-      v-model:per-page="table.perPage"
-      v-model:start="table.start"
-      v-model:search="table.search"
-      @sort="(value) => (table.sort = value)"
-      @filter="
-        (colId, value) => ((table.activeFilters || {})[colId] = [...value])
-      "
-    >
-      <template #arbitrary>Arbitrary slot content</template>
-    </AppTable>
-  </AppSection>
-
   <!-- input component -->
   <AppSection>
     <AppHeading>Input</AppHeading>
-    <AppInput icon="search" placeholder="Single line input" />
-    <AppInput :multi="true" icon="search" placeholder="Multi-line input" />
+    <AppTextbox v-model="input" icon="search" placeholder="Single line input" />
+    <AppTextbox
+      v-model="input"
+      :multi="true"
+      icon="search"
+      placeholder="Multi-line input"
+    />
   </AppSection>
 
   <!-- single select component -->
@@ -69,7 +56,7 @@
     <span>{{ singleSelectValue }}</span>
     <AppSelectSingle
       v-model="singleSelectValue"
-      name="Fruit"
+      name="Fruits"
       :options="singleSelectOptions"
     />
   </AppSection>
@@ -105,9 +92,18 @@
     <span>{{ tagsSelectValue }}</span>
     <AppSelectTags
       v-model="tagsSelectValue"
-      name="Dessert"
+      name="Desserts"
       placeholder="Search for a dessert"
       :options="tagsSelectOptions"
+    />
+  </AppSection>
+
+  <!-- autocomplete select component -->
+  <AppSection>
+    <AppHeading>Autocomplete Select</AppHeading>
+    <AppSelectAutocomplete
+      name="Animals"
+      :options="autocompleteSelectOptions"
     />
   </AppSection>
 
@@ -145,6 +141,24 @@
       <AppStatus code="unknown">Unexpected result</AppStatus>
     </AppGallery>
   </AppSection>
+
+  <!-- table component -->
+  <AppSection>
+    <AppHeading>Table</AppHeading>
+    <span>{{ omit(table, ["cols", "rows"]) }}</span>
+    <AppTable
+      v-bind="table"
+      v-model:per-page="table.perPage"
+      v-model:start="table.start"
+      v-model:search="table.search"
+      @sort="(value) => (table.sort = value)"
+      @filter="
+        (colId, value) => ((table.activeFilters || {})[colId] = [...value])
+      "
+    >
+      <template #arbitrary>Arbitrary slot content</template>
+    </AppTable>
+  </AppSection>
 </template>
 
 <script setup lang="ts">
@@ -153,15 +167,19 @@ import { omit } from "lodash";
 import AppButton from "@/components/AppButton.vue";
 import AppInput from "@/components/AppInput.vue";
 import AppRing from "@/components/AppRing.vue";
+import AppSelectAutocomplete from "@/components/AppSelectAutocomplete.vue";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
 import AppSelectTags from "@/components/AppSelectTags.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import AppTable from "@/components/AppTable.vue";
 import AppTabs from "@/components/AppTabs.vue";
+import AppTextbox from "@/components/AppTextbox.vue";
 import { Cols, Rows, Sort } from "@/components/AppTable";
 import { sleep } from "@/util/debug";
 import { Filters } from "@/api/facets";
+
+const input = ref("");
 
 type ButtonProps = InstanceType<typeof AppButton>["$props"];
 
@@ -180,6 +198,71 @@ for (const design of ["normal", "circle", "small"]) {
     buttons.value.push(row);
   }
 }
+
+/** single select */
+const singleSelectOptions = ref([
+  { id: "apple" },
+  { id: "banana" },
+  { id: "cherry" },
+  { id: "durian" },
+  { id: "elderberry" },
+  { id: "fig" },
+  { id: "grape" },
+  { id: "honeydew" },
+]);
+const singleSelectValue = ref({ id: "durian" });
+
+/** multi select */
+const multiSelectOptions = ref([
+  { id: "fruits", count: 0 },
+  { id: "vegetables", count: 7 },
+  { id: "colors", count: 42 },
+  { id: "animals", count: 999 },
+  { id: "cars" },
+  { id: "schools" },
+  { id: "appliances" },
+]);
+const multiSelectValue = ref([{ id: "vegetables" }]);
+
+/** tags select */
+const tagsSelectOptions = ref(async (search = "") => {
+  await sleep(500); /** test loading spinner */
+  return {
+    options: [
+      { id: "ice cream", icon: "home" },
+      { id: "candy", icon: "database", count: "8 phenotypes" },
+      { id: "gummies", icon: "download", count: "4 phenotypes" },
+      { id: "brownies", icon: "puzzle-piece", count: "1 phenotype" },
+      { id: "cookies", icon: "comment" },
+    ].filter(({ id }) => id.includes(search)),
+    message: "Selected item!",
+  };
+});
+const tagsSelectValue = ref([
+  { id: "candy", icon: "database", count: "8 phenotypes" },
+]);
+
+/** autocomplete select */
+const autocompleteSelectOptions = ref(async () => {
+  await sleep(500); /** test loading spinner */
+  return [
+    { icon: "home", name: "Cat" },
+    { icon: "database", name: "Dog" },
+    { icon: "download", name: "Zebra" },
+  ];
+});
+
+/** tabs */
+const tabs = [
+  { id: "apple", text: "Apple", icon: "asterisk" },
+  { id: "banana", text: "Banana", icon: "cogs" },
+  { id: "cherry", text: "Cherry", icon: "home" },
+  { id: "durian", text: "Durian", icon: "puzzle-piece" },
+  { id: "elderberry", text: "Elderberry", icon: "tools" },
+];
+
+/** selected tab */
+const tab = ref(tabs[0].id);
 
 /** table input props */
 const table = ref({
@@ -228,61 +311,6 @@ const table = ref({
   availableFilters: { score: [{ id: "numbers" }, { id: "nulls" }] } as Filters,
   activeFilters: { score: [{ id: "numbers" }] } as Filters,
 });
-
-/** single select */
-const singleSelectOptions = ref([
-  { id: "apple" },
-  { id: "banana" },
-  { id: "cherry" },
-  { id: "durian" },
-  { id: "elderberry" },
-  { id: "fig" },
-  { id: "grape" },
-  { id: "honeydew" },
-]);
-const singleSelectValue = ref({ id: "durian" });
-
-/** multi select */
-const multiSelectOptions = ref([
-  { id: "fruits", count: 0 },
-  { id: "vegetables", count: 7 },
-  { id: "colors", count: 42 },
-  { id: "animals", count: 999 },
-  { id: "cars" },
-  { id: "schools" },
-  { id: "appliances" },
-]);
-const multiSelectValue = ref([{ id: "vegetables" }]);
-
-/** tags select */
-const tagsSelectOptions = ref(async (search = "") => {
-  await sleep(500); /** test loading spinner */
-  return {
-    options: [
-      { id: "ice cream", icon: "home" },
-      { id: "candy", icon: "database", count: "8 phenotypes" },
-      { id: "gummies", icon: "download", count: "4 phenotypes" },
-      { id: "brownies", icon: "puzzle-piece", count: "1 phenotype" },
-      { id: "cookies", icon: "comment" },
-    ].filter(({ id }) => id.includes(search)),
-    message: "Selected item!",
-  };
-});
-const tagsSelectValue = ref([
-  { id: "candy", icon: "database", count: "8 phenotypes" },
-]);
-
-/** tabs */
-const tabs = [
-  { id: "apple", text: "Apple", icon: "asterisk" },
-  { id: "banana", text: "Banana", icon: "cogs" },
-  { id: "cherry", text: "Cherry", icon: "home" },
-  { id: "durian", text: "Durian", icon: "puzzle-piece" },
-  { id: "elderberry", text: "Elderberry", icon: "tools" },
-];
-
-/** selected tab */
-const tab = ref(tabs[0].id);
 
 /** util */
 const log = console.info;

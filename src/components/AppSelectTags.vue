@@ -10,7 +10,12 @@
 <template>
   <div class="select-tags">
     <!-- select box -->
-    <div :id="`select-${id}`" class="box" :data-expanded="expanded">
+    <div
+      :id="`select-${id}`"
+      ref="target"
+      class="box"
+      :data-expanded="expanded"
+    >
       <!-- deselect button -->
       <AppButton
         v-for="(option, index) in selected"
@@ -26,7 +31,7 @@
 
       <AppFlex>
         <!-- input box -->
-        <input
+        <AppInput
           v-model="search"
           v-tooltip="{ content: tooltip, offset: [20, 20] }"
           :placeholder="placeholder"
@@ -36,13 +41,14 @@
           :aria-controls="`list-${id}`"
           aria-haspopup="listbox"
           aria-autocomplete="list"
-          @focus="expanded = true"
-          @blur="expanded = false"
+          @focus="open"
+          @blur="close"
+          @debounce="getResults"
           @keydown="onKeydown"
           @paste="onPaste"
         />
 
-        <span class="meta">
+        <div class="controls">
           <!-- copy ids -->
           <AppButton
             v-tooltip="`Copy selected values`"
@@ -58,60 +64,64 @@
             icon="times"
             @click="clear"
           />
-        </span>
+        </div>
       </AppFlex>
     </div>
 
     <!-- dropdown -->
-    <div
-      v-if="expanded"
-      :id="`list-${id}`"
-      class="list"
-      role="listbox"
-      tabindex="0"
-      :aria-labelledby="`select-${id}`"
-      :aria-activedescendant="
-        results.options.length ? `option-${id}-${highlighted}` : undefined
-      "
-    >
-      <!-- status -->
-      <AppStatus v-if="isLoading" code="loading" role="option"
-        >Loading results</AppStatus
+    <Teleport to="body">
+      <div
+        v-if="expanded"
+        :id="`list-${id}`"
+        ref="dropdown"
+        class="list"
+        role="listbox"
+        tabindex="0"
+        :aria-labelledby="`select-${id}`"
+        :aria-activedescendant="
+          results.options.length ? `option-${id}-${highlighted}` : undefined
+        "
+        :style="style"
       >
-      <AppStatus v-if="isError" code="error" role="option"
-        >Error loading results</AppStatus
-      >
-
-      <!-- list of results -->
-      <div v-if="results.options.length" class="grid">
-        <div
-          v-for="(option, index) in availableResults"
-          :id="`option-${id}-${index}`"
-          :key="index"
-          class="option"
-          role="option"
-          :aria-selected="true"
-          :data-highlighted="index === highlighted"
-          tabindex="0"
-          @click="select(option)"
-          @mouseenter="highlighted = index"
-          @mousedown.prevent=""
-          @focusin="() => null"
-          @keydown="() => null"
+        <!-- status -->
+        <AppStatus v-if="isLoading" code="loading" role="option"
+          >Loading results</AppStatus
         >
-          <span class="option-icon">
-            <AppIcon :icon="option.icon || ''" />
-          </span>
-          <span class="option-label">
-            <span
-              class="truncate"
-              v-html="option.highlight || option.name || option.id"
-            ></span>
-          </span>
-          <span class="option-info truncate">{{ option.info }}</span>
+        <AppStatus v-if="isError" code="error" role="option"
+          >Error loading results</AppStatus
+        >
+
+        <!-- list of results -->
+        <div v-if="results.options.length" class="grid">
+          <div
+            v-for="(option, index) in availableResults"
+            :id="`option-${id}-${index}`"
+            :key="index"
+            class="option"
+            role="option"
+            :aria-selected="true"
+            :data-highlighted="index === highlighted"
+            tabindex="0"
+            @click="select(option)"
+            @mouseenter="highlighted = index"
+            @mousedown.prevent=""
+            @focusin="() => null"
+            @keydown="() => null"
+          >
+            <span class="option-icon">
+              <AppIcon :icon="option.icon || ''" />
+            </span>
+            <span class="option-label">
+              <span
+                class="truncate"
+                v-html="option.highlight || option.name || option.id"
+              ></span>
+            </span>
+            <span class="option-info truncate">{{ option.info }}</span>
+          </div>
         </div>
       </div>
-    </div>
+    </Teleport>
 
     <!-- description -->
     <div v-if="description" class="description">{{ description }}</div>
@@ -119,14 +129,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onBeforeUnmount } from "vue";
-import { uniqueId, isEqual, debounce, uniqBy } from "lodash";
+import { ref, computed, watch, nextTick } from "vue";
+import { uniqueId, isEqual, uniqBy } from "lodash";
 import { Option, Options, OptionsFunc } from "./AppSelectTags";
 import AppStatus from "@/components/AppStatus.vue";
 import { wrap } from "@/util/math";
 import { snackbar } from "./TheSnackbar";
 import { sleep } from "@/util/debug";
-import { useQuery } from "@/util/composables";
+import { useFloating, useQuery } from "@/util/composables";
+import AppInput from "./AppInput.vue";
 
 interface Props {
   /** two-way bound selected items state */
@@ -165,12 +176,19 @@ const highlighted = ref(0);
 /** whether input box focused and dropdown expanded */
 const expanded = ref(false);
 
+/** open results dropdown */
+async function open() {
+  expanded.value = true;
+  highlighted.value = -1;
+  await getResults();
+}
+
 /** close results dropdown */
 function close() {
+  expanded.value = false;
   search.value = "";
   results.value = { options: [] };
-  highlighted.value = 0;
-  debouncedGetResults.cancel();
+  highlighted.value = -1;
 }
 
 /** when user presses key in input */
@@ -197,15 +215,10 @@ function onKeydown(event: KeyboardEvent) {
   }
 
   /** enter key to de/select highlighted result */
-  if (event.key === "Enter") {
+  if (event.key === "Enter" && highlighted.value >= 0) {
     /** prevent browser re-clicking open button */
     event.preventDefault();
-    if (availableResults.value[highlighted.value]) {
-      select(availableResults.value[highlighted.value]);
-      /** if highlighted beyond last option, clamp */
-      if (highlighted.value > availableResults.value.length - 1)
-        highlighted.value = availableResults.value.length - 1;
-    }
+    select(availableResults.value[highlighted.value]);
   }
 
   /** esc key to close dropdown */
@@ -277,9 +290,6 @@ const {
 } = useQuery(
   /** get list of results */
   async function () {
-    /** cancel any pending calls */
-    debouncedGetResults.cancel();
-
     /** reset highlighted */
     highlighted.value = 0;
 
@@ -314,6 +324,18 @@ const availableResults = computed(() =>
       )
 );
 
+/** target element */
+const target = ref();
+/** dropdown element */
+const dropdown = ref();
+/** get dropdown position */
+const { calculate, style } = useFloating(true);
+/** recompute position when length of results changes */
+watch([expanded, availableResults], async () => {
+  await nextTick();
+  if (expanded.value) calculate(target.value, dropdown.value);
+});
+
 /** when model changes */
 watch(
   () => props.modelValue,
@@ -336,30 +358,12 @@ watch(
   { deep: true }
 );
 
-/** run async get results func when search text changes */
-watch(search, async () => debouncedGetResults());
-
-/** when expanded state changes */
-watch(expanded, async () => {
-  /** get results when first expanded */
-  if (expanded.value) await getResults();
-  /** clear search when input box blurred */ else close();
-});
-
 /** when highlighted index changes */
 watch(highlighted, () => {
   /** scroll to highlighted in dropdown */
   document
     .querySelector(`#option-${id.value}-${highlighted.value} > *`)
     ?.scrollIntoView({ block: "nearest" });
-});
-
-/** make instance-unique debounced method of getting results (async options) */
-const debouncedGetResults = debounce(getResults, 500);
-
-onBeforeUnmount(() => {
-  /** cancel any in-progress debounce */
-  debouncedGetResults.cancel();
 });
 </script>
 
@@ -401,7 +405,7 @@ input {
   font-size: 0.9rem;
 }
 
-.meta {
+.controls {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -409,14 +413,12 @@ input {
 }
 
 .list {
-  position: absolute;
   max-height: 300px;
-  width: 100%;
   overflow-x: auto;
   overflow-y: auto;
   background: $white;
   box-shadow: $shadow;
-  z-index: 2;
+  z-index: 12;
 }
 
 .grid {
