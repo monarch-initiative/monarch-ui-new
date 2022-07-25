@@ -11,4 +11,6 @@ export type Option = {
   highlight?: string;
   /** info col */
   info?: string;
+  /** tooltip on hover */
+  tooltip?: string;
 };

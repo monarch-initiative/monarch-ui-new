@@ -35,6 +35,7 @@
           v-model="search"
           v-tooltip="{ content: tooltip, offset: [20, 20] }"
           :placeholder="placeholder"
+          class="input"
           role="combobox"
           :aria-label="name"
           :aria-expanded="!!results.options.length"
@@ -92,33 +93,37 @@
         >
 
         <!-- list of results -->
-        <div v-if="results.options.length" class="grid">
-          <div
-            v-for="(option, index) in availableResults"
-            :id="`option-${id}-${index}`"
-            :key="index"
-            class="option"
-            role="option"
-            :aria-selected="true"
-            :data-highlighted="index === highlighted"
-            tabindex="0"
-            @click="select(option)"
-            @mouseenter="highlighted = index"
-            @mousedown.prevent=""
-            @focusin="() => null"
-            @keydown="() => null"
+        <div
+          v-for="(option, index) in availableResults"
+          :id="`option-${id}-${index}`"
+          :key="index"
+          v-tooltip="option.tooltip"
+          class="option"
+          role="option"
+          :aria-selected="true"
+          :data-highlighted="index === highlighted"
+          tabindex="0"
+          @click="select(option)"
+          @mouseenter.capture="highlighted = index"
+          @mousedown.prevent=""
+          @focusin="() => null"
+          @keydown="() => null"
+        >
+          <span>
+            <AppIcon
+              v-if="option.icon"
+              :icon="option.icon"
+              class="option-icon"
+            />
+          </span>
+          <span
+            class="option-label truncate"
+            v-html="option.highlight || option.name || option.id"
           >
-            <span class="option-icon">
-              <AppIcon :icon="option.icon || ''" />
-            </span>
-            <span class="option-label">
-              <span
-                class="truncate"
-                v-html="option.highlight || option.name || option.id"
-              ></span>
-            </span>
-            <span class="option-info truncate">{{ option.info }}</span>
-          </div>
+          </span>
+          <span v-if="option.info" class="option-info truncate">{{
+            option.info
+          }}</span>
         </div>
       </div>
     </Teleport>
@@ -216,7 +221,6 @@ function onKeydown(event: KeyboardEvent) {
 
   /** enter key to de/select highlighted result */
   if (event.key === "Enter" && highlighted.value >= 0) {
-    /** prevent browser re-clicking open button */
     event.preventDefault();
     select(availableResults.value[highlighted.value]);
   }
@@ -393,11 +397,8 @@ watch(highlighted, () => {
   box-shadow: $outline;
 }
 
-input {
+.input {
   flex-grow: 1;
-  appearance: none;
-  border: none;
-  outline: none;
 }
 
 .selected {
@@ -421,37 +422,17 @@ input {
   z-index: 12;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-auto-rows: 30px;
-  justify-content: stretch;
-  align-items: stretch;
-}
-
 .option {
-  display: contents;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 10px;
   cursor: pointer;
   transition: background $fast;
 }
 
-.option > * {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
-  overflow: hidden;
-
-  &:first-child {
-    padding-left: 10px;
-  }
-
-  &:last-child {
-    padding-right: 10px;
-  }
-}
-
-.option[data-highlighted="true"] > * {
+.option[data-highlighted="true"] {
   background: $light-gray;
 }
 
@@ -460,6 +441,7 @@ input {
 }
 
 .option-label {
+  flex-grow: 1;
   justify-content: flex-start;
 }
 

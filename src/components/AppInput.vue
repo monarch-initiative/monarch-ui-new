@@ -8,7 +8,7 @@
     ref="input"
     :value="modelValue"
     @focus="onFocus"
-    @blur.stop="onBlur"
+    @blur="onBlur"
     @input="onInput"
     @change="onChange"
   >
@@ -58,6 +58,7 @@ function onFocus() {
 function onBlur() {
   emit("blur");
   onDebounce.cancel();
+  onChange();
 }
 
 /** when user types in box */
@@ -72,8 +73,7 @@ const onDebounce = debounce(function (value: string) {
 }, props.debounce || 500);
 
 /** when user "commits" change (pressing enter, blurring, etc) */
-function onChange() {
-  /** if text changed since input focused */
+async function onChange() {
   emit("change", input.value.value);
   onDebounce.cancel();
 }

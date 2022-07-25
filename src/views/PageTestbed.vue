@@ -165,7 +165,6 @@
 import { ref } from "vue";
 import { omit } from "lodash";
 import AppButton from "@/components/AppButton.vue";
-import AppInput from "@/components/AppInput.vue";
 import AppRing from "@/components/AppRing.vue";
 import AppSelectAutocomplete from "@/components/AppSelectAutocomplete.vue";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
@@ -201,12 +200,12 @@ for (const design of ["normal", "circle", "small"]) {
 
 /** single select */
 const singleSelectOptions = ref([
-  { id: "apple" },
-  { id: "banana" },
-  { id: "cherry" },
-  { id: "durian" },
-  { id: "elderberry" },
-  { id: "fig" },
+  { id: "apple", icon: "lightbulb" },
+  { id: "banana", icon: "lightbulb" },
+  { id: "cherry", icon: "lightbulb", count: 54 },
+  { id: "durian", icon: "lightbulb", count: 54 },
+  { id: "elderberry", count: 54 },
+  { id: "fig", count: 54 },
   { id: "grape" },
   { id: "honeydew" },
 ]);
@@ -230,10 +229,10 @@ const tagsSelectOptions = ref(async (search = "") => {
   return {
     options: [
       { id: "ice cream", icon: "home" },
-      { id: "candy", icon: "database", count: "8 phenotypes" },
-      { id: "gummies", icon: "download", count: "4 phenotypes" },
-      { id: "brownies", icon: "puzzle-piece", count: "1 phenotype" },
-      { id: "cookies", icon: "comment" },
+      { id: "candy", icon: "database", info: "8 phenotypes" },
+      { id: "gummies", info: "4 phenotypes" },
+      { id: "brownies", icon: "puzzle-piece", info: "1 phenotype" },
+      { id: "cookies" },
     ].filter(({ id }) => id.includes(search)),
     message: "Selected item!",
   };
@@ -247,7 +246,7 @@ const autocompleteSelectOptions = ref(async () => {
   await sleep(500); /** test loading spinner */
   return [
     { icon: "home", name: "Cat" },
-    { icon: "database", name: "Dog" },
+    { name: "Dog", info: "good dog" },
     { icon: "download", name: "Zebra" },
   ];
 });

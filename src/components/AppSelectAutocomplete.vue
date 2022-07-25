@@ -55,33 +55,31 @@
         >
 
         <!-- list of results -->
-        <div v-if="results.length" class="grid">
-          <div
-            v-for="(option, index) in results"
-            :id="`option-${id}-${index}`"
-            :key="index"
-            class="option"
-            role="option"
-            :aria-selected="true"
-            :data-highlighted="index === highlighted"
-            tabindex="0"
-            @click="select(option.name)"
-            @mouseenter="highlighted = index"
-            @mousedown.prevent=""
-            @focusin="() => null"
-            @keydown="() => null"
+        <div
+          v-for="(option, index) in results"
+          :id="`option-${id}-${index}`"
+          :key="index"
+          v-tooltip="option.tooltip"
+          class="option"
+          role="option"
+          :aria-selected="true"
+          :data-highlighted="index === highlighted"
+          tabindex="0"
+          @click.prevent="select(option.name)"
+          @mouseenter.capture="highlighted = index"
+          @mousedown.prevent=""
+          @focusin="() => null"
+          @keydown="() => null"
+        >
+          <AppIcon v-if="option.icon" :icon="option.icon" class="option-icon" />
+          <span
+            class="option-label truncate"
+            v-html="option.highlight || option.name"
           >
-            <span class="option-icon">
-              <AppIcon :icon="option.icon || ''" />
-            </span>
-            <span class="option-label">
-              <span
-                class="truncate"
-                v-html="option.highlight || option.name"
-              ></span>
-            </span>
-            <span class="option-info truncate">{{ option.info }}</span>
-          </div>
+          </span>
+          <span v-if="option.info" class="option-info truncate">{{
+            option.info
+          }}</span>
         </div>
       </div>
     </Teleport>
@@ -122,6 +120,8 @@ interface Emits {
   (event: "focus"): void;
   /** when input value change "submitted"/"committed" by user */
   (event: "change", value: string): void;
+  /** when user wants to delete an entry */
+  (event: "delete", value: string): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -147,8 +147,6 @@ function close() {
   expanded.value = false;
   highlighted.value = -1;
   results.value = [];
-  if (document.activeElement?.matches("input"))
-    (document.activeElement as HTMLElement)?.blur();
 }
 
 /** when user focuses box */
@@ -173,7 +171,10 @@ function onChange(value: string) {
 }
 
 /** when user presses key in input */
-function onKeydown(event: KeyboardEvent) {
+async function onKeydown(event: KeyboardEvent) {
+  /** reopen if previously submitted */
+  expanded.value = true;
+
   /** arrow/home/end keys */
   if (["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
     /** prevent page scroll */
@@ -191,10 +192,13 @@ function onKeydown(event: KeyboardEvent) {
   }
 
   /** enter key to select highlighted result */
-  if (event.key === "Enter" && highlighted.value >= 0) {
-    /** prevent browser re-clicking open button */
-    event.preventDefault();
+  if (event.key === "Enter" && highlighted.value >= 0)
     select(results.value[highlighted.value].name);
+
+  /** delete key to delete the highlighted result */
+  if (event.key === "Delete" && event.shiftKey) {
+    emit("delete", results.value[highlighted.value].name);
+    await getResults();
   }
 
   /** esc key to close dropdown */
@@ -266,13 +270,6 @@ watch(highlighted, () => {
   min-height: 40px;
 }
 
-input {
-  flex-grow: 1;
-  appearance: none;
-  border: none;
-  outline: none;
-}
-
 .selected {
   min-height: unset !important;
   font-size: 0.9rem;
@@ -294,37 +291,17 @@ input {
   z-index: 12;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-auto-rows: 30px;
-  justify-content: stretch;
-  align-items: stretch;
-}
-
 .option {
-  display: contents;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 10px;
   cursor: pointer;
   transition: background $fast;
 }
 
-.option > * {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
-  overflow: hidden;
-
-  &:first-child {
-    padding-left: 10px;
-  }
-
-  &:last-child {
-    padding-right: 10px;
-  }
-}
-
-.option[data-highlighted="true"] > * {
+.option[data-highlighted="true"] {
   background: $light-gray;
 }
 
@@ -333,6 +310,7 @@ input {
 }
 
 .option-label {
+  flex-grow: 1;
   justify-content: flex-start;
 }
 

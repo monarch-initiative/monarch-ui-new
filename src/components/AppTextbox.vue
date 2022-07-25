@@ -8,15 +8,18 @@
       {{ title }}
       <AppIcon v-if="required" icon="asterisk" class="asterisk" />
     </div>
-    <div ref="textbox" class="textbox" :data-icon="!!icon">
+    <div ref="textbox" class="textbox">
       <AppInput
         ref="input"
+        class="input"
         v-bind="$attrs"
         :multi="multi"
         :model-value="modelValue"
         :placeholder="placeholder"
         :required="required"
         :debounce="debounce"
+        :data-multi="!!multi"
+        :data-icon="!!icon"
         @update:model-value="(...args) => $emit('update:modelValue', ...args)"
         @debounce="(...args) => $emit('debounce', ...args)"
         @change="(...args) => $emit('change', ...args)"
@@ -93,7 +96,7 @@ const input = ref();
 /** clear box */
 function clear() {
   input.value.input.value = "";
-  emit("update:modelValue", "");
+  input.value.input.dispatchEvent(new Event("input"));
   emit("change", "");
 }
 
@@ -146,8 +149,7 @@ defineExpose({ textbox });
   color: $gray;
 }
 
-input,
-textarea {
+.input {
   width: 100%;
   background: $white;
   border: solid 2px $off-black;
@@ -156,13 +158,13 @@ textarea {
   transition: box-shadow $fast;
 }
 
-input {
+.input[data-multi="false"] {
   height: var(--height);
   padding: 0 calc(var(--height) * 0.25);
   line-height: $spacing;
 }
 
-textarea {
+.input[data-multi="true"] {
   min-width: 100%;
   max-width: 100%;
   min-height: calc(var(--height) * 2);
@@ -172,16 +174,11 @@ textarea {
 }
 
 .input[data-icon="true"] {
-  input,
-  textarea {
-    padding-right: calc(var(--height) * 0.85);
-  }
+  padding-right: calc(var(--height) * 0.85);
 }
 
-input:hover,
-input:focus,
-textarea:hover,
-textarea:focus {
+.input:hover,
+.input:focus {
   box-shadow: $outline;
 }
 </style>

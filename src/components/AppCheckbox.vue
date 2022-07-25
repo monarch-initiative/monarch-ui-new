@@ -4,7 +4,12 @@
 
 <template>
   <label class="checkbox">
-    <input type="checkbox" :checked="modelValue" @change="onChange" />
+    <input
+      type="checkbox"
+      class="input"
+      :checked="modelValue"
+      @change="onChange"
+    />
     <AppIcon class="check" :icon="modelValue ? 'square-check' : 'square'" />
     <span v-if="text">{{ text }}</span>
     <AppIcon v-if="icon" class="icon" :icon="icon" />
@@ -61,9 +66,8 @@ function onChange(event: Event) {
     background: $light-gray;
   }
 
-  input {
+  .input {
     position: absolute;
-    appearance: none;
   }
 }
 </style>

@@ -8,12 +8,13 @@
   <AppWrapper tag="AppSection" :wrap="$route.name !== 'Home'">
     <!-- search box -->
     <AppSelectAutocomplete
-      v-model="searchRaw"
+      :model-value="search"
       name="Node search"
       placeholder="Search for a gene, disease, phenotype, etc."
       :options="getAutocomplete"
       @focus="onFocus"
       @change="onChange"
+      @delete="onDelete"
     />
 
     <!-- filters -->
@@ -110,9 +111,10 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import { isEqual, kebabCase, startCase, uniq } from "lodash";
+import { groupBy, isEqual, kebabCase, sortBy, startCase, uniq } from "lodash";
 import { useLocalStorage } from "@vueuse/core";
 import AppSelectAutocomplete from "@/components/AppSelectAutocomplete.vue";
+import { Options as AutocompleteOptions } from "@/components/AppSelectAutocomplete";
 import AppStatus from "@/components/AppStatus.vue";
 import AppWrapper from "@/components/AppWrapper.vue";
 import {
@@ -121,7 +123,7 @@ import {
   SearchResults,
 } from "@/api/node-search";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
-import { Options } from "@/components/AppSelectMulti";
+import { Options as MultiOptions } from "@/components/AppSelectMulti";
 import { useRoute, useRouter } from "vue-router";
 import { filtersToQuery } from "@/api/facets";
 import { useQuery } from "@/util/composables";
@@ -133,15 +135,13 @@ const route = useRoute();
 
 /** submitted search text */
 const search = ref(String(route.query.search || ""));
-/** live/raw search text, just to sync with input component */
-const searchRaw = ref(search.value);
 /** current page number */
 const page = ref(0);
 /** results per page */
 const perPage = ref(10);
 /** filters (facets) for search */
-const availableFilters = ref<Record<string, Options>>({});
-const activeFilters = ref<Record<string, Options>>({});
+const availableFilters = ref<Record<string, MultiOptions>>({});
+const activeFilters = ref<Record<string, MultiOptions>>({});
 
 /** raw, in-order history of searches */
 const history = useLocalStorage<Array<string>>("node-search-history", []);
@@ -160,6 +160,13 @@ function onChange(value: string) {
   page.value = 0;
 }
 
+/** when user deletes entry in textbox */
+function onDelete(value: string) {
+  history.value = history.value.filter(
+    (entry) => entry.trim() !== value.trim()
+  );
+}
+
 /** when user changes active filters */
 function onFilterChange() {
   page.value = 0;
@@ -167,8 +174,50 @@ function onFilterChange() {
 }
 
 /** get autocomplete results */
-async function getAutocomplete(search: string) {
-  return await getAutocompleteResults(search);
+async function getAutocomplete(search: string): Promise<AutocompleteOptions> {
+  /** if something typed in, get autocomplete options from backend */
+  if (search.trim()) return await getAutocompleteResults(search);
+
+  /** otherwise, if search box focused and nothing typed in, show some useful entries */
+
+  /** show top N entries in each category */
+  const top = 5;
+
+  /** recent searches */
+  const recent = uniq(history.value)
+    .reverse()
+    .slice(0, top)
+    .map((search) => ({
+      name: search,
+      icon: "clock-rotate-left",
+      tooltip: "Recent search. Shift + Del to remove.",
+    }));
+
+  /** most popular searches */
+  const popular = uniq(
+    sortBy(Object.values(groupBy(history.value)), "length").map(
+      (array) => array[0]
+    )
+  )
+    .slice(0, top)
+    .map((search) => ({
+      name: search,
+      icon: "person-running",
+      tooltip: "Frequent search. Shift + Del to remove.",
+    }));
+
+  /** example searches */
+  const examples = [
+    "Marfan syndrome",
+    "SSH",
+    "Multicystic kidney dysplasia",
+  ].map((search) => ({
+    name: search,
+    icon: "lightbulb",
+    tooltip: "Example search",
+  }));
+
+  return [...recent, ...popular, ...examples];
 }
 
 /** get search results */

@@ -25,6 +25,8 @@ export type Option = {
   highlight?: string;
   /** info col */
   info?: string;
+  /** tooltip on hover */
+  tooltip?: string;
   /**
    * allows returning multiple options instead when selecting this option, e.g.
    * clicking a gene result and getting/selecting its 8 associated phenotypes instead
