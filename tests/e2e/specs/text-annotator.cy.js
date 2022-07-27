@@ -1,4 +1,4 @@
-import example from "../../../src/views/explore/text-annotator.json";
+import example from "@/views/explore/text-annotator.json";
 
 it("Basic search results show", () => {
   cy.visit("/explore#text-annotator");

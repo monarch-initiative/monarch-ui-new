@@ -121,7 +121,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch } from "vue";
 import { isEqual, kebabCase, startCase, uniq } from "lodash";
 import AppInput from "@/components/AppInput.vue";
 import AppStatus from "@/components/AppStatus.vue";
@@ -132,6 +132,7 @@ import { Options } from "@/components/AppSelectMulti";
 import { useRoute, useRouter } from "vue-router";
 import { filtersToQuery } from "@/api/facets";
 import { useQuery } from "@/util/composables";
+import { appTitle } from "@/global/meta";
 
 /** route info */
 const router = useRouter();
@@ -274,15 +275,16 @@ const pages = computed((): Array<Array<number>> => {
 
 /** when route changes */
 watch(
-  () => route,
-  () => {
-    /** update search text from route (if not already) */
-    const fromUrl = String(route.query.search || "");
-    if (search.value !== fromUrl) {
-      search.value = fromUrl;
-      getResults(true);
-    }
-  }
+  () => route.query.search,
+  async () => {
+    /** update search text from route */
+    search.value = String(route.query.search || "");
+    /** update document title */
+    if (search.value) appTitle.value = [`"${search.value}"`];
+    /** refetch search */
+    await getResults(true);
+  },
+  { immediate: true, flush: "post" }
 );
 
 /** when search changes */
@@ -296,13 +298,13 @@ watch(search, async () => {
 /** when start page changes */
 watch(from, () => getResults(false));
 
-/** hide counts in filter dropdowns if any filtering being done */
+/**
+ * hide counts in filter dropdowns if any filtering being done. see
+ * https://github.com/monarch-initiative/monarch-ui-new/issues/87
+ */
 const showCounts = computed(() =>
   isEqual(activeFilters.value, availableFilters.value)
 );
-
-/** search on page load */
-onMounted(() => getResults(true));
 </script>
 
 <style lang="scss" scoped>

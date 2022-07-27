@@ -66,9 +66,7 @@
 
     <!-- status -->
     <AppStatus v-if="isLoading" code="loading">Submitting feedback</AppStatus>
-    <AppStatus v-if="isError" code="loading"
-      >Error submitting feedback</AppStatus
-    >
+    <AppStatus v-if="isError" code="error">Error submitting feedback</AppStatus>
     <AppStatus v-if="isSuccess" code="success">
       <AppLink v-if="link" :to="link"
         >View your submitted feedback here.</AppLink
@@ -131,13 +129,13 @@ const details = computed(() => {
 });
 
 /** when form submitted */
-function onSubmit() {
+async function onSubmit() {
   /**
    * only proceed if submitted through button, not "implicitly" (enter press).
    * https://stackoverflow.com/questions/895171/prevent-users-from-submitting-a-form-by-hitting-enter
    */
   if ((document.activeElement as Element).matches("button[type='submit']"))
-    submitFeedback();
+    await submitFeedback();
 }
 
 /** post feedback to backend */

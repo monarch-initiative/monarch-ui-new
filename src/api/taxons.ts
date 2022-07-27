@@ -7,9 +7,7 @@ type _Ids = Record<string, Array<string>>;
 /** from list of taxon labels, get list of matching taxon ids */
 export const getIdsFromLabels = async (ids: Array<string>): Promise<Ids> => {
   const url = `${biolink}/ontol/identifier`;
-  const params = {
-    label: ids,
-  };
+  const params = { label: ids };
   const options = { method: "POST" };
   const response = await request<_Ids>(url, params, options);
 

@@ -293,7 +293,7 @@ const cols = [
 
 /** get evidence data */
 const {
-  query: getData,
+  query: getEvidence,
   data: evidence,
   isLoading,
   isError,
@@ -324,8 +324,8 @@ async function download() {
   downloadJson(evidence.value.table);
 }
 
-onMounted(getData);
-watch(() => props.selectedAssociation, getData);
+onMounted(getEvidence);
+watch(() => props.selectedAssociation, getEvidence);
 </script>
 
 <style lang="scss" scoped>

@@ -73,14 +73,14 @@
 </template>
 
 <script setup lang="ts">
+import { watch } from "vue";
 import { useRoute } from "vue-router";
 import { Node } from "@/api/node-lookup";
-import { getHierarchy } from "@/api/node-hierachy";
+import { getHierarchy } from "@/api/node-hierarchy";
 import AppDetails from "@/components/AppDetails.vue";
 import AppDetail from "@/components/AppDetail.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { useQuery } from "@/util/composables";
-import { onMounted, watch } from "vue";
 
 const route = useRoute();
 
@@ -93,7 +93,7 @@ const props = defineProps<Props>();
 
 /** get node hierarchy data */
 const {
-  query: getHier,
+  query: getData,
   data: hierarchy,
   isLoading,
   isError,
@@ -109,11 +109,9 @@ const {
 /** when path (not hash or query) changed, get new node data */
 watch(
   [() => route.path, () => props.node.id, () => props.node.category],
-  getHier
+  getData,
+  { immediate: true, flush: "post" }
 );
-
-/** get new node data on load */
-onMounted(getHier);
 </script>
 
 <style lang="scss" scoped>

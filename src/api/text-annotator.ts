@@ -22,9 +22,7 @@ export const annotateText = async (content = ""): Promise<Annotations> => {
   if (!content.trim()) return [];
 
   /** request params */
-  const params = {
-    longest_only: true,
-  };
+  const params = { longest_only: true };
 
   /** make request options */
   const headers = new Headers();

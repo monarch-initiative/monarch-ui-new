@@ -15,7 +15,7 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
       options: ids.map((id) => ({ id })),
       message: ids.every((id) => id.startsWith("HP:"))
         ? ""
-        : 'One or more pasted ids were not valid HPO phenotype ids (start with "HP:")',
+        : 'One or more pasted IDs were not valid HPO phenotype IDs (starting with "HP:")',
     };
 
   /** otherwise perform string search for phenotypes/genes/diseases */
@@ -140,7 +140,7 @@ export const compareSetToTaxon = async (
   return mapMatches(response);
 };
 
-/** convert into desired result format */
+/** convert comparison matches into desired result format */
 const mapMatches = (response: _Comparison) => {
   const matches = response.matches.map((match) => ({
     id: match.id,

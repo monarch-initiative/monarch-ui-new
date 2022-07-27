@@ -17,7 +17,7 @@
       <AppStatus v-if="isLoading" code="loading"
         >Loading node information</AppStatus
       >
-      <AppStatus v-if="isError" code="loading"
+      <AppStatus v-if="isError" code="error"
         >Error loading node information</AppStatus
       >
     </AppSection>
@@ -39,6 +39,7 @@
 
 <script setup lang="ts">
 import { watch, onMounted, nextTick } from "vue";
+import { useRoute } from "vue-router";
 import { kebabCase } from "lodash";
 import { lookupNode } from "@/api/node-lookup";
 import AppStatus from "@/components/AppStatus.vue";
@@ -49,9 +50,8 @@ import SectionDetails from "./SectionDetails.vue";
 import SectionHierarchy from "./SectionHierarchy.vue";
 import SectionAssociations from "./SectionAssociations.vue";
 import { scrollToHash } from "@/router";
-import { useRoute } from "vue-router";
 import { useQuery } from "@/util/composables";
-import { appDescription } from "@/global/meta";
+import { appDescription, appTitle } from "@/global/meta";
 
 /** route info */
 const route = useRoute();
@@ -93,6 +93,20 @@ const {
 
 /** when path (not hash or query) changed, get new node data */
 watch(() => route.path, getNode);
+
+/** update document title */
+watch(
+  [() => route.fullPath, () => node.value?.name],
+  () => {
+    appTitle.value = [
+      node.value?.name,
+      // `${route.params.id} (${route.params.category})`,
+      route.query.associations ? `${route.query.associations} assoc.` : "",
+    ];
+  },
+  /** https://github.com/vuejs/vue-router/issues/3393 */
+  { immediate: true, flush: "post" }
+);
 
 /** get new node data on load */
 onMounted(getNode);
