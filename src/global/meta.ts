@@ -7,9 +7,11 @@ import { ref, watch } from "vue";
  * tags accordingly.
  */
 
-/** variables */
+/** multi-part page title. array. gets joined with a | separator. */
 export const appTitle = ref([process.env.VUE_APP_TITLE]);
+/** page meta description */
 export const appDescription = ref(process.env.VUE_APP_DESCRIPTION);
+/** page canonical url meta */
 export const appUrl = ref(process.env.VUE_APP_DESCRIPTION);
 
 /** update document title meta tags */

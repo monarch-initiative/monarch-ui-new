@@ -87,8 +87,9 @@ Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-
 
 Use JSDoc style comments (`/** some comment */`) instead of regular JavaScript comments.
 This allows lint checking and auto-fixing/auto-formatting of long comments wrapping to new lines.
-More importantly, it allows for better editor integration, meaning that hovering over a function/parameter/object/etc. key will show its associated JSDoc comment.
-There are user snippets, shortcuts, and extensions you can use to make this as convenient as regular comments.
+More importantly, it allows for better editor integration.
+Hovering over a function/parameter/object/etc. will show the JSDoc comment from above where it was defined.
+You can use snippets/shortcuts/extensions/etc. to make this as convenient as regular comments.
 
 Where possible and appropriate, use custom components like `AppHeading` and `AppLink` instead of native elements like `h1` and `a`.
 
@@ -102,7 +103,11 @@ Tip: use VS Code extension "Sort Lines".
 
 Use `console.log` for strictly for temporary debugging during local development that should be removed before merging PRs.
 Use `console.error` for in-production logging of _caught_ errors.
-Use `console.info` for generic in-production logging, but only use for major, infrequent events, as logging too frequently (say, multiple times per second, sustained) can impact page performance.
+Use `console.warn` for in-production logging of events that are not problems, but are still useful to know.
+Use `console.info` for generic in-production logging.
+
+Only log major, infrequent events.
+Logging too frequently (say, multiple times per second, sustained) can impact page performance.
 Leaving select logging in production will be beneficial for in this particular app, for user and in-situ troubleshooting of complex, hard-to-replicate problems.
 
 To analyze the size of the compiled bundle, dev-install `stats-webpack-plugin`, uncomment the `stats-webpack-plugin` line in `vue.config.js`, build the app, then run either `npx webpack-bundle-analyzer dist/stats.json` or `npx source-map-explorer dist/js/*`.
