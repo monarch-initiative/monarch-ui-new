@@ -6,6 +6,7 @@ import {
   VueWrapper,
   mount as vueMount,
 } from "@vue/test-utils";
+import { toHaveNoViolations } from "jest-axe";
 import { setupServer } from "msw/node";
 import fetch from "node-fetch";
 import { cloneDeep } from "lodash";
@@ -59,6 +60,9 @@ afterAll(async () => {
   await sleep();
 });
 
+/** add axe to jest */
+expect.extend(toHaveNoViolations);
+
 /** setup mock-service-worker for node.js (jest) */
 const server = setupServer(...handlers);
 beforeAll(() => server.listen());
@@ -105,7 +109,7 @@ export const mount = <Component>(
   options.props = cloneDeep(props);
 
   /** standard globals */
-  options.global = { components, plugins };
+  options.global = { components, plugins, stubs: { teleport: true } };
 
   // eslint-disable-next-line
   const wrapper: Wrapper = vueMount(component, options as MountingOptions<any>);

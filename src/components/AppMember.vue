@@ -10,7 +10,7 @@
       </div>
       <AppIcon
         v-if="alumni"
-        v-tippy="'Alumni team member'"
+        v-tooltip="'Alumni team member'"
         icon="history"
         class="icon"
       />

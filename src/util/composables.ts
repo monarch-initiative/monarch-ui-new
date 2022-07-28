@@ -1,4 +1,5 @@
-import { ref, shallowRef } from "vue";
+import { CSSProperties, ref, shallowRef } from "vue";
+import { computePosition, flip, shift, size } from "@floating-ui/dom";
 
 /**
  * inspired by react-query. simple query manager/wrapper for making queries in
@@ -78,4 +79,41 @@ export const useQuery = <Data, Args extends Array<unknown>>(
   }
 
   return { query, data, isLoading, isError, isSuccess };
+};
+
+/** use floating-ui to position dropdown */
+export const useFloating = () => {
+  /** style of dropdown */
+  const style = ref<CSSProperties>({
+    position: "absolute",
+    left: "0px",
+    top: "0px",
+    minWidth: "0px",
+  });
+
+  /** func to recompute position on command */
+  async function calculate(anchor?: HTMLElement, dropdown?: HTMLElement) {
+    if (!anchor || !dropdown) return;
+
+    /** floating-ui options */
+    const options = {
+      middleware: [
+        flip(),
+        shift({ padding: 5 }),
+        size({
+          /** update min width based on target width */
+          apply: ({ rects }) =>
+            (style.value.minWidth = rects.reference.width + "px"),
+        }),
+      ],
+    };
+    /** use floating-ui to compute position of dropdown */
+    const { x, y } = await computePosition(anchor, dropdown, options);
+
+    /** set style from position */
+    style.value.left = x + "px";
+    style.value.top = y + "px";
+  }
+
+  return { calculate, style };
 };

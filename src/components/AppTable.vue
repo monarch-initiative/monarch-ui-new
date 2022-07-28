@@ -37,7 +37,7 @@
                 </span>
                 <AppButton
                   v-if="col.sortable"
-                  v-tippy="'Sort by ' + col.heading"
+                  v-tooltip="'Sort by ' + col.heading"
                   :icon="
                     'arrow-' + (sort?.id === col.id ? sort?.direction : 'down')
                   "
@@ -54,19 +54,13 @@
                     activeFilters[col.id] &&
                     availableFilters[col.id]?.length
                   "
-                  v-slot="slotProps"
+                  v-tooltip="'Filter by ' + col.heading"
                   :name="'Filter by ' + col.heading"
                   :options="availableFilters[col.id]"
                   :model-value="activeFilters[col.id]"
+                  design="small"
                   @change="(value) => emitFilter(col.id, value)"
-                >
-                  <AppButton
-                    v-tippy="'Filter by ' + col.heading"
-                    icon="filter"
-                    design="small"
-                    v-bind="kebabify(slotProps)"
-                  />
-                </AppSelectMulti>
+                />
               </th>
             </tr>
           </thead>
@@ -125,14 +119,14 @@
         <div>
           <template v-if="showControls">
             <AppButton
-              v-tippy="'Go to first page'"
+              v-tooltip="'Go to first page'"
               :disabled="start <= 0"
               icon="angle-double-left"
               design="small"
               @click="clickFirst"
             />
             <AppButton
-              v-tippy="'Go to previous page'"
+              v-tooltip="'Go to previous page'"
               :disabled="start - perPage < 0"
               icon="angle-left"
               design="small"
@@ -148,14 +142,14 @@
           <span v-else>no data</span>
           <template v-if="showControls">
             <AppButton
-              v-tippy="'Go to next page'"
+              v-tooltip="'Go to next page'"
               :disabled="start + perPage > total"
               icon="angle-right"
               design="small"
               @click="clickNext"
             />
             <AppButton
-              v-tippy="'Go to last page'"
+              v-tooltip="'Go to last page'"
               :disabled="start + perPage > total"
               icon="angle-double-right"
               design="small"
@@ -168,20 +162,22 @@
         <div>
           <AppInput
             v-if="showControls"
-            v-tippy="'Search table data'"
+            v-tooltip="'Search table data'"
             class="search"
             icon="search"
             :model-value="search"
             @change="emitSearch"
           />
           <AppButton
-            v-tippy="'Download table data'"
+            v-tooltip="'Download table data'"
             icon="download"
             design="small"
             @click="emitDownload"
           />
           <AppButton
-            v-tippy="expanded ? 'Collapse table' : 'Expand table to full width'"
+            v-tooltip="
+              expanded ? 'Collapse table' : 'Expand table to full width'
+            "
             :icon="expanded ? 'minimize' : 'maximize'"
             design="small"
             @click="expanded = !expanded"
@@ -200,7 +196,6 @@ import AppInput from "./AppInput.vue";
 import AppSelectMulti from "./AppSelectMulti.vue";
 import AppSelectSingle from "./AppSelectSingle.vue";
 import { Options } from "./AppSelectMulti";
-import { kebabify } from "@/util/object";
 import { Filters } from "@/api/facets";
 import { closeToc } from "./TheTableOfContents";
 
