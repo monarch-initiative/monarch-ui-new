@@ -113,11 +113,11 @@ const target = ref();
 /** dropdown element */
 const dropdown = ref();
 /** get dropdown position */
-const { calculate, style } = useFloating();
+const { calculate, style } = useFloating(target, dropdown);
 /** recompute position after opened */
 watch(expanded, async () => {
   await nextTick();
-  if (expanded.value) calculate(target.value, dropdown.value);
+  if (expanded.value) calculate();
 });
 
 /** open dropdown */

@@ -335,11 +335,11 @@ const target = ref();
 /** dropdown element */
 const dropdown = ref();
 /** get dropdown position */
-const { calculate, style } = useFloating(true);
+const { calculate, style } = useFloating(target, dropdown, true);
 /** recompute position when length of results changes */
 watch([expanded, availableResults], async () => {
   await nextTick();
-  if (expanded.value) calculate(target.value, dropdown.value);
+  if (expanded.value) calculate();
 });
 
 /** when model changes */

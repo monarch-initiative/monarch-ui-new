@@ -32,7 +32,7 @@ it("Recent/frequent results show", () => {
   cy.visit("/explore");
 
   cy.get("input").trigger("focus");
-  cy.get("[role='option']");
+  cy.wait(100);
 
   /** recent */
   cy.get("[role='option']").eq(0).contains("marfan syndrome");

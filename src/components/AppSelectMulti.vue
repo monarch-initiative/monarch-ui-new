@@ -175,12 +175,14 @@ const anchor = ref();
 /** dropdown element */
 const dropdown = ref();
 /** get dropdown position */
-const { calculate, style } = useFloating();
+const { calculate, style } = useFloating(
+  computed(() => anchor.value?.button || anchor.value),
+  dropdown
+);
 /** recompute position after opened */
 watch(expanded, async () => {
   await nextTick();
-  if (expanded.value)
-    calculate(anchor.value?.button || anchor.value, dropdown.value);
+  if (expanded.value) calculate();
 });
 
 function open() {

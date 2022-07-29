@@ -92,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from "vue";
+import { ref, watch, nextTick, computed } from "vue";
 import { uniqueId } from "lodash";
 import { OptionsFunc } from "./AppSelectAutocomplete";
 import AppStatus from "@/components/AppStatus.vue";
@@ -237,11 +237,15 @@ const target = ref();
 /** dropdown element */
 const dropdown = ref();
 /** get dropdown position */
-const { calculate, style } = useFloating(true);
+const { calculate, style } = useFloating(
+  computed(() => target.value.textbox),
+  dropdown,
+  true
+);
 /** recompute position when length of results changes */
 watch([expanded, results], async () => {
   await nextTick();
-  if (expanded.value) calculate(target.value.textbox, dropdown.value);
+  if (expanded.value) calculate();
 });
 
 /** when model changes, update search */
