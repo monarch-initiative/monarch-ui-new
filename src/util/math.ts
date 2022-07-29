@@ -8,12 +8,12 @@ export const sin = (degrees = 0): number =>
 export const cos = (degrees = 0): number =>
   Math.cos((2 * Math.PI * degrees) / 360);
 
-/**
- * wrap number between range. modified true modulo from
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Remainder
- */
-export const wrap = (value = 0, min = 0, max = 10): number =>
-  ((((value - min) % (max - min)) + (max - min)) % (max - min)) + min;
+/** wrap number between range */
+export const wrap = (value: number, min: number, max: number): number => {
+  if (value > max) return min;
+  if (value < min) return max;
+  return value;
+};
 
 /** STUFF ONLY USED FOR HEADER VISUALIZATION */
 

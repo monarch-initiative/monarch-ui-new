@@ -112,7 +112,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import { groupBy, isEqual, kebabCase, sortBy, startCase, uniq } from "lodash";
-import { useLocalStorage } from "@vueuse/core";
 import AppSelectAutocomplete from "@/components/AppSelectAutocomplete.vue";
 import { Options as AutocompleteOptions } from "@/components/AppSelectAutocomplete";
 import AppStatus from "@/components/AppStatus.vue";
@@ -128,6 +127,7 @@ import { useRoute, useRouter } from "vue-router";
 import { filtersToQuery } from "@/api/facets";
 import { useQuery } from "@/util/composables";
 import { appTitle } from "@/global/meta";
+import { history, addEntry, deleteEntry } from "@/global/history";
 
 /** route info */
 const router = useRouter();
@@ -142,9 +142,6 @@ const perPage = ref(10);
 /** filters (facets) for search */
 const availableFilters = ref<Record<string, MultiOptions>>({});
 const activeFilters = ref<Record<string, MultiOptions>>({});
-
-/** raw, in-order history of searches */
-const history = useLocalStorage<Array<string>>("node-search-history", []);
 
 /** when user focuses text box */
 async function onFocus() {
@@ -162,9 +159,7 @@ function onChange(value: string) {
 
 /** when user deletes entry in textbox */
 function onDelete(value: string) {
-  history.value = history.value.filter(
-    (entry) => entry.trim() !== value.trim()
-  );
+  deleteEntry(value);
 }
 
 /** when user changes active filters */
@@ -184,8 +179,7 @@ async function getAutocomplete(search: string): Promise<AutocompleteOptions> {
   const top = 5;
 
   /** recent searches */
-  const recent = uniq(history.value)
-    .reverse()
+  const recent = uniq([...history.value].reverse())
     .slice(0, top)
     .map((search) => ({
       name: search,
@@ -199,6 +193,7 @@ async function getAutocomplete(search: string): Promise<AutocompleteOptions> {
       (array) => array[0]
     )
   )
+    .reverse()
     .slice(0, top)
     .map((search) => ({
       name: search,
@@ -257,7 +252,7 @@ const {
     }
 
     /** add search to history */
-    if (search.value) history.value.push(search.value);
+    addEntry(search.value);
   }
 );
 

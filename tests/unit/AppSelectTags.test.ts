@@ -35,7 +35,7 @@ test("Buttons click to deselect", async () => {
   expect(emitted<T>(wrapper)[0].length).toEqual(0);
 });
 
-test("Click button click to deselect", async () => {
+test("Clear button clicks to deselect", async () => {
   const wrapper = mount(AppSelectTags, props, vModel);
   await wrapper.findAll("button")[2].trigger("click");
   expect(emitted<T>(wrapper)[0].length).toEqual(0);

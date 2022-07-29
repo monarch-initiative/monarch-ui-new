@@ -42,7 +42,9 @@
         tabindex="0"
         :aria-labelledby="`select-${id}`"
         :aria-activedescendant="
-          results.length ? `option-${id}-${highlighted}` : undefined
+          results.length && highlighted >= 0
+            ? `option-${id}-${highlighted}`
+            : undefined
         "
         :style="style"
       >
@@ -65,7 +67,7 @@
           :aria-selected="true"
           :data-highlighted="index === highlighted"
           tabindex="0"
-          @click.prevent="select(option.name)"
+          @click.prevent="() => select(option.name)"
           @mouseenter.capture="highlighted = index"
           @mousedown.prevent=""
           @focusin="() => null"
@@ -99,7 +101,7 @@ import { useFloating, useQuery } from "@/util/composables";
 import AppTextbox from "./AppTextbox.vue";
 
 interface Props {
-  /** two-way bound selected items state */
+  /** two-way bound search state */
   modelValue?: string;
   /** name of the field */
   name: string;
@@ -114,7 +116,7 @@ interface Props {
 const props = defineProps<Props>();
 
 interface Emits {
-  /** two-way bound selected items state */
+  /** two-way bound search state */
   (event: "update:modelValue", value: string): void;
   /** when input focused */
   (event: "focus"): void;
@@ -188,12 +190,14 @@ async function onKeydown(event: KeyboardEvent) {
     if (event.key === "End") index = results.value.length - 1;
 
     /** update highlighted, wrapping beyond 0 or results length */
-    highlighted.value = wrap(index, 0, results.value.length);
+    highlighted.value = wrap(index, 0, results.value.length - 1);
   }
 
   /** enter key to select highlighted result */
-  if (event.key === "Enter" && highlighted.value >= 0)
+  if (event.key === "Enter" && highlighted.value >= 0) {
+    event.stopPropagation();
     select(results.value[highlighted.value].name);
+  }
 
   /** delete key to delete the highlighted result */
   if (event.key === "Delete" && event.shiftKey) {
@@ -248,7 +252,9 @@ watch(
 );
 
 /** when search changes, update model */
-watch(search, () => emit("update:modelValue", search.value));
+watch(search, () => {
+  emit("update:modelValue", search.value);
+});
 
 /** when highlighted index changes */
 watch(highlighted, () => {

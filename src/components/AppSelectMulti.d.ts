@@ -8,4 +8,5 @@ export type Option = {
   /** tooltip on hover */
   tooltip?: string;
 };
+
 export type Options = Array<Option>;

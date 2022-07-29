@@ -1,5 +1,5 @@
 <!--
-  raw, un-styled input component with smart event emitting
+  raw, un-styled multi or single line input component with debounce
 -->
 
 <template>
@@ -50,15 +50,14 @@ const input = ref();
 
 /** when user focuses box */
 function onFocus() {
-  emit("focus");
   onDebounce.cancel();
+  emit("focus");
 }
 
 /** when user blurs box */
 function onBlur() {
-  emit("blur");
   onDebounce.cancel();
-  onChange();
+  emit("blur");
 }
 
 /** when user types in box */
@@ -74,8 +73,8 @@ const onDebounce = debounce(function (value: string) {
 
 /** when user "commits" change (pressing enter, blurring, etc) */
 async function onChange() {
-  emit("change", input.value.value);
   onDebounce.cancel();
+  emit("change", input.value.value);
 }
 
 /** allow parent to access ref */

@@ -38,9 +38,12 @@
     <AppRing />
   </AppSection>
 
-  <!-- input component -->
+  <!-- textbox component -->
   <AppSection>
-    <AppHeading>Input</AppHeading>
+    <AppHeading>Textbox</AppHeading>
+    <label>
+      <AppInput v-model="input" placeholder="Raw input" />
+    </label>
     <AppTextbox v-model="input" icon="search" placeholder="Single line input" />
     <AppTextbox
       v-model="input"
@@ -165,6 +168,7 @@
 import { ref } from "vue";
 import { omit } from "lodash";
 import AppButton from "@/components/AppButton.vue";
+import AppInput from "@/components/AppInput.vue";
 import AppRing from "@/components/AppRing.vue";
 import AppSelectAutocomplete from "@/components/AppSelectAutocomplete.vue";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";

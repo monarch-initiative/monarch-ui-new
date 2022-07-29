@@ -1,10 +1,9 @@
 import { ref, watch } from "vue";
 
 /**
- * index.html is statically generated using the following hard-coded meta data
- * environment variables, specified in the .env file. convert these values into
- * reactive variables that we can change during run time, and update document
- * tags accordingly.
+ * index.html is statically generated with hard-coded meta data, from
+ * environment variables specified in the .env file. convert these values into
+ * reactive variables so we can change them and update the document tags during run time
  */
 
 /** multi-part page title. array. gets joined with a | separator. */

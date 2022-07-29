@@ -230,7 +230,7 @@ function onKeydown(event: KeyboardEvent) {
     if (event.key === "End") index = props.options.length - 1;
 
     /** update highlighted, wrapping beyond -1 or options length */
-    highlighted.value = wrap(index, -1, props.options.length);
+    highlighted.value = wrap(index, -1, props.options.length - 1);
   }
 
   /** enter key to de/select highlighted option */

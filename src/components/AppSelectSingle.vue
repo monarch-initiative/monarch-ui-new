@@ -165,7 +165,7 @@ function onKeydown(event: KeyboardEvent) {
     if (event.key === "End") index = props.options.length - 1;
 
     /** update value, wrapping beyond 0 or options length */
-    index = wrap(index, 0, props.options.length);
+    index = wrap(index, 0, props.options.length - 1);
     if (expanded.value) highlighted.value = index;
     else selected.value = index;
   }

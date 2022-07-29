@@ -104,7 +104,10 @@ async function onKeydown(event: KeyboardEvent) {
     if (event.key === "End") index = props.tabs.length - 1;
 
     /** update selected, wrapping beyond -1 or options length */
-    emit("update:modelValue", props.tabs[wrap(index, 0, props.tabs.length)].id);
+    emit(
+      "update:modelValue",
+      props.tabs[wrap(index, 0, props.tabs.length - 1)].id
+    );
   }
 }
 

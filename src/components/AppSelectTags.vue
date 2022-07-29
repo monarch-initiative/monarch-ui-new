@@ -80,7 +80,9 @@
         tabindex="0"
         :aria-labelledby="`select-${id}`"
         :aria-activedescendant="
-          results.options.length ? `option-${id}-${highlighted}` : undefined
+          results.options.length && highlighted >= 0
+            ? `option-${id}-${highlighted}`
+            : undefined
         "
         :style="style"
       >
@@ -211,7 +213,7 @@ function onKeydown(event: KeyboardEvent) {
     if (event.key === "End") index = availableResults.value.length - 1;
 
     /** update highlighted, wrapping beyond 0 or results length */
-    highlighted.value = wrap(index, 0, availableResults.value.length);
+    highlighted.value = wrap(index, 0, availableResults.value.length - 1);
   }
 
   /** backspace key to deselect last-selected option */
