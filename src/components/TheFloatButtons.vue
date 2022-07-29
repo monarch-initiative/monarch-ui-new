@@ -7,7 +7,7 @@
     <transition name="fade">
       <AppButton
         v-if="showJump"
-        v-tippy="'Jump to top of page'"
+        v-tooltip="'Jump to top of page'"
         design="circle"
         class="button"
         icon="angle-up"
@@ -17,7 +17,7 @@
     <transition name="fade">
       <AppButton
         v-if="showFeedback"
-        v-tippy="'Give us feedback on this page!'"
+        v-tooltip="'Give us feedback on this page!'"
         design="circle"
         class="button"
         icon="comment"

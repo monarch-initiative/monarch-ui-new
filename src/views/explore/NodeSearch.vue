@@ -34,7 +34,7 @@
         <AppSelectMulti
           v-if="filter.length"
           v-model="activeFilters[name]"
-          v-tippy="`${startCase(name)} filter`"
+          v-tooltip="`${startCase(name)} filter`"
           :name="`${name}`"
           :options="availableFilters[name]"
           :show-counts="showCounts"
@@ -64,7 +64,7 @@
     >
       <div class="title">
         <AppIcon
-          v-tippy="startCase(result.category)"
+          v-tooltip="startCase(result.category)"
           :icon="`category-${kebabCase(result.category)}`"
           class="type"
         />
@@ -75,7 +75,7 @@
           <span v-html="result.highlight"></span>
         </AppLink>
         <AppButton
-          v-tippy="'Node ID (click to copy)'"
+          v-tooltip="'Node ID (click to copy)'"
           class="id"
           :text="result.id"
           icon="hashtag"
@@ -84,7 +84,7 @@
           color="secondary"
         />
       </div>
-      <p v-tippy="'Click to expand'" class="truncate-3" tabindex="0">
+      <p v-tooltip="'Click to expand'" class="truncate-3" tabindex="0">
         {{ result.description || "No description available" }}
       </p>
       <p v-if="result.altNames?.length" class="names truncate-1" tabindex="0">
@@ -106,7 +106,7 @@
           <button
             v-for="pageNumber of list"
             :key="pageNumber"
-            v-tippy="`Go to page ${pageNumber + 1} of results`"
+            v-tooltip="`Go to page ${pageNumber + 1} of results`"
             class="page-button"
             :disabled="pageNumber === page"
             @click="page = pageNumber"

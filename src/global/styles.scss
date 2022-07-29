@@ -135,6 +135,23 @@ strong {
   font-weight: 500;
 }
 
+/** notification dot */
+
+[data-notification="true"] {
+  position: relative;
+}
+
+[data-notification="true"]:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: $error;
+}
+
 /** tooltips */
 
 .tippy-box {

@@ -21,7 +21,7 @@
         icon="angle-up"
         :blank="!hierarchy.superClasses.length"
         :big="true"
-        :v-tippy="`Nodes that are &quot;parents&quot; of this node`"
+        :v-tooltip="`Nodes that are &quot;parents&quot; of this node`"
       >
         <AppFlex class="flex" h-align="left" gap="small">
           <AppLink
@@ -39,7 +39,7 @@
         icon="equals"
         :blank="!hierarchy.equivalentClasses.length"
         :big="true"
-        :v-tippy="`Nodes that are &quot;siblings&quot; of this node`"
+        :v-tooltip="`Nodes that are &quot;siblings&quot; of this node`"
       >
         <AppFlex class="flex" h-align="left" gap="small">
           <AppLink
@@ -57,7 +57,7 @@
         icon="angle-down"
         :blank="!hierarchy.subClasses.length"
         :big="true"
-        :v-tippy="`Nodes that are &quot;children&quot; of this node`"
+        :v-tooltip="`Nodes that are &quot;children&quot; of this node`"
       >
         <AppFlex class="flex" h-align="left" gap="small">
           <AppLink

@@ -60,7 +60,7 @@
       </AppFlex>
 
       <AppButton
-        v-tippy="
+        v-tooltip="
           association.id === selectedAssociation?.id
             ? 'Viewing supporting evidence. Click again to hide.'
             : 'View supporting evidence for this association'

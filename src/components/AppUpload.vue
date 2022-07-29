@@ -4,7 +4,7 @@
 
 <template>
   <AppButton
-    v-tippy="'Choose or drag & drop a file'"
+    v-tooltip="'Choose or drag & drop a file'"
     class="button"
     text="Upload"
     icon="upload"

@@ -76,7 +76,7 @@
       >
         <!-- ring score -->
         <AppRing
-          v-tippy="'Similarity score'"
+          v-tooltip="'Similarity score'"
           :score="match.score"
           :min="comparison.minScore"
           :max="comparison.maxScore"
@@ -86,7 +86,7 @@
           <!-- primary match info -->
           <div class="primary truncate">
             <AppIcon
-              v-tippy="startCase(match.category)"
+              v-tooltip="startCase(match.category)"
               :icon="`category-${match.category}`"
             />
 

@@ -162,7 +162,7 @@
               >{{ publication.name }}</AppLink
             >
             <template v-if="cell.length > 1">
-              <tippy :interactive="true" :append-to="appendToBody">
+              <tooltip :interactive="true" :append-to="appendToBody">
                 <span>and {{ cell.length - 1 }} more...</span>
                 <template #content>
                   <AppFlex h-align="left" gap="tiny">
@@ -174,7 +174,7 @@
                     >
                   </AppFlex>
                 </template>
-              </tippy>
+              </tooltip>
             </template>
           </AppFlex>
         </template>
@@ -217,7 +217,7 @@ import { Node } from "@/api/node-lookup";
 import { scrollToElement } from "@/router";
 import { getAssociationEvidence } from "@/api/association-evidence";
 import { breakUrl } from "@/util/string";
-import { appendToBody } from "@/global/tippy";
+import { appendToBody } from "@/global/tooltip";
 import { waitFor } from "@/util/dom";
 import { Association } from "@/api/node-associations";
 import { useQuery } from "@/util/composables";

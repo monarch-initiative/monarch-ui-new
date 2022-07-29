@@ -24,7 +24,7 @@
           @touchstart.stop
         >
           <AppButton
-            v-tippy="'Close dialog (esc)'"
+            v-tooltip="'Close dialog (esc)'"
             class="close"
             design="circle"
             icon="times"

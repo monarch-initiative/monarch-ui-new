@@ -1,18 +1,14 @@
 import { nextTick } from "vue";
 import router, { routes } from "@/router";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "jest-axe";
 import { mount, apiCall } from "../setup";
 import App from "@/App.vue";
-
-/** add axe to jest */
-expect.extend(toHaveNoViolations);
 
 /** get list of page paths to check */
 const pages = routes
   /** exclude fuzzy-matched paths and other specific pages */
   .filter(
-    (route) =>
-      !["Node", "NodeRaw", "NotFound", "Testbed"].includes(String(route.name))
+    (route) => !["Node", "NodeRaw", "NotFound"].includes(String(route.name))
   )
   /** paths to navigate to */
   .map((route) => route.path)
@@ -40,8 +36,19 @@ test(
       await apiCall();
 
       /** analyze rendered html with axe */
-      const results = await axe(wrapper.element);
-      expect(results).toHaveNoViolations();
+      expect(await axe(wrapper.element)).toHaveNoViolations();
+
+      /** special checks on testbed page */
+      if (page === "Testbed") {
+        await wrapper.find(".select-single button").trigger("click");
+        expect(await axe(wrapper.element)).toHaveNoViolations();
+
+        await wrapper.find(".select-multi button").trigger("click");
+        expect(await axe(wrapper.element)).toHaveNoViolations();
+
+        await wrapper.find(".select-tags input").trigger("focus");
+        expect(await axe(wrapper.element)).toHaveNoViolations();
+      }
     }
   },
   /** allow plenty of seconds per page */

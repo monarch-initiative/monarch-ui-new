@@ -11,7 +11,7 @@
       v-for="(tab, index) in tabs"
       :id="`tab-${id}-${tab.id}`"
       :key="index"
-      v-tippy="tab.tooltip"
+      v-tooltip="tab.tooltip"
       :text="tab.text"
       :icon="tab.icon"
       design="circle"

@@ -10,124 +10,125 @@
 -->
 
 <template>
-  <div class="select-multi" :style="{ width: hasSlot ? '' : width }">
-    <!-- select button -->
-    <slot
-      v-if="hasSlot"
+  <div class="select-multi">
+    <!-- select button box -->
+    <component
+      :is="design === 'small' ? 'AppButton' : 'button'"
       :id="`select-${id}`"
+      ref="anchor"
+      :class="design === 'normal' ? 'box' : ''"
       :aria-label="name"
       :aria-expanded="expanded"
       :aria-controls="`list-${id}`"
       aria-haspopup="listbox"
-      :notification="!allSelected"
-      @click="onClick"
-      @keydown="onKeydown"
-      @blur="onBlur"
-    ></slot>
-    <button
-      v-else
-      :id="`select-${id}`"
-      class="button"
-      :aria-expanded="expanded"
-      :aria-controls="`list-${id}`"
-      aria-haspopup="listbox"
+      :data-notification="!allSelected"
+      icon="filter"
+      design="small"
       @click="onClick"
       @keydown="onKeydown"
       @blur="onBlur"
     >
-      <span class="button-label">
-        {{ name }}
-        <span class="button-more">
-          <template v-if="selected.length === 0">none selected</template>
-          <template v-else-if="selected.length === options.length">
-            all selected
-          </template>
-          <template v-else-if="selected.length === 1">
-            {{ options[selected[0]]?.id }}
-          </template>
-          <template v-else>{{ selected.length }} selected</template>
+      <template v-if="design === 'normal'">
+        <span class="box-label">
+          {{ name }}
+          <span class="box-more">
+            <template v-if="selected.length === 0">none selected</template>
+            <template v-else-if="selected.length === options.length">
+              all selected
+            </template>
+            <template v-else-if="selected.length === 1">
+              {{ options[selected[0]]?.id }}
+            </template>
+            <template v-else>{{ selected.length }} selected</template>
+          </span>
         </span>
-      </span>
-      <AppIcon
-        class="button-icon"
-        :icon="expanded ? 'angle-up' : 'angle-down'"
-      />
-    </button>
+        <AppIcon
+          class="button-icon"
+          :icon="expanded ? 'angle-up' : 'angle-down'"
+        />
+      </template>
+    </component>
 
     <!-- options list -->
-    <div
-      v-if="expanded"
-      :id="`list-${id}`"
-      class="list"
-      role="listbox"
-      :aria-activedescendant="
-        expanded ? `option-${id}-${highlighted}` : undefined
-      "
-      tabindex="0"
-      :data-slot="hasSlot"
-    >
-      <div class="grid">
-        <!-- select all -->
-        <div
-          :id="`option-${id}--1`"
-          class="option"
-          role="menuitem"
-          :aria-label="allSelected ? 'Deselect all' : 'Select all'"
-          :data-selected="allSelected"
-          :data-highlighted="highlighted === -1"
-          tabindex="0"
-          @click="() => toggleSelect(-1)"
-          @mouseenter="highlighted = -1"
-          @mousedown.prevent=""
-          @focusin="() => null"
-          @keydown="() => null"
-        >
-          <span class="option-icon">
-            <AppIcon :icon="allSelected ? 'square-check' : 'square'" />
-          </span>
-          <span class="option-label">All</span>
-          <span class="option-count"></span>
-        </div>
+    <Teleport to="body">
+      <div
+        v-if="expanded"
+        :id="`list-${id}`"
+        ref="dropdown"
+        class="list"
+        role="listbox"
+        :aria-labelledby="`select-${id}`"
+        :aria-activedescendant="
+          expanded ? `option-${id}-${highlighted}` : undefined
+        "
+        tabindex="0"
+        :style="style"
+      >
+        <div class="grid">
+          <!-- select all -->
+          <div
+            :id="`option-${id}--1`"
+            class="option"
+            role="option"
+            :aria-label="allSelected ? 'Deselect all' : 'Select all'"
+            :aria-selected="allSelected"
+            :data-selected="allSelected"
+            :data-highlighted="highlighted === -1"
+            tabindex="0"
+            @click="() => toggleSelect(-1)"
+            @mouseenter="highlighted = -1"
+            @mousedown.prevent=""
+            @focusin="() => null"
+            @keydown="() => null"
+          >
+            <span class="option-icon">
+              <AppIcon :icon="allSelected ? 'square-check' : 'square'" />
+            </span>
+            <span class="option-label">All</span>
+            <span class="option-count"></span>
+          </div>
 
-        <div class="option-spacer"></div>
+          <div class="option-spacer"></div>
 
-        <!-- options -->
-        <div
-          v-for="(option, index) in options"
-          :id="`option-${id}-${index}`"
-          :key="index"
-          class="option"
-          role="option"
-          :aria-selected="selected.includes(index)"
-          :data-selected="selected.includes(index)"
-          :data-highlighted="index === highlighted"
-          tabindex="0"
-          @click="(event) => toggleSelect(index, event.shiftKey)"
-          @mouseenter="highlighted = index"
-          @mousedown.prevent=""
-          @focusin="() => null"
-          @keydown="() => null"
-        >
-          <span class="option-icon">
-            <AppIcon
-              :icon="selected.includes(index) ? 'square-check' : 'square'"
-            />
-          </span>
-          <span class="option-label">{{ option.id }}</span>
-          <span class="option-count">
-            {{ showCounts ? option.count : "" }}
-          </span>
+          <!-- options -->
+          <div
+            v-for="(option, index) in options"
+            :id="`option-${id}-${index}`"
+            :key="index"
+            class="option"
+            role="option"
+            :aria-selected="selected.includes(index)"
+            :data-selected="selected.includes(index)"
+            :data-highlighted="index === highlighted"
+            tabindex="0"
+            @click="(event) => toggleSelect(index, event.shiftKey)"
+            @mouseenter="highlighted = index"
+            @mousedown.prevent=""
+            @focusin="() => null"
+            @keydown="() => null"
+          >
+            <span class="option-icon">
+              <AppIcon
+                :icon="selected.includes(index) ? 'square-check' : 'square'"
+              />
+            </span>
+            <span class="option-label">{{ option.id }}</span>
+            <span class="option-count">
+              {{ showCounts ? option.count : "" }}
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, useSlots, watch } from "vue";
+import { ref, computed, watch, nextTick } from "vue";
 import { isEqual, uniqueId } from "lodash";
 import { Options } from "./AppSelectMulti";
 import { wrap } from "@/util/math";
+import { useFloating } from "@/util/composables";
 
 interface Props {
   /** two-way bound selected items state */
@@ -136,13 +137,16 @@ interface Props {
   name: string;
   /** list of options to show */
   options: Options;
-  /** width style of button */
-  width?: string;
   /** whether to show count col */
   showCounts?: boolean;
+  /** visual design */
+  design?: "normal" | "small";
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  showCounts: true,
+  design: "normal",
+});
 
 interface Emits {
   /** two-way bound selected items state */
@@ -165,6 +169,19 @@ const selected = ref<Array<number>>([]);
 const last = ref<Array<number>>([]);
 /** index of option that is highlighted */
 const highlighted = ref(0);
+
+/** anchor element */
+const anchor = ref();
+/** dropdown element */
+const dropdown = ref();
+/** get dropdown position */
+const { calculate, style } = useFloating();
+/** recompute position after opened */
+watch(expanded, async () => {
+  await nextTick();
+  if (expanded.value)
+    calculate(anchor.value?.button || anchor.value, dropdown.value);
+});
 
 function open() {
   /** open dropdown */
@@ -291,9 +308,6 @@ watch(highlighted, () =>
     ?.scrollIntoView({ block: "nearest" })
 );
 
-/** if has slot */
-const hasSlot = computed(() => !!useSlots().default);
-
 /** are all options selected */
 const allSelected = computed(
   () => selected.value.length === props.options.length
@@ -307,7 +321,7 @@ const allSelected = computed(
   text-transform: capitalize;
 }
 
-.button {
+.box {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -318,19 +332,17 @@ const allSelected = computed(
   background: $light-gray;
 }
 
-.button-label {
+.box-label {
   flex-grow: 1;
   text-align: left;
 }
 
-.button-more {
+.box-more {
   color: $dark-gray;
   margin-left: 10px;
 }
 
 .list {
-  position: absolute;
-  min-width: 100%;
   max-width: 90vw;
   max-height: 300px;
   overflow-x: auto;
@@ -338,12 +350,6 @@ const allSelected = computed(
   background: $white;
   box-shadow: $shadow;
   z-index: 2;
-}
-
-.list[data-slot="true"] {
-  max-width: unset;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .grid {
