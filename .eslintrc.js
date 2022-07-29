@@ -23,7 +23,7 @@ module.exports = {
 
   /** rule overrides (KEEP THIS AS MINIMAL AS POSSIBLE) */
   rules: {
-    /** count v-tippy (which adds an accessible aria-label attribute) as accessible */
+    /** count v-tooltip (which adds an accessible aria-label attribute) as accessible */
     "vuejs-accessibility/anchor-has-content": [
       "error",
       { accessibleDirectives: ["tooltip"] },
