@@ -188,14 +188,17 @@ async function getAutocomplete(search: string): Promise<AutocompleteOptions> {
     }));
 
   /** most popular searches */
-  const popular = uniq(
-    sortBy(Object.values(groupBy(history.value)), "length").map(
-      (array) => array[0]
-    )
+  const popular = sortBy(
+    Object.entries(groupBy(history)).map(([search, matches]) => ({
+      search,
+      count: matches.length,
+    })),
+    "count"
   )
+    .filter(({ count }) => count >= 3)
     .reverse()
     .slice(0, top)
-    .map((search) => ({
+    .map(({ search }) => ({
       name: search,
       icon: "person-running",
       tooltip: "Frequent search. Shift + Del to remove.",
