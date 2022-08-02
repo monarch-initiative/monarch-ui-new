@@ -133,7 +133,6 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from "vue";
 import { startCase, kebabCase, isEqual } from "lodash";
-import { getData } from "@/router";
 import AppSelectTags from "@/components/AppSelectTags.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
 import AppRing from "@/components/AppRing.vue";
@@ -315,7 +314,7 @@ watch([aPhenotypes, bMode, bTaxon, bPhenotypes], clearResults, { deep: true });
 
 /** fill in phenotype ids from text annotator */
 onMounted(() => {
-  const phenotypes = getData() as Options;
+  const phenotypes = window.history.state.phenotypes as Options;
   if (phenotypes) {
     aPhenotypes.value = phenotypes;
     aGeneratedFrom.value = {

@@ -64,7 +64,7 @@ const {
   isLoading,
   isError,
 } = useQuery(
-  async function getData() {
+  async function () {
     /** get node from route params */
     const { id = "", category = "" } = route.params;
 

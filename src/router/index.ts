@@ -5,7 +5,6 @@ import {
   RouterScrollBehavior,
   NavigationGuard,
 } from "vue-router";
-import { clone } from "lodash";
 import { hideAll } from "tippy.js";
 import PageHome from "@/views/PageHome.vue";
 import PageExplore from "@/views/explore/PageExplore.vue";
@@ -214,7 +213,7 @@ export const scrollToHash = () =>
   scrollToElement(document?.getElementById(window.location.hash.slice(1)));
 
 /** navigation history object */
-const history = createWebHistory(process.env.BASE_URL);
+export const history = createWebHistory(process.env.BASE_URL);
 
 /** router object */
 const router = createRouter({
@@ -229,22 +228,3 @@ router.beforeEach(() => {
 });
 
 export default router;
-
-/**
- * dirty way to allow passing arbitrary data with router.push. will no longer be
- * needed once this vue-router RFC is implemented:
- * https://github.com/vuejs/rfcs/discussions/400
- */
-let routeData: unknown = null;
-
-/** attach data to be consumed after route change */
-export const setData = (data: unknown): void => {
-  routeData = data;
-};
-
-/** consume data set before route change */
-export const getData = (): unknown => {
-  const copy = clone(routeData);
-  routeData = null; /** reset after data consumed once */
-  return copy;
-};

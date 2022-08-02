@@ -82,7 +82,6 @@ import AppStatus from "@/components/AppStatus.vue";
 import example from "./text-annotator.json";
 import { annotateText } from "@/api/text-annotator";
 import { downloadJson } from "@/util/download";
-import { setData } from "@/router";
 import { useRouter } from "vue-router";
 import { appendToBody } from "@/global/tooltip";
 import { useQuery } from "@/util/composables";
@@ -142,8 +141,10 @@ function analyze() {
       if (id.startsWith("HP:")) phenotypes.push({ id, name });
 
   /** de-duplicate, and send them to phenotype explorer component via router */
-  setData(uniqBy(phenotypes, "id"));
-  router.push({ hash: "#phenotype-explorer" });
+  router.push({
+    hash: "#phenotype-explorer",
+    state: { phenotypes: uniqBy(phenotypes, "id") },
+  });
 }
 
 /** run annotations on mount if content loaded from storage */
