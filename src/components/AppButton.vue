@@ -14,7 +14,7 @@
     :data-text="!!text"
     @click="copy ? copyToClipboard() : click"
   >
-    <span v-if="text">{{ text }}</span>
+    <span v-if="text" class="truncate">{{ text }}</span>
     <AppIcon v-if="icon" :icon="icon" />
   </component>
 </template>
@@ -65,6 +65,7 @@ async function copyToClipboard() {
 /** type of component to render */
 const component = computed(() => (props.to ? "AppLink" : "button"));
 
+/** allow parent to access ref */
 defineExpose({ button });
 </script>
 
@@ -73,11 +74,11 @@ defineExpose({ button });
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  max-width: 100%;
   gap: 10px;
   flex-grow: 0;
   flex-shrink: 0;
   text-decoration: none;
-  text-transform: capitalize;
   transition: color $fast, background $fast, opacity $fast, box-shadow $fast;
 
   &[data-design="normal"] {

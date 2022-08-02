@@ -48,6 +48,9 @@ test(
 
         await wrapper.find(".select-tags input").trigger("focus");
         expect(await axe(wrapper.element)).toHaveNoViolations();
+
+        await wrapper.find(".select-autocomplete input").trigger("focus");
+        expect(await axe(wrapper.element)).toHaveNoViolations();
       }
     }
   },

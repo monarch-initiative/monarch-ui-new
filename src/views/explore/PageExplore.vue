@@ -7,8 +7,6 @@
     <AppHeading>Explore</AppHeading>
 
     <AppTabs v-model="tab" name="Explore Mode" :tabs="tabs" />
-
-    <p>{{ description }}</p>
   </AppSection>
 
   <NodeSearch v-if="tab === 'node-search'" />
@@ -19,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { startCase } from "lodash";
 import AppTabs from "@/components/AppTabs.vue";
@@ -34,10 +32,6 @@ const route = useRoute();
 
 /** selected tab */
 const tab = ref(tabs[0].id);
-
-const description = computed(
-  () => tabs.find(({ id }) => id === tab.value)?.description
-);
 
 /** update document title */
 watch(

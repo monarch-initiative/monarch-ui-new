@@ -52,7 +52,9 @@ $cell: minmax(100px, 1fr);
     grid-template-columns: $cell;
   }
 }
+</style>
 
+<style lang="scss">
 /** force no margins for children since grid already provides gap */
 .gallery > :deep(*) {
   margin: 0 !important;

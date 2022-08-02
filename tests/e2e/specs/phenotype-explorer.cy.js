@@ -6,12 +6,11 @@ it("Populating example works", () => {
 
 it("Mode switching works", () => {
   cy.visit("/explore#phenotype-explorer");
-  cy.contains("button", "all genes").trigger("click");
+  cy.contains("button", "these phenotypes").trigger("click");
   cy.contains("[role='option'] > *", "all human diseases").trigger("click");
-  cy.contains("mouse").should("not.exist");
   cy.contains("button", "all human diseases").trigger("click");
-  cy.contains("[role='option'] > *", "these phenotypes").trigger("click");
-  cy.get(".select-tags").should("have.length", 2);
+  cy.contains("[role='option'] > *", "all genes").trigger("click");
+  cy.contains("button", "all genes").trigger("click");
 });
 
 /**
@@ -21,6 +20,8 @@ it("Mode switching works", () => {
 
 it("Phenotype set vs gene/disease works", () => {
   cy.visit("/explore#phenotype-explorer");
+  cy.contains("button", "these phenotypes").trigger("click");
+  cy.contains("[role='option'] > *", "all genes").trigger("click");
   cy.get("input").paste("HP:0004970,HP:0004933,HP:0004927");
   cy.contains("Analyze").trigger("click");
   cy.contains("55");
@@ -31,8 +32,6 @@ it("Phenotype set vs gene/disease works", () => {
 
 it("Phenotype set vs phenotype set works", () => {
   cy.visit("/explore#phenotype-explorer");
-  cy.contains("button", "all genes").trigger("click");
-  cy.contains("[role='option'] > *", "these phenotypes").trigger("click");
   cy.get("input").first().paste("HP:0004970,HP:0004933,HP:0004927");
   cy.get("input").last().paste("HP:0004970,HP:0004933,HP:0004927");
   cy.contains("Analyze").click();

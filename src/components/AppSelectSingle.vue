@@ -42,29 +42,30 @@
         tabindex="0"
         :style="style"
       >
-        <div class="grid">
-          <div
-            v-for="(option, index) in options"
-            :id="`option-${id}-${index}`"
-            :key="index"
-            class="option"
-            role="option"
-            :aria-selected="selected === index"
-            :data-selected="selected === index"
-            :data-highlighted="index === highlighted"
-            tabindex="0"
-            @click="selected = index"
-            @mouseenter="highlighted = index"
-            @mousedown.prevent=""
-            @focusin="() => null"
-            @keydown="() => null"
-          >
-            <span class="option-icon">
-              <AppIcon v-if="option.icon" :icon="option.icon" />
-            </span>
-            <span class="option-label">{{ option.name || option.id }}</span>
-            <span class="option-count">{{ option.count }}</span>
-          </div>
+        <div
+          v-for="(option, index) in options"
+          :id="`option-${id}-${index}`"
+          :key="index"
+          v-tooltip="option.tooltip"
+          class="option"
+          role="option"
+          :aria-selected="selected === index"
+          :data-selected="selected === index"
+          :data-highlighted="index === highlighted"
+          tabindex="0"
+          @click="selected = index"
+          @mouseenter.capture="highlighted = index"
+          @mousedown.prevent=""
+          @focusin="() => null"
+          @keydown="() => null"
+        >
+          <AppIcon v-if="option.icon" :icon="option.icon" class="option-icon" />
+          <span class="option-label truncate">
+            {{ option.name || option.id }}
+          </span>
+          <span v-if="option.count" class="option-count">{{
+            option.count
+          }}</span>
         </div>
       </div>
     </Teleport>
@@ -112,11 +113,11 @@ const target = ref();
 /** dropdown element */
 const dropdown = ref();
 /** get dropdown position */
-const { calculate, style } = useFloating();
+const { calculate, style } = useFloating(target, dropdown);
 /** recompute position after opened */
 watch(expanded, async () => {
   await nextTick();
-  if (expanded.value) calculate(target.value, dropdown.value);
+  if (expanded.value) calculate();
 });
 
 /** open dropdown */
@@ -164,7 +165,7 @@ function onKeydown(event: KeyboardEvent) {
     if (event.key === "End") index = props.options.length - 1;
 
     /** update value, wrapping beyond 0 or options length */
-    index = wrap(index, 0, props.options.length);
+    index = wrap(index, 0, props.options.length - 1);
     if (expanded.value) highlighted.value = index;
     else selected.value = index;
   }
@@ -248,24 +249,18 @@ watch(
   position: fixed;
   max-width: 90vw;
   max-height: 300px;
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: auto;
   background: $white;
   box-shadow: $shadow;
-  z-index: 2;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-auto-rows: 30px;
-  justify-content: stretch;
-  align-items: stretch;
-  min-width: max-content;
+  z-index: 12;
 }
 
 .option {
-  display: contents;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   padding: 5px 10px;
   text-align: left;
   white-space: nowrap;
@@ -273,27 +268,11 @@ watch(
   transition: background $fast;
 }
 
-.option > * {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
-  overflow: hidden;
-
-  &:first-child {
-    padding-left: 10px;
-  }
-
-  &:last-child {
-    padding-right: 10px;
-  }
-}
-
-.option[data-selected="true"] > * {
+.option[data-selected="true"] {
   background: $theme-light;
 }
 
-.option[data-highlighted="true"] > * {
+.option[data-highlighted="true"] {
   background: $light-gray;
 }
 
@@ -303,7 +282,9 @@ watch(
 }
 
 .option-label {
+  flex-grow: 1;
   justify-content: flex-start;
+  overflow-x: hidden;
 }
 
 .option-count {

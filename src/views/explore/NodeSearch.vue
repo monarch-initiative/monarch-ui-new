@@ -6,26 +6,15 @@
 
 <template>
   <AppWrapper tag="AppSection" :wrap="$route.name !== 'Home'">
-    <!-- examples -->
-    <AppFlex>
-      <span>Try:</span>
-      <AppButton
-        v-for="(text, index) of examples"
-        :key="index"
-        :text="text"
-        design="small"
-        @click="doExample(text)"
-      />
-    </AppFlex>
-
     <!-- search box -->
-    <AppInput
-      ref="searchBox"
+    <AppSelectAutocomplete
       :model-value="search"
+      name="Node search"
       placeholder="Search for a gene, disease, phenotype, etc."
-      icon="search"
-      @change="onChange"
+      :options="getAutocomplete"
       @focus="onFocus"
+      @change="onChange"
+      @delete="onDelete"
     />
 
     <!-- filters -->
@@ -122,37 +111,27 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import { isEqual, kebabCase, startCase, uniq } from "lodash";
-import AppInput from "@/components/AppInput.vue";
+import { groupBy, isEqual, kebabCase, sortBy, startCase, uniq } from "lodash";
+import AppSelectAutocomplete from "@/components/AppSelectAutocomplete.vue";
+import { Options as AutocompleteOptions } from "@/components/AppSelectAutocomplete";
 import AppStatus from "@/components/AppStatus.vue";
 import AppWrapper from "@/components/AppWrapper.vue";
-import { getSearchResults, Results } from "@/api/node-search";
+import {
+  getAutocompleteResults,
+  getSearchResults,
+  SearchResults,
+} from "@/api/node-search";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
-import { Options } from "@/components/AppSelectMulti";
+import { Options as MultiOptions } from "@/components/AppSelectMulti";
 import { useRoute, useRouter } from "vue-router";
 import { filtersToQuery } from "@/api/facets";
 import { useQuery } from "@/util/composables";
 import { appTitle } from "@/global/meta";
+import { history, addEntry, deleteEntry } from "@/global/history";
 
 /** route info */
 const router = useRouter();
 const route = useRoute();
-
-/** example searches */
-const examples = ["Marfan Syndrome", "Multicystic Kidney Dysplasia", "SSH"];
-
-/** default filters to show before anything typed in */
-/*
-const defaultFilters = {
-  category: [
-    { id: "gene" },
-    { id: "disease" },
-    { id: "phenotype" },
-    { id: "genotype" },
-    { id: "variant" },
-  ],
-};
-*/
 
 /** submitted search text */
 const search = ref(String(route.query.search || ""));
@@ -161,8 +140,8 @@ const page = ref(0);
 /** results per page */
 const perPage = ref(10);
 /** filters (facets) for search */
-const availableFilters = ref<Record<string, Options>>({});
-const activeFilters = ref<Record<string, Options>>({});
+const availableFilters = ref<Record<string, MultiOptions>>({});
+const activeFilters = ref<Record<string, MultiOptions>>({});
 
 /** when user focuses text box */
 async function onFocus() {
@@ -176,7 +155,11 @@ async function onFocus() {
 function onChange(value: string) {
   search.value = value;
   page.value = 0;
-  getResults(true);
+}
+
+/** when user deletes entry in textbox */
+function onDelete(value: string) {
+  deleteEntry(value);
 }
 
 /** when user changes active filters */
@@ -185,10 +168,51 @@ function onFilterChange() {
   getResults(false);
 }
 
-/** enter in clicked example and search */
-function doExample(value: string) {
-  search.value = value;
-  getResults(true);
+/** get autocomplete results */
+async function getAutocomplete(search: string): Promise<AutocompleteOptions> {
+  /** if something typed in, get autocomplete options from backend */
+  if (search.trim()) return await getAutocompleteResults(search);
+
+  /** otherwise, if search box focused and nothing typed in, show some useful entries */
+
+  /** show top N entries in each category */
+  const top = 5;
+
+  /** recent searches */
+  const recent = uniq([...history.value].reverse())
+    .slice(0, top)
+    .map((search) => ({
+      name: search,
+      icon: "clock-rotate-left",
+      tooltip: "Recent search. Shift + Del to remove.",
+    }));
+
+  /** most popular searches */
+  const popular = uniq(
+    sortBy(Object.values(groupBy(history.value)), "length").map(
+      (array) => array[0]
+    )
+  )
+    .reverse()
+    .slice(0, top)
+    .map((search) => ({
+      name: search,
+      icon: "person-running",
+      tooltip: "Frequent search. Shift + Del to remove.",
+    }));
+
+  /** example searches */
+  const examples = [
+    "Marfan syndrome",
+    "SSH",
+    "Multicystic kidney dysplasia",
+  ].map((search) => ({
+    name: search,
+    icon: "lightbulb",
+    tooltip: "Example search",
+  }));
+
+  return [...recent, ...popular, ...examples];
 }
 
 /** get search results */
@@ -204,7 +228,7 @@ const {
      * when search text changes, false when filters/pagination/etc change.
      */
     fresh: boolean
-  ): Promise<Results> {
+  ): Promise<SearchResults> {
     /** get results from api */
     const response = await getSearchResults(
       search.value,
@@ -226,6 +250,9 @@ const {
       availableFilters.value = { ...response.facets };
       activeFilters.value = { ...response.facets };
     }
+
+    /** add search to history */
+    addEntry(search.value);
   }
 );
 
@@ -320,6 +347,7 @@ const showCounts = computed(() =>
   flex-shrink: 0;
   flex-grow: 0;
 }
+
 .name {
   flex-grow: 1;
 }

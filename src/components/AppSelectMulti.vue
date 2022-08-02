@@ -64,59 +64,59 @@
         tabindex="0"
         :style="style"
       >
-        <div class="grid">
-          <!-- select all -->
-          <div
-            :id="`option-${id}--1`"
-            class="option"
-            role="option"
-            :aria-label="allSelected ? 'Deselect all' : 'Select all'"
-            :aria-selected="allSelected"
-            :data-selected="allSelected"
-            :data-highlighted="highlighted === -1"
-            tabindex="0"
-            @click="() => toggleSelect(-1)"
-            @mouseenter="highlighted = -1"
-            @mousedown.prevent=""
-            @focusin="() => null"
-            @keydown="() => null"
-          >
-            <span class="option-icon">
-              <AppIcon :icon="allSelected ? 'square-check' : 'square'" />
-            </span>
-            <span class="option-label">All</span>
-            <span class="option-count"></span>
-          </div>
+        <!-- select all -->
+        <div
+          :id="`option-${id}--1`"
+          class="option"
+          role="option"
+          :aria-label="allSelected ? 'Deselect all' : 'Select all'"
+          :aria-selected="allSelected"
+          :data-selected="allSelected"
+          :data-highlighted="highlighted === -1"
+          tabindex="0"
+          @click="() => toggleSelect(-1)"
+          @mouseenter="highlighted = -1"
+          @mousedown.prevent=""
+          @focusin="() => null"
+          @keydown="() => null"
+        >
+          <span class="option-icon">
+            <AppIcon :icon="allSelected ? 'square-check' : 'square'" />
+          </span>
+          <span class="option-label truncate">All</span>
+          <span class="option-count"></span>
+        </div>
 
-          <div class="option-spacer"></div>
+        <div class="option-spacer" aria-hidden="true"></div>
 
-          <!-- options -->
-          <div
-            v-for="(option, index) in options"
-            :id="`option-${id}-${index}`"
-            :key="index"
-            class="option"
-            role="option"
-            :aria-selected="selected.includes(index)"
-            :data-selected="selected.includes(index)"
-            :data-highlighted="index === highlighted"
-            tabindex="0"
-            @click="(event) => toggleSelect(index, event.shiftKey)"
-            @mouseenter="highlighted = index"
-            @mousedown.prevent=""
-            @focusin="() => null"
-            @keydown="() => null"
-          >
-            <span class="option-icon">
-              <AppIcon
-                :icon="selected.includes(index) ? 'square-check' : 'square'"
-              />
-            </span>
-            <span class="option-label">{{ option.id }}</span>
-            <span class="option-count">
-              {{ showCounts ? option.count : "" }}
-            </span>
-          </div>
+        <!-- options -->
+        <div
+          v-for="(option, index) in options"
+          :id="`option-${id}-${index}`"
+          :key="index"
+          v-tooltip="option.tooltip"
+          class="option"
+          role="option"
+          :aria-selected="selected.includes(index)"
+          :data-selected="selected.includes(index)"
+          :data-highlighted="index === highlighted"
+          tabindex="0"
+          @click="(event) => toggleSelect(index, event.shiftKey)"
+          @mouseenter.capture="highlighted = index"
+          @mousedown.prevent=""
+          @focusin="() => null"
+          @keydown="() => null"
+        >
+          <AppIcon
+            :icon="selected.includes(index) ? 'square-check' : 'square'"
+            class="option-icon"
+          />
+          <span class="option-label truncate">
+            {{ option.name || option.id }}
+          </span>
+          <span v-if="showCounts && option.count" class="option-count">
+            {{ option.count }}
+          </span>
         </div>
       </div>
     </Teleport>
@@ -175,12 +175,14 @@ const anchor = ref();
 /** dropdown element */
 const dropdown = ref();
 /** get dropdown position */
-const { calculate, style } = useFloating();
+const { calculate, style } = useFloating(
+  computed(() => anchor.value?.button || anchor.value),
+  dropdown
+);
 /** recompute position after opened */
 watch(expanded, async () => {
   await nextTick();
-  if (expanded.value)
-    calculate(anchor.value?.button || anchor.value, dropdown.value);
+  if (expanded.value) calculate();
 });
 
 function open() {
@@ -230,7 +232,7 @@ function onKeydown(event: KeyboardEvent) {
     if (event.key === "End") index = props.options.length - 1;
 
     /** update highlighted, wrapping beyond -1 or options length */
-    highlighted.value = wrap(index, -1, props.options.length);
+    highlighted.value = wrap(index, -1, props.options.length - 1);
   }
 
   /** enter key to de/select highlighted option */
@@ -349,47 +351,24 @@ const allSelected = computed(
   overflow-y: auto;
   background: $white;
   box-shadow: $shadow;
-  z-index: 2;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-template-rows: 30px 10px;
-  grid-auto-rows: 30px;
-  justify-content: stretch;
-  align-items: stretch;
-  min-width: max-content;
+  z-index: 12;
 }
 
 .option {
-  display: contents;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 7.5px;
   cursor: pointer;
   transition: background $fast;
 }
 
-.option > * {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
-  overflow: hidden;
-
-  &:first-child {
-    padding-left: 10px;
-  }
-
-  &:last-child {
-    padding-right: 10px;
-  }
-}
-
-.option[data-highlighted="true"] > * {
+.option[data-highlighted="true"] {
   background: $light-gray;
 }
 
 .option-spacer {
-  grid-column: 1 / 4;
   height: 10px;
 }
 
@@ -399,7 +378,9 @@ const allSelected = computed(
 }
 
 .option-label {
+  flex-grow: 1;
   justify-content: flex-start;
+  overflow-x: hidden;
 }
 
 .option-count {

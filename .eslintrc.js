@@ -34,7 +34,11 @@ module.exports = {
      */
     "vuejs-accessibility/label-has-for": [
       "error",
-      { required: { some: ["nesting", "id"] }, allowChildren: true },
+      {
+        controlComponents: ["AppInput"],
+        required: { some: ["nesting", "id"] },
+        allowChildren: true,
+      },
     ],
     /**
      * allow v-html. we are only using this from very controlled sources, so

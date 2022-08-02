@@ -52,6 +52,7 @@ import SectionAssociations from "./SectionAssociations.vue";
 import { scrollToHash } from "@/router";
 import { useQuery } from "@/util/composables";
 import { appDescription, appTitle } from "@/global/meta";
+import { addEntry } from "@/global/history";
 
 /** route info */
 const route = useRoute();
@@ -107,6 +108,11 @@ watch(
   /** https://github.com/vuejs/vue-router/issues/3393 */
   { immediate: true, flush: "post" }
 );
+
+/** update node history */
+watch([() => node.value?.name], () => addEntry(node.value?.name), {
+  immediate: true,
+});
 
 /** get new node data on load */
 onMounted(getNode);

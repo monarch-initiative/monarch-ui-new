@@ -4,12 +4,7 @@
 
 <template>
   <AppSection design="fill">
-    <AppTabs
-      v-model="tab"
-      name="Explore Mode"
-      :tabs="tabs"
-      :route="{ name: 'Explore' }"
-    />
+    <AppTabs v-model="tab" name="Explore Mode" :tabs="tabs" route="Explore" />
     <NodeSearch />
   </AppSection>
   <AppSection>

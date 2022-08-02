@@ -160,12 +160,13 @@
 
         <!-- right side controls -->
         <div>
-          <AppInput
+          <AppTextbox
             v-if="showControls"
             v-tooltip="'Search table data'"
             class="search"
             icon="search"
             :model-value="search"
+            @debounce="emitSearch"
             @change="emitSearch"
           />
           <AppButton
@@ -192,7 +193,7 @@
 import { ref, computed, watch, onMounted, nextTick } from "vue";
 import { useResizeObserver, useScroll } from "@vueuse/core";
 import { Col, Cols, Rows, Sort } from "./AppTable";
-import AppInput from "./AppInput.vue";
+import AppTextbox from "./AppTextbox.vue";
 import AppSelectMulti from "./AppSelectMulti.vue";
 import AppSelectSingle from "./AppSelectSingle.vue";
 import { Options } from "./AppSelectMulti";
@@ -212,9 +213,9 @@ interface Props {
   /** items per page (two-way bound) */
   perPage?: number;
   /** starting item index (two-way bound) */
-  start: number;
+  start?: number;
   /** total number of items */
-  total: number;
+  total?: number;
   /** text being searched (two-way bound) */
   search?: string;
   /**
@@ -225,12 +226,13 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  perPage: 5,
   sort: undefined,
-  search: "",
   availableFilters: undefined,
   activeFilters: undefined,
-  status: null,
+  perPage: 5,
+  start: 0,
+  total: 0,
+  search: "",
   showControls: true,
 });
 
