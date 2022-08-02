@@ -22,7 +22,11 @@
 
   <router-link
     v-else
-    :to="to.startsWith('#') ? { ...$route, hash: to } : to"
+    :to="{
+      path: to.startsWith('#') ? '' : to,
+      hash: to.startsWith('#') ? to : undefined,
+      state,
+    }"
     :replace="to.startsWith('#')"
   >
     <!-- use vue router component for relative urls -->
@@ -33,15 +37,24 @@
 <script setup lang="ts">
 import { computed, useSlots } from "vue";
 import { isExternal, isAbsolute } from "@/util/url";
+import { HistoryState } from "vue-router";
 
 interface Props {
   /** location to link to */
   to: string;
+  /**
+   * state data to attach on navigation
+   * https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
+   */
+  state?: HistoryState;
   /** whether to forcibly forgo external icon when link is external */
   noIcon?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), { noIcon: false });
+const props = withDefaults(defineProps<Props>(), {
+  noIcon: false,
+  state: undefined,
+});
 
 const slots = useSlots();
 

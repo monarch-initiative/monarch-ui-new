@@ -117,33 +117,27 @@ const categoryOptions = computed(
 watch(category, () => (association.value = undefined));
 
 /** update url from selected category */
-watch(category, (value, prev) =>
-  /**
-   * if category changed because it was set to default on page load, don't
-   * create new history entry
-   */
-  (prev ? router.push : router.replace)({
-    ...route,
-    query: { associations: category.value?.id },
-  })
+watch(
+  category,
+  (value, prev) => {
+    router.push({
+      ...route,
+      query: { associations: category.value?.id },
+      replace: !prev,
+    });
+  },
+  /** avoid extra triggering of watch functions */
+  { flush: "post" }
 );
 
 /** update selected category from url */
-function setCategoryFromUrl() {
-  if (route.query.associations)
-    category.value = categoryOptions.value.find(
-      (option) => option.id === route.query.associations
-    );
-}
-watch(() => route.query.associations, setCategoryFromUrl, { immediate: true });
-
-/** auto-select first category */
 watch(
-  categoryOptions,
+  () => route.query.associations,
   () => {
-    /** if no category selected, and no category about to be selected from url */
-    if (!category.value && !route.query.associations)
-      category.value = categoryOptions.value[0];
+    if (route.query.associations)
+      category.value = categoryOptions.value.find(
+        (option) => option.id === route.query.associations
+      );
   },
   { immediate: true }
 );

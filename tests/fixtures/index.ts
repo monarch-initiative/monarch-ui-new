@@ -77,7 +77,6 @@ export const handlers = [
     const category =
       (req.url.pathname.match(/\/bioentity\/(.+)\//) || [])[1] || "";
     nodeLookup.category = [category];
-
     /**
      * note that this will show (in yarn test:gui) silly things like "Marfan
      * syndrome: gene", because only the category field is changed

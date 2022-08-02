@@ -132,10 +132,13 @@
         </template>
 
         <!-- "object" -->
-        <template #object="{ cell }">
-          <AppLink class="truncate" :to="`/${cell.category}/${cell.id}`">{{
-            cell.name
-          }}</AppLink>
+        <template #object="{ cell, row }">
+          <AppLink
+            class="truncate"
+            :to="`/${cell.category}/${cell.id}`"
+            :state="{ subject: row.subject, relation: row.relation }"
+            >{{ cell.name }}</AppLink
+          >
         </template>
 
         <!-- evidence codes -->

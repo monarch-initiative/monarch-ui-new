@@ -127,10 +127,12 @@ it("Table association info shows", () => {
 it("Association mode switching works", () => {
   cy.visit("/disease/MONDO:0007947");
 
+  cy.url().should("include", "associations=phenotype");
   cy.contains("Table").trigger("click");
   cy.contains("button", "Phenotypes").trigger("click");
   cy.contains("[role='option'] > *", "Variants").trigger("click");
   cy.contains("th", "Variant");
+  cy.url().should("include", "associations=variant");
 });
 
 it("Association table has extra metadata columns", () => {

@@ -46,6 +46,10 @@
           />
           <AppLink
             :to="`/${association.object.category}/${association.object.id}`"
+            :state="{
+              subject: association.subject,
+              relation: association.relation,
+            }"
             >{{ association.object.name }}</AppLink
           >
         </AppFlex>

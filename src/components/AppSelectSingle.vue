@@ -212,7 +212,6 @@ watch(highlighted, () =>
 );
 
 /** auto-select first option as fallback */
-/*
 watch(
   () => props.options,
   () => {
@@ -220,7 +219,6 @@ watch(
   },
   { immediate: true }
 );
-*/
 </script>
 
 <style lang="scss" scoped>
