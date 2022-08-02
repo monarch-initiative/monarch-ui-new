@@ -6,6 +6,8 @@ node_modules
 /tests/e2e/screenshots/
 /cypress
 
+mockServiceWorker.js
+
 # local env files
 .env.local
 .env.*.local
