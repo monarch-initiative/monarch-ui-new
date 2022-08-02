@@ -184,12 +184,12 @@ async function getAutocomplete(search: string): Promise<AutocompleteOptions> {
     .map((search) => ({
       name: search,
       icon: "clock-rotate-left",
-      tooltip: "Recent search. Shift + Del to remove.",
+      tooltip: "One of your recent searches. Shift + Del to remove.",
     }));
 
   /** most popular searches */
   const popular = sortBy(
-    Object.entries(groupBy(history)).map(([search, matches]) => ({
+    Object.entries(groupBy(history.value)).map(([search, matches]) => ({
       search,
       count: matches.length,
     })),
@@ -201,7 +201,7 @@ async function getAutocomplete(search: string): Promise<AutocompleteOptions> {
     .map(({ search }) => ({
       name: search,
       icon: "person-running",
-      tooltip: "Frequent search. Shift + Del to remove.",
+      tooltip: "One of your frequent searches. Shift + Del to remove.",
     }));
 
   /** example searches */
