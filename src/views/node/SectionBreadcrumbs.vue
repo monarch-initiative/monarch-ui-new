@@ -10,14 +10,19 @@
     <AppFlex>
       <template v-for="(breadcrumb, index) of breadcrumbs" :key="index">
         <!-- subject -->
-        <AppLink
-          class="truncate"
-          :to="`/${breadcrumb.subject.category}/${breadcrumb.subject.id}`"
-          >{{ breadcrumb.subject.name }}</AppLink
-        >
+        <AppFlex flow="inline" gap="small">
+          <AppIcon
+            v-tooltip="startCase(breadcrumb.subject.category)"
+            :icon="`category-${kebabCase(breadcrumb.subject.category)}`"
+          />
+          <AppLink
+            :to="`/${breadcrumb.subject.category}/${breadcrumb.subject.id}`"
+            >{{ breadcrumb.subject.name }}</AppLink
+          >
+        </AppFlex>
 
         <!-- relation -->
-        <AppFlex flow="inline" gap="tiny">
+        <AppFlex flow="inline" gap="small">
           <AppIcon
             class="arrow"
             :icon="
@@ -26,12 +31,9 @@
                 : 'arrow-right-long'
             "
           />
-          <AppLink
-            class="truncate"
-            :to="breadcrumb.relation.iri"
-            :no-icon="true"
-            >{{ startCase(breadcrumb.relation.name) }}</AppLink
-          >
+          <AppLink :to="breadcrumb.relation.iri" :no-icon="true">{{
+            startCase(breadcrumb.relation.name)
+          }}</AppLink>
           <AppIcon
             class="arrow"
             :icon="
@@ -44,7 +46,13 @@
       </template>
 
       <!-- ending/current node -->
-      <strong>{{ node.name }}</strong>
+      <AppFlex flow="inline" gap="small">
+        <AppIcon
+          v-tooltip="startCase(node.category)"
+          :icon="`category-${kebabCase(node.category)}`"
+        />
+        <strong>{{ node.name }}</strong>
+      </AppFlex>
     </AppFlex>
   </AppSection>
 </template>
@@ -52,7 +60,7 @@
 <script setup lang="ts">
 import { watch } from "vue";
 import { useRoute } from "vue-router";
-import { startCase } from "lodash";
+import { kebabCase, startCase } from "lodash";
 import { breadcrumbs } from "@/global/breadcrumbs";
 import { Node } from "@/api/node-lookup";
 
