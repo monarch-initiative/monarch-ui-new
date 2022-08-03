@@ -74,11 +74,23 @@ export const handlers = [
      * change fixture data based on request so we can see UI that is conditional
      * on name/category/etc
      */
-    nodeLookup.label =
-      (req.url.pathname.match(/\/bioentity\/\w+\/(.+)/) || [])[1] || "";
-    nodeLookup.category = [
-      (req.url.pathname.match(/\/bioentity\/(\w+)\//) || [])[1] || "",
-    ];
+    const [, category = "", id = ""] =
+      req.url.pathname.match(/\/bioentity\/(\w+)\/(.+)\\?/) || [];
+    const labels: Record<string, string> = {
+      "MONDO:0007947": "Marfan syndrome",
+      "HP:0100775": "Dural ectasia",
+      "HP:0003179": "Protrusio acetabuli",
+      "HP:0001083": "Ectopia lentis",
+      "HP:0000501": "Glaucoma",
+      "HP:0002705": "High, narrow palate",
+      "HP:0004382": "Mitral valve calcification",
+      "HP:0004326": "Cachexia",
+      "HP:0002816": "Genu recurvatum",
+      "HP:0004298": "Abnormality of the abdominal wall",
+      "HP:0002996": "Limited elbow movement",
+    };
+    nodeLookup.label = labels[id] || "Marfan syndrome";
+    nodeLookup.category = [category];
     /**
      * note that this will show (in yarn test:gui) silly things like "Marfan
      * syndrome: gene", because only the category field is changed

@@ -238,14 +238,14 @@ it("Breadcrumbs section works", () => {
     .then(getInnerText)
     .should(
       "eq",
-      "MONDO:0007947 Has Phenotype HP:0100775 Has Phenotype HP:0004326 Has Phenotype HP:0002705 Has Phenotype HP:0002816"
+      "Marfan syndrome Has Phenotype Dural ectasia Has Phenotype Cachexia Has Phenotype High, narrow palate Has Phenotype Genu recurvatum"
     );
 
   cy.go(-3);
 
   cy.get("@breadcrumbs")
     .then(getInnerText)
-    .should("eq", "MONDO:0007947 Has Phenotype HP:0100775");
+    .should("eq", "Marfan syndrome Has Phenotype Dural ectasia");
 
   cy.go(2);
 
@@ -253,6 +253,6 @@ it("Breadcrumbs section works", () => {
     .then(getInnerText)
     .should(
       "eq",
-      "MONDO:0007947 Has Phenotype HP:0100775 Has Phenotype HP:0004326 Has Phenotype HP:0002705"
+      "Marfan syndrome Has Phenotype Dural ectasia Has Phenotype Cachexia Has Phenotype High, narrow palate"
     );
 });
