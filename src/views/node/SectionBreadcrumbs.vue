@@ -60,7 +60,7 @@
 import { watch } from "vue";
 import { useRoute } from "vue-router";
 import { kebabCase, startCase } from "lodash";
-import { breadcrumbs } from "@/global/breadcrumbs";
+import { breadcrumbs, updateBreadcrumbs } from "@/global/breadcrumbs";
 import { Node } from "@/api/node-lookup";
 
 interface Props {
@@ -74,18 +74,7 @@ defineProps<Props>();
 const route = useRoute();
 
 /** keep breadcrumbs global variable in sync with history.state.breadcrumbs */
-watch(
-  () => route,
-  () => {
-    try {
-      breadcrumbs.value = JSON.parse(window.history.state.breadcrumbs);
-    } catch (error) {
-      console.warn("Bad breadcrumbs state");
-      breadcrumbs.value = [];
-    }
-  },
-  { immediate: true, deep: true }
-);
+watch(() => route, updateBreadcrumbs, { immediate: true, deep: true });
 </script>
 
 <style lang="scss" scoped>
