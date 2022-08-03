@@ -71,12 +71,14 @@ export const handlers = [
   /** node search */
   rest.get(/\/bioentity\/\w+\/[^/]+$/i, (req, res, ctx) => {
     /**
-     * change category of fixture data based on request so we can see UI that is
-     * conditional on category
+     * change fixture data based on request so we can see UI that is conditional
+     * on name/category/etc
      */
-    const category =
-      (req.url.pathname.match(/\/bioentity\/(.+)\//) || [])[1] || "";
-    nodeLookup.category = [category];
+    nodeLookup.label =
+      (req.url.pathname.match(/\/bioentity\/\w+\/(.+)/) || [])[1] || "";
+    nodeLookup.category = [
+      (req.url.pathname.match(/\/bioentity\/(\w+)\//) || [])[1] || "",
+    ];
     /**
      * note that this will show (in yarn test:gui) silly things like "Marfan
      * syndrome: gene", because only the category field is changed

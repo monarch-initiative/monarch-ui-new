@@ -1,8 +1,9 @@
 import { ref } from "vue";
+import { Node } from "@/api/node-lookup";
 import { Association } from "@/api/node-associations";
 
 interface Breadcrumb {
-  subject: Association["subject"];
+  node: Node;
   relation: Association["relation"];
 }
 

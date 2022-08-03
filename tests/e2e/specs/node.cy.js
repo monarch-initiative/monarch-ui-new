@@ -221,3 +221,38 @@ it("Evidence table viewer works", () => {
   cy.contains("and 2 more").trigger("mouseenter");
   cy.contains(/PMID:3189335.*Marfan syndrome/);
 });
+
+it("Breadcrumbs section works", () => {
+  cy.visit("/disease/MONDO:0007947");
+
+  cy.contains("Dural ectasia").click();
+  cy.contains("Cachexia").click();
+  cy.contains("High, narrow palate").click();
+  cy.contains("Genu recurvatum").click();
+
+  cy.get("#breadcrumbs").nextAll(".flex").last().as("breadcrumbs");
+
+  const getInnerText = (els) => els[0].innerText.split(/\n/).join(" ");
+
+  cy.get("@breadcrumbs")
+    .then(getInnerText)
+    .should(
+      "eq",
+      "MONDO:0007947 Has Phenotype HP:0100775 Has Phenotype HP:0004326 Has Phenotype HP:0002705 Has Phenotype HP:0002816"
+    );
+
+  cy.go(-3);
+
+  cy.get("@breadcrumbs")
+    .then(getInnerText)
+    .should("eq", "MONDO:0007947 Has Phenotype HP:0100775");
+
+  cy.go(2);
+
+  cy.get("@breadcrumbs")
+    .then(getInnerText)
+    .should(
+      "eq",
+      "MONDO:0007947 Has Phenotype HP:0100775 Has Phenotype HP:0004326 Has Phenotype HP:0002705"
+    );
+});

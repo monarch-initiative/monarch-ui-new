@@ -47,7 +47,7 @@
           <AppBreadcrumbsLink
             :to="`/${association.object.category}/${association.object.id}`"
             :breadcrumb="{
-              subject: association.subject,
+              node,
               relation: association.relation,
             }"
             >{{ association.object.name }}</AppBreadcrumbsLink

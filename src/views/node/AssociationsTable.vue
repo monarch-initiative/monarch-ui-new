@@ -54,7 +54,7 @@
       <AppBreadcrumbsLink
         class="truncate"
         :to="`/${cell.category}/${cell.id}`"
-        :breadcrumb="{ subject: row.subject, relation: row.relation }"
+        :breadcrumb="{ node, relation: row.relation }"
         >{{ cell.name }}</AppBreadcrumbsLink
       >
     </template>

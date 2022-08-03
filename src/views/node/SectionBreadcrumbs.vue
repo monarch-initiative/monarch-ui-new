@@ -9,16 +9,15 @@
 
     <AppFlex>
       <template v-for="(breadcrumb, index) of breadcrumbs" :key="index">
-        <!-- subject -->
+        <!-- node -->
         <AppFlex flow="inline" gap="small">
           <AppIcon
-            v-tooltip="startCase(breadcrumb.subject.category)"
-            :icon="`category-${kebabCase(breadcrumb.subject.category)}`"
+            v-tooltip="startCase(breadcrumb.node.category)"
+            :icon="`category-${kebabCase(breadcrumb.node.category)}`"
           />
-          <AppLink
-            :to="`/${breadcrumb.subject.category}/${breadcrumb.subject.id}`"
-            >{{ breadcrumb.subject.name }}</AppLink
-          >
+          <AppLink :to="`/${breadcrumb.node.category}/${breadcrumb.node.id}`">{{
+            breadcrumb.node.name
+          }}</AppLink>
         </AppFlex>
 
         <!-- relation -->
