@@ -64,9 +64,10 @@
         v-tooltip="
           'Send any annotations above that are phenotypes to Phenotype Explorer'
         "
+        to="#phenotype-explorer"
+        :state="{ phenotypes: getPhenotypes() }"
         text="Analyze Phenotypes"
         icon="bars-progress"
-        @click="analyze"
       />
     </AppFlex>
   </AppSection>
@@ -82,12 +83,8 @@ import AppStatus from "@/components/AppStatus.vue";
 import example from "./text-annotator.json";
 import { annotateText } from "@/api/text-annotator";
 import { downloadJson } from "@/util/download";
-import { useRouter } from "vue-router";
 import { appendToBody } from "@/global/tooltip";
 import { useQuery } from "@/util/composables";
-
-/** route info */
-const router = useRouter();
 
 /** text content */
 const content = useLocalStorage("annotations-content", "");
@@ -132,8 +129,8 @@ function download() {
   );
 }
 
-/** send phenotype annotations to phenotype explorer to analyze */
-function analyze() {
+/** get phenotype annotations to send to phenotype explorer */
+function getPhenotypes() {
   /** gather annotations that are phenotypes */
   const phenotypes = [];
   for (const { tokens } of annotations.value)
@@ -141,10 +138,7 @@ function analyze() {
       if (id.startsWith("HP:")) phenotypes.push({ id, name });
 
   /** de-duplicate, and send them to phenotype explorer component via router */
-  router.push({
-    hash: "#phenotype-explorer",
-    state: { phenotypes: uniqBy(phenotypes, "id") },
-  });
+  return uniqBy(phenotypes, "id");
 }
 
 /** run annotations on mount if content loaded from storage */
