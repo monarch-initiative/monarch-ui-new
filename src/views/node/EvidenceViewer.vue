@@ -133,11 +133,11 @@
 
         <!-- "object" -->
         <template #object="{ cell, row }">
-          <AppLink
+          <AppBreadcrumbsLink
             class="truncate"
             :to="`/${cell.category}/${cell.id}`"
-            :state="{ subject: row.subject, relation: row.relation }"
-            >{{ cell.name }}</AppLink
+            :breadcrumb="{ subject: row.subject, relation: row.relation }"
+            >{{ cell.name }}</AppBreadcrumbsLink
           >
         </template>
 
@@ -216,6 +216,7 @@ import AppDetails from "@/components/AppDetails.vue";
 import AppDetail from "@/components/AppDetail.vue";
 import AppTable from "@/components/AppTable.vue";
 import AppStatus from "@/components/AppStatus.vue";
+import AppBreadcrumbsLink from "@/components/AppBreadcrumbsLink.vue";
 import { Node } from "@/api/node-lookup";
 import { scrollToElement } from "@/router";
 import { getAssociationEvidence } from "@/api/association-evidence";

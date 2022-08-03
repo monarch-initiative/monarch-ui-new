@@ -68,6 +68,7 @@ Hosting at a default GitHub Pages url like monarch-initiative.github.io/monarch-
   - `/assets` - Static resources like images.
   - `/components` - Reusable building blocks of UI.
   - `/global` - Components, directives, styles, and other "global" resources that always -- whether running the app normally or setting up and mounting a test -- need to be included in the Vue application instance.
+    Also includes global variables and associated functions.
   - `/router` - See [Vue router](https://router.vuejs.org/).
   - `/store` - See [Vuex](https://vuex.vuejs.org/) (similar to Redux).
     Most useful for managing global and complex state.

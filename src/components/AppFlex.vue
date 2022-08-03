@@ -7,6 +7,7 @@
 <template>
   <div
     class="flex"
+    :data-flow="flow"
     :data-direction="direction"
     :data-gap="gap"
     :style="{ justifyContent, alignItems }"
@@ -17,7 +18,6 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-
 /** map nice human align names to css flex align names */
 const alignMap = {
   left: "flex-start",
@@ -29,6 +29,8 @@ const alignMap = {
 };
 
 interface Props {
+  /** flex display (whether container takes up full width) */
+  flow?: "inline" | "block";
   /** horizontal or vertical */
   direction?: "row" | "col";
   /** spacing between items */
@@ -40,6 +42,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  flow: "block",
   direction: "row",
   gap: "medium",
   hAlign: "center",
@@ -57,8 +60,14 @@ const alignItems = computed(() =>
 
 <style lang="scss" scoped>
 .flex {
-  display: flex;
-  width: 100%;
+  &[data-flow="block"] {
+    display: flex;
+    width: 100%;
+  }
+
+  &[data-flow="inline"] {
+    display: inline-flex;
+  }
 
   &[data-direction="row"] {
     flex-wrap: wrap;
@@ -71,15 +80,19 @@ const alignItems = computed(() =>
   &[data-gap="none"] {
     gap: 0;
   }
+
   &[data-gap="tiny"] {
     gap: 5px;
   }
+
   &[data-gap="small"] {
     gap: 10px;
   }
+
   &[data-gap="medium"] {
     gap: 20px;
   }
+
   &[data-gap="big"] {
     gap: 40px;
   }

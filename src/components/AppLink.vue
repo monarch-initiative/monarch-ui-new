@@ -25,7 +25,7 @@
     :to="{
       path: to.startsWith('#') ? '' : to,
       hash: to.startsWith('#') ? to : undefined,
-      state,
+      state: mapValues(state, JSON.stringify),
     }"
     :replace="to.startsWith('#')"
   >
@@ -36,17 +36,17 @@
 
 <script setup lang="ts">
 import { computed, useSlots } from "vue";
+import { mapValues } from "lodash";
 import { isExternal, isAbsolute } from "@/util/url";
-import { HistoryState } from "vue-router";
 
 interface Props {
   /** location to link to */
   to: string;
   /**
-   * state data to attach on navigation
+   * state data to attach on navigation. object/array values get stringified.
    * https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
    */
-  state?: HistoryState;
+  state?: Record<string, unknown>;
   /** whether to forcibly forgo external icon when link is external */
   noIcon?: boolean;
 }
