@@ -18,14 +18,6 @@
       const { origin, pathname, search, hash } = window.location;
       const { state } = window.history;
 
-      /** only keep state added by app, as to not interfere with built-in browser nav */
-      delete state.back;
-      delete state.current;
-      delete state.forward;
-      delete state.position;
-      delete state.replaced;
-      delete state.scroll;
-
       /** set redirect and state */
       window.sessionStorage.redirect = pathname + search + hash;
       window.sessionStorage.redirectState = JSON.stringify(state);

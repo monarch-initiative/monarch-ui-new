@@ -4,8 +4,8 @@ import {
   RouteRecordRaw,
   RouterScrollBehavior,
   NavigationGuard,
-  RouteLocationRaw,
 } from "vue-router";
+import { isEmpty, pick } from "lodash";
 import { hideAll } from "tippy.js";
 import PageHome from "@/views/PageHome.vue";
 import PageExplore from "@/views/explore/PageExplore.vue";
@@ -36,14 +36,25 @@ export const routes: Array<RouteRecordRaw> = [
     beforeEnter: (async () => {
       /** look for redirect in session storage (saved from public/404.html page) */
       const redirect = window.sessionStorage.redirect;
-      const redirectState = parse(window.sessionStorage.redirectState);
+      let redirectState = parse(window.sessionStorage.redirectState, {});
+
+      /** after consuming, remove storage values */
       window.sessionStorage.removeItem("redirect");
       window.sessionStorage.removeItem("redirectState");
+
+      /** log for debugging */
       console.info("Redirecting to:", redirect);
       console.info("With state:", redirectState);
 
-      if (redirect)
-        return { path: redirect, state: redirectState } as RouteLocationRaw;
+      /** only keep state added by app, as to not interfere with built-in browser nav */
+      redirectState = pick(redirectState, ["phenotypes", "breadcrumbs"]);
+
+      /** apply state to current route */
+      if (!isEmpty(redirectState))
+        window.history.replaceState(redirectState, "");
+
+      /** go to appropriate route */
+      if (redirect) return redirect;
     }) as NavigationGuard,
   },
   {
