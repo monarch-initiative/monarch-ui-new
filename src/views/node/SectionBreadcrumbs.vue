@@ -53,6 +53,15 @@
         <strong>{{ node.name }}</strong>
       </AppFlex>
     </AppFlex>
+
+    <!-- clear button -->
+    <AppButton
+      v-tooltip="'Clear breadcrumb history'"
+      icon="times"
+      text="Clear"
+      design="small"
+      @click="clear"
+    />
   </AppSection>
 </template>
 
@@ -75,6 +84,13 @@ const route = useRoute();
 
 /** keep breadcrumbs global variable in sync with history.state.breadcrumbs */
 watch(() => route, updateBreadcrumbs, { immediate: true, deep: true });
+
+/** clear breadcrumbs history */
+function clear() {
+  /** confirmation warning not necessary since back button should return to previous state */
+  window.history.pushState({}, "");
+  updateBreadcrumbs();
+}
 </script>
 
 <style lang="scss" scoped>
