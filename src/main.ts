@@ -21,8 +21,7 @@ for (const [name, Component] of Object.entries(components))
 
 (async () => {
   /** mock api for local development */
-
-  if (process.env.NODE_ENV === "development" && process.env.CI !== "true") {
+  if (process.env.NODE_ENV === "development") {
     const { setupWorker } = await import("msw");
     await setupWorker(...handlers).start();
   }
