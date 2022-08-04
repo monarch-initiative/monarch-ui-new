@@ -12,10 +12,11 @@ export const breadcrumbs = ref<Array<Breadcrumb>>([]);
 
 /** keep breadcrumbs global variable in sync with history.state.breadcrumbs */
 export const updateBreadcrumbs = () => {
+  console.info(window.history);
   try {
     breadcrumbs.value = JSON.parse(window.history.state.breadcrumbs);
   } catch (error) {
-    console.warn("Bad breadcrumbs state");
+    console.warn("Bad breadcrumbs state", window.history.state.breadcrumbs);
     breadcrumbs.value = [];
   }
 };

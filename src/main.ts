@@ -6,6 +6,9 @@ import plugins from "@/global/plugins";
 import { handlers } from "../tests/fixtures";
 import "@/global/meta";
 
+/** log env variables for debugging */
+console.info(process.env);
+
 /** create main app object */
 let app = createApp(App);
 
@@ -18,7 +21,8 @@ for (const [name, Component] of Object.entries(components))
 
 (async () => {
   /** mock api for local development */
-  if (process.env.NODE_ENV === "development") {
+
+  if (process.env.NODE_ENV === "development" && process.env.CI !== "true") {
     const { setupWorker } = await import("msw");
     await setupWorker(...handlers).start();
   }
