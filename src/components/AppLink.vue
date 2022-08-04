@@ -25,7 +25,7 @@
     :to="{
       path: to.startsWith('#') ? '' : to,
       hash: to.startsWith('#') ? to : undefined,
-      state: mapValues(state, stringify),
+      state: mapValues(state, (value) => stringify(value)),
     }"
     :replace="to.startsWith('#')"
   >

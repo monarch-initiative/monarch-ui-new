@@ -12,7 +12,7 @@
 
       /** turn on "preserve log" in chrome dev tools to still see this after nav */
       console.info("Redirecting from:", window.location);
-      console.info("With history:", window.history);
+      console.info("With state:", window.history.state);
 
       /** set redirect and state */
       const { origin, pathname, search, hash } = window.location;
