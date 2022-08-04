@@ -50,10 +50,13 @@
     </template>
 
     <!-- "object" (what current node has an association with) -->
-    <template #object="{ cell }">
-      <AppLink class="truncate" :to="`/${cell.category}/${cell.id}`">{{
-        cell.name
-      }}</AppLink>
+    <template #object="{ cell, row }">
+      <AppBreadcrumbsLink
+        class="truncate"
+        :to="`/${cell.category}/${cell.id}`"
+        :breadcrumb="{ node, relation: row.relation }"
+        >{{ cell.name }}</AppBreadcrumbsLink
+      >
     </template>
 
     <!-- button to show evidence -->
@@ -108,6 +111,7 @@ import { startCase } from "lodash";
 import AppTable from "@/components/AppTable.vue";
 import AppStatus from "@/components/AppStatus.vue";
 import { Col, Cols, Sort } from "@/components/AppTable";
+import AppBreadcrumbsLink from "@/components/AppBreadcrumbsLink.vue";
 import { Node } from "@/api/node-lookup";
 import { getTabulatedAssociations, Association } from "@/api/node-associations";
 import { downloadJson } from "@/util/download";

@@ -6,11 +6,10 @@ import { handlers } from "../../fixtures";
 /** setup mock-service-worker for browser (cypress) */
 const worker = setupWorker(...handlers);
 before(() => {
-  worker.start();
+  /** https://stackoverflow.com/questions/49980311/cypress-io-how-to-handle-async-code */
+  cy.wrap(null).then({ timeout: 10000 }, worker.start);
 });
-afterEach(() => {
-  worker.resetHandlers();
-});
+afterEach(() => worker.resetHandlers());
 /**
  * leave this out so when running cypress gui you can still play around with
  * mocked responses even after tests have finished running

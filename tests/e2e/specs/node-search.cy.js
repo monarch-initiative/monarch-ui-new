@@ -12,11 +12,13 @@ it("Recent/frequent results show", () => {
   cy.visit("/explore");
 
   const searches = [
-    "ssh",
-    "multicystic kidney dysplasia",
-    "ssh",
-    "multicystic kidney dysplasia",
-    "ssh",
+    "abc def",
+    "123",
+    "123",
+    "abc def",
+    "123",
+    "123",
+    "abc def",
   ];
 
   for (const search of searches) {
@@ -36,13 +38,12 @@ it("Recent/frequent results show", () => {
 
   /** recent */
   cy.get("[role='option']").eq(0).contains("marfan syndrome");
-  cy.get("[role='option']").eq(1).contains("ssh");
-  cy.get("[role='option']").eq(2).contains("multicystic kidney dysplasia");
+  cy.get("[role='option']").eq(1).contains("abc def");
+  cy.get("[role='option']").eq(2).contains("123");
 
   /** frequent */
-  cy.get("[role='option']").eq(3).contains("ssh");
-  cy.get("[role='option']").eq(4).contains("multicystic kidney dysplasia");
-  cy.get("[role='option']").eq(5).contains("marfan syndrome");
+  cy.get("[role='option']").eq(3).contains("123");
+  cy.get("[role='option']").eq(4).contains("abc def");
 });
 
 it("Autocomplete results show", () => {

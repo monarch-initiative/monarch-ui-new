@@ -43,3 +43,29 @@ export const renameKey = (
     delete object[oldKey];
   }
 };
+
+/** safe json stringify */
+export const stringify = (value: unknown, space = 0) => {
+  try {
+    if (!value) return "";
+    else return JSON.stringify(value, null, space);
+  } catch (error) {
+    console.warn("Invalid JSON stringify");
+    console.info(value);
+    console.info(error);
+    return "";
+  }
+};
+
+/** safe json parse */
+export const parse = (value: string, defaultValue: unknown = null) => {
+  try {
+    if (!value) return defaultValue;
+    else return JSON.parse(value);
+  } catch (error) {
+    console.warn("Invalid JSON parse");
+    console.info(value);
+    console.info(error);
+    return defaultValue;
+  }
+};

@@ -1,6 +1,7 @@
 import { biolink, request } from ".";
 import { getSearchResults } from "./node-search";
 import { Options, OptionsFunc } from "@/components/AppSelectTags.d";
+import { stringify } from "@/util/object";
 
 /** search individual phenotypes or gene/disease phenotypes */
 export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
@@ -112,7 +113,7 @@ export const compareSetToSet = async (
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify(body),
+    body: stringify(body),
   };
 
   /** make query */

@@ -5,7 +5,7 @@ import {
   RouterScrollBehavior,
   NavigationGuard,
 } from "vue-router";
-import { clone } from "lodash";
+import { isEmpty, pick } from "lodash";
 import { hideAll } from "tippy.js";
 import PageHome from "@/views/PageHome.vue";
 import PageExplore from "@/views/explore/PageExplore.vue";
@@ -22,6 +22,7 @@ import PageNode from "@/views/node/PageNode.vue";
 import PageTestbed from "@/views/PageTestbed.vue";
 import { sleep } from "@/util/debug";
 import { lookupNode } from "@/api/node-lookup";
+import { parse } from "@/util/object";
 import descriptions from "@/router/descriptions.json";
 
 /** list of routes and corresponding components. */
@@ -35,11 +36,25 @@ export const routes: Array<RouteRecordRaw> = [
     beforeEnter: (async () => {
       /** look for redirect in session storage (saved from public/404.html page) */
       const redirect = window.sessionStorage.redirect;
-      if (redirect) {
-        console.info(`Redirecting to ${redirect}`);
-        delete window.sessionStorage.redirect;
-        return redirect;
-      }
+      let redirectState = parse(window.sessionStorage.redirectState, {});
+
+      /** after consuming, remove storage values */
+      window.sessionStorage.removeItem("redirect");
+      window.sessionStorage.removeItem("redirectState");
+
+      /** log for debugging */
+      console.info("Redirecting to:", redirect);
+      console.info("With state:", redirectState);
+
+      /** only keep state added by app, as to not interfere with built-in browser nav */
+      redirectState = pick(redirectState, ["phenotypes", "breadcrumbs"]);
+
+      /** apply state to current route */
+      if (!isEmpty(redirectState))
+        window.history.replaceState(redirectState, "");
+
+      /** go to appropriate route */
+      if (redirect) return redirect;
     }) as NavigationGuard,
   },
   {
@@ -214,7 +229,7 @@ export const scrollToHash = () =>
   scrollToElement(document?.getElementById(window.location.hash.slice(1)));
 
 /** navigation history object */
-const history = createWebHistory(process.env.BASE_URL);
+export const history = createWebHistory(process.env.BASE_URL);
 
 /** router object */
 const router = createRouter({
@@ -229,22 +244,3 @@ router.beforeEach(() => {
 });
 
 export default router;
-
-/**
- * dirty way to allow passing arbitrary data with router.push. will no longer be
- * needed once this vue-router RFC is implemented:
- * https://github.com/vuejs/rfcs/discussions/400
- */
-let routeData: unknown = null;
-
-/** attach data to be consumed after route change */
-export const setData = (data: unknown): void => {
-  routeData = data;
-};
-
-/** consume data set before route change */
-export const getData = (): unknown => {
-  const copy = clone(routeData);
-  routeData = null; /** reset after data consumed once */
-  return copy;
-};

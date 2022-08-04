@@ -1,6 +1,7 @@
 <template>
   <AppFlex
     ref="toc"
+    flow="inline"
     direction="col"
     gap="none"
     h-align="stretch"
@@ -168,7 +169,6 @@ useMutationObserver(
 .toc {
   position: fixed;
   top: 0;
-  width: unset;
   background: $white;
   box-shadow: $shadow;
   z-index: 10;

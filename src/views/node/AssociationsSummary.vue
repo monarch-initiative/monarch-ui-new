@@ -44,9 +44,13 @@
                 : 'arrow-right-long'
             "
           />
-          <AppLink
+          <AppBreadcrumbsLink
             :to="`/${association.object.category}/${association.object.id}`"
-            >{{ association.object.name }}</AppLink
+            :breadcrumb="{
+              node,
+              relation: association.relation,
+            }"
+            >{{ association.object.name }}</AppBreadcrumbsLink
           >
         </AppFlex>
 
@@ -86,6 +90,7 @@
 <script setup lang="ts">
 import { watch, onMounted } from "vue";
 import AppStatus from "@/components/AppStatus.vue";
+import AppBreadcrumbsLink from "@/components/AppBreadcrumbsLink.vue";
 import { Node } from "@/api/node-lookup";
 import { getTopAssociations, Association } from "@/api/node-associations";
 import { useQuery } from "@/util/composables";

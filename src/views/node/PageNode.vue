@@ -30,6 +30,7 @@
     <SectionDetails :node="node" />
     <SectionHierarchy :node="node" />
     <SectionAssociations :node="node" />
+    <SectionBreadcrumbs :node="node" />
 
     <Teleport to="body">
       <TheTableOfContents />
@@ -49,6 +50,7 @@ import SectionOverview from "./SectionOverview.vue";
 import SectionDetails from "./SectionDetails.vue";
 import SectionHierarchy from "./SectionHierarchy.vue";
 import SectionAssociations from "./SectionAssociations.vue";
+import SectionBreadcrumbs from "./SectionBreadcrumbs.vue";
 import { scrollToHash } from "@/router";
 import { useQuery } from "@/util/composables";
 import { appDescription, appTitle } from "@/global/meta";
@@ -64,7 +66,7 @@ const {
   isLoading,
   isError,
 } = useQuery(
-  async function getData() {
+  async function () {
     /** get node from route params */
     const { id = "", category = "" } = route.params;
 

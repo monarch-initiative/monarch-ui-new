@@ -102,7 +102,7 @@ const name = "monarch-cache";
 /** start cache */
 const initCache = async () => {
   /** start fresh each session (as if using sessionStorage) */
-  if (process.env.NODE_ENV !== "development") await window.caches.delete(name);
+  await window.caches.delete(name);
   /** set cache interface */
   cache = await window.caches.open(name);
 };

@@ -49,7 +49,7 @@ module.exports = {
   },
 
   /** don't lint certain files */
-  ignorePatterns: ["mockServiceWorker.js"],
+  ignorePatterns: [],
 
   /** is this needed? */
   overrides: [
