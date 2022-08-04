@@ -184,7 +184,8 @@ async function getAutocomplete(search: string): Promise<AutocompleteOptions> {
     .map((search) => ({
       name: search,
       icon: "clock-rotate-left",
-      tooltip: "One of your recent searches. Shift + Del to remove.",
+      tooltip:
+        "One of your recent node searches/visits. Shift + Del to remove.",
     }));
 
   /** most popular searches */
@@ -201,7 +202,8 @@ async function getAutocomplete(search: string): Promise<AutocompleteOptions> {
     .map(({ search }) => ({
       name: search,
       icon: "person-running",
-      tooltip: "One of your frequent searches. Shift + Del to remove.",
+      tooltip:
+        "One of your frequent node searches/visits. Shift + Del to remove.",
     }));
 
   /** example searches */

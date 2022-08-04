@@ -226,9 +226,13 @@ it("Breadcrumbs section works", () => {
   cy.visit("/disease/MONDO:0007947");
 
   cy.contains("Dural ectasia").click();
+  cy.reload();
   cy.contains("Cachexia").click();
+  cy.reload();
   cy.contains("High, narrow palate").click();
+  cy.reload();
   cy.contains("Genu recurvatum").click();
+  cy.reload();
 
   cy.get("#breadcrumbs").nextAll(".flex").last().as("breadcrumbs");
 
@@ -242,12 +246,14 @@ it("Breadcrumbs section works", () => {
     );
 
   cy.go(-3);
+  cy.reload();
 
   cy.get("@breadcrumbs")
     .then(getInnerText)
     .should("eq", "Marfan syndrome Has Phenotype Dural ectasia");
 
   cy.go(2);
+  cy.reload();
 
   cy.get("@breadcrumbs")
     .then(getInnerText)
