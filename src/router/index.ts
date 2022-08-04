@@ -4,6 +4,7 @@ import {
   RouteRecordRaw,
   RouterScrollBehavior,
   NavigationGuard,
+  RouteLocationRaw,
 } from "vue-router";
 import { hideAll } from "tippy.js";
 import PageHome from "@/views/PageHome.vue";
@@ -38,15 +39,11 @@ export const routes: Array<RouteRecordRaw> = [
       const redirectState = parse(window.sessionStorage.redirectState);
       window.sessionStorage.removeItem("redirect");
       window.sessionStorage.removeItem("redirectState");
+      console.info("Redirecting to:", redirect);
+      console.info("With state:", redirectState);
 
-      if (redirect) {
-        console.info("Redirecting to:", redirect);
-        if (redirectState) {
-          console.info("With state:", redirectState);
-          window.history.replaceState(redirectState, "");
-        }
-        return redirect;
-      }
+      if (redirect)
+        return { path: redirect, state: redirectState } as RouteLocationRaw;
     }) as NavigationGuard,
   },
   {
