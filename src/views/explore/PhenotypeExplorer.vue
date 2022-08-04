@@ -146,6 +146,7 @@ import { Option, Options } from "@/components/AppSelectTags";
 import { snackbar } from "@/components/TheSnackbar";
 import { mountPhenogrid } from "@/api/phenogrid";
 import { useQuery } from "@/util/composables";
+import { parse } from "@/util/object";
 
 /** common tooltip explaining how to use multi-select component */
 const multiTooltip = `In this box, you can select phenotypes in 3 ways:<br>
@@ -315,7 +316,7 @@ watch([aPhenotypes, bMode, bTaxon, bPhenotypes], clearResults, { deep: true });
 /** fill in phenotype ids from text annotator */
 onMounted(() => {
   if (window.history.state.phenotypes) {
-    const phenotypes = JSON.parse(window.history.state.phenotypes) as Options;
+    const phenotypes = parse(window.history.state.phenotypes, []) as Options;
     aPhenotypes.value = phenotypes;
     aGeneratedFrom.value = {
       option: { id: "text annotator" },

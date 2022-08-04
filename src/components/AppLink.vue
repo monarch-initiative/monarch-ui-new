@@ -25,7 +25,7 @@
     :to="{
       path: to.startsWith('#') ? '' : to,
       hash: to.startsWith('#') ? to : undefined,
-      state: mapValues(state, JSON.stringify),
+      state: mapValues(state, stringify),
     }"
     :replace="to.startsWith('#')"
   >
@@ -38,6 +38,7 @@
 import { computed, useSlots } from "vue";
 import { mapValues } from "lodash";
 import { isExternal, isAbsolute } from "@/util/url";
+import { stringify } from "@/util/object";
 
 interface Props {
   /** location to link to */

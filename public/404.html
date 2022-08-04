@@ -18,7 +18,7 @@
       const { origin, pathname, search, hash } = window.location;
       const { state } = window.history;
       window.sessionStorage.redirect = pathname + search + hash;
-      window.sessionStorage.redirectState = state;
+      window.sessionStorage.redirectState = JSON.stringify(state);
       window.location = "/";
     </script>
   </body>

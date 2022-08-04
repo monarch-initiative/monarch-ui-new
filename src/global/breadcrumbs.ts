@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { Node } from "@/api/node-lookup";
 import { Association } from "@/api/node-associations";
+import { parse } from "@/util/object";
 
 interface Breadcrumb {
   node: Node;
@@ -11,11 +12,5 @@ interface Breadcrumb {
 export const breadcrumbs = ref<Array<Breadcrumb>>([]);
 
 /** keep breadcrumbs global variable in sync with history.state.breadcrumbs */
-export const updateBreadcrumbs = () => {
-  try {
-    breadcrumbs.value = JSON.parse(window.history.state.breadcrumbs);
-  } catch (error) {
-    console.warn("Bad breadcrumbs state", window.history.state.breadcrumbs);
-    breadcrumbs.value = [];
-  }
-};
+export const updateBreadcrumbs = () =>
+  (breadcrumbs.value = parse(window.history.state.breadcrumbs, []));

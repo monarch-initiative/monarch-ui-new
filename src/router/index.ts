@@ -21,6 +21,7 @@ import PageNode from "@/views/node/PageNode.vue";
 import PageTestbed from "@/views/PageTestbed.vue";
 import { sleep } from "@/util/debug";
 import { lookupNode } from "@/api/node-lookup";
+import { parse } from "@/util/object";
 import descriptions from "@/router/descriptions.json";
 
 /** list of routes and corresponding components. */
@@ -34,7 +35,7 @@ export const routes: Array<RouteRecordRaw> = [
     beforeEnter: (async () => {
       /** look for redirect in session storage (saved from public/404.html page) */
       const redirect = window.sessionStorage.redirect;
-      const redirectState = window.sessionStorage.redirectState;
+      const redirectState = parse(window.sessionStorage.redirectState);
       window.sessionStorage.removeItem("redirect");
       window.sessionStorage.removeItem("redirectState");
 
