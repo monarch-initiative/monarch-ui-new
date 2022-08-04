@@ -101,6 +101,7 @@ const name = "monarch-cache";
 
 /** start cache */
 const initCache = async () => {
+  console.log("init cache");
   /** start fresh each session (as if using sessionStorage) */
   await window.caches.delete(name);
   /** set cache interface */

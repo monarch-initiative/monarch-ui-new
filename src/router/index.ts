@@ -34,9 +34,16 @@ export const routes: Array<RouteRecordRaw> = [
     beforeEnter: (async () => {
       /** look for redirect in session storage (saved from public/404.html page) */
       const redirect = window.sessionStorage.redirect;
+      const redirectState = window.sessionStorage.redirectState;
+      window.sessionStorage.removeItem("redirect");
+      window.sessionStorage.removeItem("redirectState");
+
       if (redirect) {
-        console.info(`Redirecting to ${redirect}`);
-        delete window.sessionStorage.redirect;
+        console.info("Redirecting to:", redirect);
+        if (redirectState) {
+          console.info("With state:", redirectState);
+          window.history.replaceState(redirectState, "");
+        }
         return redirect;
       }
     }) as NavigationGuard,
