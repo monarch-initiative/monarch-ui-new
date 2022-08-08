@@ -70,15 +70,20 @@
   <!-- social media -->
   <AppSection>
     <AppHeading>Follow</AppHeading>
-    <p>
-      Be the first to know when we have important updates or other fun news.
-    </p>
+    <p>Be the first to know when we have major updates or other fun news.</p>
     <AppFlex>
+      <AppTile
+        to="https://medium.com/@MonarchInit"
+        icon="medium"
+        title="Medium"
+        subtitle="Blog posts and major updates"
+        design="small"
+      />
       <AppTile
         to="https://github.com/monarch-initiative"
         icon="github"
         title="GitHub"
-        subtitle="Star and follow for new releases"
+        subtitle="Source code and releases"
         design="small"
       />
       <AppTile
@@ -86,13 +91,6 @@
         icon="twitter"
         title="Twitter"
         subtitle="Quick updates and musings"
-        design="small"
-      />
-      <AppTile
-        to="https://medium.com/@MonarchInit"
-        icon="medium"
-        title="Medium"
-        subtitle="Our blog posts on Medium"
         design="small"
       />
     </AppFlex>
