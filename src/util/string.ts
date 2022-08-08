@@ -6,3 +6,7 @@ export const collapse = (value = ""): string =>
 export const breakUrl = (value = ""): string =>
   /** non-alphanumeric char followed by alphanumeric char */
   value.replaceAll(/([^A-Za-z0-9])([A-Za-z0-9])/g, "$1<wbr/>$2");
+
+/** strip html from string */
+export const stripHtml = (html = "") =>
+  new DOMParser().parseFromString(html, "text/html").body.textContent || "";

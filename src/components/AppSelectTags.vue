@@ -139,7 +139,6 @@
 import { ref, computed, watch, nextTick } from "vue";
 import { uniqueId, isEqual, uniqBy } from "lodash";
 import { Option, Options, OptionsFunc } from "./AppSelectTags";
-import AppStatus from "@/components/AppStatus.vue";
 import { wrap } from "@/util/math";
 import { snackbar } from "./TheSnackbar";
 import { sleep } from "@/util/debug";

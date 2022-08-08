@@ -174,7 +174,6 @@ import AppSelectAutocomplete from "@/components/AppSelectAutocomplete.vue";
 import AppSelectMulti from "@/components/AppSelectMulti.vue";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
 import AppSelectTags from "@/components/AppSelectTags.vue";
-import AppStatus from "@/components/AppStatus.vue";
 import AppTable from "@/components/AppTable.vue";
 import AppTabs from "@/components/AppTabs.vue";
 import AppTextbox from "@/components/AppTextbox.vue";

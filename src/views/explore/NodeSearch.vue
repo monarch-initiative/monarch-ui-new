@@ -114,7 +114,6 @@ import { ref, computed, watch } from "vue";
 import { groupBy, isEqual, kebabCase, sortBy, startCase, uniq } from "lodash";
 import AppSelectAutocomplete from "@/components/AppSelectAutocomplete.vue";
 import { Options as AutocompleteOptions } from "@/components/AppSelectAutocomplete";
-import AppStatus from "@/components/AppStatus.vue";
 import AppWrapper from "@/components/AppWrapper.vue";
 import {
   getAutocompleteResults,

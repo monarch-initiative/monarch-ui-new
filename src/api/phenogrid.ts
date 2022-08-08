@@ -1,4 +1,4 @@
-import { waitFor } from "./../util/dom";
+import { waitFor } from "@/util/dom";
 import { biolink } from ".";
 /** import "phenogrid/dist/phenogrid-bundle.css"; */
 import "./phenogrid.css";

@@ -79,7 +79,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { getUptimes } from "@/api/uptime";
-import AppStatus from "@/components/AppStatus.vue";
 import { useQuery } from "@/util/composables";
 
 /** list of status checks to display */

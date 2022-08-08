@@ -89,7 +89,6 @@
 
 <script setup lang="ts">
 import { watch, onMounted } from "vue";
-import AppStatus from "@/components/AppStatus.vue";
 import AppBreadcrumbsLink from "@/components/AppBreadcrumbsLink.vue";
 import { Node } from "@/api/node-lookup";
 import { getTopAssociations, Association } from "@/api/node-associations";

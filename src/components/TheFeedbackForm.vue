@@ -85,7 +85,6 @@ import { useLocalStorage } from "@vueuse/core";
 import { truncate } from "lodash";
 import parser from "ua-parser-js";
 import AppTextbox from "@/components/AppTextbox.vue";
-import AppStatus from "./AppStatus.vue";
 import { collapse } from "@/util/string";
 import { postFeedback } from "@/api/feedback";
 import { useQuery } from "@/util/composables";

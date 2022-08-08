@@ -2,7 +2,7 @@ import { mapValues } from "lodash";
 import { Params } from ".";
 import { Options } from "@/components/AppSelectMulti.d";
 import { getIdsFromLabels } from "./taxons";
-import { renameKey } from "./../util/object";
+import { renameKey } from "@/util/object";
 
 /** format of facet counts returned from biolink */
 export type Facets = Record<string, Record<string, number>>;

@@ -95,7 +95,6 @@
 import { ref, watch, nextTick, computed } from "vue";
 import { uniqueId } from "lodash";
 import { OptionsFunc } from "./AppSelectAutocomplete";
-import AppStatus from "@/components/AppStatus.vue";
 import { wrap } from "@/util/math";
 import { useFloating, useQuery } from "@/util/composables";
 import AppTextbox from "./AppTextbox.vue";

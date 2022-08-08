@@ -79,7 +79,6 @@ import { useLocalStorage } from "@vueuse/core";
 import { kebabCase, uniqBy } from "lodash";
 import AppTextbox from "@/components/AppTextbox.vue";
 import AppUpload from "@/components/AppUpload.vue";
-import AppStatus from "@/components/AppStatus.vue";
 import example from "./text-annotator.json";
 import { annotateText } from "@/api/text-annotator";
 import { downloadJson } from "@/util/download";

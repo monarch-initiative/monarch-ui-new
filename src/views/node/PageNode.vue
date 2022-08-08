@@ -43,7 +43,6 @@ import { watch, onMounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { kebabCase } from "lodash";
 import { lookupNode } from "@/api/node-lookup";
-import AppStatus from "@/components/AppStatus.vue";
 import TheTableOfContents from "@/components/TheTableOfContents.vue";
 import SectionTitle from "./SectionTitle.vue";
 import SectionOverview from "./SectionOverview.vue";

@@ -220,6 +220,9 @@ strong {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: $i;
     overflow: hidden;
+  }
+
+  .truncate-#{$i}:not(:focus)[tabindex="0"] {
     cursor: zoom-in;
   }
 }

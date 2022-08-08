@@ -109,7 +109,6 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { startCase } from "lodash";
 import AppTable from "@/components/AppTable.vue";
-import AppStatus from "@/components/AppStatus.vue";
 import { Col, Cols, Sort } from "@/components/AppTable";
 import AppBreadcrumbsLink from "@/components/AppBreadcrumbsLink.vue";
 import { Node } from "@/api/node-lookup";
