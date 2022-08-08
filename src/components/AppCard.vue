@@ -5,7 +5,7 @@
 
 <template>
   <div class="card">
-    <div class="image">
+    <div class="image" :data-image="!!image">
       <img v-if="image" :src="image" alt="" />
       <AppIcon v-if="icon" :icon="icon" />
     </div>
@@ -44,12 +44,21 @@ defineProps<Props>();
   height: 100px;
   flex-shrink: 0;
   overflow: hidden;
-  box-shadow: $shadow;
+
+  &[data-image="true"] {
+    box-shadow: $shadow;
+  }
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+    color: $off-black;
   }
 }
 

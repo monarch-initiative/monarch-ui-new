@@ -11,8 +11,57 @@
 
   <!-- "elevator pitch" -->
   <AppSection>
-    <AppHeading>What is Monarch</AppHeading>
-    <AppPlaceholder />
+    <AppHeading>What is Monarch?</AppHeading>
+
+    <AppFlex gap="big">
+      <AppTile
+        icon="knowledge-graph"
+        title="Extensive, cross-species, semantic knowledge graph"
+      />
+      <AppTile
+        icon="toolbox"
+        title="Ecosystem of powerful tools for analysis"
+      />
+      <AppTile
+        icon="phenotype-search"
+        title="One-of-a-kind fuzzy phenotype search"
+      />
+    </AppFlex>
+
+    <hr />
+
+    <AppFlex>
+      <AppTile
+        icon="category-gene"
+        design="small"
+        :title="`${(100000).toLocaleString()}+`"
+        subtitle="genes"
+      />
+      <AppTile
+        icon="category-disease"
+        design="small"
+        :title="`${(100000).toLocaleString()}+`"
+        subtitle="diseases"
+      />
+      <AppTile
+        icon="category-phenotype"
+        design="small"
+        :title="`${(100000).toLocaleString()}+`"
+        subtitle="phenotypes"
+      />
+      <AppTile
+        icon="category-publication"
+        design="small"
+        :title="`${(100000).toLocaleString()}+`"
+        subtitle="publications"
+      />
+      <AppTile
+        icon="category-unknown"
+        design="small"
+        :title="`${(1000000).toLocaleString()}+`"
+        subtitle="total nodes"
+      />
+    </AppFlex>
     <AppButton to="/about" text="Learn more" icon="arrow-right" />
   </AppSection>
 
@@ -29,12 +78,8 @@
     <p>Latest posts about Monarch.</p>
 
     <!-- status -->
-    <AppStatus v-if="isLoading" code="loading" role="option"
-      >Loading results</AppStatus
-    >
-    <AppStatus v-if="isError" code="error" role="option"
-      >Error loading results</AppStatus
-    >
+    <AppStatus v-if="isLoading" code="loading">Loading posts</AppStatus>
+    <AppStatus v-if="isError" code="error">Error loading posts</AppStatus>
 
     <!-- list of posts -->
     <AppFlex v-if="blogPosts.length" direction="col" gap="big">
@@ -101,6 +146,7 @@
 import { onMounted, ref } from "vue";
 import AppTabs from "@/components/AppTabs.vue";
 import AppCard from "@/components/AppCard.vue";
+import AppTile from "@/components/AppTile.vue";
 import tabs from "./explore/tabs.json";
 import NodeSearch from "./explore/NodeSearch.vue";
 import { useQuery } from "@/util/composables";

@@ -76,6 +76,7 @@ library.add(
     fas.faTimes,
     fas.faTimesCircle,
     fas.faTools,
+    fas.faToolbox,
     fas.faUpload,
     fas.faUsers,
     fas.faXmark,
