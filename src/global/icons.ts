@@ -7,6 +7,7 @@ import * as fab from "@fortawesome/free-brands-svg-icons";
 library.add(
   ...([
     fab.faGithub,
+    fab.faMedium,
     fab.faTwitter,
     fas.faAngleDoubleLeft,
     fas.faAngleDoubleRight,
@@ -41,7 +42,6 @@ library.add(
     fas.faCopy,
     fas.faDatabase,
     fas.faDownload,
-    fas.faEnvelopeOpenText,
     fas.faEquals,
     fas.faExclamationCircle,
     fas.faExternalLinkAlt,

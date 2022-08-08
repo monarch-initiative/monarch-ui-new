@@ -26,7 +26,7 @@
   <AppSection>
     <AppHeading>News</AppHeading>
 
-    Latest posts about Monarch
+    <p>Latest posts about Monarch.</p>
 
     <!-- status -->
     <AppStatus v-if="isLoading" code="loading" role="option"
@@ -44,8 +44,14 @@
         class="blog-post"
         :image="item.thumbnail"
       >
-        <span class="blog-date">{{ item.date.toLocaleDateString() }}</span>
-        <AppLink :to="item.link">
+        <span class="blog-date">{{
+          item.date.toLocaleDateString(undefined, {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })
+        }}</span>
+        <AppLink class="blog-link" :to="item.link">
           {{ item.title }}
         </AppLink>
         <p class="blog-description truncate-2">
@@ -56,9 +62,40 @@
 
     <AppButton
       to="https://monarchinit.medium.com/"
-      text="More on Medium.com"
-      icon="external-link-alt"
+      text="More on Medium"
+      icon="medium"
     />
+  </AppSection>
+
+  <!-- social media -->
+  <AppSection>
+    <AppHeading>Follow</AppHeading>
+    <p>
+      Be the first to know when we have important updates or other fun news.
+    </p>
+    <AppFlex>
+      <AppTile
+        to="https://github.com/monarch-initiative"
+        icon="github"
+        title="GitHub"
+        subtitle="Star and follow for new releases"
+        design="small"
+      />
+      <AppTile
+        to="https://twitter.com/MonarchInit"
+        icon="twitter"
+        title="Twitter"
+        subtitle="Quick updates and musings"
+        design="small"
+      />
+      <AppTile
+        to="https://medium.com/@MonarchInit"
+        icon="medium"
+        title="Medium"
+        subtitle="Our blog posts on Medium"
+        design="small"
+      />
+    </AppFlex>
   </AppSection>
 </template>
 
@@ -100,7 +137,11 @@ onMounted(getPosts);
 }
 
 .blog-post {
-  max-width: 100%;
+  width: 100%;
+}
+
+.blog-link {
+  line-height: $spacing;
 }
 
 .blog-description {

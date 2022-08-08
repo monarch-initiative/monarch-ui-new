@@ -83,42 +83,4 @@
       <li>Improve ontologies to better curate genotype-phenotype data</li>
     </ol>
   </AppSection>
-
-  <!-- social media -->
-  <AppSection>
-    <AppHeading>Stay up to date</AppHeading>
-    <p>
-      Be the first to know when we have important updates or other fun news.
-    </p>
-    <AppFlex>
-      <AppTile
-        to="https://substack.com/"
-        icon="envelope-open-text"
-        title="Newsletter"
-        subtitle="Occasional, detailed updates"
-        design="small"
-      />
-      <AppTile
-        to="https://github.com/monarch-initiative"
-        icon="github"
-        title="GitHub"
-        subtitle="Star and follow for new releases"
-        design="small"
-      />
-      <AppTile
-        to="https://twitter.com/MonarchInit"
-        icon="twitter"
-        title="Twitter"
-        subtitle="Quick updates and musings"
-        design="small"
-      />
-      <AppTile
-        to="https://medium.com/@MonarchInit"
-        icon="blog"
-        title="Blog"
-        subtitle="Our blog posts on Medium"
-        design="small"
-      />
-    </AppFlex>
-  </AppSection>
 </template>

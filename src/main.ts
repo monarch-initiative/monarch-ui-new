@@ -25,18 +25,19 @@ for (const [name, Component] of Object.entries(components))
   app = app.component(name, Component);
 
 /** track errors with Sentry */
-Sentry.init({
-  app,
-  dsn: "https://122020f2154c48fa9ebbc53b98afdcf8@o1351894.ingest.sentry.io/6632682",
-  integrations: [
-    new BrowserTracing({
-      routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-    }),
-  ],
-  tracesSampleRate: 1.0,
-  logErrors: true,
-  environment: process.env.NODE_ENV,
-});
+if (process.env.NODE_ENV === "production")
+  Sentry.init({
+    app,
+    dsn: "https://122020f2154c48fa9ebbc53b98afdcf8@o1351894.ingest.sentry.io/6632682",
+    integrations: [
+      new BrowserTracing({
+        routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+      }),
+    ],
+    tracesSampleRate: 1.0,
+    logErrors: true,
+    environment: process.env.NODE_ENV,
+  });
 
 /** hotjar analytics */
 app.use(Hotjar, {

@@ -5,17 +5,17 @@
 <template>
   <footer>
     <div class="social">
-      <AppLink v-tooltip="'Newsletter'" to="https://substack.com/">
-        <AppIcon icon="envelope-open-text" />
-      </AppLink>
       <AppLink v-tooltip="'GitHub'" to="https://github.com/monarch-initiative">
         <AppIcon icon="github" />
       </AppLink>
       <AppLink v-tooltip="'Twitter'" to="https://twitter.com/MonarchInit">
         <AppIcon icon="twitter" />
       </AppLink>
-      <AppLink v-tooltip="'Blog'" to="https://medium.com/@MonarchInit">
-        <AppIcon icon="blog" />
+      <AppLink
+        v-tooltip="'Our blog posts on Medium.com'"
+        to="https://medium.com/@MonarchInit"
+      >
+        <AppIcon icon="medium" />
       </AppLink>
     </div>
     <div class="license">
