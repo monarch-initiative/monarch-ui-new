@@ -9,10 +9,10 @@
     <NodeSearch />
   </AppSection>
 
-  <!-- "elevator pitch" -->
   <AppSection>
     <AppHeading>What is Monarch?</AppHeading>
 
+    <!-- high level description of monarch as a whole. "elevator pitch" -->
     <AppFlex gap="big">
       <AppTile
         icon="knowledge-graph"
@@ -30,35 +30,55 @@
 
     <hr />
 
+    <!-- (rough) node counts, just for advertising -->
     <AppFlex>
+      <!-- http://solr.monarchinitiative.org/solr/search/select?q=*:*&rows=0&facet=true&facet.field=category&wt=json -->
       <AppTile
         icon="category-gene"
         design="small"
-        :title="`${(100000).toLocaleString()}+`"
+        :title="`~${(1000000).toLocaleString()}`"
         subtitle="genes"
       />
       <AppTile
         icon="category-disease"
         design="small"
-        :title="`${(100000).toLocaleString()}+`"
+        :title="`~${(25000).toLocaleString()}`"
         subtitle="diseases"
       />
       <AppTile
         icon="category-phenotype"
         design="small"
-        :title="`${(100000).toLocaleString()}+`"
+        :title="`~${(70000).toLocaleString()}`"
         subtitle="phenotypes"
+      />
+      <AppTile
+        icon="category-variant"
+        design="small"
+        :title="`~${(3000000).toLocaleString()}`"
+        subtitle="variants"
+      />
+      <AppTile
+        icon="category-genotype"
+        design="small"
+        :title="`~${(200000).toLocaleString()}`"
+        subtitle="genotypes"
+      />
+      <AppTile
+        icon="category-anatomy"
+        design="small"
+        :title="`~${(100000).toLocaleString()}`"
+        subtitle="anatomies"
       />
       <AppTile
         icon="category-publication"
         design="small"
-        :title="`${(100000).toLocaleString()}+`"
+        :title="`~${(50000).toLocaleString()}`"
         subtitle="publications"
       />
       <AppTile
         icon="category-unknown"
         design="small"
-        :title="`${(1000000).toLocaleString()}+`"
+        :title="`~${(5000000).toLocaleString()}`"
         subtitle="total nodes"
       />
     </AppFlex>

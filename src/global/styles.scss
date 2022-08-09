@@ -66,6 +66,10 @@ blockquote {
   line-height: $spacing + 0.3;
 }
 
+img {
+  max-width: 100%;
+}
+
 a {
   color: $theme;
   transition: color $fast;

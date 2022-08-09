@@ -29,7 +29,7 @@
         to="https://github.com/biolink/biolink-api"
         icon="code"
         title="API"
-        subtitle="The API behind this website"
+        subtitle="The API behind this website, BioLink"
       />
       <AppTile
         to="/sources"
