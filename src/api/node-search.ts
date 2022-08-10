@@ -1,6 +1,9 @@
 import { biolink, request } from ".";
 import { Filters, Query, facetsToFilters, queryToParams } from "./facets";
 
+/** remove any special characters that would screw up backend search */
+const encode = (string: string) => string.replaceAll(/[^a-zA-Z0-9]/g, " ");
+
 /** search results (from backend) */
 interface _SearchResults {
   numFound: number;
@@ -51,7 +54,7 @@ export const getSearchResults = async (
   };
 
   /** make query */
-  const url = `${biolink}/search/entity/${search}`;
+  const url = `${biolink}/search/entity/${encode(search)}`;
   const response = await request<_SearchResults>(url, params);
   const {
     numFound: count = 0,
@@ -113,7 +116,7 @@ interface _Autocomplete {
 export const getAutocompleteResults = async (
   search = ""
 ): Promise<Autocomplete> => {
-  const url = `${biolink}/search/entity/autocomplete/${search}`;
+  const url = `${biolink}/search/entity/autocomplete/${encode(search)}`;
   const response = await request<_Autocomplete>(url);
 
   /** transform into desired format */

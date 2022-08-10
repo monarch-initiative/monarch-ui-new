@@ -7,7 +7,6 @@ import "wicg-inert";
 import App from "@/App.vue";
 import components from "@/global/components";
 import plugins from "@/global/plugins";
-import { handlers } from "../tests/fixtures";
 import router from "@/router";
 import "@/global/meta";
 
@@ -51,10 +50,11 @@ if (process.env.NODE_ENV === "production")
 
 (async () => {
   /** mock api for local development */
-  if (process.env.NODE_ENV === "development") {
-    const { setupWorker } = await import("msw");
-    await setupWorker(...handlers).start();
-  }
+  // if (process.env.NODE_ENV === "development") {
+  //   const { setupWorker } = await import("msw");
+  //   const { handlers } = await import("../tests/fixtures");
+  //   await setupWorker(...handlers).start();
+  // }
 
   /** start app */
   app.mount("#app");
