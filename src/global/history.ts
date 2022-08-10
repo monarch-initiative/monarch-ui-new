@@ -16,3 +16,6 @@ export const deleteEntry = (value: string) =>
   (history.value = history.value.filter(
     (entry) => entry.trim() !== value.trim()
   ));
+
+/** delete all entries from node search/visit history */
+export const deleteAll = () => (history.value = []);

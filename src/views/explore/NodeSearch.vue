@@ -126,7 +126,7 @@ import { useRoute, useRouter } from "vue-router";
 import { filtersToQuery } from "@/api/facets";
 import { useQuery } from "@/util/composables";
 import { appTitle } from "@/global/meta";
-import { history, addEntry, deleteEntry } from "@/global/history";
+import { history, addEntry, deleteEntry, deleteAll } from "@/global/history";
 
 /** route info */
 const router = useRouter();
@@ -157,8 +157,9 @@ function onChange(value: string) {
 }
 
 /** when user deletes entry in textbox */
-function onDelete(value: string) {
-  deleteEntry(value);
+function onDelete(value: string, all?: boolean) {
+  if (all) deleteAll();
+  else deleteEntry(value);
 }
 
 /** when user changes active filters */
