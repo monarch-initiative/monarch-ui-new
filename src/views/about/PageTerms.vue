@@ -40,6 +40,13 @@
         >their explanation here</AppLink
       >.
     </p>
+    <AppHeading>Local Data</AppHeading>
+    <p>
+      For the convenience of the user on repeat visits to the site, this web
+      application also saves certain information locally, such as recent
+      searches and form drafts. This data only exists locally on the user's
+      device, and is not sent to the Monarch team or any other party.
+    </p>
   </AppSection>
 
   <AppSection>

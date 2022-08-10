@@ -66,6 +66,16 @@
     />
   </AppSection>
 
+  <AppSection>
+    <AppHeading>Local Data</AppHeading>
+    <p>
+      Clear all of your locally-saved data, such as your recent node
+      searches/visits and feedback form drafts.
+      <AppLink to="/terms#local-data">Learn more.</AppLink>
+    </p>
+    <AppButton text="Clear Local Data" icon="floppy-disk" @click="clearData" />
+  </AppSection>
+
   <!-- last resort contact methods -->
   <AppSection>
     <p>
@@ -85,6 +95,14 @@ import { useQuery } from "@/util/composables";
 const { query, data: uptimes, isLoading, isError } = useQuery(getUptimes, []);
 
 onMounted(query);
+
+/** clear user localstorage data */
+function clearData() {
+  window.localStorage.clear();
+  window.alert(
+    "Your local data has been cleared. Restart the app for changes to take effect."
+  );
+}
 </script>
 
 <style lang="scss" scoped>

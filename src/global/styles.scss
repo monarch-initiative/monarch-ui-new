@@ -46,6 +46,7 @@ h2 {
 h3 {
   width: 100%;
   margin: 0;
+  margin-bottom: -20px;
   padding: 10px 0;
   font-size: 1.1rem;
   font-weight: 500;
@@ -64,6 +65,10 @@ blockquote {
   padding: 0;
   text-align: justify;
   line-height: $spacing + 0.3;
+}
+
+p + p {
+  margin-top: -20px;
 }
 
 img {

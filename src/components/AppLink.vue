@@ -23,11 +23,10 @@
   <router-link
     v-else
     :to="{
-      path: to.startsWith('#') ? '' : to,
-      hash: to.startsWith('#') ? to : undefined,
+      ...splitTo,
       state: mapValues(state, (value) => stringify(value)),
     }"
-    :replace="to.startsWith('#')"
+    :replace="!!splitTo.hash && !splitTo.path"
   >
     <!-- use vue router component for relative urls -->
     <slot />
@@ -72,6 +71,12 @@ const plainText = computed(
     slots.default().length === 1 &&
     typeof slots.default()[0].children === "string"
 );
+
+/** convert "to" prop to separate route props because vue-router can't do this itself */
+const splitTo = computed(() => {
+  const [, path, hash] = props.to.match(/([^#]*)(#[^#]*)?/) || [];
+  return { path, hash };
+});
 </script>
 
 <style lang="scss" scoped>

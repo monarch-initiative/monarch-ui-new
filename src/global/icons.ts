@@ -50,6 +50,7 @@ library.add(
     fas.faFileLines,
     fas.faFilter,
     fas.faFlask,
+    fas.faFloppyDisk,
     fas.faHandsHelping,
     fas.faHashtag,
     fas.faHistory,
