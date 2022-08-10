@@ -46,7 +46,7 @@ app.use(Hotjar, {
 
 /** google analytics */
 if (process.env.NODE_ENV === "production")
-  app.use(VueGtag, { config: { id: "UA-XXXXXXXX-X" } }, router);
+  app.use(VueGtag, { config: { id: "G-RDNWN51PE8" } }, router);
 
 (async () => {
   /** mock api for local development */
