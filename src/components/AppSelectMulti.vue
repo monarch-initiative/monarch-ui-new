@@ -166,7 +166,7 @@ const expanded = ref(false);
 /** array of indices of selected options */
 const selected = ref<Array<number>>([]);
 /** selected state when dropdown was opened */
-const last = ref<Array<number>>([]);
+const original = ref<Array<number>>([]);
 /** index of option that is highlighted */
 const highlighted = ref(0);
 
@@ -191,14 +191,16 @@ function open() {
   /** auto highlight first selected option */
   highlighted.value = selected.value[0] || 0;
   /** remember selected state when opened */
-  last.value = [...selected.value];
+  original.value = [...selected.value];
 }
 
 function close() {
   /** close dropdown */
   expanded.value = false;
   /** emit change, if value is different from when dropdown first opened */
-  if (!isEqual(selected.value, last.value)) emit("change", getModel());
+  if (!isEqual(selected.value, original.value)) emit("change", getModel());
+  /** also update original value here in case e.g. user presses esc then blurs */
+  original.value = [...selected.value];
 }
 
 /** when button clicked */

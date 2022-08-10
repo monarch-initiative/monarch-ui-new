@@ -93,8 +93,6 @@ const props = defineProps<Props>();
 interface Emits {
   /** two-way bound selected item state */
   (event: "update:modelValue", value: Option): void;
-  /** when value changed */
-  (event: "input"): void;
 }
 
 const emit = defineEmits<Emits>();

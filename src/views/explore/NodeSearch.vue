@@ -73,7 +73,7 @@
           color="secondary"
         />
       </div>
-      <p v-tooltip="'Click to expand'" class="truncate-3" tabindex="0">
+      <p class="truncate-3" tabindex="0">
         {{ result.description || "No description available" }}
       </p>
       <p v-if="result.altNames?.length" class="names truncate-1" tabindex="0">
