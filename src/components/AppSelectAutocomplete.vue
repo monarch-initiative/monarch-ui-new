@@ -122,7 +122,7 @@ interface Emits {
   /** when input value change "submitted"/"committed" by user */
   (event: "change", value: string): void;
   /** when user wants to delete an entry */
-  (event: "delete", value: string, all?: boolean): void;
+  (event: "delete", value: string): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -200,8 +200,7 @@ async function onKeydown(event: KeyboardEvent) {
 
   /** delete key to delete the highlighted result */
   if (event.key === "Delete" && event.shiftKey) {
-    const all = event.altKey && event.ctrlKey;
-    emit("delete", results.value[highlighted.value].name, all);
+    emit("delete", results.value[highlighted.value].name);
     await getResults();
   }
 
