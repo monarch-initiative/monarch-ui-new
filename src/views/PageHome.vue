@@ -87,8 +87,52 @@
 
   <!-- specific feature demos -->
   <AppSection>
-    <AppHeading>Features</AppHeading>
-    <AppPlaceholder />
+    <AppHeading>Demos</AppHeading>
+
+    <p>Things you can do on this website.</p>
+
+    <div class="demo">
+      <video src="@/assets/demos/node-search.mp4" muted autoplay loop></video>
+      <p>
+        Quickly and easily browse nodes. Filter by category and taxon. See your
+        recent and frequent searches.
+      </p>
+    </div>
+
+    <div class="demo">
+      <video
+        src="@/assets/demos/text-annotator.mp4"
+        muted
+        autoplay
+        loop
+      ></video>
+      <p>
+        Easily search our knowledge graph for multiple nodes from free text.
+        Download results and analyze with Phenotype Explorer.
+      </p>
+    </div>
+
+    <div class="demo">
+      <video
+        src="@/assets/demos/phenotype-explorer.mp4"
+        muted
+        autoplay
+        loop
+      ></video>
+      <p>
+        Compare a set of phenotypes to another set of phenotypes, or to all
+        genes/diseases of a species. See a rich comparison of the overlap
+        between the two sets.
+      </p>
+    </div>
+
+    <div class="demo">
+      <video src="@/assets/demos/node-page.mp4" muted autoplay loop></video>
+      <p>
+        See rich details about each node. Traverse between nodes via
+        associations between them, and view the evidence for those associations.
+      </p>
+    </div>
   </AppSection>
 
   <!-- news -->
@@ -216,5 +260,31 @@ onMounted(getPosts);
 .blog-date {
   color: $gray;
   font-size: 0.9rem;
+}
+
+.demo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  width: 100%;
+
+  &:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+
+  @media (max-width: 800px) {
+    flex-direction: column !important;
+  }
+
+  video {
+    width: 100%;
+    max-width: 400px;
+    box-shadow: $shadow;
+  }
+
+  p {
+    flex-grow: 1;
+  }
 }
 </style>
