@@ -69,8 +69,8 @@
   <AppSection>
     <AppHeading>Local Data</AppHeading>
     <p>
-      Clear all of your locally-saved data, such as your recent node
-      searches/visits and feedback form drafts.
+      Clear all of your locally-saved data, such as your recent node searches
+      and feedback form drafts.
       <AppLink to="/terms#local-data">Learn more.</AppLink>
     </p>
     <AppButton text="Clear Local Data" icon="floppy-disk" @click="clearData" />

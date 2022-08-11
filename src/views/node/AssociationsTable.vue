@@ -331,9 +331,7 @@ watch(
   () => props.selectedCategory,
   async () => await getAssociations(true)
 );
-watch([() => props.selectedCategory, perPage, start, search, sort], () =>
-  getAssociations(false)
-);
+watch([perPage, start, search, sort], async () => await getAssociations(false));
 
 /** get associations on load */
 onMounted(() => getAssociations(true));

@@ -13,18 +13,19 @@
     <AppHeading>What is Monarch?</AppHeading>
 
     <!-- high level description of monarch as a whole. "elevator pitch" -->
-    <AppFlex gap="big">
+    <!-- eslint-disable-next-line -->
+    <AppFlex gap="big" vAlign="top">
       <AppTile
         icon="knowledge-graph"
-        title="Extensive, cross-species, semantic knowledge graph"
-      />
-      <AppTile
-        icon="toolbox"
-        title="Ecosystem of powerful tools for analysis"
+        title="An extensive, cross-species, semantic knowledge graph"
       />
       <AppTile
         icon="phenotype-search"
-        title="One-of-a-kind fuzzy phenotype search"
+        title="A website for quick and easy exploration of the graph"
+      />
+      <AppTile
+        icon="toolbox"
+        title="Powerful API and ecosystem of related tools"
       />
     </AppFlex>
 
@@ -87,11 +88,11 @@
 
   <!-- specific feature demos -->
   <AppSection>
-    <AppHeading>Demos</AppHeading>
+    <AppHeading>Highlights</AppHeading>
 
-    <p>Things you can do on this website.</p>
+    <p>Some cool things you can do on this website.</p>
 
-    <div class="demo">
+    <div class="highlight">
       <video src="@/assets/demos/node-search.mp4" muted autoplay loop></video>
       <p>
         Quickly and easily browse nodes. Filter by category and taxon. See your
@@ -99,7 +100,7 @@
       </p>
     </div>
 
-    <div class="demo">
+    <div class="highlight">
       <video
         src="@/assets/demos/text-annotator.mp4"
         muted
@@ -108,11 +109,12 @@
       ></video>
       <p>
         Easily search our knowledge graph for multiple nodes from free text.
-        Download results and analyze with Phenotype Explorer.
+        Download the results or send them to the phenotype explorer tool for
+        analysis.
       </p>
     </div>
 
-    <div class="demo">
+    <div class="highlight">
       <video
         src="@/assets/demos/phenotype-explorer.mp4"
         muted
@@ -126,7 +128,7 @@
       </p>
     </div>
 
-    <div class="demo">
+    <div class="highlight">
       <video src="@/assets/demos/node-page.mp4" muted autoplay loop></video>
       <p>
         See rich details about each node. Traverse between nodes via
@@ -179,7 +181,9 @@
   <!-- social media -->
   <AppSection>
     <AppHeading>Follow</AppHeading>
+
     <p>Be the first to know when we have major updates or other fun news.</p>
+
     <AppFlex>
       <AppTile
         to="https://medium.com/@MonarchInit"
@@ -232,18 +236,6 @@ onMounted(getPosts);
 </script>
 
 <style lang="scss" scoped>
-.news-cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-}
-
-@media (max-width: 800px) {
-  .news-cols {
-    grid-template-columns: 1fr;
-  }
-}
-
 .blog-post {
   width: 100%;
 }
@@ -262,12 +254,13 @@ onMounted(getPosts);
   font-size: 0.9rem;
 }
 
-.demo {
+.highlight {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 40px;
   width: 100%;
+  margin: 20px 0;
 
   &:nth-child(even) {
     flex-direction: row-reverse;
@@ -279,7 +272,7 @@ onMounted(getPosts);
 
   video {
     width: 100%;
-    max-width: 400px;
+    max-width: 360px;
     box-shadow: $shadow;
   }
 

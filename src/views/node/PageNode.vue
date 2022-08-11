@@ -110,7 +110,7 @@ watch(
   { immediate: true, flush: "post" }
 );
 
-/** update node history */
+/** update node history on node visit */
 watch([() => node.value?.name], () => addEntry(node.value?.name), {
   immediate: true,
 });

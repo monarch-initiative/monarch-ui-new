@@ -41,7 +41,7 @@ withDefaults(defineProps<Props>(), { to: "", subtitle: "", design: "big" });
   align-items: center;
   flex-direction: column;
   gap: 15px;
-  width: 180px;
+  width: 200px;
 }
 
 .button {
