@@ -92,49 +92,27 @@
 
     <p>Some cool things you can do on this website.</p>
 
-    <div class="highlight">
-      <video src="@/assets/demos/node-search.mp4" muted autoplay loop></video>
-      <p>
-        Quickly and easily browse nodes. Filter by category and taxon. See your
-        recent and frequent searches.
-      </p>
-    </div>
+    <AppHighlight :src="require('@/assets/demos/node-search.mp4')">
+      Quickly and easily browse nodes. Filter by category and taxon. See your
+      recent and frequent searches.
+    </AppHighlight>
 
-    <div class="highlight">
-      <video
-        src="@/assets/demos/text-annotator.mp4"
-        muted
-        autoplay
-        loop
-      ></video>
-      <p>
-        Easily search our knowledge graph for multiple nodes from free text.
-        Download the results or send them to the phenotype explorer tool for
-        analysis.
-      </p>
-    </div>
+    <AppHighlight :src="require('@/assets/demos/text-annotator.mp4')">
+      Easily search our knowledge graph for multiple nodes from free text.
+      Download the results or send them to the phenotype explorer tool for
+      analysis.
+    </AppHighlight>
 
-    <div class="highlight">
-      <video
-        src="@/assets/demos/phenotype-explorer.mp4"
-        muted
-        autoplay
-        loop
-      ></video>
-      <p>
-        Compare a set of phenotypes to another set of phenotypes, or to all
-        genes/diseases of a species. See a rich comparison of the overlap
-        between the two sets.
-      </p>
-    </div>
+    <AppHighlight :src="require('@/assets/demos/phenotype-explorer.mp4')">
+      Compare a set of phenotypes to another set of phenotypes, or to all
+      genes/diseases of a species. See a rich comparison of the overlap between
+      the two sets.
+    </AppHighlight>
 
-    <div class="highlight">
-      <video src="@/assets/demos/node-page.mp4" muted autoplay loop></video>
-      <p>
-        See rich details about each node. Traverse between nodes via
-        associations between them, and view the evidence for those associations.
-      </p>
-    </div>
+    <AppHighlight :src="require('@/assets/demos/node-page.mp4')">
+      See rich details about each node. Traverse between nodes via associations
+      between them, and view the evidence for those associations.
+    </AppHighlight>
   </AppSection>
 
   <!-- news -->
@@ -149,26 +127,16 @@
 
     <!-- list of posts -->
     <AppFlex v-if="blogPosts.length" direction="col" gap="big">
-      <AppCard
+      <AppPost
         v-for="(item, index) in blogPosts.slice(0, 5)"
         :key="index"
         class="blog-post"
         :image="item.thumbnail"
-      >
-        <span class="blog-date">{{
-          item.date.toLocaleDateString(undefined, {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })
-        }}</span>
-        <AppLink class="blog-link" :to="item.link">
-          {{ item.title }}
-        </AppLink>
-        <p class="blog-description truncate-2">
-          {{ item.description }}
-        </p>
-      </AppCard>
+        :date="item.date"
+        :link="item.link"
+        :title="item.title"
+        :description="item.description"
+      />
     </AppFlex>
 
     <AppButton
@@ -213,7 +181,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import AppTabs from "@/components/AppTabs.vue";
-import AppCard from "@/components/AppCard.vue";
+import AppHighlight from "@/components/AppHighlight.vue";
+import AppPost from "@/components/AppPost.vue";
 import AppTile from "@/components/AppTile.vue";
 import tabs from "./explore/tabs.json";
 import NodeSearch from "./explore/NodeSearch.vue";
@@ -234,50 +203,3 @@ const {
 
 onMounted(getPosts);
 </script>
-
-<style lang="scss" scoped>
-.blog-post {
-  width: 100%;
-}
-
-.blog-link {
-  line-height: $spacing;
-}
-
-.blog-description {
-  font-size: 0.9rem;
-  line-height: $spacing;
-}
-
-.blog-date {
-  color: $gray;
-  font-size: 0.9rem;
-}
-
-.highlight {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  width: 100%;
-  margin: 20px 0;
-
-  &:nth-child(even) {
-    flex-direction: row-reverse;
-  }
-
-  @media (max-width: 800px) {
-    flex-direction: column !important;
-  }
-
-  video {
-    width: 100%;
-    max-width: 360px;
-    box-shadow: $shadow;
-  }
-
-  p {
-    flex-grow: 1;
-  }
-}
-</style>
