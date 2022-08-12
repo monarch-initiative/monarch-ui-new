@@ -26,19 +26,6 @@
     </AppFlex>
   </AppSection>
 
-  <!-- tutorials/faqs -->
-  <AppSection>
-    <AppHeading>How to use this website</AppHeading>
-    <AppGallery>
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-      <AppPlaceholder />
-    </AppGallery>
-  </AppSection>
-
   <!-- api and service statuses -->
   <AppSection>
     <AppHeading>Status</AppHeading>
@@ -98,10 +85,16 @@ onMounted(query);
 
 /** clear user localstorage data */
 function clearData() {
-  window.localStorage.clear();
-  window.alert(
-    "Your local data has been cleared. Restart the app for changes to take effect."
-  );
+  if (
+    window.confirm(
+      "Are you sure you want to clear your local data? This cannot be undone."
+    )
+  ) {
+    window.localStorage.clear();
+    window.alert(
+      "Your local data has been cleared. Restart the app for changes to take effect."
+    );
+  }
 }
 </script>
 
