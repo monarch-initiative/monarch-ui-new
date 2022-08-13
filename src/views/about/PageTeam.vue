@@ -96,8 +96,11 @@ import { kebabCase } from "lodash";
 import AppMember from "@/components/AppMember.vue";
 import teamData from "./team.json";
 
-/** define types manually because typescript can't infer them completely correctly */
-const team = teamData as Array<{
+/**
+ * define types manually because typescript can't infer them from json
+ * completely correctly
+ */
+type Team = Array<{
   name: string;
   image: string;
   link: string;
@@ -109,6 +112,8 @@ const team = teamData as Array<{
     alumni?: boolean;
   }>;
 }>;
+
+const team = teamData as Team;
 
 /** get group img src with fallback if not found */
 function getSrc(image: string) {
