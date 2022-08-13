@@ -79,7 +79,6 @@ import { Node } from "@/api/node-lookup";
 import { getHierarchy } from "@/api/node-hierarchy";
 import AppDetails from "@/components/AppDetails.vue";
 import AppDetail from "@/components/AppDetail.vue";
-import AppStatus from "@/components/AppStatus.vue";
 import { useQuery } from "@/util/composables";
 
 const route = useRoute();

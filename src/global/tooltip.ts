@@ -32,7 +32,7 @@ export const options = {
   directive: "tooltip",
   component: "tooltip",
   defaultProps: {
-    delay: 100,
+    delay: [300, 0],
     duration: 200,
     offset: [13, 13],
     allowHTML: true,

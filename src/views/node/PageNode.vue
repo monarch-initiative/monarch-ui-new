@@ -43,7 +43,6 @@ import { watch, onMounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { kebabCase } from "lodash";
 import { lookupNode } from "@/api/node-lookup";
-import AppStatus from "@/components/AppStatus.vue";
 import TheTableOfContents from "@/components/TheTableOfContents.vue";
 import SectionTitle from "./SectionTitle.vue";
 import SectionOverview from "./SectionOverview.vue";
@@ -111,7 +110,7 @@ watch(
   { immediate: true, flush: "post" }
 );
 
-/** update node history */
+/** update node history on node visit */
 watch([() => node.value?.name], () => addEntry(node.value?.name), {
   immediate: true,
 });

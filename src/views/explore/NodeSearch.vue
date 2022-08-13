@@ -73,7 +73,7 @@
           color="secondary"
         />
       </div>
-      <p v-tooltip="'Click to expand'" class="truncate-3" tabindex="0">
+      <p class="truncate-3" tabindex="0">
         {{ result.description || "No description available" }}
       </p>
       <p v-if="result.altNames?.length" class="names truncate-1" tabindex="0">
@@ -114,7 +114,6 @@ import { ref, computed, watch } from "vue";
 import { groupBy, isEqual, kebabCase, sortBy, startCase, uniq } from "lodash";
 import AppSelectAutocomplete from "@/components/AppSelectAutocomplete.vue";
 import { Options as AutocompleteOptions } from "@/components/AppSelectAutocomplete";
-import AppStatus from "@/components/AppStatus.vue";
 import AppWrapper from "@/components/AppWrapper.vue";
 import {
   getAutocompleteResults,
@@ -184,8 +183,7 @@ async function getAutocomplete(search: string): Promise<AutocompleteOptions> {
     .map((search) => ({
       name: search,
       icon: "clock-rotate-left",
-      tooltip:
-        "One of your recent node searches/visits. Shift + Del to remove.",
+      tooltip: "One of your recent node searches",
     }));
 
   /** most popular searches */
@@ -202,8 +200,7 @@ async function getAutocomplete(search: string): Promise<AutocompleteOptions> {
     .map(({ search }) => ({
       name: search,
       icon: "person-running",
-      tooltip:
-        "One of your frequent node searches/visits. Shift + Del to remove.",
+      tooltip: "One of your frequent node searches",
     }));
 
   /** example searches */

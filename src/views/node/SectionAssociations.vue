@@ -119,11 +119,10 @@ watch(category, () => (association.value = undefined));
 /** update url from selected category */
 watch(
   category,
-  (value, prev) => {
-    router.push({
+  () => {
+    router.replace({
       ...route,
       query: { associations: category.value?.id },
-      replace: !prev,
     });
   },
   /** avoid extra triggering of watch functions */

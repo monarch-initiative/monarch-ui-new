@@ -133,7 +133,6 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import AppStatus from "@/components/AppStatus.vue";
 import AppCheckbox from "@/components/AppCheckbox.vue";
 import AppAccordion from "@/components/AppAccordion.vue";
 import { getDatasets } from "@/api/datasets";

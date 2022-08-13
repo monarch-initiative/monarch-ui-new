@@ -9,7 +9,6 @@
     class="icon"
     aria-hidden="true"
     :data-icon="icon"
-    @loaded="loadedInline"
   />
   <FontAwesomeIcon
     v-else-if="fa"
@@ -17,6 +16,12 @@
     :data-icon="icon"
     aria-hidden="true"
   />
+  <svg v-else-if="initials" viewBox="-10 -10 120 120" class="initials">
+    <circle cx="50" cy="50" r="55" />
+    <text x="50" y="54">
+      {{ initials }}
+    </text>
+  </svg>
 </template>
 
 <script setup lang="ts">
@@ -44,9 +49,7 @@ const custom = computed((): string => {
   try {
     return require(`@/assets/icons/${props.icon}.svg`);
   } catch (error) {
-    if (props.icon.startsWith("category-"))
-      return require(`@/assets/icons/category-fallback.svg`);
-    else return "";
+    return "";
   }
 });
 
@@ -63,22 +66,14 @@ const fa = computed(() => {
   return null;
 });
 
-/** when custom svg icon inlined/loaded */
-function loadedInline(element: HTMLElement) {
-  if (!element?.style) return;
-
-  /** get absolute display size of icon in px */
-  const size = Number.parseFloat(window.getComputedStyle(element).fontSize);
-
-  /** stroke inversely with size */
-  let stroke;
-  if (size >= 32) stroke = 4;
-  else if (size >= 24) stroke = 5;
-  else stroke = 6;
-
-  /** set stroke width css variable */
-  element?.style?.setProperty("--stroke", stroke + "px");
-}
+/** initials as fallback */
+const initials = computed(() =>
+  props.icon
+    .replace(/^category-/, "")
+    .split("-")
+    .map((word) => (word[0] || "").toUpperCase())
+    .join("")
+);
 </script>
 
 <style lang="scss" scoped>
@@ -91,12 +86,25 @@ function loadedInline(element: HTMLElement) {
   height: 1.2em;
   fill: none;
   stroke: currentColor;
-  stroke-width: var(--stroke);
+  stroke-width: 5;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
 
-  & > circle:first-child {
-    display: none;
+.initials {
+  height: 1.2em;
+
+  circle {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 5;
+  }
+
+  text {
+    fill: currentColor;
+    font-size: 50px;
+    text-anchor: middle;
+    dominant-baseline: middle;
   }
 }
 </style>

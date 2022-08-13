@@ -46,8 +46,9 @@ h2 {
 h3 {
   width: 100%;
   margin: 0;
+  margin-bottom: -20px;
   padding: 10px 0;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 500;
   text-align: left;
 }
@@ -64,6 +65,10 @@ blockquote {
   padding: 0;
   text-align: justify;
   line-height: $spacing + 0.3;
+}
+
+img {
+  max-width: 100%;
 }
 
 a {
@@ -220,6 +225,9 @@ strong {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: $i;
     overflow: hidden;
+  }
+
+  .truncate-#{$i}:not(:focus)[tabindex="0"] {
     cursor: zoom-in;
   }
 }

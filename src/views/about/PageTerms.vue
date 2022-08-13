@@ -26,19 +26,21 @@
       This web application tracks user behavior such as navigation and clicks
       through the use of HotJar and Google Analytics. These background
       scripts/services take significant steps to remove identifying information
-      from the data they collect to ensure anonymity.
-    </p>
-    <p>
-      The Monarch Initiative pledges to never inspect or disclose any private,
-      identifying information collected, and to only use it for the purposes of
-      improving Monarch.
-    </p>
-    <p>
-      To learn more about how Hotjar maintains privacy and complies with
-      relevant privacy laws, see
+      from the data they collect to ensure anonymity. The Monarch Initiative
+      pledges to never inspect or disclose any private, identifying information
+      collected, and to only use it for the purposes of improving Monarch. To
+      learn more about how Hotjar maintains privacy and complies with relevant
+      privacy laws, see
       <AppLink to="https://www.hotjar.com/legal/compliance/gdpr-commitment/"
         >their explanation here</AppLink
       >.
+    </p>
+    <AppHeading>Local Data</AppHeading>
+    <p>
+      For the convenience of the user on repeat visits to the site, this web
+      application also saves certain information locally, such as recent
+      searches and form drafts. This data only exists locally on the user's
+      device, and is not sent to the Monarch team or any other party.
     </p>
   </AppSection>
 

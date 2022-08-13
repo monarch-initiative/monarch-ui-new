@@ -130,11 +130,8 @@ watch(
     button?.focus();
 
     /** update hash in url and nav if applicable */
-    await router.push({
-      name: props.route || undefined,
-      hash: props.url ? "#" + props.modelValue : undefined,
-      replace: !props.route,
-    });
+    if (props.route) await router.replace({ name: props.route });
+    else if (props.url) await router.push({ hash: "#" + props.modelValue });
   }
 );
 

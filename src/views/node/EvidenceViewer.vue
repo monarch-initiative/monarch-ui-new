@@ -215,7 +215,6 @@ import AppTabs from "@/components/AppTabs.vue";
 import AppDetails from "@/components/AppDetails.vue";
 import AppDetail from "@/components/AppDetail.vue";
 import AppTable from "@/components/AppTable.vue";
-import AppStatus from "@/components/AppStatus.vue";
 import AppBreadcrumbsLink from "@/components/AppBreadcrumbsLink.vue";
 import { Node } from "@/api/node-lookup";
 import { scrollToElement } from "@/router";

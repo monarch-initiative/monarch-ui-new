@@ -141,7 +141,6 @@ import {
   compareSetToSet,
   getPhenotypes,
 } from "@/api/phenotype-explorer";
-import AppStatus from "@/components/AppStatus.vue";
 import { Option, Options } from "@/components/AppSelectTags";
 import { snackbar } from "@/components/TheSnackbar";
 import { mountPhenogrid } from "@/api/phenogrid";
