@@ -182,14 +182,16 @@ const bTaxonOptions = taxons.slice(1);
 
 /** example data */
 const exampleAPhenotypes = [
-  { id: "HP:0004970" },
-  { id: "HP:0004933" },
-  { id: "HP:0004927" },
+  { id: "MP:0010771" },
+  { id: "MP:0002169" },
+  { id: "MP:0005391" },
+  { id: "MP:0005389" },
+  { id: "MP:0005367" },
 ];
 const exampleBPhenotypes = [
-  { id: "HP:0004872" },
-  { id: "HP:0012499" },
-  { id: "HP:0002650" },
+  { id: "HP:0004325" },
+  { id: "HP:0000093" },
+  { id: "MP:0006144" },
 ];
 
 interface GeneratedFrom {

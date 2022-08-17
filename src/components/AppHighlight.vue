@@ -4,7 +4,7 @@
 
 <template>
   <div class="highlight">
-    <video :src="src" muted autoplay loop></video>
+    <video :src="src" muted autoplay loop controls></video>
     <p>
       <slot />
     </p>

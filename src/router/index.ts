@@ -157,9 +157,9 @@ export const routes: Array<RouteRecordRaw> = [
 routes.forEach(
   (route) =>
     (route.meta = {
-      description: (descriptions as Record<string, string>)[
-        String(route.name || "")
-      ],
+      description:
+        (descriptions as Record<string, string>)[String(route.name || "")] ||
+        process.env.VUE_APP_DESCRIPTION,
     })
 );
 
@@ -175,15 +175,13 @@ const scrollBehavior: RouterScrollBehavior = async (
   /** scroll to previous position if exists */
   if (savedPosition) return savedPosition;
 
-  /** get hash */
-  const hash = to.hash;
-  if (!hash) return;
-
-  /** get element corresponding to hash */
+  /** scroll to element corresponding to hash */
   const element = document?.getElementById(to.hash.slice(1));
-  if (!element) return;
+  if (element)
+    return { el: getTarget(element), top: getOffset(), behavior: "smooth" };
 
-  return { el: getTarget(element), top: getOffset(), behavior: "smooth" };
+  /** otherwise just scroll to top */
+  return { top: 0, left: 0 };
 };
 
 /** given element, get (possibly) modified target */

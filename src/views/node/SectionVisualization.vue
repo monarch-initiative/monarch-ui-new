@@ -1,14 +1,18 @@
 <template>
-  <AppSection>
-    <AppHeading icon="chart-bar">Visualization</AppHeading>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-      cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-      est laborum.
-    </p>
+  <AppSection v-if="node.category === 'disease'">
+    <AppHeading icon="chart-bar">Histo-Pheno</AppHeading>
+    <HistoPheno :node="node" />
   </AppSection>
 </template>
+
+<script setup lang="ts">
+import { Node } from "@/api/node-lookup";
+import HistoPheno from "./HistoPheno.vue";
+
+interface Props {
+  /** current node */
+  node: Node;
+}
+
+defineProps<Props>();
+</script>

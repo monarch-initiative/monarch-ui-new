@@ -237,7 +237,7 @@ const target = ref();
 const dropdown = ref();
 /** get dropdown position */
 const { calculate, style } = useFloating(
-  computed(() => target.value.textbox),
+  computed(() => target.value?.textbox),
   dropdown,
   true
 );
