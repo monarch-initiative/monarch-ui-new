@@ -88,6 +88,7 @@ export const handlers = [
       "HP:0002816": "Genu recurvatum",
       "HP:0004298": "Abnormality of the abdominal wall",
       "HP:0002996": "Limited elbow movement",
+      "MONDO:0020208": "syndromic myopia",
     };
     nodeLookup.label = labels[id] || "Marfan syndrome";
     nodeLookup.category = [category];
