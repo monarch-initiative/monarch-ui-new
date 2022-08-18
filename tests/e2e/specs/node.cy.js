@@ -262,6 +262,11 @@ it("Breadcrumbs section works", () => {
       "Marfan syndrome Has Phenotype Dural ectasia Has Phenotype Cachexia Has Phenotype High, narrow palate"
     );
 
+  cy.contains("Dural ectasia").click();
+  cy.get("@breadcrumbs")
+    .then(getInnerText)
+    .should("eq", "Marfan syndrome Has Phenotype Dural ectasia");
+
   cy.contains("clear").click();
   cy.get("#breadcrumbs").should("not.exist");
 });

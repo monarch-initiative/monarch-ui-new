@@ -65,8 +65,6 @@ export const getSearchResults = async (
     highlighting = {},
   } = response;
 
-  console.log(response);
-
   /** convert into desired result format */
   const results = docs.map((doc) => ({
     id: doc.id || "",
