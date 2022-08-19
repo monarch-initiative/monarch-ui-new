@@ -32,8 +32,8 @@ const props = defineProps<Props>();
 
 /** chart options */
 const options = computed(() => ({
-  colors: [theme.theme],
   chart: {
+    id: "histo-pheno",
     type: "bar",
     redrawOnParentResize: true,
     width: "100%",
@@ -42,6 +42,7 @@ const options = computed(() => ({
   title: {
     text: `Breakdown of phenotypes associated with ${props.node.name}`,
   },
+  colors: [theme.theme],
   plotOptions: {
     bar: {
       horizontal: true,
@@ -106,5 +107,11 @@ watch([() => route.path, () => props.node.id], getData, { immediate: true });
 <style lang="scss" scoped>
 .vue-apexcharts {
   width: 100%;
+}
+</style>
+
+<style>
+.apexcharts-menu-item {
+  white-space: nowrap;
 }
 </style>
