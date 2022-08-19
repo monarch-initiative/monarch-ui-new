@@ -226,15 +226,11 @@ it("Breadcrumbs section works", () => {
   cy.visit("/disease/MONDO:0007947");
 
   cy.contains("Dural ectasia").click();
-  cy.reload();
   cy.contains("Cachexia").click();
-  cy.reload();
   cy.contains("syndromic myopia").click();
   cy.reload();
   cy.contains("High, narrow palate").click();
-  cy.reload();
   cy.contains("Genu recurvatum").click();
-  cy.reload();
 
   cy.get("#breadcrumbs").nextAll(".flex").last().as("breadcrumbs");
 
@@ -248,7 +244,6 @@ it("Breadcrumbs section works", () => {
     );
 
   cy.go(-4);
-  cy.reload();
 
   cy.get("@breadcrumbs")
     .then(getInnerText)
@@ -264,7 +259,7 @@ it("Breadcrumbs section works", () => {
       "Marfan syndrome Has Phenotype Dural ectasia Has Phenotype Cachexia Is Super Class Of syndromic myopia Has Phenotype High, narrow palate"
     );
 
-  cy.contains("Dural ectasia").click();
+  cy.get("@breadcrumbs").contains("Dural ectasia").click();
   cy.get("@breadcrumbs")
     .then(getInnerText)
     .should("eq", "Marfan syndrome Has Phenotype Dural ectasia");
