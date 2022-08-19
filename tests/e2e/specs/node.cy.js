@@ -232,7 +232,7 @@ it("Breadcrumbs section works", () => {
   cy.contains("High, narrow palate").click();
   cy.contains("Genu recurvatum").click();
 
-  cy.get("#breadcrumbs").nextAll(".flex").last().as("breadcrumbs");
+  cy.get("#breadcrumbs ~ .flex").as("breadcrumbs");
 
   const getInnerText = (els) => els[0].innerText.split(/\n/).join(" ");
 
