@@ -224,11 +224,16 @@
 
 it("Breadcrumbs section works", () => {
   const debug = () =>
-    cy.window().then((window) => {
-      cy.log(window.location.href);
-      cy.log(window.document.querySelector("#breadcrumbs ~ .flex")?.innerText);
-      cy.log(window.history.state.breadcrumbs);
-    });
+    cy
+      .wait(500)
+      .window()
+      .then((window) => {
+        cy.log(window.location.href);
+        cy.log(
+          window.document.querySelector("#breadcrumbs ~ .flex")?.innerText
+        );
+        cy.log(window.history.state.breadcrumbs);
+      });
 
   cy.visit("/disease/MONDO:0007947");
   debug();
