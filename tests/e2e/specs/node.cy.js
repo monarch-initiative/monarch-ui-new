@@ -55,201 +55,189 @@
 //   cy.contains("Marfan syndrome is a disorder of the connective tissue");
 // });
 
-// it("Details items show", () => {
-//   cy.visit("/disease/MONDO:0007947");
+it("Details items show", () => {
+  cy.visit("/disease/MONDO:0007947");
 
-//   cy.contains("Autosomal dominant inheritance");
-//   cy.contains("NCIT:C34807");
-//   cy.contains("UMLS:C0024796");
-// });
+  cy.contains("Autosomal dominant inheritance");
+  cy.contains("NCIT:C34807");
+  cy.contains("UMLS:C0024796");
+});
 
-// it("Hierarchy items show", () => {
-//   cy.visit("/disease/MONDO:0007947");
+it("Hierarchy items show", () => {
+  cy.visit("/disease/MONDO:0007947");
 
-//   cy.contains("syndromic myopia");
-//   cy.contains("connective tissue disease with eye involvement");
-//   cy.contains("lens position anomaly");
-//   cy.contains("SCTID:19346006");
-//   cy.contains("NCIT:C34807");
-// });
+  cy.contains("syndromic myopia");
+  cy.contains("connective tissue disease with eye involvement");
+  cy.contains("lens position anomaly");
+  cy.contains("SCTID:19346006");
+  cy.contains("NCIT:C34807");
+});
 
-// it("Gene specific info shows", () => {
-//   cy.visit("/gene/MONDO:0007947");
+it("Gene specific info shows", () => {
+  cy.visit("/gene/MONDO:0007947");
 
-//   cy.contains("Gene");
-//   cy.contains("Symbol");
-//   cy.contains("CDK2");
-// });
+  cy.contains("Gene");
+  cy.contains("Symbol");
+  cy.contains("CDK2");
+});
 
-// it("Publication specific info shows", () => {
-//   cy.visit("/publication/MONDO:0007947");
+it("Publication specific info shows", () => {
+  cy.visit("/publication/MONDO:0007947");
 
-//   cy.contains("Publication");
-//   cy.contains("Dimorphic effects of transforming growth factor-β signaling");
-//   cy.contains("Cook JR");
-//   cy.contains("Ramirez F");
-//   cy.contains("1. Arterioscler Thromb Vasc Biol. 2015 Apr;35(4):911-7.");
-// });
+  cy.contains("Publication");
+  cy.contains("Dimorphic effects of transforming growth factor-β signaling");
+  cy.contains("Cook JR");
+  cy.contains("Ramirez F");
+  cy.contains("1. Arterioscler Thromb Vasc Biol. 2015 Apr;35(4):911-7.");
+});
 
-// it("Summary association info shows", () => {
-//   cy.visit("/disease/MONDO:0007947");
+it("Summary association info shows", () => {
+  cy.visit("/disease/MONDO:0007947");
 
-//   cy.get(".result").contains("Marfan syndrome");
-//   cy.get(".result").contains(/5 piece.*supporting evidence/);
-//   cy.get(".result")
-//     .contains("Has Phenotype")
-//     .invoke("attr", "href")
-//     .should("equal", "http://purl.obolibrary.org/obo/RO_0002200");
-//   cy.get(".result")
-//     .contains("Dural ectasia")
-//     .invoke("attr", "href")
-//     .should("equal", "/phenotype/HP:0100775");
+  cy.get(".result").contains("Marfan syndrome");
+  cy.get(".result").contains(/5 piece.*supporting evidence/);
+  cy.get(".result")
+    .contains("Has Phenotype")
+    .invoke("attr", "href")
+    .should("equal", "http://purl.obolibrary.org/obo/RO_0002200");
+  cy.get(".result")
+    .contains("Dural ectasia")
+    .invoke("attr", "href")
+    .should("equal", "/phenotype/HP:0100775");
 
-//   cy.get(".result").contains("5 piece(s) of supporting evidence");
-//   cy.get(".result").contains("4 piece(s) of supporting evidence");
-// });
+  cy.get(".result").contains("5 piece(s) of supporting evidence");
+  cy.get(".result").contains("4 piece(s) of supporting evidence");
+});
 
-// it("Table association info shows", () => {
-//   cy.visit("/disease/MONDO:0007947");
+it("Table association info shows", () => {
+  cy.visit("/disease/MONDO:0007947");
 
-//   cy.contains("Table").trigger("click");
-//   cy.contains("tr", "Marfan syndrome");
-//   cy.contains("tr", "Has Phenotype")
-//     .contains("Has Phenotype")
-//     .invoke("attr", "href")
-//     .should("equal", "http://purl.obolibrary.org/obo/RO_0002200");
-//   cy.contains("tr", "Dural ectasia")
-//     .contains("Dural ectasia")
-//     .invoke("attr", "href")
-//     .should("equal", "/phenotype/HP:0100775");
-// });
+  cy.contains("Table").trigger("click");
+  cy.contains("tr", "Marfan syndrome");
+  cy.contains("tr", "Has Phenotype")
+    .contains("Has Phenotype")
+    .invoke("attr", "href")
+    .should("equal", "http://purl.obolibrary.org/obo/RO_0002200");
+  cy.contains("tr", "Dural ectasia")
+    .contains("Dural ectasia")
+    .invoke("attr", "href")
+    .should("equal", "/phenotype/HP:0100775");
+});
 
-// it("Association mode switching works", () => {
-//   cy.visit("/disease/MONDO:0007947");
+it("Association mode switching works", () => {
+  cy.visit("/disease/MONDO:0007947");
 
-//   cy.url().should("include", "associations=phenotype");
-//   cy.contains("Table").trigger("click");
-//   cy.contains("button", "Phenotypes").trigger("click");
-//   cy.contains("[role='option'] > *", "Variants").trigger("click");
-//   cy.contains("th", "Variant");
-//   cy.url().should("include", "associations=variant");
-// });
+  cy.url().should("include", "associations=phenotype");
+  cy.contains("Table").trigger("click");
+  cy.contains("button", "Phenotypes").trigger("click");
+  cy.contains("[role='option'] > *", "Variants").trigger("click");
+  cy.contains("th", "Variant");
+  cy.url().should("include", "associations=variant");
+});
 
-// it("Association table has extra metadata columns", () => {
-//   cy.visit("/disease/MONDO:0007947");
+it("Association table has extra metadata columns", () => {
+  cy.visit("/disease/MONDO:0007947");
 
-//   cy.contains("Table").trigger("click");
+  cy.contains("Table").trigger("click");
 
-//   cy.contains("tr", "Frequent")
-//     .contains("Frequent")
-//     .invoke("attr", "href")
-//     .should("equal", "http://purl.obolibrary.org/obo/HP_0040282");
+  cy.contains("tr", "Frequent")
+    .contains("Frequent")
+    .invoke("attr", "href")
+    .should("equal", "http://purl.obolibrary.org/obo/HP_0040282");
 
-//   cy.contains("button", "Phenotypes").as("category");
+  cy.contains("button", "Phenotypes").as("category");
 
-//   cy.get("@category").trigger("click");
-//   cy.contains("[role='option'] > *", "Variants").trigger("click");
-//   cy.contains("td", "Mus musculus");
-//   cy.contains("th", "Taxon").find("button").trigger("click");
-//   cy.get("[role='listbox']").contains("Homo Sapiens");
-//   cy.get("[role='listbox']").contains("Mus Musculus");
+  cy.get("@category").trigger("click");
+  cy.contains("[role='option'] > *", "Variants").trigger("click");
+  cy.contains("td", "Mus musculus");
+  cy.contains("th", "Taxon").find("button").trigger("click");
+  cy.get("[role='listbox']").contains("Homo Sapiens");
+  cy.get("[role='listbox']").contains("Mus Musculus");
 
-//   cy.get("@category").trigger("click");
-//   cy.contains("[role='option'] > *", "Publications").trigger("click");
-//   cy.contains("Author");
-//   cy.contains("Year");
-//   cy.contains("Publisher");
-// });
+  cy.get("@category").trigger("click");
+  cy.contains("[role='option'] > *", "Publications").trigger("click");
+  cy.contains("Author");
+  cy.contains("Year");
+  cy.contains("Publisher");
+});
 
-// it("Evidence summary viewer works", () => {
-//   cy.visit("/disease/MONDO:0007947");
+it("Evidence summary viewer works", () => {
+  cy.visit("/disease/MONDO:0007947");
 
-//   cy.contains("button", "Evidence").trigger("click");
+  cy.contains("button", "Evidence").trigger("click");
 
-//   cy.contains(/selected.*association/)
-//     .next()
-//     .contains("has phenotype");
-//   cy.contains(/selected.*association/)
-//     .next()
-//     .contains("Dural ectasia");
+  cy.contains(/selected.*association/)
+    .next()
+    .contains("has phenotype");
+  cy.contains(/selected.*association/)
+    .next()
+    .contains("Dural ectasia");
 
-//   cy.contains("Evidence codes").next().contains("2");
-//   cy.contains("Sources").next().contains("1");
-//   cy.contains("Publications").next().contains("3");
+  cy.contains("Evidence codes").next().contains("2");
+  cy.contains("Sources").next().contains("1");
+  cy.contains("Publications").next().contains("3");
 
-//   cy.contains("experimental evidence used in manual assertion")
-//     .invoke("attr", "href")
-//     .should("equal", "http://purl.obolibrary.org/obo/ECO_0000269");
+  cy.contains("experimental evidence used in manual assertion")
+    .invoke("attr", "href")
+    .should("equal", "http://purl.obolibrary.org/obo/ECO_0000269");
 
-//   cy.contains("https://archive.monarchinitiative.org/#hpoa")
-//     .invoke("attr", "href")
-//     .should("equal", "https://archive.monarchinitiative.org/#hpoa");
+  cy.contains("https://archive.monarchinitiative.org/#hpoa")
+    .invoke("attr", "href")
+    .should("equal", "https://archive.monarchinitiative.org/#hpoa");
 
-//   cy.contains("PMID:10489951")
-//     .invoke("attr", "href")
-//     .should("equal", "http://www.ncbi.nlm.nih.gov/pubmed/10489951");
-// });
+  cy.contains("PMID:10489951")
+    .invoke("attr", "href")
+    .should("equal", "http://www.ncbi.nlm.nih.gov/pubmed/10489951");
+});
 
-// it("Evidence table viewer works", () => {
-//   cy.visit("/disease/MONDO:0007947");
+it("Evidence table viewer works", () => {
+  cy.visit("/disease/MONDO:0007947");
 
-//   cy.contains("button", "Evidence").click();
-//   cy.contains("selected association").parent().parent().as("evidence-section");
+  cy.contains("button", "Evidence").click();
+  cy.contains("selected association").parent().parent().as("evidence-section");
 
-//   cy.get("@evidence-section").contains("table").trigger("click");
+  cy.get("@evidence-section").contains("table").trigger("click");
 
-//   cy.contains("Subject");
-//   cy.contains("Relation");
-//   cy.contains("Object");
-//   cy.contains("Evidence Codes");
-//   cy.contains("Publications");
-//   cy.contains("Sources");
-//   cy.contains("References");
+  cy.contains("Subject");
+  cy.contains("Relation");
+  cy.contains("Object");
+  cy.contains("Evidence Codes");
+  cy.contains("Publications");
+  cy.contains("Sources");
+  cy.contains("References");
 
-//   cy.contains("experimental evidence used in manual assertion")
-//     .invoke("attr", "href")
-//     .should("equal", "http://purl.obolibrary.org/obo/ECO_0000269");
+  cy.contains("experimental evidence used in manual assertion")
+    .invoke("attr", "href")
+    .should("equal", "http://purl.obolibrary.org/obo/ECO_0000269");
 
-//   cy.contains("#hpoa")
-//     .invoke("attr", "href")
-//     .should("equal", "https://archive.monarchinitiative.org/#hpoa");
+  cy.contains("#hpoa")
+    .invoke("attr", "href")
+    .should("equal", "https://archive.monarchinitiative.org/#hpoa");
 
-//   cy.contains("PMID:10489951")
-//     .invoke("attr", "href")
-//     .should("equal", "http://www.ncbi.nlm.nih.gov/pubmed/10489951");
+  cy.contains("PMID:10489951")
+    .invoke("attr", "href")
+    .should("equal", "http://www.ncbi.nlm.nih.gov/pubmed/10489951");
 
-//   cy.contains("and 2 more").trigger("mouseenter");
-//   cy.contains(/PMID:3189335.*Marfan syndrome/);
-// });
+  cy.contains("and 2 more").trigger("mouseenter");
+  cy.contains(/PMID:3189335.*Marfan syndrome/);
+});
 
 it("Breadcrumbs section works", () => {
-  const debug = () =>
-    cy
-      .wait(500)
-      .window()
-      .then((window) => {
-        cy.log(window.location.href);
-        cy.log(
-          window.document.querySelector("#breadcrumbs ~ .flex")?.innerText
-        );
-        cy.log(window.history.state.breadcrumbs);
-      });
-
   cy.visit("/disease/MONDO:0007947");
-  debug();
+  cy.wait(500);
 
   cy.contains("Dural ectasia").click();
-  debug();
+  cy.wait(500);
   cy.contains("Cachexia").click();
-  debug();
+  cy.wait(500);
   cy.contains("syndromic myopia").click();
-  debug();
+  cy.wait(500);
   cy.reload();
-  debug();
+  cy.wait(500);
   cy.contains("High, narrow palate").click();
-  debug();
+  cy.wait(500);
   cy.contains("Genu recurvatum").click();
-  debug();
+  cy.wait(500);
 
   cy.get("#breadcrumbs ~ .flex").as("breadcrumbs");
 
@@ -263,13 +251,16 @@ it("Breadcrumbs section works", () => {
     );
 
   cy.go(-4);
+  cy.wait(500);
 
   cy.get("@breadcrumbs")
     .then(getInnerText)
     .should("eq", "Marfan syndrome Has Phenotype Dural ectasia");
 
   cy.go(3);
+  cy.wait(500);
   cy.reload();
+  cy.wait(500);
 
   cy.get("@breadcrumbs")
     .then(getInnerText)
@@ -279,6 +270,7 @@ it("Breadcrumbs section works", () => {
     );
 
   cy.get("@breadcrumbs").contains("Dural ectasia").click();
+  cy.wait(500);
   cy.get("@breadcrumbs")
     .then(getInnerText)
     .should("eq", "Marfan syndrome Has Phenotype Dural ectasia");
