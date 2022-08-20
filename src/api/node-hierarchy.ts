@@ -1,5 +1,6 @@
 import { uniqBy } from "lodash";
 import { biolink, request } from ".";
+import { Association } from "@/api/node-associations";
 
 /** graph info to construct hierarchy (from backend) */
 interface _Hierarchy {
@@ -20,6 +21,29 @@ interface _Hierarchy {
 
 /** "part of" relationship type */
 const partOf = "BFO:0000050";
+
+/** super/equivalent/sub-class relations */
+const superRelation: Association["relation"] = {
+  id: "",
+  name: "is super class of",
+  iri: "",
+  category: "",
+  inverse: true,
+};
+const equivalentRelation: Association["relation"] = {
+  id: "",
+  name: "is equivalent class of",
+  iri: "",
+  category: "",
+  inverse: true,
+};
+const subRelation: Association["relation"] = {
+  id: "",
+  name: "is subclass of",
+  iri: "",
+  category: "",
+  inverse: true,
+};
 
 /** lookup hierarchy info for a node id */
 export const getHierarchy = async (
@@ -47,19 +71,26 @@ export const getHierarchy = async (
   const { nodes, edges } = response;
 
   /** take id of subject or object and find associated node label */
-  const idToClass = (id = ""): Class => ({
+  const idToClass = (id = "", relation: Association["relation"]): Class => ({
     id,
     name: nodes.find((node) => node.id === id)?.lbl || "",
+    relation,
   });
 
   /** populate super/equivalent/sub classes */
   for (const { sub, pred, obj } of edges) {
     if (pred === "subClassOf" || pred === partOf) {
-      if (sub === id) superClasses.push(idToClass(obj));
-      else if (obj === id) subClasses.push(idToClass(sub));
+      if (sub === id) {
+        superClasses.push(idToClass(obj, superRelation));
+      } else if (obj === id) {
+        subClasses.push(idToClass(sub, subRelation));
+      }
     } else if (pred === "equivalentClass") {
-      if (sub === id) equivalentClasses.push(idToClass(obj));
-      else equivalentClasses.push(idToClass(sub));
+      if (sub === id) {
+        equivalentClasses.push(idToClass(obj, equivalentRelation));
+      } else {
+        equivalentClasses.push(idToClass(sub, equivalentRelation));
+      }
     }
   }
 
@@ -70,7 +101,7 @@ export const getHierarchy = async (
   };
 };
 
-type Class = { id: string; name: string };
+type Class = { id: string; name: string; relation: Association["relation"] };
 
 /** hierarchy (for frontend) */
 export interface Hierarchy {

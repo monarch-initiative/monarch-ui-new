@@ -31,15 +31,16 @@ const route = useRoute();
 watch(
   () => route.fullPath,
   async () => {
+    /**
+     * meta vars set in components should override this, since this component is
+     * root and renders first.
+     */
+
     /** update document title from route */
     appTitle.value = [String(route.name)];
 
-    /**
-     * update description. description set in components should override this,
-     * since this component is root and renders first.
-     */
-    appDescription.value =
-      (route.meta.description as string) || process.env.VUE_APP_DESCRIPTION;
+    /** update description */
+    appDescription.value = route.meta.description as string;
 
     /** update canonical url */
     appUrl.value = window.location.href;

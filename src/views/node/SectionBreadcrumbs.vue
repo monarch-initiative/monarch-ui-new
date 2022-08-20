@@ -4,10 +4,10 @@
 
     <span
       >How you got to <strong>{{ node.name }}</strong> through the Monarch
-      knowledge graph</span
+      knowledge graph:</span
     >
 
-    <AppFlex>
+    <AppFlex direction="col">
       <template v-for="(breadcrumb, index) of breadcrumbs" :key="index">
         <!-- node -->
         <AppFlex flow="inline" gap="small">
@@ -15,9 +15,11 @@
             v-tooltip="startCase(breadcrumb.node.category)"
             :icon="`category-${kebabCase(breadcrumb.node.category)}`"
           />
-          <AppLink :to="`/${breadcrumb.node.category}/${breadcrumb.node.id}`">{{
-            breadcrumb.node.name
-          }}</AppLink>
+          <AppLink
+            :to="`/${breadcrumb.node.category}/${breadcrumb.node.id}`"
+            @click.prevent="$router.go(-breadcrumbs.length + index)"
+            >{{ breadcrumb.node.name }}</AppLink
+          >
         </AppFlex>
 
         <!-- relation -->
@@ -25,9 +27,7 @@
           <AppIcon
             class="arrow"
             :icon="
-              breadcrumb.relation.inverse
-                ? 'arrow-left-long'
-                : 'arrow-right-long'
+              breadcrumb.relation.inverse ? 'arrow-up-long' : 'arrow-down-long'
             "
           />
           <AppLink :to="breadcrumb.relation.iri" :no-icon="true">{{
@@ -36,9 +36,7 @@
           <AppIcon
             class="arrow"
             :icon="
-              breadcrumb.relation.inverse
-                ? 'arrow-left-long'
-                : 'arrow-right-long'
+              breadcrumb.relation.inverse ? 'arrow-up-long' : 'arrow-down-long'
             "
           />
         </AppFlex>

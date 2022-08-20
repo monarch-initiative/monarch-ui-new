@@ -26,15 +26,13 @@ it("Recent/frequent results show", () => {
     cy.get("input").trigger("change");
     cy.wait(100);
     cy.get(".textbox button").trigger("click");
-    cy.wait(100);
   }
 
   cy.visit("/disease/MONDO:12345");
   cy.wait(100);
   cy.visit("/explore");
 
-  cy.get("input").trigger("focus");
-  cy.wait(100);
+  cy.get("input").trigger("focus", { force: true });
 
   /** recent */
   cy.get("[role='option']").eq(0).contains("marfan syndrome");

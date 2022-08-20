@@ -1,6 +1,6 @@
 it("Populating example works", () => {
   cy.visit("/explore#phenotype-explorer");
-  cy.contains("example 1").trigger("click");
+  cy.contains("example").trigger("click");
   cy.get(".select-tags > .box > button").should("have.length.gt", 0);
 });
 

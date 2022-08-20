@@ -23,6 +23,7 @@
     "@sentry/tracing": "^7.9.0",
     "@sentry/vue": "^7.9.0",
     "@vueuse/core": "^8.9.4",
+    "apexcharts": "^3.35.4",
     "body-scroll-lock": "^4.0.0-beta.0",
     "core-js": "^3.23.5",
     "file-saver": "^2.0.5",
@@ -38,6 +39,7 @@
     "vue-inline-svg": "^3.1.0",
     "vue-router": "^4.1.2",
     "vue-tippy": "^6.0.0-alpha.62",
+    "vue3-apexcharts": "^1.4.1",
     "vuex": "^4.0.2",
     "wicg-inert": "^3.1.2"
   },

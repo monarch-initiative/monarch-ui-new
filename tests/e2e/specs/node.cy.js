@@ -226,15 +226,12 @@ it("Breadcrumbs section works", () => {
   cy.visit("/disease/MONDO:0007947");
 
   cy.contains("Dural ectasia").click();
-  cy.reload();
   cy.contains("Cachexia").click();
-  cy.reload();
+  cy.contains("syndromic myopia").click();
   cy.contains("High, narrow palate").click();
-  cy.reload();
   cy.contains("Genu recurvatum").click();
-  cy.reload();
 
-  cy.get("#breadcrumbs").nextAll(".flex").last().as("breadcrumbs");
+  cy.get("#breadcrumbs ~ .flex").as("breadcrumbs");
 
   const getInnerText = (els) => els[0].innerText.split(/\n/).join(" ");
 
@@ -242,25 +239,33 @@ it("Breadcrumbs section works", () => {
     .then(getInnerText)
     .should(
       "eq",
-      "Marfan syndrome Has Phenotype Dural ectasia Has Phenotype Cachexia Has Phenotype High, narrow palate Has Phenotype Genu recurvatum"
+      "Marfan syndrome Has Phenotype Dural ectasia Has Phenotype Cachexia Is Super Class Of syndromic myopia Has Phenotype High, narrow palate Has Phenotype Genu recurvatum"
     );
 
-  cy.go(-3);
-  cy.reload();
+  cy.go(-4);
+  cy.wait(100);
 
   cy.get("@breadcrumbs")
     .then(getInnerText)
     .should("eq", "Marfan syndrome Has Phenotype Dural ectasia");
 
-  cy.go(2);
+  cy.go(3);
+  cy.wait(100);
   cy.reload();
+  cy.wait(100);
 
   cy.get("@breadcrumbs")
     .then(getInnerText)
     .should(
       "eq",
-      "Marfan syndrome Has Phenotype Dural ectasia Has Phenotype Cachexia Has Phenotype High, narrow palate"
+      "Marfan syndrome Has Phenotype Dural ectasia Has Phenotype Cachexia Is Super Class Of syndromic myopia Has Phenotype High, narrow palate"
     );
+
+  cy.get("@breadcrumbs").contains("Dural ectasia").click();
+  cy.wait(100);
+  cy.get("@breadcrumbs")
+    .then(getInnerText)
+    .should("eq", "Marfan syndrome Has Phenotype Dural ectasia");
 
   cy.contains("clear").click();
   cy.get("#breadcrumbs").should("not.exist");

@@ -1,9 +1,9 @@
 import * as api from "@/api";
 import { postFeedback } from "@/api/feedback";
 import { getTabulatedAssociations } from "@/api/node-associations";
-import { getGene } from "@/api/node-gene";
+import { getGene } from "@/api/genes";
 import { getHierarchy } from "@/api/node-hierarchy";
-import { getSummaries } from "@/api/node-publication";
+import { getSummaries } from "@/api/publications";
 import { compareSetToSet } from "@/api/phenotype-explorer";
 
 /**

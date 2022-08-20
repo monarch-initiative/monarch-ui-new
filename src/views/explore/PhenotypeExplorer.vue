@@ -6,11 +6,8 @@
 
 <template>
   <AppSection>
-    <!-- examples -->
-    <AppFlex>
-      <span>Try:</span>
-      <AppButton text="example 1" design="small" @click="doExample1()" />
-    </AppFlex>
+    <!-- example -->
+    <AppButton text="Try an example" design="small" @click="doExample()" />
 
     <strong>Compare these phenotypes ...</strong>
 
@@ -146,6 +143,7 @@ import { snackbar } from "@/components/TheSnackbar";
 import { mountPhenogrid } from "@/api/phenogrid";
 import { useQuery } from "@/util/composables";
 import { parse } from "@/util/object";
+import examples from "./phenotype-explorer.json";
 
 /** common tooltip explaining how to use multi-select component */
 const multiTooltip = `In this box, you can select phenotypes in 3 ways:<br>
@@ -181,19 +179,10 @@ const bTaxonHuman = taxons[0];
 const bTaxonOptions = taxons.slice(1);
 
 /** example data */
-const exampleAPhenotypes = [
-  { id: "HP:0004970" },
-  { id: "HP:0004933" },
-  { id: "HP:0004927" },
-];
-const exampleBPhenotypes = [
-  { id: "HP:0004872" },
-  { id: "HP:0012499" },
-  { id: "HP:0002650" },
-];
-
 interface GeneratedFrom {
+  /** the option (gene/disease/phenotype) that the phenotypes came from */
   option?: Option;
+  /** the phenotypes themselves */
   options?: Options;
 }
 
@@ -211,10 +200,11 @@ const bPhenotypes = ref([] as Options);
 const bGeneratedFrom = ref({} as GeneratedFrom);
 
 /** example phenotype set comparison */
-function doExample1() {
-  bMode.value = bModeOptions[0];
-  aPhenotypes.value = exampleAPhenotypes;
-  bPhenotypes.value = exampleBPhenotypes;
+function doExample() {
+  aPhenotypes.value = examples.a.options;
+  bPhenotypes.value = examples.b.options;
+  aGeneratedFrom.value = examples.a;
+  bGeneratedFrom.value = examples.b;
 }
 
 /** comparison analysis */

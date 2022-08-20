@@ -15,6 +15,8 @@ interface _SearchResults {
     label?: Array<string>;
     score?: number;
     prefix?: string;
+    taxon?: string;
+    taxon_label?: string;
   }>;
   facet_counts: Record<string, Record<string, number>>;
   highlighting: Record<
@@ -74,6 +76,13 @@ export const getSearchResults = async (
     score: doc.score || 0,
     prefix: doc.prefix || "",
     highlight: highlighting[doc.id].highlight,
+    taxon:
+      doc.taxon || doc.taxon_label
+        ? {
+            id: doc.taxon || "",
+            name: doc.taxon_label || "",
+          }
+        : undefined,
   }));
 
   /** empty error status */
@@ -98,6 +107,10 @@ export interface SearchResults {
     score?: number;
     prefix?: string;
     highlight?: string;
+    taxon?: {
+      id: string;
+      name: string;
+    };
   }>;
   facets: Filters;
 }

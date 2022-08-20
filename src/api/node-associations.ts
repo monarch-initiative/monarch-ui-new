@@ -1,7 +1,7 @@
 import { getXrefLink } from "./xrefs";
 import { biolink, request } from ".";
 import { Filters, Query, facetsToFilters, queryToParams } from "./facets";
-import { getSummaries } from "./node-publication";
+import { getSummaries } from "./publications";
 import { mapCategory, getAssociationEndpoint } from "./categories";
 import { Sort } from "@/components/AppTable";
 
