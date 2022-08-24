@@ -172,7 +172,10 @@ async function getAutocomplete(search: string): Promise<AutocompleteOptions> {
   /** if something typed in, get autocomplete options from backend */
   if (search.trim()) return await getAutocompleteResults(search);
 
-  /** otherwise, if search box focused and nothing typed in, show some useful entries */
+  /**
+   * otherwise, if search box focused and nothing typed in, show some useful
+   * entries
+   */
 
   /** show top N entries in each category */
   const top = 5;

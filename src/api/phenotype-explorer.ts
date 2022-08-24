@@ -32,7 +32,10 @@ export const getPhenotypes = async (search = ""): ReturnType<OptionsFunc> => {
       id: result.id,
       name: result.name,
       spreadOptions:
-        /** if gene/disease, provide function to get associated phenotypes upon select */
+        /**
+         * if gene/disease, provide function to get associated phenotypes upon
+         * select
+         */
         result.category === "phenotype" || !result.category
           ? undefined
           : async () =>

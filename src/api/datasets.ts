@@ -19,7 +19,10 @@ interface _Datasets {
   }>;
 }
 
-/** get metadata of all datasets used in monarch from biolink, in format of source */
+/**
+ * get metadata of all datasets used in monarch from biolink, in format of
+ * source
+ */
 export const getDatasets = async (): Promise<Datasets> => {
   /** make query */
   const url = `${biolink}/metadata/datasets`;

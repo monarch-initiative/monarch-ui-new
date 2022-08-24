@@ -46,7 +46,10 @@ export const routes: Array<RouteRecordRaw> = [
       console.info("Redirecting to:", redirect);
       console.info("With state:", redirectState);
 
-      /** only keep state added by app, as to not interfere with built-in browser nav */
+      /**
+       * only keep state added by app, as to not interfere with built-in browser
+       * nav
+       */
       redirectState = pick(redirectState, ["phenotypes", "breadcrumbs"]);
 
       /** apply state to current route */

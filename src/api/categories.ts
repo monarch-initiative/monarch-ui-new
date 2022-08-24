@@ -4,7 +4,10 @@ import { startCase } from "lodash";
 export const mapCategory = (category: Array<string> = []): string =>
   category[0] || "unknown";
 
-/** from a category name, get its pluralized form, for querying association endpoints */
+/**
+ * from a category name, get its pluralized form, for querying association
+ * endpoints
+ */
 export const getAssociationEndpoint = (category = ""): string => {
   /** special */
   if (category === "anatomy") return "expression/anatomy";
@@ -40,7 +43,10 @@ export const getAssociationLabel = (category = ""): string => {
   return `${startCase(category)}s`;
 };
 
-/** categories that app supports. keep in specific order of "importance", used for sorting. */
+/**
+ * categories that app supports. keep in specific order of "importance", used
+ * for sorting.
+ */
 export const categories = [
   "phenotype",
   "disease",

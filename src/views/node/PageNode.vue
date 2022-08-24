@@ -86,7 +86,8 @@ const {
 
     /**
      * set page description from node meta data. no need to include category and
-     * id, as those should already be in the document title. see https://metatags.io/
+     * id, as those should already be in the document title. see
+     * https://metatags.io/
      */
     const { name = "", description = "" } = results || {};
     appDescription.value = [name, description]

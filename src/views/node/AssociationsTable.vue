@@ -233,7 +233,10 @@ const cols = computed((): Cols => {
       }
     );
 
-  /** filter out extra columns with nothing in them (all rows for that col falsey) */
+  /**
+   * filter out extra columns with nothing in them (all rows for that col
+   * falsey)
+   */
   /*
   extraCols = extraCols.filter((col) =>
     associations.value.some((association) => association[col.key || ""])

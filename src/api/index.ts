@@ -75,7 +75,10 @@ export const request = async <T>(
       throw new Error(message || `Response not OK`);
     }
 
-    /** add response to cache (if GET, https://w3c.github.io/ServiceWorker/#cache-put) */
+    /**
+     * add response to cache (if GET,
+     * https://w3c.github.io/ServiceWorker/#cache-put)
+     */
     if (request.method === "GET") await cache.put(request, response.clone());
   }
 

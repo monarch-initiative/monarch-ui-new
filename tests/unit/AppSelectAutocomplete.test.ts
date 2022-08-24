@@ -1,4 +1,3 @@
-import { nextTick } from "vue";
 import { mount, emitted } from "../setup";
 import AppSelectAutocomplete from "@/components/AppSelectAutocomplete.vue";
 
@@ -17,12 +16,9 @@ const props = {
 /** expected type of emitted update:modelValue events */
 type T = Array<unknown>;
 
-/** nextTick used occasionally here due to useQuery */
-
 test("Types to search", async () => {
   const wrapper = mount(AppSelectAutocomplete, props);
   await wrapper.find("input").trigger("focus");
-  await nextTick();
   expect(wrapper.findAll("[role='option']").length).toBe(4);
   await wrapper.find("input").setValue("veg");
   await wrapper.find("input").trigger("focus");

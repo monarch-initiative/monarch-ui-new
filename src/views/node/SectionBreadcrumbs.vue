@@ -85,7 +85,10 @@ watch(() => route, updateBreadcrumbs, { immediate: true, deep: true });
 
 /** clear breadcrumbs history */
 function clear() {
-  /** confirmation warning not necessary since back button should return to previous state */
+  /**
+   * confirmation warning not necessary since back button should return to
+   * previous state
+   */
   window.history.pushState({}, "");
   updateBreadcrumbs();
 }

@@ -13,7 +13,10 @@ export type Filters = Record<string, Options>;
 /** simplified filter format for passing to api funcs */
 export type Query = Record<string, Array<string>>;
 
-/** convert backend facets into filters (set of options) compatible with select components */
+/**
+ * convert backend facets into filters (set of options) compatible with select
+ * components
+ */
 export const facetsToFilters = (facets: Facets): Filters => {
   const filters: Filters = {};
   for (const [name, facet] of Object.entries(facets)) {
@@ -26,7 +29,10 @@ export const facetsToFilters = (facets: Facets): Filters => {
   /** delete certain facets (explicitly, opt-out) that we don't want to show */
   delete filters["_taxon_map"];
 
-  /** rename facet names to be consistent, and to be what biolink expects in future queries */
+  /**
+   * rename facet names to be consistent, and to be what biolink expects in
+   * future queries
+   */
   renameKey(filters, "taxon_label", "taxon");
   renameKey(filters, "object_taxon_label", "taxon");
 
