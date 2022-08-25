@@ -29,7 +29,6 @@ test("Switches by mouse", async () => {
 
 test("Switches by keyboard", async () => {
   const wrapper = mount(AppTabs, props, vModel);
-
   const button = wrapper.find("button");
   await button.trigger("click");
   expect(emitted(wrapper)).toEqual(["apple"]);

@@ -1,5 +1,6 @@
 import * as api from "@/api";
 import { postFeedback } from "@/api/feedback";
+import { getSearchResults } from "@/api/node-search";
 import { getTabulatedAssociations } from "@/api/node-associations";
 import { getGene } from "@/api/genes";
 import { getHierarchy } from "@/api/node-hierarchy";
@@ -10,7 +11,8 @@ import { compareSetToSet } from "@/api/phenotype-explorer";
  * tests for api functions. only test that request is constructed correctly,
  * (between starting function and making request). other steps adequately tested
  * via e2e, msw, and typescript. only test funcs that are non-trivial in this
- * step (i.e. not just taking a parameter and putting it in request url string).
+ * step (i.e. not just taking a parameter and putting it in request url
+ * string).
  */
 
 const requestSpy = jest.spyOn(api, "request");
@@ -22,6 +24,50 @@ test("Post feedback requests correctly", async () => {
     body: "dummy body",
   });
   expect(requestSpy.mock.lastCall[2]).toStrictEqual({ method: "POST" });
+});
+
+test("Node search returns correctly", async () => {
+  /** expected results */
+  const result = {
+    id: "MONDO:0017310",
+    altIds: ["ORPHA:284993", "ORDO:284993", "Orphanet:284993", "UMLS:CN227112"],
+    name: "Marfan and Marfan-related disorder",
+    altNames: [],
+    category: "disease",
+    description: "",
+    score: 108.652695,
+    prefix: "MONDO",
+    highlight:
+      '<em class="hilite">Marfan</em> and <em class="hilite">Marfan</em>-related disorder',
+  };
+
+  const category = [
+    {
+      id: "disease",
+      count: 25,
+    },
+    {
+      id: "publication",
+      count: 9,
+    },
+  ];
+
+  const taxon = [
+    {
+      id: "Gallus gallus",
+      count: 1,
+    },
+    {
+      id: "Homo sapiens",
+      count: 1,
+    },
+  ];
+
+  const { count, results, facets } = await getSearchResults("marfan");
+  expect(count).toEqual(61);
+  expect(results).toContainEqual(result);
+  expect(facets?.category).toEqual(expect.arrayContaining(category));
+  expect(facets?.taxon).toEqual(expect.arrayContaining(taxon));
 });
 
 test("Get node associations requests correctly", async () => {

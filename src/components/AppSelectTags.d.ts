@@ -29,7 +29,8 @@ export type Option = {
   tooltip?: string;
   /**
    * allows returning multiple options instead when selecting this option, e.g.
-   * clicking a gene result and getting/selecting its 8 associated phenotypes instead
+   * clicking a gene result and getting/selecting its 8 associated phenotypes
+   * instead
    */
   spreadOptions?: () => Promise<Options>;
 };

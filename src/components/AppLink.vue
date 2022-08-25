@@ -72,7 +72,10 @@ const plainText = computed(
     typeof slots.default()[0].children === "string"
 );
 
-/** convert "to" prop to separate route props because vue-router can't do this itself */
+/**
+ * convert "to" prop to separate route props because vue-router can't do this
+ * itself
+ */
 const splitTo = computed(() => {
   const [, path, hash] = props.to.match(/([^#]*)(#[^#]*)?/) || [];
   return { path, hash };
