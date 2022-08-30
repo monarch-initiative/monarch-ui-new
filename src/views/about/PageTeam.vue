@@ -115,12 +115,12 @@ type Team = Array<{
 
 const team = teamData as Team;
 
-/** get group img src with fallback if not found */
+/** get group img src */
 function getSrc(image: string) {
   try {
     return require(`@/assets/team/groups/${image}`);
   } catch (error) {
-    return false;
+    return "";
   }
 }
 </script>

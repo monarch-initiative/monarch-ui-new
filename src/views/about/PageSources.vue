@@ -152,7 +152,7 @@ function getSrc(image = "") {
     if (image.startsWith("http")) return image;
     else return require(`@/assets/sources/${image}`);
   } catch (error) {
-    return false;
+    return "";
   }
 }
 
