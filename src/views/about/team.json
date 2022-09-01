@@ -10,13 +10,8 @@
         "link": "https://tislab.org/members/melissa-haendel.html"
       },
       {
-        "name": "Julie McMurry",
-        "role": "Associate Director",
-        "link": "https://tislab.org/members/julie-mcmurry.html"
-      },
-      {
         "name": "Monica Munoz-Torres",
-        "role": "Program Manager",
+        "role": "Program Director",
         "link": "https://tislab.org/members/monica-munoz-torres.html"
       },
       {
@@ -25,11 +20,10 @@
         "link": "https://tislab.org/members/tim-putman.html"
       },
       {
-        "name": "Kent Shefchek",
-        "role": "Bioinformatics Software Engineer",
-        "link": "https://tislab.org/members/kent-shefchek.html",
-        "alumni": true
-      },
+        "name": "Julie McMurry",
+        "role": "Project Manager",
+        "link": "https://tislab.org/members/julie-mcmurry.html"
+      },     
       {
         "name": "Vincent Rubinetti",
         "role": "Frontend and UI/UX Dev",
@@ -56,11 +50,6 @@
         "link": "https://tislab.org/members/nicole-vasilevsky.html"
       },
       {
-        "name": "Victoria Alexandra Soesanto",
-        "role": "Scientific Software Engineer",
-        "link": "https://tislab.org/members/victoria-soesanto.html"
-      },
-      {
         "name": "Matthew Brush",
         "role": "Ontologist",
         "link": "https://tislab.org/members/matthew-brush.html"
@@ -73,6 +62,18 @@
       {
         "name": "Bryan Laraway",
         "role": "Data Wrangler"
+      },
+      {
+        "name": "Kent Shefchek",
+        "role": "Bioinformatics Software Engineer",
+        "link": "https://tislab.org/members/kent-shefchek.html",
+        "alumni": true
+      },
+      {
+        "name": "Victoria Alexandra Soesanto",
+        "role": "Scientific Software Engineer",
+        "link": "https://tislab.org/members/victoria-soesanto.html"
+        "alumni": true
       }
     ]
   },
@@ -104,6 +105,7 @@
         "name": "Vida Ravanmehr",
         "role": "Postdoctoral Associate",
         "link": "https://www.jax.org/people/vida-ravanmehr"
+        "alumni": true
       }
     ]
   },
@@ -175,42 +177,9 @@
     ]
   },
   {
-    "name": "Oregon State University",
-    "image": "oregon-state.png",
-    "link": "https://oregonstate.edu/",
-    "alumni": true,
-    "members": [
-      {
-        "name": "Jen Martin",
-        "role": "Scientific Software Engineer"
-      },
-      {
-        "name": "Tom Conlin",
-        "role": "Bioinformaticist"
-      },
-      {
-        "name": "Daniel Keith",
-        "role": "Bioinformatics Semantic Engineer",
-        "link": "https://doctorbud.com/"
-      }
-    ]
-  },
-  {
-    "name": "Oregon Health & Science University",
-    "image": "ohsu.png",
-    "link": "https://www.ohsu.edu/",
-    "alumni": true,
-    "members": [
-      {
-        "name": "Lilly Winfree",
-        "role": "Science and Data Analyst"
-      }
-    ]
-  },
-  {
-    "name": "Charité - Universitätsmedizin Berlin",
-    "image": "charite.png",
-    "link": "http://compbio.charite.de/",
+    "name": "Ada Health",
+    "image": "ada-health.png",
+    "link": "https://www.linkedin.com/in/koehlers/",
     "members": [
       {
         "name": "Sebastian Köhler",
@@ -270,6 +239,49 @@
       {
         "name": "Nicolas Matentzoglu",
         "role": "Semantic Web Developer"
+      }
+    ]
+  },
+    {
+    "name": "Semanticly",
+    "members": [
+      {
+        "name": "Nicolas Matentzoglu",
+        "role": "Semantic Web Developer",
+        "link": "https://www.linkedin.com/in/nmatentzoglu",
+      }
+    ]
+  },
+    {
+    "name": "Oregon State University",
+    "image": "oregon-state.png",
+    "link": "https://oregonstate.edu/",
+    "alumni": true,
+    "members": [
+      {
+        "name": "Jen Martin",
+        "role": "Scientific Software Engineer"
+      },
+      {
+        "name": "Tom Conlin",
+        "role": "Bioinformaticist"
+      },
+      {
+        "name": "Daniel Keith",
+        "role": "Bioinformatics Semantic Engineer",
+        "link": "https://doctorbud.com/"
+      }
+    ]
+  },
+  {
+    "name": "Oregon Health & Science University",
+    "image": "ohsu.png",
+    "link": "https://www.ohsu.edu/",
+    "alumni": true,
+    "members": [
+      {
+        "name": "Lilly Winfree",
+        "role": "Science and Data Analyst"
       }
     ]
   },
