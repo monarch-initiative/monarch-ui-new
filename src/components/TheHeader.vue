@@ -3,7 +3,7 @@
 -->
 
 <template>
-  <header ref="header" :data-home="home">
+  <header ref="header" class="header" :data-home="home">
     <!-- header background visualization -->
     <TheNexus v-if="home" />
 
@@ -37,7 +37,7 @@
     </div>
 
     <!-- navigation bar -->
-    <nav :data-home="home" :data-expanded="expanded">
+    <nav class="nav" :data-home="home" :data-expanded="expanded">
       <AppLink
         v-tooltip="'Dive right in and use Monarch'"
         class="link"
@@ -100,7 +100,7 @@ $wrap: 600px;
 
 /** header */
 
-header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -111,22 +111,22 @@ header {
   z-index: 10;
 }
 
-header[data-home="true"] {
+.header[data-home="true"] {
   justify-content: center;
 }
 
 @media (max-width: $wrap) {
-  header {
+  .header {
     flex-direction: column;
   }
 
-  header[data-home="true"] {
+  .header[data-home="true"] {
     justify-content: space-between;
   }
 }
 
 @media not all and (max-width: $wrap) {
-  header[data-home="true"] {
+  .header[data-home="true"] {
     position: relative;
     min-height: 300px;
   }
@@ -214,7 +214,7 @@ header[data-home="true"] {
 
 /** navigation bar */
 
-nav {
+.nav {
   display: flex;
   gap: 10px;
   padding: 15px;
@@ -245,14 +245,14 @@ nav {
 }
 
 @media (max-width: $wrap) {
-  nav {
+  .nav {
     flex-wrap: wrap;
     justify-content: center;
     position: unset;
     margin-top: -10px;
   }
 
-  nav[data-expanded="false"] {
+  .nav[data-expanded="false"] {
     display: none;
   }
 
@@ -262,7 +262,7 @@ nav {
 }
 
 @media not all and (max-width: $wrap) {
-  nav[data-home="true"] {
+  .nav[data-home="true"] {
     position: absolute;
     top: 0;
     right: 0;

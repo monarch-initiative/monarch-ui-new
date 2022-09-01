@@ -39,7 +39,7 @@ interface Props {
    * kebab-case name of icon to show. for font awesome, without fas/far/etc
    * prefix. for custom icon, match filename, without extension.
    */
-  icon: string;
+  icon?: string;
 }
 
 const props = defineProps<Props>();

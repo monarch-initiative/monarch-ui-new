@@ -24,7 +24,7 @@ export const getBlogPosts = async (): Promise<BlogItems> => {
 
   return items.map((item) => ({
     title: item.title || "",
-    date: new Date(item.pubDate || new Date()),
+    date: new Date(item.pubDate?.split(/\s/)[0] || "") || new Date(),
     link: item.link || "",
     thumbnail: item.thumbnail || "",
     description: stripHtml(item.description),

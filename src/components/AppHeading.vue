@@ -12,7 +12,7 @@
 
     <!-- heading anchor -->
     <AppLink
-      v-if="link"
+      v-if="link && tag !== 'h1'"
       :to="'#' + link"
       class="anchor"
       :aria-label="'Link to this section'"

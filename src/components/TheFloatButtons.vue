@@ -33,12 +33,19 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
-import { useEventListener, useMutationObserver } from "@vueuse/core";
+import {
+  useEventListener,
+  useMutationObserver,
+  useActiveElement,
+} from "@vueuse/core";
 import AppModal from "@/components/AppModal.vue";
 import TheFeedbackForm from "@/components/TheFeedbackForm.vue";
 
 /** route info */
 const route = useRoute();
+
+/** focused element */
+const focused = useActiveElement();
 
 /** whether to show jump button */
 const showJump = ref(false);
@@ -54,15 +61,20 @@ async function update() {
   /** wait for rendering to finish */
   await nextTick();
 
+  /** whether some kind of input/textbox/control focused */
+  const controlFocused =
+    focused.value && focused.value.matches("input, textarea");
+
   /** get dimensions of footer */
   const footerEl = document?.querySelector("footer");
   if (!footerEl) return;
   const footer = footerEl.getBoundingClientRect();
 
   /** show jump button if user has scrolled far down enough */
-  showJump.value = window.scrollY > window.innerHeight * 0.1;
+  showJump.value = !controlFocused && window.scrollY > window.innerHeight * 0.1;
   /** show feedback button if user not already on dedicated feedback page */
-  showFeedback.value = String(route.name || "").toLowerCase() !== "feedback";
+  showFeedback.value =
+    !controlFocused && String(route.name || "").toLowerCase() !== "feedback";
 
   /** calculate nudge */
   nudge.value = Math.max(0, footer.height + window.innerHeight - footer.bottom);
@@ -73,9 +85,10 @@ function jump() {
   window.scrollTo(0, 0);
 }
 
-/** run update on: page load, route change, scroll, resize, reflow, etc. */
+/** run update on: page load, route change, focused, scroll, resize, reflow, etc. */
 onMounted(update);
-watch(() => route, update);
+watch(route, update, { deep: true });
+watch(focused, update);
 useEventListener(window, "scroll", update);
 useEventListener(window, "resize", update);
 useMutationObserver(document?.body, update, {

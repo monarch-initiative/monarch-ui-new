@@ -151,6 +151,12 @@ onMounted(getAssociations);
   gap: 40px;
 }
 
+@media (max-width: 800px) {
+  .result {
+    flex-direction: column;
+  }
+}
+
 .arrow {
   color: $gray;
 }

@@ -35,7 +35,7 @@
     >
 
     <!-- results -->
-    <p v-if="annotations.length">
+    <p v-if="annotations.length" class="results">
       <tooltip
         v-for="({ text, tokens }, annotationIndex) in annotations"
         :key="annotationIndex"
@@ -147,7 +147,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-p {
+.results {
   white-space: pre-line;
 }
 

@@ -12,22 +12,24 @@
     <AppFlex direction="col">
       <div
         ref="table"
-        class="table"
+        class="wrapper"
         :data-left="arrivedState.left"
         :data-right="arrivedState.right"
         :data-expanded="expanded"
       >
         <table
+          class="table"
           :aria-colcount="cols.length"
           :aria-rowcount="rows.length"
           :style="{ gridTemplateColumns: widths }"
         >
           <!-- head -->
-          <thead>
-            <tr>
+          <thead class="thead">
+            <tr class="tr">
               <th
                 v-for="(col, colIndex) in cols"
                 :key="colIndex"
+                class="th"
                 :aria-sort="ariaSort"
                 :data-align="col.align || 'left'"
                 :data-divider="col.id === 'divider'"
@@ -66,11 +68,12 @@
           </thead>
 
           <!-- body -->
-          <tbody>
-            <tr v-for="(row, rowIndex) in rows" :key="rowIndex">
+          <tbody class="tbody">
+            <tr v-for="(row, rowIndex) in rows" :key="rowIndex" class="tr">
               <td
                 v-for="(col, colIndex) in cols"
                 :key="colIndex"
+                class="td"
                 :aria-rowindex="rowIndex + 1"
                 :aria-colindex="colIndex + 1"
                 :data-align="col.align || 'left'"
@@ -359,7 +362,7 @@ const ariaSort = computed(() => {
   width: 100%;
 }
 
-.table {
+.wrapper {
   width: 100%;
   overflow-x: auto;
   transition: mask-image $fast;
@@ -397,28 +400,28 @@ const ariaSort = computed(() => {
     width: calc(100vw - 80px);
     transform: translateX(0);
 
-    td,
-    th {
+    .td,
+    .th {
       max-width: unset;
     }
   }
 }
 
-table {
+.table {
   display: grid;
   border-collapse: collapse;
 }
 
 /** ignore top level semantic elements in grid layout */
-thead,
-tbody,
-tr {
+.thead,
+.tbody,
+.tr {
   display: contents;
 }
 
 /** all cells */
-th,
-td {
+.th,
+.td {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -453,18 +456,18 @@ td {
 }
 
 /** heading cells */
-th {
+.th {
   padding-bottom: 10px;
   font-weight: 400;
   text-transform: capitalize;
 }
 
-th > span {
+.th > span {
   font-weight: 600;
 }
 
 /** body cells */
-td {
+.td {
   border-bottom: solid 2px $light-gray;
 }
 

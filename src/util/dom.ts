@@ -1,3 +1,4 @@
+import { sleep } from "@/util/debug";
 /** restart an element's CSS animations programmatically */
 export const restartAnimations = (element: Element): void => {
   if (element instanceof Element)
@@ -8,23 +9,25 @@ export const restartAnimations = (element: Element): void => {
 };
 
 /**
- * wait for element matching selector to appear (checking several times per
- * sec). when found, return found element and run callback with element
+ * wait for element matching selector to appear. check several times per sec,
+ * with hard limit. when found, return found element and run callback with
+ * element
  */
 export const waitFor = async (
   selector = "",
-  callback?: (element: Element) => void
-): Promise<Element> =>
-  new Promise((resolve) => {
-    const check = () => {
-      const match = document?.querySelector(selector);
-      if (match) {
-        resolve(match);
-        if (callback) callback(match);
-      } else window.setTimeout(check, 50);
-    };
-    check();
-  });
+  callback?: (element: Element) => void,
+  timeout = 1000,
+  interval = 50
+): Promise<Element | undefined> => {
+  for (let check = 0; check < timeout / interval; check++) {
+    const match = document?.querySelector(selector);
+    if (match) {
+      if (callback) callback(match);
+      return match;
+    }
+    await sleep(interval);
+  }
+};
 
 /** find index of first element "in view". model behavior off of wikiwand.com. */
 export const firstInView = (elements: Array<HTMLElement>): number => {

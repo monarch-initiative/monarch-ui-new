@@ -125,9 +125,9 @@ watch(
   () => props.modelValue,
   async () => {
     /** focus the selected tab */
-    const selector = `#tab-${id.value}-${props.modelValue}`;
-    const button = document?.querySelector(selector) as HTMLButtonElement;
-    button?.focus();
+    // const selector = `#tab-${id.value}-${props.modelValue}`;
+    // const button = document?.querySelector(selector) as HTMLButtonElement;
+    // button?.focus();
 
     /** update hash in url and nav if applicable */
     if (props.route) await router.replace({ name: props.route });

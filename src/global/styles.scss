@@ -82,6 +82,7 @@ a {
 }
 
 button {
+  appearance: none;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -142,6 +143,10 @@ code {
   background: $off-black;
   color: $white;
   font-family: $mono;
+}
+
+b {
+  font-weight: 500;
 }
 
 strong {
@@ -213,6 +218,7 @@ strong {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 100%;
 }
 
 @for $i from 1 through 10 {
@@ -225,6 +231,7 @@ strong {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: $i;
     overflow: hidden;
+    max-width: 100%;
   }
 
   .truncate-#{$i}:not(:focus)[tabindex="0"] {

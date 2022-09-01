@@ -3,7 +3,7 @@
 -->
 
 <template>
-  <footer>
+  <footer class="footer">
     <div class="social">
       <AppLink v-tooltip="'Medium'" to="https://medium.com/@MonarchInit">
         <AppIcon icon="medium" />
@@ -26,7 +26,7 @@
 <style lang="scss" scoped>
 $wrap: 500px;
 
-footer {
+.footer {
   display: flex;
   justify-content: space-between;
   align-items: center;

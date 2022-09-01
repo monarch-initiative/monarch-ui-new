@@ -73,7 +73,7 @@
           color="secondary"
         />
       </div>
-      <p class="truncate-3" tabindex="0">
+      <p class="description truncate-3" tabindex="0">
         {{ result.description || "No description available" }}
       </p>
       <p v-if="result.altNames?.length" class="names truncate-1" tabindex="0">
@@ -364,6 +364,7 @@ const showCounts = computed(() =>
 @media (max-width: 600px) {
   .title {
     flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -376,10 +377,6 @@ const showCounts = computed(() =>
   span {
     width: 100%;
   }
-}
-
-b {
-  font-weight: 600;
 }
 
 .page-button {

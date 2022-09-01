@@ -13,7 +13,7 @@
   </p>
 
   <!-- form -->
-  <form @submit.prevent="onSubmit">
+  <form class="form" @submit.prevent="onSubmit">
     <!-- fields for user to fill out -->
     <div class="fields">
       <AppTextbox
@@ -35,15 +35,16 @@
         description="So we can tag you"
         placeholder="@janesmith"
       />
-      <AppTextbox
-        v-model="feedback"
-        class="feedback"
-        title="Feedback"
-        description="Please give us as many details as possible!"
-        placeholder=""
-        :required="true"
-        :multi="true"
-      />
+      <div class="feedback">
+        <AppTextbox
+          v-model="feedback"
+          title="Feedback"
+          description="Please give us as many details as possible!"
+          placeholder=""
+          :required="true"
+          :multi="true"
+        />
+      </div>
     </div>
 
     <!-- auto-submitted details -->
@@ -60,8 +61,8 @@
       <AppLink to="https://github.com/monarch-initiative/helpdesk"
         >help desk</AppLink
       >
-      on GitHub with <em>all of the information above</em>. You'll get a link to
-      the discussion once it's created.
+      on GitHub with <strong>all of the information above</strong>. You'll get a
+      link to the discussion once it's created.
     </p>
 
     <!-- status -->
@@ -195,7 +196,7 @@ function resetForm() {
   font-weight: 600;
 }
 
-form {
+.form {
   display: contents;
   margin-top: 40px;
 }
@@ -236,10 +237,6 @@ form {
 
   @media (max-width: 800px) {
     grid-template-columns: 100px 1fr;
-  }
-
-  @media (max-width: 400px) {
-    grid-template-columns: 1fr;
   }
 }
 </style>

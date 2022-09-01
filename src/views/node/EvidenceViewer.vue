@@ -20,9 +20,7 @@
               : 'arrow-right-long'
           "
         />
-        <AppLink :to="selectedAssociation.relation.iri" :no-icon="true">{{
-          selectedAssociation.relation.name
-        }}</AppLink>
+        {{ selectedAssociation.relation.name }}
         <AppIcon
           class="arrow"
           :icon="
@@ -31,10 +29,7 @@
               : 'arrow-right-long'
           "
         />
-        <AppLink
-          :to="`/${selectedAssociation.object.category}/${selectedAssociation.object.id}`"
-          >{{ selectedAssociation.object.name }}</AppLink
-        >
+        {{ selectedAssociation.object.name }}
       </AppFlex>
     </AppFlex>
 
