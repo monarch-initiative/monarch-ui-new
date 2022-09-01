@@ -112,7 +112,7 @@
       {
         "name": "Vida Ravanmehr",
         "role": "Postdoctoral Associate",
-        "link": "https://www.jax.org/people/vida-ravanmehr"
+        "link": "https://www.jax.org/people/vida-ravanmehr",
         "alumni": true
       }
     ]
@@ -250,17 +250,17 @@
       }
     ]
   },
-    {
+  {
     "name": "Semanticly",
     "members": [
       {
         "name": "Nicolas Matentzoglu",
         "role": "Semantic Web Developer",
-        "link": "https://www.linkedin.com/in/nmatentzoglu",
+        "link": "https://www.linkedin.com/in/nmatentzoglu"
       }
     ]
   },
-    {
+  {
     "name": "Oregon State University",
     "image": "oregon-state.png",
     "link": "https://oregonstate.edu/",
