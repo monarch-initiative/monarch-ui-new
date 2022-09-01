@@ -23,7 +23,27 @@
         "name": "Julie McMurry",
         "role": "Project Manager",
         "link": "https://tislab.org/members/julie-mcmurry.html"
-      },     
+      },
+      {
+        "name": "Nicole Vasilevsky",
+        "role": "Lead Biocurator",
+        "link": "https://tislab.org/members/nicole-vasilevsky.html"
+      },
+      {
+        "name": "Sabrina Toro",
+        "role": "Biocurator",
+        "link": "https://tislab.org/members/sabrina-toro.html"
+      },
+      {
+        "name": "Kevin Schaper",
+        "role": "Scientific Software Engineer",
+        "link": "https://tislab.org/members/kevin-schaper.html"
+      },
+      {
+        "name": "Glass Elsarboukh",
+        "role": "Scientific Software Engineer",
+        "link": "https://tislab.org/members/glass-elsarboukh.html"
+      },
       {
         "name": "Vincent Rubinetti",
         "role": "Frontend and UI/UX Dev",
@@ -38,16 +58,6 @@
         "name": "Anne Thessen",
         "role": "Biodiversity Informaticist",
         "link": "https://tislab.org/members/anne-thessen.html"
-      },
-      {
-        "name": "Sabrina Toro",
-        "role": "Biocurator",
-        "link": "https://tislab.org/members/sabrina-toro.html"
-      },
-      {
-        "name": "Nicole Vasilevsky",
-        "role": "Lead Biocurator",
-        "link": "https://tislab.org/members/nicole-vasilevsky.html"
       },
       {
         "name": "Matthew Brush",
