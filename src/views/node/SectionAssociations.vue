@@ -9,7 +9,10 @@
     <!-- select -->
     <AppFlex gap="small">
       <span
-        >Associations between <strong>{{ node.name }}</strong> and</span
+        >Associations between &nbsp;<AppNodeBadge
+          :node="node"
+          :link="false"
+        />&nbsp; and</span
       >
       <AppSelectSingle
         v-model="category"
@@ -62,6 +65,7 @@ import { useRouter, useRoute } from "vue-router";
 import AppSelectSingle from "@/components/AppSelectSingle.vue";
 import { Option, Options } from "@/components/AppSelectSingle";
 import AppTabs from "@/components/AppTabs.vue";
+import AppNodeBadge from "@/components/AppNodeBadge.vue";
 import { Node } from "@/api/node-lookup";
 import { getAssociationLabel } from "@/api/categories";
 import { Association } from "@/api/node-associations";

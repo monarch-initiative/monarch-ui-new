@@ -7,31 +7,12 @@
   <AppSection>
     <AppHeading icon="flask">Evidence</AppHeading>
 
-    <AppFlex direction="col">
-      <span>... for the selected association:</span>
-
-      <AppFlex gap="small">
-        <span class="truncate">{{ node.name }}</span>
-        <AppIcon
-          class="arrow"
-          :icon="
-            selectedAssociation.relation.inverse
-              ? 'arrow-left-long'
-              : 'arrow-right-long'
-          "
-        />
-        {{ selectedAssociation.relation.name }}
-        <AppIcon
-          class="arrow"
-          :icon="
-            selectedAssociation.relation.inverse
-              ? 'arrow-left-long'
-              : 'arrow-right-long'
-          "
-        />
-        {{ selectedAssociation.object.name }}
-      </AppFlex>
-    </AppFlex>
+    <div>
+      Evidence for the selected association, <br />
+      <AppNodeBadge :node="node" />&nbsp;
+      <AppRelationBadge :relation="selectedAssociation.relation" />&nbsp;
+      <AppNodeBadge :node="selectedAssociation.object" />
+    </div>
 
     <!-- status -->
     <AppStatus v-if="isLoading" code="loading">Loading evidence</AppStatus>
@@ -106,34 +87,17 @@
       >
         <!-- "subject" -->
         <template #subject="{ cell }">
-          <AppLink class="truncate" :to="`/${cell.category}/${cell.id}`">{{
-            cell.name
-          }}</AppLink>
+          <AppNodeBadge :node="cell" />
         </template>
 
         <!-- relation -->
         <template #relation="{ cell }">
-          <AppIcon
-            class="arrow"
-            :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
-          />
-          <AppLink class="truncate" :to="cell.iri" :no-icon="true">{{
-            startCase(cell.name)
-          }}</AppLink>
-          <AppIcon
-            class="arrow"
-            :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
-          />
+          <AppRelationBadge :relation="cell" />
         </template>
 
         <!-- "object" -->
-        <template #object="{ cell, row }">
-          <AppBreadcrumbsLink
-            class="truncate"
-            :to="`/${cell.category}/${cell.id}`"
-            :breadcrumb="{ node, relation: row.relation }"
-            >{{ cell.name }}</AppBreadcrumbsLink
-          >
+        <template #object="{ cell }">
+          <AppNodeBadge :node="cell" />
         </template>
 
         <!-- evidence codes -->
@@ -205,12 +169,12 @@
 
 <script setup lang="ts">
 import { watch, onMounted, ref } from "vue";
-import { startCase } from "lodash";
 import AppTabs from "@/components/AppTabs.vue";
 import AppDetails from "@/components/AppDetails.vue";
 import AppDetail from "@/components/AppDetail.vue";
 import AppTable from "@/components/AppTable.vue";
-import AppBreadcrumbsLink from "@/components/AppBreadcrumbsLink.vue";
+import AppNodeBadge from "@/components/AppNodeBadge.vue";
+import AppRelationBadge from "@/components/AppRelationBadge.vue";
 import { Node } from "@/api/node-lookup";
 import { scrollToElement } from "@/router";
 import { getAssociationEvidence } from "@/api/association-evidence";
@@ -221,6 +185,7 @@ import { Association } from "@/api/node-associations";
 import { useQuery } from "@/util/composables";
 import { snackbar } from "@/components/TheSnackbar";
 import { downloadJson } from "@/util/download";
+import { Cols } from "@/components/AppTable";
 
 interface Props {
   /** current node */
@@ -249,21 +214,24 @@ const tabs = [
 const tab = ref(tabs[0].id);
 
 /** table columns */
-const cols = [
+const cols: Cols = [
   {
     id: "subject",
     key: "subject",
     heading: "Subject",
+    width: "max-content",
   },
   {
     id: "relation",
     key: "relation",
     heading: "Relation",
+    width: "max-content",
   },
   {
     id: "object",
     key: "object",
     heading: "Object",
+    width: "max-content",
   },
   {
     id: "codes",

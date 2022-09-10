@@ -1,5 +1,6 @@
 import { uniqBy } from "lodash";
 import { biolink, request } from ".";
+import { mapCategory } from "./categories";
 import { Association } from "@/api/node-associations";
 
 /** graph info to construct hierarchy (from backend) */
@@ -8,6 +9,9 @@ interface _Hierarchy {
     {
       id: string;
       lbl: string;
+      meta?: {
+        category?: Array<string>;
+      };
     }
   ];
   edges: [
@@ -71,11 +75,16 @@ export const getHierarchy = async (
   const { nodes, edges } = response;
 
   /** take id of subject or object and find associated node label */
-  const idToClass = (id = "", relation: Association["relation"]): Class => ({
-    id,
-    name: nodes.find((node) => node.id === id)?.lbl || "",
-    relation,
-  });
+  const idToClass = (id = "", relation: Association["relation"]): Class => {
+    const matchingNode = nodes.find((node) => node.id === id);
+
+    return {
+      id,
+      name: matchingNode?.lbl || "",
+      category: mapCategory(matchingNode?.meta?.category),
+      relation,
+    };
+  };
 
   /** populate super/equivalent/sub classes */
   for (const { sub, pred, obj } of edges) {
@@ -101,7 +110,12 @@ export const getHierarchy = async (
   };
 };
 
-type Class = { id: string; name: string; relation: Association["relation"] };
+type Class = {
+  id: string;
+  name: string;
+  category: string;
+  relation: Association["relation"];
+};
 
 /** hierarchy (for frontend) */
 export interface Hierarchy {

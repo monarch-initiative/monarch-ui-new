@@ -4,7 +4,11 @@
 
 * {
   box-sizing: border-box;
+}
+
+body {
   font-family: $sans;
+  line-height: $spacing;
 }
 
 #app {

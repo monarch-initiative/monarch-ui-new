@@ -69,7 +69,7 @@ const fa = computed(() => {
 /** initials as fallback */
 const initials = computed(() =>
   props.icon
-    .replace(/^category-/, "")
+    ?.replace(/^category-/, "")
     .split("-")
     .map((word) => (word[0] || "").toUpperCase())
     .join("")

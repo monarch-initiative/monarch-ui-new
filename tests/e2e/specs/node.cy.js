@@ -185,13 +185,12 @@ it("Evidence summary viewer works", () => {
   /** click first evidence button (in first association in summary mode) */
   cy.contains("button", "Evidence").trigger("click");
 
+  /** get evidence section */
+  cy.get("#evidence").parent().as("evidence");
+
   /** check for evidence heading text */
-  cy.contains(/selected.*association/)
-    .next()
-    .contains("has phenotype");
-  cy.contains(/selected.*association/)
-    .next()
-    .contains("Dural ectasia");
+  cy.get("@evidence").contains("has phenotype");
+  cy.get("@evidence").contains("Dural ectasia");
 
   /** check high level evidence counts */
   cy.contains("Evidence codes").next().contains("2");
@@ -215,8 +214,7 @@ it("Evidence table viewer works", () => {
 
   /** go to first association evidence and switch to table mode */
   cy.contains("button", "Evidence").click();
-  cy.contains("selected association").parent().parent().as("evidence-section");
-  cy.get("@evidence-section").contains("table").trigger("click");
+  cy.get("#evidence").parent().contains("table").trigger("click");
 
   /** check for all evidence columns */
   cy.contains("Subject");
