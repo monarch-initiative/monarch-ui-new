@@ -29,7 +29,7 @@
         @click="deselect(option)"
       />
 
-      <AppFlex>
+      <AppFlex h-align="right">
         <!-- input box -->
         <AppInput
           v-model="search"

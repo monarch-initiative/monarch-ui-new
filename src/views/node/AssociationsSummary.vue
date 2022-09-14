@@ -21,46 +21,24 @@
       :key="index"
       class="result"
     >
-      <AppFlex direction="col" gap="small" class="details">
+      <AppFlex direction="col" h-align="left" gap="small" class="details">
         <!-- primary result info -->
-        <AppFlex gap="small" h-align="left" class="title">
-          <span class="truncate">{{ node.name }}</span>
-          <AppIcon
-            class="arrow"
-            :icon="
-              association.relation.inverse
-                ? 'arrow-left-long'
-                : 'arrow-right-long'
-            "
+        <div class="title">
+          <AppNodeBadge :node="node" :link="false" />&nbsp;
+          <AppRelationBadge :relation="association.relation" />&nbsp;
+          <AppNodeBadge
+            :node="association.object"
+            :breadcrumb="{ node, relation: association.relation }"
           />
-          <AppLink :to="association.relation.iri" :no-icon="true">{{
-            association.relation.name
-          }}</AppLink>
-          <AppIcon
-            class="arrow"
-            :icon="
-              association.relation.inverse
-                ? 'arrow-left-long'
-                : 'arrow-right-long'
-            "
-          />
-          <AppBreadcrumbsLink
-            :to="`/${association.object.category}/${association.object.id}`"
-            :breadcrumb="{
-              node,
-              relation: association.relation,
-            }"
-            >{{ association.object.name }}</AppBreadcrumbsLink
-          >
-        </AppFlex>
+        </div>
 
         <!-- secondary result info -->
-        <AppFlex h-align="left" class="secondary">
+        <div class="secondary">
           <span
             >{{ association.supportCount }} piece(s) of supporting
             evidence</span
           >
-        </AppFlex>
+        </div>
       </AppFlex>
 
       <AppButton
@@ -89,7 +67,8 @@
 
 <script setup lang="ts">
 import { watch, onMounted } from "vue";
-import AppBreadcrumbsLink from "@/components/AppBreadcrumbsLink.vue";
+import AppNodeBadge from "@/components/AppNodeBadge.vue";
+import AppRelationBadge from "@/components/AppRelationBadge.vue";
 import { Node } from "@/api/node-lookup";
 import { getTopAssociations, Association } from "@/api/node-associations";
 import { useQuery } from "@/util/composables";
@@ -149,6 +128,12 @@ onMounted(getAssociations);
   align-items: center;
   width: 100%;
   gap: 40px;
+}
+
+@media (max-width: 600px) {
+  .result {
+    flex-direction: column;
+  }
 }
 
 .arrow {

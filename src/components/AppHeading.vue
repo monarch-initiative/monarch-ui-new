@@ -79,7 +79,12 @@ function getTag() {
 
 /** determine link from text content of heading */
 function getLink() {
-  return kebabCase(props.id || heading.value?.textContent || "");
+  /**
+   * per accessibility conventions, h1's should only appear once and near top of
+   * doc. thus, anchors aren't useful for them.
+   */
+  if (tag.value === "h1") return "";
+  else return kebabCase(props.id || heading.value?.textContent || "");
 }
 
 /** update tag and link on mount and change */

@@ -27,10 +27,6 @@ test("Creates heading links correctly", async () => {
   const headings = wrapper.findAll(tags);
 
   /** compare expected link to actual rendered link */
-  expect(headings.at(0)?.attributes("id")).toContain("abc-def-gih");
-  expect(headings.at(0)?.find("a").attributes("href")).toContain(
-    "#abc-def-gih"
-  );
   expect(headings.at(1)?.attributes("id")).toContain("123-alphabet-street");
   expect(headings.at(1)?.find("a").attributes("href")).toContain(
     "#123-alphabet-street"

@@ -116,3 +116,18 @@ interface _Error {
     message: string;
   };
 }
+
+/**
+ * create dummy caches interface. only really needed for local mobile testing so
+ * requests don't error.
+ * https://stackoverflow.com/questions/53094298/window-caches-is-undefined-in-android-chrome-but-is-available-at-desktop-chrome
+ */
+if (!window.caches) {
+  window.caches = {
+    open: async () => ({
+      match: (async () => undefined) as Cache["match"],
+      put: (async () => undefined) as Cache["put"],
+    }),
+    delete: (async () => true) as CacheStorage["delete"],
+  } as unknown as CacheStorage;
+}

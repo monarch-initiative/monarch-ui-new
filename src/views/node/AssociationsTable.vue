@@ -29,34 +29,20 @@
   >
     <!-- "subject" (current node) -->
     <template #subject="{ cell }">
-      <span class="truncate">
-        {{ cell.name }}
-      </span>
+      <AppNodeBadge :node="cell" :link="false" />
     </template>
 
     <!-- type of association/relation -->
     <template #relation="{ cell }">
-      <AppIcon
-        class="arrow"
-        :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
-      />
-      <AppLink class="truncate" :to="cell.iri" :no-icon="true">{{
-        startCase(cell.name)
-      }}</AppLink>
-      <AppIcon
-        class="arrow"
-        :icon="cell.inverse ? 'arrow-left-long' : 'arrow-right-long'"
-      />
+      <AppRelationBadge :relation="cell" />
     </template>
 
     <!-- "object" (what current node has an association with) -->
     <template #object="{ cell, row }">
-      <AppBreadcrumbsLink
-        class="truncate"
-        :to="`/${cell.category}/${cell.id}`"
+      <AppNodeBadge
+        :node="cell"
         :breadcrumb="{ node, relation: row.relation }"
-        >{{ cell.name }}</AppBreadcrumbsLink
-      >
+      />
     </template>
 
     <!-- button to show evidence -->
@@ -107,10 +93,10 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
-import { startCase } from "lodash";
 import AppTable from "@/components/AppTable.vue";
 import { Col, Cols, Sort } from "@/components/AppTable";
-import AppBreadcrumbsLink from "@/components/AppBreadcrumbsLink.vue";
+import AppNodeBadge from "@/components/AppNodeBadge.vue";
+import AppRelationBadge from "@/components/AppRelationBadge.vue";
 import { Node } from "@/api/node-lookup";
 import { getTabulatedAssociations, Association } from "@/api/node-associations";
 import { downloadJson } from "@/util/download";
@@ -153,21 +139,21 @@ const cols = computed((): Cols => {
       id: "subject",
       key: "subject",
       heading: props.node.category,
-      width: "1fr",
+      width: "max-content",
       sortable: true,
     },
     {
       id: "relation",
       key: "relation",
       heading: "Association",
-      width: "1fr",
+      width: "max-content",
       sortable: true,
     },
     {
       id: "object",
       key: "object",
       heading: props.selectedCategory,
-      width: "1fr",
+      width: "max-content",
       sortable: true,
     },
     {

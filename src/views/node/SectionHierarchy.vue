@@ -24,13 +24,12 @@
         :v-tooltip="`Nodes that are &quot;parents&quot; of this node`"
       >
         <AppFlex class="flex" h-align="left" gap="small">
-          <AppBreadcrumbsLink
+          <AppNodeBadge
             v-for="(_class, index) in hierarchy.superClasses"
             :key="index"
-            :to="'/' + _class.id"
+            :node="_class"
             :breadcrumb="{ node, relation: _class.relation }"
-            >{{ _class.name || _class.id }}</AppBreadcrumbsLink
-          >
+          />
         </AppFlex>
       </AppDetail>
 
@@ -43,13 +42,12 @@
         :v-tooltip="`Nodes that are &quot;siblings&quot; of this node`"
       >
         <AppFlex class="flex" h-align="left" gap="small">
-          <AppBreadcrumbsLink
+          <AppNodeBadge
             v-for="(_class, index) in hierarchy.equivalentClasses"
             :key="index"
-            :to="'/' + _class.id"
+            :node="_class"
             :breadcrumb="{ node, relation: _class.relation }"
-            >{{ _class.name || _class.id }}</AppBreadcrumbsLink
-          >
+          />
         </AppFlex>
       </AppDetail>
 
@@ -62,13 +60,12 @@
         :v-tooltip="`Nodes that are &quot;children&quot; of this node`"
       >
         <AppFlex class="flex" h-align="left" gap="small">
-          <AppBreadcrumbsLink
+          <AppNodeBadge
             v-for="(_class, index) in hierarchy.subClasses"
             :key="index"
-            :to="'/' + _class.id"
+            :node="_class"
             :breadcrumb="{ node, relation: _class.relation }"
-            >{{ _class.name || _class.id }}</AppBreadcrumbsLink
-          >
+          />
         </AppFlex>
       </AppDetail>
     </AppDetails>
@@ -82,8 +79,8 @@ import { Node } from "@/api/node-lookup";
 import { getHierarchy } from "@/api/node-hierarchy";
 import AppDetails from "@/components/AppDetails.vue";
 import AppDetail from "@/components/AppDetail.vue";
+import AppNodeBadge from "@/components/AppNodeBadge.vue";
 import { useQuery } from "@/util/composables";
-import AppBreadcrumbsLink from "@/components/AppBreadcrumbsLink.vue";
 
 /** route info */
 const route = useRoute();

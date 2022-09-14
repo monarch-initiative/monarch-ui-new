@@ -71,6 +71,7 @@ defineExpose({ button });
 
 <style lang="scss" scoped>
 .button {
+  appearance: none;
   display: inline-flex;
   justify-content: center;
   align-items: center;

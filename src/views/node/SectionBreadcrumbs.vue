@@ -2,54 +2,25 @@
   <AppSection v-if="breadcrumbs.length">
     <AppHeading icon="location-dot">Breadcrumbs</AppHeading>
 
-    <span
-      >How you got to <strong>{{ node.name }}</strong> through the Monarch
-      knowledge graph:</span
-    >
+    <div>
+      How you got to &nbsp;<AppNodeBadge :node="node" :link="false" />&nbsp;
+      through the knowledge graph
+    </div>
 
-    <AppFlex direction="col">
+    <AppFlex direction="col" gap="small">
       <template v-for="(breadcrumb, index) of breadcrumbs" :key="index">
         <!-- node -->
-        <AppFlex flow="inline" gap="small">
-          <AppIcon
-            v-tooltip="startCase(breadcrumb.node.category)"
-            :icon="`category-${kebabCase(breadcrumb.node.category)}`"
-          />
-          <AppLink
-            :to="`/${breadcrumb.node.category}/${breadcrumb.node.id}`"
-            @click.prevent="$router.go(-breadcrumbs.length + index)"
-            >{{ breadcrumb.node.name }}</AppLink
-          >
-        </AppFlex>
+        <AppNodeBadge
+          :node="breadcrumb.node"
+          @click.prevent.capture="$router.go(-breadcrumbs.length + index)"
+        />
 
         <!-- relation -->
-        <AppFlex flow="inline" gap="small">
-          <AppIcon
-            class="arrow"
-            :icon="
-              breadcrumb.relation.inverse ? 'arrow-up-long' : 'arrow-down-long'
-            "
-          />
-          <AppLink :to="breadcrumb.relation.iri" :no-icon="true">{{
-            startCase(breadcrumb.relation.name)
-          }}</AppLink>
-          <AppIcon
-            class="arrow"
-            :icon="
-              breadcrumb.relation.inverse ? 'arrow-up-long' : 'arrow-down-long'
-            "
-          />
-        </AppFlex>
+        <AppRelationBadge :relation="breadcrumb.relation" :vertical="true" />
       </template>
 
       <!-- ending/current node -->
-      <AppFlex flow="inline" gap="small">
-        <AppIcon
-          v-tooltip="startCase(node.category)"
-          :icon="`category-${kebabCase(node.category)}`"
-        />
-        <strong>{{ node.name }}</strong>
-      </AppFlex>
+      <AppNodeBadge :node="node" :link="false" />
     </AppFlex>
 
     <!-- clear button -->
@@ -66,9 +37,10 @@
 <script setup lang="ts">
 import { watch } from "vue";
 import { useRoute } from "vue-router";
-import { kebabCase, startCase } from "lodash";
 import { breadcrumbs, updateBreadcrumbs } from "@/global/breadcrumbs";
 import { Node } from "@/api/node-lookup";
+import AppNodeBadge from "@/components/AppNodeBadge.vue";
+import AppRelationBadge from "@/components/AppRelationBadge.vue";
 
 interface Props {
   /** current node */

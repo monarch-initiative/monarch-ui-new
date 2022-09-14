@@ -259,7 +259,7 @@ useIntervalFn(pulse, 10000);
 </script>
 
 <style lang="scss" scoped>
-canvas {
+#nexus {
   position: absolute;
   left: 0;
   top: 0;

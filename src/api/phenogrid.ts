@@ -15,7 +15,7 @@ export const mountPhenogrid = async (
    * wait for phenogrid container to render on mount, and clear any previous
    * phenogrid instances from showing
    */
-  (await waitFor("#phenogrid")).innerHTML = "";
+  await waitFor("#phenogrid", (el) => (el.innerHTML = ""));
 
   /** map in particular way based on mode, per ui 2.0 */
   const modifiedXAxis = xAxis.map(({ id = "", name = "" }) =>
@@ -37,7 +37,7 @@ export const mountPhenogrid = async (
     owlSimFunction: mode,
   });
 
-  patchSvg(await waitFor("#phenogrid_svg"));
+  await waitFor("#phenogrid_svg", patchSvg);
 };
 
 /** SHIMS FOR PHENOGRID */

@@ -4,7 +4,7 @@
 -->
 
 <template>
-  <section :data-width="width" :data-design="design">
+  <section class="section" :data-width="width" :data-design="design">
     <slot />
   </section>
 </template>
@@ -21,7 +21,7 @@ withDefaults(defineProps<Props>(), { width: "medium", design: "normal" });
 </script>
 
 <style lang="scss" scoped>
-section {
+.section {
   display: flex;
   align-items: center;
   flex-direction: column;

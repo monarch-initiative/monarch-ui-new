@@ -213,9 +213,6 @@ const getOffset = () => document?.querySelector("header")?.clientHeight || 0;
 export const scrollToElement = async (element?: Element | null) => {
   if (!element) return;
 
-  /** wait for everything to render fully and page to expand to full height */
-  await sleep(500);
-
   window.scrollTo({
     top:
       getTarget(element).getBoundingClientRect().top +
