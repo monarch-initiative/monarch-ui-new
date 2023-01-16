@@ -28,13 +28,16 @@ import { startCase, kebabCase } from "lodash";
 import { breadcrumbs } from "@/global/breadcrumbs";
 
 interface Props {
-  /** current node */
+  /** node represented by badge */
   node: Pick<Node, "id" | "name" | "category">;
   /** whether to include icon */
   icon?: boolean;
   /** whether to include link */
   link?: boolean;
-  /** "current" breadcrumb to add list */
+  /**
+   * breadcrumb object to add list when badge clicked on. include node that user
+   * came from and relation between that node and this node.
+   */
   breadcrumb?: Record<string, unknown>;
 }
 
