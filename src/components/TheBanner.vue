@@ -3,7 +3,7 @@
 -->
 
 <template>
-  <AppFlex v-if="open" :wrap="false" class="banner">
+  <aside class="banner">
     <div>
       This web app is a <strong>WORK IN PROGRESS</strong> successor to the
       <a href="https://monarchinitiative.org/">old web app here</a>, and is
@@ -15,8 +15,8 @@
       >
       that will be replaced soon.
     </div>
-    <AppButton icon="times" design="small" @click="open = false" />
-  </AppFlex>
+    <AppButton icon="times" text="Close" design="small" @click="open = false" />
+  </aside>
 </template>
 
 <script setup lang="ts">
@@ -27,6 +27,12 @@ const open = ref(true);
 
 <style lang="scss" scoped>
 .banner {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
   padding: 20px;
   background: $theme-light;
   text-align: center;
