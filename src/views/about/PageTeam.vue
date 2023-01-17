@@ -25,30 +25,23 @@
   <AppSection v-for="(group, groupIndex) in team" :key="groupIndex" width="big">
     <AppHeading>
       {{ group.name }}
-      <AppIcon
-        v-if="group.alumni"
-        v-tooltip="'Alumni group'"
-        class="icon"
-        icon="history"
-      />
     </AppHeading>
-    <AppLink v-if="group.link" :to="group.link" :aria-label="group.name">
-      <img
-        v-if="getSrc(group.image)"
-        class="image"
-        :src="getSrc(group.image)"
-        :alt="group.name"
-        loading="lazy"
-      />
-    </AppLink>
-    <AppGallery>
+    <AppGroup :name="group.name" :link="group.link" />
+    <AppGallery v-if="!group.type">
       <AppMember
         v-for="(member, memberIndex) in group.members"
         :key="memberIndex"
         :name="member.name"
-        :role="member.role"
+        :role="'role' in member ? member.role : ''"
         :link="member.link"
-        :alumni="group.alumni || member.alumni"
+      />
+    </AppGallery>
+    <AppGallery v-else>
+      <AppGroup
+        v-for="(member, memberIndex) in group.members"
+        :key="memberIndex"
+        :name="member.name"
+        :link="member.link"
       />
     </AppGallery>
   </AppSection>
@@ -94,45 +87,6 @@
 <script setup lang="ts">
 import { kebabCase } from "lodash";
 import AppMember from "@/components/AppMember.vue";
-import teamData from "./team.json";
-
-/**
- * define types manually because typescript can't infer them from json
- * completely correctly
- */
-type Team = Array<{
-  name: string;
-  image: string;
-  link: string;
-  alumni?: boolean;
-  members: Array<{
-    name: string;
-    role?: string;
-    link?: string;
-    alumni?: boolean;
-  }>;
-}>;
-
-const team = teamData as Team;
-
-/** get group img src */
-function getSrc(image: string) {
-  try {
-    return require(`@/assets/team/groups/${image}`);
-  } catch (error) {
-    return "";
-  }
-}
+import team from "./team.json";
+import AppGroup from "@/components/AppGroup.vue";
 </script>
-
-<style lang="scss" scoped>
-.image {
-  display: block;
-  max-width: 100%;
-  max-height: 60px;
-}
-
-.icon {
-  margin-left: 10px;
-}
-</style>

@@ -8,14 +8,8 @@
       <div class="portrait">
         <img :src="src" :alt="name" loading="lazy" />
       </div>
-      <AppIcon
-        v-if="alumni"
-        v-tooltip="'Alumni team member'"
-        icon="history"
-        class="icon"
-      />
     </div>
-    <div v-if="role" class="text">
+    <div class="text">
       <div class="name">{{ name }}</div>
       <div v-if="role" class="role">{{ role }}</div>
     </div>
@@ -33,8 +27,6 @@ interface Props {
   role?: string;
   /** link to bio */
   link?: string;
-  /** whether or not member is a past contributor */
-  alumni?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -65,7 +57,6 @@ a.member:hover {
 }
 
 .image {
-  position: relative;
   width: 80px;
   height: 80px;
   flex-shrink: 0;
@@ -81,20 +72,6 @@ a.member:hover {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-
-  .icon {
-    position: absolute;
-    /** align to 45 degree edge of circle (for aesthetics) */
-    left: 14%;
-    top: 14%;
-    width: 15px;
-    height: 15px;
-    padding: 7px;
-    background: $white;
-    border-radius: 999px;
-    /** align center */
-    transform: translate(-50%, -50%);
   }
 }
 

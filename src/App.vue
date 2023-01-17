@@ -3,6 +3,7 @@
 -->
 
 <template>
+  <TheBanner />
   <TheHeader />
   <main>
     <router-view />
@@ -18,6 +19,7 @@ import { useRoute } from "vue-router";
 import "normalize.css";
 import "@/global/icons";
 import "@/global/styles.scss"; /** keep these last so they take priority */
+import TheBanner from "./components/TheBanner.vue";
 import TheHeader from "@/components/TheHeader.vue";
 import TheFooter from "@/components/TheFooter.vue";
 import TheFloatButtons from "@/components/TheFloatButtons.vue";
