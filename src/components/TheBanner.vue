@@ -5,15 +5,12 @@
 <template>
   <aside v-if="open" class="banner">
     <div>
-      This web app is a <strong>WORK IN PROGRESS</strong> successor to the
-      <a href="https://monarchinitiative.org/">old web app here</a>, and is
-      still using
-      <strong>
-        <a href="https://api.monarchinitiative.org/api/"
-          >old data and APIs</a
-        ></strong
-      >
-      that will be replaced soon.
+      This is the "old" version of the Monarch UI version 3.0. It will be
+      deleted soon and should not be used or referenced. See
+      <a href="https://github.com/monarch-initiative/monarch-ui-new">
+        the readme
+      </a>
+      for more info.
     </div>
     <AppButton icon="times" text="Close" design="small" @click="open = false" />
   </aside>
